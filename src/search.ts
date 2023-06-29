@@ -1,6 +1,6 @@
 import { Request } from "./fetcher";
 import { Data, DataRes, Result } from "./types";
-import { anilistSearchQuery } from "./utils/queries";
+import { SearchQuery } from "./utils/queries";
 
 class Search {
   constructor() {}
@@ -12,7 +12,7 @@ class Search {
     page: number = 1,
     amount: number = 10
   ) => {
-    const query = anilistSearchQuery(title, page, amount, "ANIME");
+    const query = SearchQuery(title, page, amount, "ANIME");
 
     const response = await this.request.makeGQLRequest(query).catch((error) => {
       return error;
@@ -26,7 +26,7 @@ class Search {
     page: number = 1,
     amount: number = 10
   ) => {
-    const query = anilistSearchQuery(title, page, amount, "MANGA");
+    const query = SearchQuery(title, page, amount, "MANGA");
 
     const response = await this.request.makeGQLRequest(query).catch((error) => {
       return error;
