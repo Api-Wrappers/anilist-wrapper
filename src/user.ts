@@ -5,7 +5,6 @@ import { UserProfileQuery } from "./utils/queries";
 
 class User {
   private access_token?: string;
-  private request = new Request(this.access_token);
 
   constructor(access_token?: string) {
     this.access_token = access_token;
@@ -14,11 +13,9 @@ class User {
   getCurrentUser = async () => {
     if (!this.access_token) return new NotLoggedInException();
 
-    // FIXME: Query seems to be wrong i think
-    return await this.request.makeGQLRequest(
-      `query{Viewer{${UserProfileQuery}}}`,
-      {}
-    );
+    const request = new Request(this.access_token);
+
+    return await request.makeGQLRequest(`query{Viewer{${UserProfileQuery}}}`);
   };
 }
 
