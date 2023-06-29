@@ -19,19 +19,21 @@ class Request {
       throw new NotLoggedInException();
 
     const options = {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
+        Authorization: this.access_token ? `Bearer ${this.access_token}` : "",
       },
-      query: query,
-      variables: variables,
+      body: JSON.stringify({
+        query: query,
+      }),
     };
 
     try {
-      const { data, status, statusText } = await axios.post(
-        "https://graphql.anilist.co",
-        options
-      );
+      const res = await fetch("https://graphql.anilist.co", options);
+
+      const { status, statusText } = res;
 
       if (status !== 200) {
         if (statusText)
@@ -43,9 +45,9 @@ class Request {
         );
       }
 
-      return data;
+      return await res.json();
     } catch (error) {
-      return error;
+      return (error as Error).message;
     }
   };
 }
