@@ -15,7 +15,6 @@ class Request {
   private access_token?: string | undefined;
 
   constructor(access_token?: string) {
-    if (!access_token) return;
     this.access_token = access_token;
   }
 
@@ -36,6 +35,7 @@ class Request {
       },
       body: JSON.stringify({
         query: query,
+        variables: variables,
       }),
     };
 
