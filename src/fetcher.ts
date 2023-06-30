@@ -1,5 +1,15 @@
-import axios from "axios";
+// import fetch from "node-fetch";
 import { NotLoggedInException } from "./utils/exceptions";
+
+interface ReqOptions {
+  method: string;
+  headers: {
+    "Content-Type": string;
+    Accept: string;
+    Authorization?: string;
+  };
+  body: string;
+}
 
 class Request {
   private access_token?: string | undefined;
@@ -18,17 +28,20 @@ class Request {
     if (query.startsWith("mutation") && this.access_token === null)
       throw new NotLoggedInException();
 
-    const options = {
+    const options: ReqOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: this.access_token ? `Bearer ${this.access_token}` : "",
       },
       body: JSON.stringify({
         query: query,
       }),
     };
+
+    if (variables) options.body = JSON.stringify({ query, variables });
+    if (this.access_token)
+      options.headers.Authorization = `Bearer ${this.access_token}`;
 
     try {
       const res = await fetch("https://graphql.anilist.co", options);

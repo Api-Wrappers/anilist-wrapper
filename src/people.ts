@@ -1,0 +1,3 @@
+class People {}
+
+export { People };
