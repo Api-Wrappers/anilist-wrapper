@@ -72,3 +72,50 @@ export interface CoverImage {
   medium: string;
   color: string;
 }
+
+
+// Mutations
+
+type MediaListStatus = "CURRENT" | "PLANNING" | "COMPLETED" | "DROPPED" | "PAUSED" | "REPEATING";
+
+type FuzzyDateInput = {
+  year: number,
+  month: number,
+  day: number
+};
+
+export interface ShowMutations {
+  mediaId: number,
+  status?: MediaListStatus,
+  score?: number,
+  scoreRaw?: number,
+  progress?: number,
+  progressVolumes?: number,
+  repeat?: number,
+  priority?: number,
+  private?: boolean,
+  notes?: string,
+  hiddenFromStatusLists?: boolean,
+  customLists?: Array<string>,
+  advancedScores?: Array<number>,
+  startedAt?: FuzzyDateInput,
+  completedAt?: FuzzyDateInput
+}
+
+export const ShowMutationsTypes = {
+  mediaId: "Int",
+  status: "MediaListStatus",
+  score: "Float",
+  scoreRaw: "Int",
+  progress: "Int",
+  progressVolumes: "Int",
+  repeat: "Int",
+  priority: "Int",
+  private: "Boolean",
+  notes: "String",
+  hiddenFromStatusLists: "Boolean",
+  customLists: "[String]",
+  advancedScores: "[Float]",
+  startedAt: "FuzzyDateInput",
+  completedAt: "FuzzyDateInput"
+}
