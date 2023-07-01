@@ -1,0 +1,3 @@
+class Recommendation {}
+
+export { Recommendation };

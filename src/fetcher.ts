@@ -1,5 +1,7 @@
 // import fetch from "node-fetch";
-import { NotLoggedInException } from "./utils/exceptions";
+import AbortController from "abort-controller";
+import { RequestOptions } from "./types";
+import { NotLoggedInException, TimeOutException } from "./utils/exceptions";
 
 interface ReqOptions {
   method: string;
@@ -8,14 +10,17 @@ interface ReqOptions {
     Accept: string;
     Authorization?: string;
   };
+  signal?: AbortSignal;
   body: string;
 }
 
 class Request {
   private access_token?: string | undefined;
+  private options?: RequestOptions;
 
-  constructor(access_token?: string) {
+  constructor(access_token?: string, options?: RequestOptions) {
     this.access_token = access_token;
+    this.options = options;
   }
 
   public makeGQLRequest = async (
@@ -27,6 +32,12 @@ class Request {
     if (query.startsWith("mutation") && this.access_token === null)
       throw new NotLoggedInException();
 
+    const controller = new AbortController();
+
+    const requestTimeout = setTimeout(() => {
+      controller.abort();
+    }, this.options?.timeout || 5000);
+
     const options: ReqOptions = {
       method: "POST",
       headers: {
@@ -35,8 +46,8 @@ class Request {
       },
       body: JSON.stringify({
         query: query,
-        variables: variables,
       }),
+      signal: controller.signal as AbortSignal,
     };
 
     if (variables) options.body = JSON.stringify({ query, variables });
@@ -60,7 +71,10 @@ class Request {
 
       return await res.json();
     } catch (error) {
-      return (error as Error).message;
+      if ((error as Error).name === "AbortError")
+        throw new TimeOutException(this.options?.timeout || 5000);
+    } finally {
+      clearTimeout(requestTimeout);
     }
   };
 }

@@ -12,4 +12,11 @@ class NoIdException extends Error {
   }
 }
 
-export { NotLoggedInException, NoIdException };
+class TimeOutException extends Error {
+  constructor(timeoutTime: number) {
+    super(`Request timed out after ${timeoutTime}ms`);
+    this.name = "TimeOutException";
+  }
+}
+
+export { NotLoggedInException, NoIdException, TimeOutException };

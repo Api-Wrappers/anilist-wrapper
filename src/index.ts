@@ -1,5 +1,11 @@
-import { Request } from "./fetcher";
+import { Activity } from "./activity";
+import { Lists } from "./lists";
+import { Media } from "./media";
+import { People } from "./people";
+import { Recommendation } from "./recommendation";
 import { Search } from "./search";
+import { Thread } from "./thread";
+import { User } from "./user";
 
 class Anilist {
   private access_token?: string;
@@ -8,23 +14,21 @@ class Anilist {
     this.access_token = access_token;
   }
 
-  search = async (
-    query: string,
-    page: number = 1,
-    amount: number = 20,
-    type: "ANIME" | "MANGA" = "ANIME"
-  ) => {
-    const searchReq = new Search();
+  activty = new Activity();
 
-    switch (type) {
-      case "ANIME":
-        return await searchReq.anime(query, page, amount);
-      case "MANGA":
-        return await searchReq.manga(query, page, amount);
-      default:
-        return await searchReq.anime(query, page, amount);
-    }
-  };
+  lists = new Lists();
+
+  media = new Media(this.access_token);
+
+  people = new People(this.access_token);
+
+  recommendation = new Recommendation();
+
+  search = new Search();
+
+  thread = new Thread();
+
+  user = new User(this.access_token);
 }
 
 export { Anilist };

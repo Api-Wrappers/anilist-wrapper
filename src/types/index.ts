@@ -73,33 +73,42 @@ export interface CoverImage {
   color: string;
 }
 
+export interface RequestOptions {
+  timeout?: number;
+}
 
 // Mutations
 
-type MediaListStatus = "CURRENT" | "PLANNING" | "COMPLETED" | "DROPPED" | "PAUSED" | "REPEATING";
+type MediaListStatus =
+  | "CURRENT"
+  | "PLANNING"
+  | "COMPLETED"
+  | "DROPPED"
+  | "PAUSED"
+  | "REPEATING";
 
 type FuzzyDateInput = {
-  year: number,
-  month: number,
-  day: number
+  year: number;
+  month: number;
+  day: number;
 };
 
 export interface ShowMutations {
-  mediaId: number,
-  status?: MediaListStatus,
-  score?: number,
-  scoreRaw?: number,
-  progress?: number,
-  progressVolumes?: number,
-  repeat?: number,
-  priority?: number,
-  private?: boolean,
-  notes?: string,
-  hiddenFromStatusLists?: boolean,
-  customLists?: Array<string>,
-  advancedScores?: Array<number>,
-  startedAt?: FuzzyDateInput,
-  completedAt?: FuzzyDateInput
+  mediaId: number;
+  status?: MediaListStatus;
+  score?: number;
+  scoreRaw?: number;
+  progress?: number;
+  progressVolumes?: number;
+  repeat?: number;
+  priority?: number;
+  private?: boolean;
+  notes?: string;
+  hiddenFromStatusLists?: boolean;
+  customLists?: Array<string>;
+  advancedScores?: Array<number>;
+  startedAt?: FuzzyDateInput;
+  completedAt?: FuzzyDateInput;
 }
 
 export const ShowMutationsTypes = {
@@ -117,5 +126,5 @@ export const ShowMutationsTypes = {
   customLists: "[String]",
   advancedScores: "[Float]",
   startedAt: "FuzzyDateInput",
-  completedAt: "FuzzyDateInput"
-}
+  completedAt: "FuzzyDateInput",
+};
