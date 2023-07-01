@@ -5,4 +5,11 @@ class NotLoggedInException extends Error {
   }
 }
 
-export { NotLoggedInException };
+class NoIdException extends Error {
+  constructor(type: string) {
+    super(`No anilist ${type} id was provided!`);
+    this.name = "NoIdException";
+  }
+}
+
+export { NotLoggedInException, NoIdException };

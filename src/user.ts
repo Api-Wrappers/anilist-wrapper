@@ -1,5 +1,11 @@
 import { Request } from "./fetcher";
-import { Data, DataRes, Result, ShowMutations, ShowMutationsTypes } from "./types";
+import {
+  Data,
+  DataRes,
+  Result,
+  ShowMutations,
+  ShowMutationsTypes,
+} from "./types";
 import { NotLoggedInException } from "./utils/exceptions";
 import { UserProfileQuery } from "./utils/queries";
 
@@ -28,16 +34,17 @@ class User {
                     }`;
 
     const variables = {
-      mediaId: anilistId
+      mediaId: anilistId,
     };
 
     const request = new Request(this.access_token);
-    const response = await request.makeGQLRequest(query, variables) as { [key: string]: any };
+    const response = (await request.makeGQLRequest(query, variables)) as {
+      [key: string]: any;
+    };
     return response?.data?.Media?.mediaListEntry?.id;
   };
 
   updateShow = async (variables: ShowMutations) => {
-
     const keys = Object.keys(variables) as Array<keyof ShowMutations>;
     const firstKey = keys.shift()!;
 
@@ -46,7 +53,7 @@ class User {
 
     for (const key of keys) {
       mutationQueryVars += `, \$${key}: ${ShowMutationsTypes[key]}`;
-      entryVar += `, ${key}: \$${key}`
+      entryVar += `, ${key}: \$${key}`;
     }
 
     const query = `mutation (${mutationQueryVars}) {
@@ -91,7 +98,7 @@ class User {
              }`;
 
       const variables = {
-        id: mediaListId
+        id: mediaListId,
       };
 
       const request = new Request(this.access_token);
@@ -99,7 +106,7 @@ class User {
     } else {
       throw Error("Unexpected media list Id");
     }
-  }
+  };
 }
 
 export { User };
