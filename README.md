@@ -1,4 +1,6 @@
-# AniList Api Wrapper
+<h1 align="center">
+  AniList Api Wrapper
+</h1>
 
 The AniList TypeScript Wrapper simplifies the process of making API requests to AniList, a popular anime and manga database. It encapsulates functionality related to various API endpoints, such as activity, lists, media, people, recommendations, search, threads, and user-related features. With this wrapper, developers can quickly integrate AniList functionality into their TypeScript projects.
 
