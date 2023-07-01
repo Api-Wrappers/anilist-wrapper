@@ -49,17 +49,16 @@ You can now use the anilist object to access various functionalities of the AniL
 Authentication is required to access certain endpoints and perform actions on behalf of a user. To authenticate with the AniList API, you need to obtain an access token. Visit the AniList website and follow their documentation to generate an access token. When creating an instance of the AniList class, you can provide the access token as a parameter to enable authenticated access to specific features.
 
 ## Functionality
-The AniList TypeScript Wrapper provides the following functionality:
+The AniList Api Wrapper provides the following functionality:
 
-activity: Access and interact with user activity-related features.
-lists: Retrieve and manage user lists, such as anime and manga lists.
-media: Retrieve media-related information, including anime, manga, characters, and staff.
-people: Access information about people involved in media, such as voice actors and staff members.
-recommendation: Retrieve and manage recommendations for anime and manga.
-search: Search for media, characters, and users on AniList.
-thread: Interact with AniList forum threads and comments.
-user: Access and manage user-related information and actions.
-Each functionality is encapsulated within a separate class, allowing for modular usage and easy integration into your project. Refer to the documentation and code comments for each class to learn more about the available methods and usage examples.
+- activity: Access and interact with user activity-related features.
+- lists: Retrieve and manage user lists, such as anime and manga lists.
+- media: Retrieve media-related information, including anime, manga, characters, and staff.
+- people: Access information about people involved in media, such as voice actors and staff members.
+- recommendation: Retrieve and manage recommendations for anime and manga.
+- search: Search for media, characters, and users on AniList.
+- thread: Interact with AniList forum threads and comments.
+- user: Access and manage user-related information and actions.
 
 ## Contributing
 Contributions to the AniList TypeScript Wrapper are welcome! If you find a bug, have a feature suggestion, or want to contribute improvements, please follow the contribution guidelines outlined in the repository.
