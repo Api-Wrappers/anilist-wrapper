@@ -35,7 +35,7 @@ class People {
         nodes { id }
     } } }`;
 
-    const request = new Request();
+    const request = new Request(this.access_token);
 
     return await request.makeGQLRequest(query, { charID: id });
   };
@@ -79,7 +79,7 @@ characterMedia { nodes { id title { romaji english native userPreferred } type }
         nodes { id } 
     } } }`;
 
-    const request = new Request();
+    const request = new Request(this.access_token);
 
     return await request.makeGQLRequest(query, { staffID: id });
   };

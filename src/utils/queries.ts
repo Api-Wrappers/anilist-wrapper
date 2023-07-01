@@ -102,3 +102,13 @@ export const UserProfileQuery = `id name
     moderatorRoles
     updatedAt
 `;
+
+export const TextActivityQuery = `id user { id name } type text createdAt replies { id text likeCount }
+isLocked isSubscribed isLiked likes { id name }`;
+
+export const MessageActivityQuery = `id recipient { id name } type message createdAt replies { id text likeCount }
+user:messenger { id name } isPrivate isLocked isSubscribed isLiked likes { id name }`;
+
+export const ListActivityQuery = ` id user { id name } status type progress
+media { id title { romaji english native userPreferred } type }
+createdAt isLocked isSubscribed isLiked replies { id text likeCount } likes { id name }`;
