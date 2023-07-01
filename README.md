@@ -104,4 +104,8 @@ The AniList TypeScript Wrapper is licensed under the MIT License. Make sure to r
 
 Feel free to use, modify, and distribute this library as per the license terms.
 
-Thank you for using the AniList TypeScript Wrapper! If you have any questions or need further assistance, please contact the project team or refer to the documentation available in the repository.
+Thank you for using the AniList Api Wrapper! If you have any questions or need further assistance, please contact the project team or refer to the documentation available in the repository.
+
+# ❤️
+
+Reminder that <strong><i>you are great, you are enough, and your presence is valued.</i></strong> If you are struggling with your mental health, please reach out to someone you love and consult a professional. You are not alone.
