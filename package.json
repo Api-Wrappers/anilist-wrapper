@@ -1,8 +1,23 @@
 {
-  "name": "anilistwrapper",
-  "version": "0.0.1",
-  "description": "A nodejs wrapper for the anilist api (cause gql is ass)",
-  "main": "index.js",
+  "name": "anilist-wrapper",
+  "version": "1.0.0",
+  "description": "A wrapper for the Anilist graphQL api",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tdanks2000/anilistwrapper"
+  },
+  "keywords": [
+    "anilist",
+    "anilistWrapper",
+    "api wrapper",
+    "node",
+    "typescript"
+  ],
   "author": "people",
   "license": "MIT",
   "private": false,
@@ -10,6 +25,9 @@
     "@types/node": "^20.3.2",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.5"
+  },
+  "scripts": {
+    "build": "tsc"
   },
   "dependencies": {
     "abort-controller": "^3.0.0"
