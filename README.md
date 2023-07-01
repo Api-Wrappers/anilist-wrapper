@@ -2,7 +2,7 @@
   AniList Api Wrapper
 </h1>
 
-The AniList TypeScript Wrapper simplifies the process of making API requests to AniList, a popular anime and manga database. It encapsulates functionality related to various API endpoints, such as activity, lists, media, people, recommendations, search, threads, and user-related features. With this wrapper, developers can quickly integrate AniList functionality into their TypeScript projects.
+The AniList Api Wrapper simplifies the process of making API requests to AniList, a popular anime and manga database. It encapsulates functionality related to various API endpoints, such as activity, lists, media, people, recommendations, search, threads, and user-related features. With this wrapper, developers can quickly integrate AniList functionality into their TypeScript projects.
 
 ## Table of Contents
 
@@ -18,9 +18,7 @@ The AniList TypeScript Wrapper simplifies the process of making API requests to 
 
 To install the AniList TypeScript Wrapper, follow these steps:
 
-1. Ensure that you have TypeScript and npm installed in your development environment.
-
-2. Run the following command in your project directory:
+1. Run the following command in your project directory:
 
 ```typescript
 // npm
@@ -30,9 +28,6 @@ yarn add @tdanks2000/anilist-wrapper
 // pnpm
 pnpm i @tdanks2000/anilist-wrapper
 ```
-
-python
-Copy code
 
 ## Usage
 
