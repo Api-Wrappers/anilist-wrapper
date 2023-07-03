@@ -8,27 +8,25 @@ import { Thread } from "./thread";
 import { User } from "./user";
 
 class Anilist {
-  private access_token?: string;
-
   constructor(access_token?: string) {
-    this.access_token = access_token;
+    this.activty = new Activity(access_token);
+    this.lists = new Lists(access_token);
+    this.media = new Media(access_token);
+    this.people = new People(access_token);
+    this.recommendation = new Recommendation(access_token);
+    this.search = new Search(access_token);
+    this.thread = new Thread(access_token);
+    this.user = new User(access_token);
   }
 
-  activty = new Activity();
-
-  lists = new Lists();
-
-  media = new Media(this.access_token);
-
-  people = new People(this.access_token);
-
-  recommendation = new Recommendation();
-
-  search = new Search();
-
-  thread = new Thread();
-
-  user = new User(this.access_token);
+  activty: Activity;
+  lists: Lists;
+  media: Media;
+  people: People;
+  recommendation: Recommendation;
+  search: Search;
+  thread: Thread;
+  user: User;
 }
 
 export { Anilist };

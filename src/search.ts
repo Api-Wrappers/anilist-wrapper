@@ -3,7 +3,11 @@ import { Data, DataRes, Result } from "./types";
 import { SearchQuery } from "./utils/queries";
 
 class Search {
-  constructor() {}
+  private access_token?: string;
+
+  constructor(access_token?: string) {
+    this.access_token = access_token;
+  }
 
   private request = new Request();
 
