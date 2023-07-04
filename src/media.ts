@@ -20,12 +20,12 @@ class Media {
     characters { nodes { id name { english: full } } } staff { nodes { id name { english: full } } } studios { nodes { id name isAnimationStudio } } 
     isFavourite isAdult isLocked nextAiringEpisode { timeUntilAiring airingAt episode } airingSchedule { nodes { airingAt timeUntilAiring episode } }
     trends { nodes { date trending popularity inProgress } } externalLinks { url }
-    streamingEpisodes { title thumbnail url site } rankings { rank type context year season } mediaListEntry { id status }
+    streamingEpisodes { title thumbnail url site } rankings { rank type context year season } mediaListEntry { progress status score(format: POINT_10) id startedAt { year month day } completedAt { year month day } userId mediaId updatedAt createdAt }
     reviews { nodes { id score summary body } } siteUrl autoCreateForumThread modNotes 
     stats { scoreDistribution { score amount } statusDistribution { status amount } }
     isRecommendationBlocked recommendations { nodes { mediaRecommendation { id title { romaji english native userPreferred } type } } } } }`;
 
-    const request = new Request();
+    const request = new Request(this.access_token);
 
     return await request.makeGQLRequest(query, { id });
   };
@@ -57,7 +57,7 @@ class Media {
     stats { scoreDistribution { score amount } statusDistribution { status amount } } favourites
     isRecommendationBlocked recommendations { nodes { mediaRecommendation { id title { romaji english native userPreferred } type } } } } }`;
 
-    const request = new Request();
+    const request = new Request(this.access_token);
 
     return await request.makeGQLRequest(query, { id });
   };
