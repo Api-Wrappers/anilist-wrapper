@@ -1,6 +1,6 @@
 {
   "name": "@tdanks2000/anilist-wrapper",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A wrapper for the Anilist graphQL api",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
