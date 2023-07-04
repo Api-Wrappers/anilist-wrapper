@@ -22,12 +22,81 @@ class Lists {
 
     const query =
       queryVals[1] +
-      `lists { name isCustomList isSplitCompletedList status entries { id
-      media { id idMal title { romaji english native userPreferred } 
-      episodes description format startDate { year month day } endDate { year month day }
-      duration genres synonyms tags { name isMediaSpoiler } isFavourite isAdult siteUrl }
-      status score progress repeat priority private notes hiddenFromStatusLists
-      advancedScores startedAt { year month day } completedAt { year month day } updatedAt createdAt } } } }`;
+      `lists {
+          name
+          isCustomList
+          isSplitCompletedList
+          status
+          entries {
+            id
+            media {
+              averageScore
+              meanScore
+              id
+              idMal
+              title {
+                romaji
+                english
+                native
+                userPreferred
+              }
+              type 
+              seasonYear
+              coverImage {
+                extraLarge
+                large
+                medium
+                color
+              }
+              bannerImage
+              episodes
+              description
+              format
+              startDate {
+                year
+                month
+                day
+              }
+              endDate {
+                year
+                month
+                day
+              }
+              duration
+              genres
+              synonyms
+              tags {
+                name
+                isMediaSpoiler
+              }
+              isFavourite
+              isAdult
+              siteUrl
+            }
+            status
+            score
+            progress
+            repeat
+            priority
+            private
+            notes
+            hiddenFromStatusLists
+            advancedScores
+            startedAt {
+              year
+              month
+              day
+            }
+            completedAt {
+              year
+              month
+              day
+            }
+            updatedAt
+            createdAt
+          }
+        }
+      }`;
 
     const reqest = new Request();
 
