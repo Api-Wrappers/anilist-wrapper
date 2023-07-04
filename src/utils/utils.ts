@@ -1,7 +1,10 @@
+import { MediaListStatus } from "../types";
+
 export const generateQueryHeaders = (
   type: string,
   item: number | string,
-  addItm?: string
+  addItm?: string,
+  status?: MediaListStatus
 ): [object, string] => {
   // A search term is needed. Throw an error.
   if (!item) {
@@ -16,8 +19,8 @@ export const generateQueryHeaders = (
       switch (type) {
         case "MediaListCollection":
           return [
-            { id: item, type: addItm },
-            "query ($id: Int, $type: MediaType) { MediaListCollection(userId: $id, type: $type) {",
+            { id: item, type: addItm, status: status },
+            "query ($id: Int, $type: MediaType, status: MediaListStatus) { MediaListCollection(userId: $id, type: $type, status: $status) {",
           ];
         case "User":
         case "Staff":
@@ -33,8 +36,8 @@ export const generateQueryHeaders = (
       switch (type) {
         case "MediaListCollection":
           return [
-            { name: item, type: addItm },
-            "query ($name: String, $type: MediaType) { MediaListCollection(userName: $name, type: $type) {",
+            { name: item, type: addItm, status: status },
+            "query ($name: String, $type: MediaType, status: MediaListStatus) { MediaListCollection(userName: $name, type: $type, status: $status) {",
           ];
         case "User":
           return [

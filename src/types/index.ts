@@ -79,7 +79,7 @@ export interface RequestOptions {
 
 // Mutations
 
-type MediaListStatus =
+export type MediaListStatus =
   | "CURRENT"
   | "PLANNING"
   | "COMPLETED"

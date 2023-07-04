@@ -1,4 +1,5 @@
 import { Request } from "./fetcher";
+import { MediaListStatus } from "./types";
 import { utils } from "./utils";
 import { NoIdException } from "./utils/exceptions";
 
@@ -9,13 +10,14 @@ class Lists {
     this.access_token = access_token;
   }
 
-  anime = async (idOrUsername: string) => {
+  anime = async (idOrUsername: string, status: MediaListStatus) => {
     if (!idOrUsername) throw new NoIdException("anime");
 
     const queryVals = utils.generateQueryHeaders(
       "MediaListCollection",
       idOrUsername,
-      "ANIME"
+      "ANIME",
+      status
     );
 
     const query =
@@ -32,13 +34,14 @@ class Lists {
     return await reqest.makeGQLRequest(query, queryVals[0]);
   };
 
-  manga = async (idOrUsername: string) => {
+  manga = async (idOrUsername: string, status: MediaListStatus) => {
     if (!idOrUsername) throw new NoIdException("manga");
 
     const queryVals = utils.generateQueryHeaders(
       "MediaListCollection",
       idOrUsername,
-      "MANGA"
+      "MANGA",
+      status
     );
 
     const query =
