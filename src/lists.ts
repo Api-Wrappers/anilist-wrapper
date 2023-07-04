@@ -95,8 +95,9 @@ class Lists {
             updatedAt
             createdAt
           }
-        }
-      }`;
+      }
+    }
+  }`;
 
     const reqest = new Request();
 
