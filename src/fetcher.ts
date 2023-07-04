@@ -34,10 +34,6 @@ class Request {
 
     const controller = new AbortController();
 
-    const requestTimeout = setTimeout(() => {
-      controller.abort();
-    }, this.options?.timeout || 5000);
-
     const options: ReqOptions = {
       method: "POST",
       headers: {
@@ -47,7 +43,6 @@ class Request {
       body: JSON.stringify({
         query: query,
       }),
-      signal: controller.signal as AbortSignal,
     };
 
     if (variables) options.body = JSON.stringify({ query, variables });
@@ -73,8 +68,6 @@ class Request {
     } catch (error) {
       if ((error as Error).name === "AbortError")
         throw new TimeOutException(this.options?.timeout || 5000);
-    } finally {
-      clearTimeout(requestTimeout);
     }
   };
 }
