@@ -20,7 +20,7 @@ export const generateQueryHeaders = (
         case "MediaListCollection":
           return [
             { id: item, type: addItm, status: status },
-            "query ($id: Int, $type: MediaType, $status: MediaListStatus) { MediaListCollection(userId: $id, type: $type, status: $status) {",
+            "query ($id: Int, $type: MediaType, $status: MediaListStatus) { MediaListCollection(userId: $id, type: $type, status: $status, sort: [ADDED_TIME_DESC, UPDATED_TIME_DESC, PROGRESS_DESC]) {",
           ];
         case "User":
         case "Staff":
@@ -37,7 +37,7 @@ export const generateQueryHeaders = (
         case "MediaListCollection":
           return [
             { name: item, type: addItm, status: status },
-            "query ($name: String, $type: MediaType, $status: MediaListStatus) { MediaListCollection(userName: $name, type: $type, status: $status) {",
+            "query ($name: String, $type: MediaType, $status: MediaListStatus) { MediaListCollection(userName: $name, type: $type, status: $status, sort: [ADDED_TIME_DESC, UPDATED_TIME_DESC, PROGRESS_DESC]) {",
           ];
         case "User":
           return [
