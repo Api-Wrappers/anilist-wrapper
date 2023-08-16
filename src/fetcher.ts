@@ -23,10 +23,7 @@ class Request {
     this.options = options;
   }
 
-  public makeGQLRequest = async (
-    query: string,
-    variables?: object
-  ): Promise<unknown | Error> => {
+  public makeGQLRequest = async (query: string, variables?: object): Promise<unknown | Error> => {
     if (!query) return new Error("No query provided");
 
     if (query.startsWith("mutation") && this.access_token === null)
@@ -44,10 +41,10 @@ class Request {
         query: query,
       }),
     };
+    console.log(query);
 
     if (variables) options.body = JSON.stringify({ query, variables });
-    if (this.access_token)
-      options.headers.Authorization = `Bearer ${this.access_token}`;
+    if (this.access_token) options.headers.Authorization = `Bearer ${this.access_token}`;
 
     try {
       const res = await fetch("https://graphql.anilist.co", options);
@@ -56,12 +53,8 @@ class Request {
 
       if (status !== 200) {
         if (statusText)
-          return new Error(
-            `Anilist Api returned with a ${status} status. ${statusText}`
-          );
-        throw new Error(
-          `Anilist Api returned with a ${status} status. The api might be down!`
-        );
+          return new Error(`Anilist Api returned with a ${status} status. ${statusText}`);
+        throw new Error(`Anilist Api returned with a ${status} status. The api might be down!`);
       }
 
       return await res.json();

@@ -1,0 +1,1006 @@
+{
+  "data": {
+    "Page": {
+      "pageInfo": {
+        "total": 5000,
+        "perPage": 10,
+        "currentPage": 1,
+        "lastPage": 500,
+        "hasNextPage": true
+      },
+      "media": [
+        {
+          "id": 20,
+          "idMal": 20,
+          "status": "FINISHED",
+          "title": {
+            "userPreferred": "NARUTO",
+            "romaji": "NARUTO",
+            "english": "Naruto",
+            "native": "NARUTO -ナルト-"
+          },
+          "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/20-HHxhPj5JD13a.jpg",
+          "popularity": 488930,
+          "coverImage": {
+            "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20-YJvLbgJQPCoI.jpg",
+            "large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx20-YJvLbgJQPCoI.jpg",
+            "medium": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/bx20-YJvLbgJQPCoI.jpg",
+            "color": "#e47850"
+          },
+          "episodes": 220,
+          "format": "TV",
+          "season": "FALL",
+          "description": "Naruto Uzumaki, a hyperactive and knuckle-headed ninja, lives in Konohagakure, the Hidden Leaf village. Moments prior to his birth, a huge demon known as the Kyuubi, the Nine-tailed Fox, attacked Konohagakure and wreaked havoc. In order to put an end to the Kyuubi's rampage, the leader of the village, the 4th Hokage, sacrificed his life and sealed the monstrous beast inside the newborn Naruto. <br><br>\nShunned because of the presence of the Kyuubi inside him, Naruto struggles to find his place in the village. He strives to become the Hokage of Konohagakure, and he meets many friends and foes along the way. <br><br>\n(Source: MAL Rewrite)",
+          "seasonYear": 2002,
+          "chapters": null,
+          "volumes": null,
+          "averageScore": 79,
+          "genres": [
+            "Action",
+            "Adventure",
+            "Comedy",
+            "Drama",
+            "Fantasy",
+            "Supernatural"
+          ],
+          "nextAiringEpisode": null,
+          "startDate": {
+            "year": 2002,
+            "month": 10,
+            "day": 3
+          },
+          "endDate": {
+            "year": 2007,
+            "month": 2,
+            "day": 8
+          },
+          "tags": [
+            {
+              "id": 255,
+              "name": "Ninja",
+              "category": "Cast-Traits",
+              "description": "Prominently features Japanese warriors traditionally trained in espionage, sabotage and assasination."
+            },
+            {
+              "id": 56,
+              "name": "Shounen",
+              "category": "Demographic",
+              "description": "Target demographic is teenage and young adult males."
+            },
+            {
+              "id": 102,
+              "name": "Coming of Age",
+              "category": "Theme-Drama",
+              "description": "Centers around a character's transition from childhood to adulthood."
+            },
+            {
+              "id": 82,
+              "name": "Male Protagonist",
+              "category": "Cast-Main Cast",
+              "description": "Main character is male."
+            },
+            {
+              "id": 66,
+              "name": "Super Power",
+              "category": "Theme-Fantasy",
+              "description": "Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible."
+            },
+            {
+              "id": 1277,
+              "name": "Found Family",
+              "category": "Theme-Other",
+              "description": "Features a group of characters with no biological relations that are united in a group providing social support."
+            },
+            {
+              "id": 326,
+              "name": "Cultivation",
+              "category": "Theme-Fantasy",
+              "description": "Features characters using training, often martial arts-related, and other special methods to cultivate life force and gain strength or immortality."
+            },
+            {
+              "id": 252,
+              "name": "Revenge",
+              "category": "Theme-Drama",
+              "description": "Prominently features a character who aims to exact punishment in a resentful or vindictive manner."
+            },
+            {
+              "id": 30,
+              "name": "Martial Arts",
+              "category": "Theme-Action",
+              "description": "Centers around the use of traditional hand-to-hand combat."
+            },
+            {
+              "id": 490,
+              "name": "Anachronism",
+              "category": "Setting-Time",
+              "description": "Prominently features elements that are out of place in the historical period the work takes place in, particularly modern elements in a historical setting."
+            },
+            {
+              "id": 1045,
+              "name": "Heterosexual",
+              "category": "Theme-Romance",
+              "description": "Prominently features a romance between a man and a woman, not inherently sexual."
+            },
+            {
+              "id": 446,
+              "name": "Primarily Child Cast",
+              "category": "Cast-Main Cast",
+              "description": "Main cast is mostly composed of characters below a high school age."
+            },
+            {
+              "id": 85,
+              "name": "Tragedy",
+              "category": "Theme-Drama",
+              "description": "Centers around tragic events and unhappy endings."
+            },
+            {
+              "id": 772,
+              "name": "Shapeshifting",
+              "category": "Theme-Fantasy",
+              "description": "Features character(s) who changes one's appearance or form."
+            },
+            {
+              "id": 1382,
+              "name": "Orphan",
+              "category": "Cast-Traits",
+              "description": "Prominently features a character that is an orphan."
+            },
+            {
+              "id": 276,
+              "name": "Kaiju",
+              "category": "Theme-Fantasy",
+              "description": "Prominently features giant monsters."
+            },
+            {
+              "id": 105,
+              "name": "Ensemble Cast",
+              "category": "Cast-Main Cast",
+              "description": "Features a large cast of characters with (almost) equal screen time and importance to the plot."
+            },
+            {
+              "id": 171,
+              "name": "Bullying",
+              "category": "Theme-Drama",
+              "description": "Prominently features the use of force for intimidation, often in a school setting."
+            },
+            {
+              "id": 1310,
+              "name": "Travel",
+              "category": "Theme-Other",
+              "description": "Centers around character(s) moving between places a significant distance apart."
+            },
+            {
+              "id": 15,
+              "name": "Demons",
+              "category": "Cast-Traits",
+              "description": "Prominently features malevolent otherworldly creatures."
+            },
+            {
+              "id": 77,
+              "name": "Gender Bending",
+              "category": "Theme-Other",
+              "description": "Prominently features a character who dresses and behaves in a way characteristic of another gender, or has been transformed into a person of another gender."
+            },
+            {
+              "id": 83,
+              "name": "Slapstick",
+              "category": "Theme-Comedy",
+              "description": "Prominently features comedy based on deliberately clumsy actions or embarrassing events."
+            },
+            {
+              "id": 1456,
+              "name": "Femboy",
+              "category": "Cast-Traits",
+              "description": "Features a boy who exhibits characteristics or behaviors considered in many cultures to be typical of girls."
+            },
+            {
+              "id": 46,
+              "name": "School",
+              "category": "Setting-Scene",
+              "description": "Partly or completely set in a primary or secondary educational institution."
+            },
+            {
+              "id": 322,
+              "name": "Assassins",
+              "category": "Theme-Other-Organisations",
+              "description": "Centers around characters who murder people as a profession."
+            },
+            {
+              "id": 100,
+              "name": "Nudity",
+              "category": "Cast-Traits",
+              "description": "Features a character wearing no clothing or exposing intimate body parts."
+            },
+            {
+              "id": 139,
+              "name": "Love Triangle",
+              "category": "Theme-Romance",
+              "description": "Centered around romantic feelings between more than two people. Includes all love polygons."
+            }
+          ],
+          "duration": 23,
+          "meanScore": 79
+        },
+        {
+          "id": 21220,
+          "idMal": 28755,
+          "status": "FINISHED",
+          "title": {
+            "userPreferred": "BORUTO: NARUTO THE MOVIE",
+            "romaji": "BORUTO: NARUTO THE MOVIE",
+            "english": "Boruto: Naruto the Movie",
+            "native": "BORUTO -NARUTO THE MOVIE-"
+          },
+          "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/21220-tdeNPd6YFzIo.jpg",
+          "popularity": 74300,
+          "coverImage": {
+            "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21220-3cWAUtR1Ih5h.jpg",
+            "large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx21220-3cWAUtR1Ih5h.jpg",
+            "medium": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/bx21220-3cWAUtR1Ih5h.jpg",
+            "color": "#e46b50"
+          },
+          "episodes": 1,
+          "format": "MOVIE",
+          "season": "SUMMER",
+          "description": "Boruto is the son of Naruto who completely rejects his father. Behind this, he has feelings of wanting to surpass Naruto, who is respected as a hero. He ends up meeting his father's friend Sasuke, and requests to become... his apprentice!? The curtain rises on the story of the new generation written by Masashi Kishimoto!<br>\n<br>\n(Source: Anime News Network)",
+          "seasonYear": 2015,
+          "chapters": null,
+          "volumes": null,
+          "averageScore": 71,
+          "genres": [
+            "Action",
+            "Adventure",
+            "Comedy"
+          ],
+          "nextAiringEpisode": null,
+          "startDate": {
+            "year": 2015,
+            "month": 8,
+            "day": 7
+          },
+          "endDate": {
+            "year": 2015,
+            "month": 8,
+            "day": 7
+          },
+          "tags": [
+            {
+              "id": 56,
+              "name": "Shounen",
+              "category": "Demographic",
+              "description": "Target demographic is teenage and young adult males."
+            },
+            {
+              "id": 87,
+              "name": "Family Life",
+              "category": "Theme-Slice of Life",
+              "description": "Centers around the activities of a family unit."
+            },
+            {
+              "id": 255,
+              "name": "Ninja",
+              "category": "Cast-Traits",
+              "description": "Prominently features Japanese warriors traditionally trained in espionage, sabotage and assasination."
+            },
+            {
+              "id": 191,
+              "name": "Aliens",
+              "category": "Cast-Traits",
+              "description": "Prominently features extraterrestrial lifeforms."
+            },
+            {
+              "id": 446,
+              "name": "Primarily Child Cast",
+              "category": "Cast-Main Cast",
+              "description": "Main cast is mostly composed of characters below a high school age."
+            },
+            {
+              "id": 30,
+              "name": "Martial Arts",
+              "category": "Theme-Action",
+              "description": "Centers around the use of traditional hand-to-hand combat."
+            },
+            {
+              "id": 276,
+              "name": "Kaiju",
+              "category": "Theme-Fantasy",
+              "description": "Prominently features giant monsters."
+            },
+            {
+              "id": 489,
+              "name": "Drugs",
+              "category": "Theme-Other",
+              "description": "Prominently features the usage of drugs such as opioids, stimulants, hallucinogens etc."
+            },
+            {
+              "id": 253,
+              "name": "Gods",
+              "category": "Cast-Traits",
+              "description": "Prominently features a character of divine or religious nature."
+            },
+            {
+              "id": 1382,
+              "name": "Orphan",
+              "category": "Cast-Traits",
+              "description": "Prominently features a character that is an orphan."
+            },
+            {
+              "id": 193,
+              "name": "Episodic",
+              "category": "Technical",
+              "description": "Features story arcs that are loosely tied or lack an overarching plot."
+            }
+          ],
+          "duration": 95,
+          "meanScore": 71
+        },
+        {
+          "id": 3480,
+          "idMal": 3480,
+          "status": "FINISHED",
+          "title": {
+            "userPreferred": "Nayuta",
+            "romaji": "Nayuta",
+            "english": "Nayuta",
+            "native": "那由他"
+          },
+          "bannerImage": null,
+          "popularity": 802,
+          "coverImage": {
+            "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b3480-DcXfDXlpHTqi.png",
+            "large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b3480-DcXfDXlpHTqi.png",
+            "medium": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/b3480-DcXfDXlpHTqi.png",
+            "color": "#1a5078"
+          },
+          "episodes": 1,
+          "format": "OVA",
+          "season": "SUMMER",
+          "description": "Based on the manga by Sasaki Junko, published in three volumes by Shougakukan under the Flower Comics label.<br><br>\nScifi tale of a young girl that who acquires ESP powers. ",
+          "seasonYear": 1986,
+          "chapters": null,
+          "volumes": null,
+          "averageScore": 48,
+          "genres": [
+            "Action",
+            "Sci-Fi"
+          ],
+          "nextAiringEpisode": null,
+          "startDate": {
+            "year": 1986,
+            "month": 7,
+            "day": 31
+          },
+          "endDate": {
+            "year": 1986,
+            "month": 7,
+            "day": 31
+          },
+          "tags": [
+            {
+              "id": 53,
+              "name": "Shoujo",
+              "category": "Demographic",
+              "description": "Target demographic is teenage and young adult females."
+            },
+            {
+              "id": 66,
+              "name": "Super Power",
+              "category": "Theme-Fantasy",
+              "description": "Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible."
+            },
+            {
+              "id": 98,
+              "name": "Female Protagonist",
+              "category": "Cast-Main Cast",
+              "description": "Main character is female."
+            }
+          ],
+          "duration": 80,
+          "meanScore": 49
+        },
+        {
+          "id": 6000,
+          "idMal": 6000,
+          "status": "FINISHED",
+          "title": {
+            "userPreferred": "Haruwo",
+            "romaji": "Haruwo",
+            "english": null,
+            "native": "ハルヲ"
+          },
+          "bannerImage": null,
+          "popularity": 440,
+          "coverImage": {
+            "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/6000.jpg",
+            "large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/6000.jpg",
+            "medium": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/6000.jpg",
+            "color": "#fed650"
+          },
+          "episodes": 1,
+          "format": "OVA",
+          "season": "SUMMER",
+          "description": "In a violent post-apocalyptic Japan, a reckless juvenile delinquent named Haruwo takes on the Yakuza, but their new bouncer may be more than he can handle... <br><br>\nOver a year in the making, this half-hour short was entirely the work of one person--even the music! \"Haruwo\" animator Shao Guee writes, \"I didn't make this film for money, just for fun. I hope people all over the world will have a chance to see it. If you like it, please tell your friends about it. That's all I want. My thanks to everyone who helped me make this project a reality.\"",
+          "seasonYear": 2008,
+          "chapters": null,
+          "volumes": null,
+          "averageScore": 31,
+          "genres": [
+            "Action",
+            "Sci-Fi"
+          ],
+          "nextAiringEpisode": null,
+          "startDate": {
+            "year": 2008,
+            "month": 7,
+            "day": 25
+          },
+          "endDate": {
+            "year": 2008,
+            "month": 7,
+            "day": 25
+          },
+          "tags": [
+            {
+              "id": 89,
+              "name": "Full CGI",
+              "category": "Technical",
+              "description": "Almost entirely created with computer-generated imagery."
+            },
+            {
+              "id": 93,
+              "name": "Post-Apocalyptic",
+              "category": "Setting-Universe",
+              "description": "Partly or completely set in a world or civilization after a global disaster."
+            },
+            {
+              "id": 199,
+              "name": "Yakuza",
+              "category": "Theme-Other-Organisations",
+              "description": "Centered around Japanese organised crime syndicates."
+            },
+            {
+              "id": 801,
+              "name": "Cyborg",
+              "category": "Cast-Traits",
+              "description": "Prominently features a human character whose physiological functions are aided or enhanced by artificial means."
+            },
+            {
+              "id": 173,
+              "name": "Motorcycles",
+              "category": "Theme-Other-Vehicle",
+              "description": "Prominently features the use of motorcycles."
+            },
+            {
+              "id": 157,
+              "name": "Guns",
+              "category": "Theme-Action",
+              "description": "Prominently features the use of guns in combat."
+            },
+            {
+              "id": 252,
+              "name": "Revenge",
+              "category": "Theme-Drama",
+              "description": "Prominently features a character who aims to exact punishment in a resentful or vindictive manner."
+            },
+            {
+              "id": 648,
+              "name": "Crime",
+              "category": "Theme-Other",
+              "description": "Centers around unlawful activities punishable by the state or other authority."
+            },
+            {
+              "id": 153,
+              "name": "Time Skip",
+              "category": "Setting-Time",
+              "description": "Features a gap in time used to advance the story."
+            }
+          ],
+          "duration": 30,
+          "meanScore": 28
+        },
+        {
+          "id": 97938,
+          "idMal": 34566,
+          "status": "FINISHED",
+          "title": {
+            "userPreferred": "BORUTO: NARUTO NEXT GENERATIONS",
+            "romaji": "BORUTO: NARUTO NEXT GENERATIONS",
+            "english": "Boruto: Naruto Next Generations",
+            "native": "BORUTO-ボルト- NARUTO NEXT GENERATIONS"
+          },
+          "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/97938-cT6wkSRifTEC.jpg",
+          "popularity": 168648,
+          "coverImage": {
+            "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx97938-BnF6M5yTaNB1.jpg",
+            "large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx97938-BnF6M5yTaNB1.jpg",
+            "medium": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/bx97938-BnF6M5yTaNB1.jpg",
+            "color": "#00c9ff"
+          },
+          "episodes": 293,
+          "format": "TV",
+          "season": "SPRING",
+          "description": "Naruto was a young shinobi with an incorrigible knack for mischief. He achieved his dream to become the greatest ninja in the village and his face sits atop the Hokage monument. But this is not his story... A new generation of ninja are ready to take the stage, led by Naruto's own son, Boruto!<br><br>\n\n(Source: VIZ Media)",
+          "seasonYear": 2017,
+          "chapters": null,
+          "volumes": null,
+          "averageScore": 58,
+          "genres": [
+            "Action",
+            "Adventure",
+            "Fantasy"
+          ],
+          "nextAiringEpisode": null,
+          "startDate": {
+            "year": 2017,
+            "month": 4,
+            "day": 5
+          },
+          "endDate": {
+            "year": 2023,
+            "month": 3,
+            "day": 26
+          },
+          "tags": [
+            {
+              "id": 56,
+              "name": "Shounen",
+              "category": "Demographic",
+              "description": "Target demographic is teenage and young adult males."
+            },
+            {
+              "id": 255,
+              "name": "Ninja",
+              "category": "Cast-Traits",
+              "description": "Prominently features Japanese warriors traditionally trained in espionage, sabotage and assasination."
+            },
+            {
+              "id": 66,
+              "name": "Super Power",
+              "category": "Theme-Fantasy",
+              "description": "Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible."
+            },
+            {
+              "id": 82,
+              "name": "Male Protagonist",
+              "category": "Cast-Main Cast",
+              "description": "Main character is male."
+            },
+            {
+              "id": 446,
+              "name": "Primarily Child Cast",
+              "category": "Cast-Main Cast",
+              "description": "Main cast is mostly composed of characters below a high school age."
+            },
+            {
+              "id": 43,
+              "name": "Swordplay",
+              "category": "Theme-Action",
+              "description": "Prominently features the use of swords in combat."
+            },
+            {
+              "id": 253,
+              "name": "Gods",
+              "category": "Cast-Traits",
+              "description": "Prominently features a character of divine or religious nature."
+            },
+            {
+              "id": 30,
+              "name": "Martial Arts",
+              "category": "Theme-Action",
+              "description": "Centers around the use of traditional hand-to-hand combat."
+            },
+            {
+              "id": 191,
+              "name": "Aliens",
+              "category": "Cast-Traits",
+              "description": "Prominently features extraterrestrial lifeforms."
+            },
+            {
+              "id": 1052,
+              "name": "Adoption",
+              "category": "Theme-Other",
+              "description": "Features a character who has been adopted by someone who is neither of their biological parents."
+            },
+            {
+              "id": 490,
+              "name": "Anachronism",
+              "category": "Setting-Time",
+              "description": "Prominently features elements that are out of place in the historical period the work takes place in, particularly modern elements in a historical setting."
+            },
+            {
+              "id": 96,
+              "name": "Time Manipulation",
+              "category": "Theme-Sci-Fi",
+              "description": "Prominently features time-traveling or other time-warping phenomena."
+            },
+            {
+              "id": 193,
+              "name": "Episodic",
+              "category": "Technical",
+              "description": "Features story arcs that are loosely tied or lack an overarching plot."
+            },
+            {
+              "id": 704,
+              "name": "Dinosaurs",
+              "category": "Cast-Traits",
+              "description": "Prominently features Dinosaurs, prehistoric reptiles that went extinct millions of years ago."
+            },
+            {
+              "id": 46,
+              "name": "School",
+              "category": "Setting-Scene",
+              "description": "Partly or completely set in a primary or secondary educational institution."
+            },
+            {
+              "id": 536,
+              "name": "Dissociative Identities",
+              "category": "Cast-Traits",
+              "description": "A case where one or more people share the same body."
+            }
+          ],
+          "duration": 24,
+          "meanScore": 58
+        },
+        {
+          "id": 21579,
+          "idMal": 32365,
+          "status": "FINISHED",
+          "title": {
+            "userPreferred": "BORUTO: NARUTO THE MOVIE - Naruto ga Hokage ni Natta Hi",
+            "romaji": "BORUTO: NARUTO THE MOVIE - Naruto ga Hokage ni Natta Hi",
+            "english": "Boruto: Naruto the Movie - The Day Naruto Became Hokage",
+            "native": "BORUTO -NARUTO THE MOVIE- ナルトが火影になった日"
+          },
+          "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/21579-yXgNYDhYev70.jpg",
+          "popularity": 22295,
+          "coverImage": {
+            "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/21579-AKxouF9BidMD.jpg",
+            "large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/21579-AKxouF9BidMD.jpg",
+            "medium": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/21579-AKxouF9BidMD.jpg",
+            "color": "#35aee4"
+          },
+          "episodes": 1,
+          "format": "SPECIAL",
+          "season": "SUMMER",
+          "description": "Bundled with the perfect limited edition DVD/BD Boruto: Naruto the Movie.",
+          "seasonYear": 2016,
+          "chapters": null,
+          "volumes": null,
+          "averageScore": 70,
+          "genres": [
+            "Action",
+            "Comedy"
+          ],
+          "nextAiringEpisode": null,
+          "startDate": {
+            "year": 2016,
+            "month": 7,
+            "day": 6
+          },
+          "endDate": {
+            "year": 2016,
+            "month": 7,
+            "day": 6
+          },
+          "tags": [
+            {
+              "id": 56,
+              "name": "Shounen",
+              "category": "Demographic",
+              "description": "Target demographic is teenage and young adult males."
+            },
+            {
+              "id": 66,
+              "name": "Super Power",
+              "category": "Theme-Fantasy",
+              "description": "Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible."
+            },
+            {
+              "id": 186,
+              "name": "Crossdressing",
+              "category": "Cast-Traits",
+              "description": "Prominently features a character dressing up as the opposite sex."
+            }
+          ],
+          "duration": 10,
+          "meanScore": 70
+        },
+        {
+          "id": 165523,
+          "idMal": 54687,
+          "status": "NOT_YET_RELEASED",
+          "title": {
+            "userPreferred": "BORUTO: NARUTO NEXT GENERATIONS Part 2",
+            "romaji": "BORUTO: NARUTO NEXT GENERATIONS Part 2",
+            "english": null,
+            "native": "BORUTO-ボルト- NARUTO NEXT GENERATIONS 第二部"
+          },
+          "bannerImage": null,
+          "popularity": 1653,
+          "coverImage": {
+            "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b165523-zpuZUkdTTRD3.jpg",
+            "large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b165523-zpuZUkdTTRD3.jpg",
+            "medium": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/b165523-zpuZUkdTTRD3.jpg",
+            "color": "#50aee4"
+          },
+          "episodes": null,
+          "format": "TV",
+          "season": null,
+          "description": "The second part of <i>BORUTO: NARUTO NEXT GENERATIONS</i>.",
+          "seasonYear": null,
+          "chapters": null,
+          "volumes": null,
+          "averageScore": null,
+          "genres": [
+            "Action",
+            "Adventure",
+            "Fantasy"
+          ],
+          "nextAiringEpisode": null,
+          "startDate": {
+            "year": null,
+            "month": null,
+            "day": null
+          },
+          "endDate": {
+            "year": null,
+            "month": null,
+            "day": null
+          },
+          "tags": [
+            {
+              "id": 56,
+              "name": "Shounen",
+              "category": "Demographic",
+              "description": "Target demographic is teenage and young adult males."
+            },
+            {
+              "id": 255,
+              "name": "Ninja",
+              "category": "Cast-Traits",
+              "description": "Prominently features Japanese warriors traditionally trained in espionage, sabotage and assasination."
+            },
+            {
+              "id": 82,
+              "name": "Male Protagonist",
+              "category": "Cast-Main Cast",
+              "description": "Main character is male."
+            },
+            {
+              "id": 66,
+              "name": "Super Power",
+              "category": "Theme-Fantasy",
+              "description": "Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible."
+            },
+            {
+              "id": 30,
+              "name": "Martial Arts",
+              "category": "Theme-Action",
+              "description": "Centers around the use of traditional hand-to-hand combat."
+            }
+          ],
+          "duration": null,
+          "meanScore": null
+        },
+        {
+          "id": 10075,
+          "idMal": 10075,
+          "status": "FINISHED",
+          "title": {
+            "userPreferred": "NARUTO×UT",
+            "romaji": "NARUTO×UT",
+            "english": null,
+            "native": "NARUTO×UT"
+          },
+          "bannerImage": null,
+          "popularity": 9398,
+          "coverImage": {
+            "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/10075.jpg",
+            "large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/10075.jpg",
+            "medium": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/10075.jpg",
+            "color": "#0d6bf1"
+          },
+          "episodes": 1,
+          "format": "OVA",
+          "season": "WINTER",
+          "description": "UNIQLO clothing stores throughout Japan will be offering a Naruto x UT Original DVD with all-new animation on January 1. The DVD will contain an original Naruto anime video set to an exclusive version of Mayonaka no Orchestra, the upcoming song by the Japanese rock band Aqua Timez. A limited number of the DVDs will be offered as presents to people who buy UNIQLO's Naruto graphic T-shirts online or in stores.\n<br><br>\n(Source: Anime News Network)\n<br>",
+          "seasonYear": 2011,
+          "chapters": null,
+          "volumes": null,
+          "averageScore": 69,
+          "genres": [
+            "Action",
+            "Comedy"
+          ],
+          "nextAiringEpisode": null,
+          "startDate": {
+            "year": 2011,
+            "month": 1,
+            "day": 1
+          },
+          "endDate": {
+            "year": 2011,
+            "month": 1,
+            "day": 1
+          },
+          "tags": [
+            {
+              "id": 255,
+              "name": "Ninja",
+              "category": "Cast-Traits",
+              "description": "Prominently features Japanese warriors traditionally trained in espionage, sabotage and assasination."
+            },
+            {
+              "id": 56,
+              "name": "Shounen",
+              "category": "Demographic",
+              "description": "Target demographic is teenage and young adult males."
+            },
+            {
+              "id": 66,
+              "name": "Super Power",
+              "category": "Theme-Fantasy",
+              "description": "Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible."
+            },
+            {
+              "id": 85,
+              "name": "Tragedy",
+              "category": "Theme-Drama",
+              "description": "Centers around tragic events and unhappy endings."
+            }
+          ],
+          "duration": 6,
+          "meanScore": 70
+        },
+        {
+          "id": 162561,
+          "idMal": 54688,
+          "status": "NOT_YET_RELEASED",
+          "title": {
+            "userPreferred": "NARUTO (2023)",
+            "romaji": "NARUTO (2023)",
+            "english": null,
+            "native": "NARUTO -ナルト- (2023)"
+          },
+          "bannerImage": null,
+          "popularity": 6066,
+          "coverImage": {
+            "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx162561-Uk4eZAwcmcWk.jpg",
+            "large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx162561-Uk4eZAwcmcWk.jpg",
+            "medium": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/bx162561-Uk4eZAwcmcWk.jpg",
+            "color": "#43bbe4"
+          },
+          "episodes": 4,
+          "format": "TV",
+          "season": "FALL",
+          "description": "The official website for the <i>NARUTO</i> anime franchise announced a new anime project: to air four \"brand-new\" episodes starting in September 2023 to celebrate the TV anime's 20th anniversary back in 2022. <br><br>(Source: Anime News Network, edited) <br><br>\n<i>Note: Title, format, and relations are provisional and will be updated when more info is announced.</i>",
+          "seasonYear": 2023,
+          "chapters": null,
+          "volumes": null,
+          "averageScore": null,
+          "genres": [
+            "Action",
+            "Adventure",
+            "Comedy"
+          ],
+          "nextAiringEpisode": {
+            "airingAt": 1693729800,
+            "timeUntilAiring": 1548530,
+            "episode": 1
+          },
+          "startDate": {
+            "year": 2023,
+            "month": 9,
+            "day": 3
+          },
+          "endDate": {
+            "year": 2023,
+            "month": 9,
+            "day": 24
+          },
+          "tags": [
+            {
+              "id": 255,
+              "name": "Ninja",
+              "category": "Cast-Traits",
+              "description": "Prominently features Japanese warriors traditionally trained in espionage, sabotage and assasination."
+            },
+            {
+              "id": 56,
+              "name": "Shounen",
+              "category": "Demographic",
+              "description": "Target demographic is teenage and young adult males."
+            }
+          ],
+          "duration": null,
+          "meanScore": null
+        },
+        {
+          "id": 155348,
+          "idMal": 53236,
+          "status": "FINISHED",
+          "title": {
+            "userPreferred": "ROAD OF NARUTO",
+            "romaji": "ROAD OF NARUTO",
+            "english": null,
+            "native": "ROAD OF NARUTO"
+          },
+          "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/155348-I6f4TQKslVx2.jpg",
+          "popularity": 11827,
+          "coverImage": {
+            "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx155348-4ipji8SvTjyh.jpg",
+            "large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx155348-4ipji8SvTjyh.jpg",
+            "medium": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/bx155348-4ipji8SvTjyh.jpg",
+            "color": "#f18650"
+          },
+          "episodes": 1,
+          "format": "SPECIAL",
+          "season": "FALL",
+          "description": "A special animation made to commemorate the 20th anniversary of the <i>NARUTO</i> anime.",
+          "seasonYear": 2022,
+          "chapters": null,
+          "volumes": null,
+          "averageScore": 83,
+          "genres": [
+            "Action",
+            "Adventure",
+            "Drama",
+            "Fantasy",
+            "Supernatural"
+          ],
+          "nextAiringEpisode": null,
+          "startDate": {
+            "year": 2022,
+            "month": 10,
+            "day": 3
+          },
+          "endDate": {
+            "year": 2022,
+            "month": 10,
+            "day": 3
+          },
+          "tags": [
+            {
+              "id": 255,
+              "name": "Ninja",
+              "category": "Cast-Traits",
+              "description": "Prominently features Japanese warriors traditionally trained in espionage, sabotage and assasination."
+            },
+            {
+              "id": 56,
+              "name": "Shounen",
+              "category": "Demographic",
+              "description": "Target demographic is teenage and young adult males."
+            },
+            {
+              "id": 82,
+              "name": "Male Protagonist",
+              "category": "Cast-Main Cast",
+              "description": "Main character is male."
+            },
+            {
+              "id": 30,
+              "name": "Martial Arts",
+              "category": "Theme-Action",
+              "description": "Centers around the use of traditional hand-to-hand combat."
+            },
+            {
+              "id": 66,
+              "name": "Super Power",
+              "category": "Theme-Fantasy",
+              "description": "Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible."
+            },
+            {
+              "id": 104,
+              "name": "Anti-Hero",
+              "category": "Cast-Main Cast",
+              "description": "Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain."
+            }
+          ],
+          "duration": 10,
+          "meanScore": 83
+        }
+      ]
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import { Request } from "./fetcher";
-import { Data, DataRes, Result } from "./types";
+import { Data, DataRes, ISearch, Result } from "./types";
 import { SearchQuery } from "./utils/queries";
 
 class Search {
@@ -15,21 +15,17 @@ class Search {
     title: string,
     page: number = 1,
     perPage: number = 10
-  ) => {
+  ): Promise<ISearch> => {
     const query = SearchQuery(title, page, perPage, "ANIME");
 
     const response = await this.request.makeGQLRequest(query).catch((error) => {
       return error;
     });
 
-    return response;
+    return response as ISearch;
   };
 
-  public manga = async (
-    title: string,
-    page: number = 1,
-    perPage: number = 10
-  ) => {
+  public manga = async (title: string, page: number = 1, perPage: number = 10) => {
     const query = SearchQuery(title, page, perPage, "MANGA");
 
     const response = await this.request.makeGQLRequest(query).catch((error) => {
@@ -39,11 +35,7 @@ class Search {
     return response;
   };
 
-  public staff = async (
-    term: string,
-    page: number = 1,
-    perPage: number = 10
-  ) => {
+  public staff = async (term: string, page: number = 1, perPage: number = 10) => {
     const query = `query ($page: Int, $perPage: Int, $search: String) {
       Page (page: $page, perPage: $perPage) { pageInfo { total currentPage lastPage hasNextPage perPage } 
       staff (search: $search) { id name { english: full } } } }`;
@@ -55,11 +47,7 @@ class Search {
     });
   };
 
-  public user = async (
-    term: string,
-    page: number = 1,
-    perPage: number = 10
-  ) => {
+  public user = async (term: string, page: number = 1, perPage: number = 10) => {
     const query = `query ($page: Int, $perPage: Int, $search: String) {
       Page (page: $page, perPage: $perPage) { pageInfo { total currentPage lastPage hasNextPage perPage } 
       users (search: $search) { id name } } }`;
@@ -71,11 +59,7 @@ class Search {
     });
   };
 
-  public character = async (
-    term: string,
-    page: number = 1,
-    perPage: number = 10
-  ) => {
+  public character = async (term: string, page: number = 1, perPage: number = 10) => {
     const query = `query ($page: Int, $perPage: Int, $search: String) {
       Page (page: $page, perPage: $perPage) { pageInfo { total currentPage lastPage hasNextPage perPage } 
       characters (search: $search) { id image { large medium } age gender description name { english: full } } } }`;
@@ -87,11 +71,7 @@ class Search {
     });
   };
 
-  public studio = async (
-    term: string,
-    page: number = 1,
-    perPage: number = 10
-  ) => {
+  public studio = async (term: string, page: number = 1, perPage: number = 10) => {
     const query = `query ($page: Int, $perPage: Int, $search: String) {
       Page (page: $page, perPage: $perPage) { pageInfo { total currentPage lastPage hasNextPage perPage } 
       studios (search: $search) { id name isAnimationStudio siteUrl} } }`;
