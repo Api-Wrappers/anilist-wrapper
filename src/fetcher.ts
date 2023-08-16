@@ -41,7 +41,6 @@ class Request {
         query: query,
       }),
     };
-    console.log(query);
 
     if (variables) options.body = JSON.stringify({ query, variables });
     if (this.access_token) options.headers.Authorization = `Bearer ${this.access_token}`;
