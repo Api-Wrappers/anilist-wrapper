@@ -1,6 +1,8 @@
 import { Request } from "./fetcher";
-import { Data, DataRes, ISearch, Result } from "./types";
-import { SearchQuery } from "./utils/queries";
+import { AdvancedSearchOptions, Data, DataRes, ISearchAnime, ISearchManga, Result } from "./types";
+import { AdvancedQuery, SearchQuery } from "./utils/queries";
+
+import fs from "node:fs";
 
 class Search {
   private access_token?: string;
@@ -15,24 +17,48 @@ class Search {
     title: string,
     page: number = 1,
     perPage: number = 10
-  ): Promise<ISearch> => {
+  ): Promise<ISearchAnime> => {
     const query = SearchQuery(title, page, perPage, "ANIME");
 
     const response = await this.request.makeGQLRequest(query).catch((error) => {
       return error;
     });
 
-    return response as ISearch;
+    return response as ISearchAnime;
   };
 
-  public manga = async (title: string, page: number = 1, perPage: number = 10) => {
+  public advanced_anime = async (variables: AdvancedSearchOptions): Promise<ISearchAnime> => {
+    const response = await this.request
+      .makeGQLRequest(AdvancedQuery(), { ...variables, type: "ANIME" })
+      .catch((error) => {
+        return error;
+      });
+
+    return response as ISearchAnime;
+  };
+
+  public manga = async (
+    title: string,
+    page: number = 1,
+    perPage: number = 10
+  ): Promise<ISearchManga> => {
     const query = SearchQuery(title, page, perPage, "MANGA");
 
     const response = await this.request.makeGQLRequest(query).catch((error) => {
       return error;
     });
 
-    return response;
+    return response as ISearchManga;
+  };
+
+  public advanced_manga = async (variables: AdvancedSearchOptions): Promise<ISearchManga> => {
+    const response = await this.request
+      .makeGQLRequest(AdvancedQuery(), { ...variables, type: "MANGA" })
+      .catch((error) => {
+        return error;
+      });
+
+    return response as ISearchManga;
   };
 
   public staff = async (term: string, page: number = 1, perPage: number = 10) => {

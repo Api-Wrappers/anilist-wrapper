@@ -50,6 +50,13 @@ class Lists {
               }
               bannerImage
               episodes
+              nextAiringEpisode {
+                id
+                episode
+                airingAt
+                timeUntilAiring
+                mediaId
+              }
               description
               format
               startDate {

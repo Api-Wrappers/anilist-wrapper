@@ -1,17 +1,49 @@
-export interface ISearch {
-  data: Data;
+export interface ISearchManga {
+  data: ISearchMangaData;
 }
 
-export interface Data {
-  Page: Page;
+export interface ISearchMangaData {
+  Page: ISearchMangaPage;
 }
 
-export interface Page {
+export interface ISearchMangaPage {
   pageInfo: PageInfo;
-  media: Media[];
+  media: ISearchMangaMedia[];
 }
 
-export interface Media {
+export interface ISearchMangaMedia {
+  id: number;
+  idMal: number | null;
+  status: Status;
+  title: Title;
+  bannerImage: null | string;
+  coverImage: CoverImage;
+  episodes: null;
+  season: null;
+  popularity: number;
+  description: string;
+  format: string;
+  seasonYear: null;
+  genres: string[];
+  averageScore: number;
+  countryOfOrigin: string;
+  nextAiringEpisode: null;
+}
+
+export interface ISearchAnime {
+  data: ISearchAnimeData;
+}
+
+export interface ISearchAnimeData {
+  Page: ISearchAnimePage;
+}
+
+export interface ISearchAnimePage {
+  pageInfo: PageInfo;
+  media: ISearchAnimeMedia[];
+}
+
+export interface ISearchAnimeMedia {
   id: number;
   idMal: number;
   status: Status;
@@ -80,4 +112,17 @@ export interface PageInfo {
   currentPage: number;
   lastPage: number;
   hasNextPage: boolean;
+}
+
+export interface AdvancedSearchOptions {
+  search?: string;
+  page: number;
+  size: number;
+  format?: string;
+  sort?: string[];
+  genres?: string[];
+  id?: string | number;
+  year?: number;
+  status?: string;
+  season?: string;
 }
