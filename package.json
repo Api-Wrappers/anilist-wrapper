@@ -18,6 +18,9 @@
     "node",
     "typescript"
   ],
+  "engines": {
+    "node": ">=16"
+  },
   "author": "people",
   "license": "MIT",
   "private": false,
