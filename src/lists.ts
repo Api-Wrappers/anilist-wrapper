@@ -40,6 +40,7 @@ class Lists {
                 native
                 userPreferred
               }
+              status
               type 
               seasonYear
               coverImage {
