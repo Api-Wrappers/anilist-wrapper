@@ -47,15 +47,161 @@ class Media {
   manga = async (id: number) => {
     if (!id) throw new NoIdException("Manga");
 
-    const query = `query ($id: Int) { Media (id: $id, type: MANGA) { id idMal title { romaji english native userPreferred }
-    description format status startDate { year month day } endDate { year month day } chapters volumes countryOfOrigin isLicensed updatedAt
-    coverImage { large:extraLarge medium:large small:medium color } bannerImage genres synonyms averageScore meanScore siteUrl autoCreateForumThread modNotes
-    popularity trending tags { id name isMediaSpoiler } relations { nodes { id title { english native romaji userPreferred } type } }
-    characters { nodes { id name { english: full } } } staff { nodes { id name { english: full } } } isFavourite isAdult isLocked
-    trends { nodes { date trending popularity inProgress } } externalLinks { url } rankings { rank type context year season } 
-    mediaListEntry { id status } reviews { nodes { id score summary body } } 
-    stats { scoreDistribution { score amount } statusDistribution { status amount } } favourites
-    isRecommendationBlocked recommendations { nodes { mediaRecommendation { id title { romaji english native userPreferred } type } } } } }`;
+    const query = `query ($id: Int) {
+      Media(id: $id, type: MANGA) {
+        id
+        idMal
+        title {
+          romaji
+          english
+          native
+          userPreferred
+        }
+        description
+        format
+        status
+        startDate {
+          year
+          month
+          day
+        }
+        endDate {
+          year
+          month
+          day
+        }
+        chapters
+        volumes
+        countryOfOrigin
+        isLicensed
+        updatedAt
+        coverImage {
+          large: extraLarge
+          medium: large
+          small: medium
+          color
+        }
+        bannerImage
+        genres
+        synonyms
+        averageScore
+        meanScore
+        siteUrl
+        autoCreateForumThread
+        modNotes
+        popularity
+        trending
+        tags {
+          id
+          name
+          isMediaSpoiler
+        }
+        relations {
+          nodes {
+            id
+            title {
+              english
+              native
+              romaji
+              userPreferred
+            }
+            type
+          }
+        }
+        characters {
+          nodes {
+            id
+            name {
+              english: full
+            }
+          }
+        }
+        staff {
+          nodes {
+            id
+            name {
+              english: full
+            }
+          }
+        }
+        isFavourite
+        isAdult
+        isLocked
+        trends {
+          nodes {
+            date
+            trending
+            popularity
+            inProgress
+          }
+        }
+        externalLinks {
+          url
+        }
+        rankings {
+          rank
+          type
+          context
+          year
+          season
+        }
+        mediaListEntry {
+          progress
+          status
+          score(format: POINT_10)
+          id
+          startedAt {
+            year
+            month
+            day
+          }
+          completedAt {
+            year
+            month
+            day
+          }
+          userId
+          mediaId
+          updatedAt
+          createdAt
+        }
+        reviews {
+          nodes {
+            id
+            score
+            summary
+            body
+          }
+        }
+        stats {
+          scoreDistribution {
+            score
+            amount
+          }
+          statusDistribution {
+            status
+            amount
+          }
+        }
+        favourites
+        isRecommendationBlocked
+        recommendations {
+          nodes {
+            mediaRecommendation {
+              id
+              title {
+                romaji
+                english
+                native
+                userPreferred
+              }
+              type
+            }
+          }
+        }
+      }
+    }
+    `;
 
     const request = new Request(this.access_token);
 
