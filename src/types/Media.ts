@@ -189,6 +189,8 @@ export type AniListMediaRelation = {
     title: AniListMediaTitle;
     episodes: number;
     chapters: number;
+    type: 'ANIME' | 'MANGA';
+    averageScore: number;
     format: string;
     nextAiringEpisode: AniListMediaNextAiringEpisode;
     meanScore: number;

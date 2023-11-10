@@ -56,6 +56,9 @@ class Media {
           updatedAt
           createdAt
         }
+        averageScore
+        type
+        description
         staff {
           edges {
             node {
@@ -278,6 +281,8 @@ class Media {
               }
               episodes
               chapters
+              type
+              averageScore
               format
               nextAiringEpisode {
                 airingAt
@@ -299,8 +304,7 @@ class Media {
         }
         isRecommendationBlocked
       }
-    }
-    `;
+    }`;
 
     const request = new Request(this.access_token);
 
@@ -374,15 +378,37 @@ class Media {
           isMediaSpoiler
         }
         relations {
-          nodes {
+          edges {
             id
-            title {
-              english
-              native
-              romaji
-              userPreferred
+            relationType
+            node {
+              id
+              idMal
+              status
+              coverImage {
+                extraLarge
+                large
+                medium
+                color
+              }
+              bannerImage
+              title {
+                romaji
+                english
+                native
+                userPreferred
+              }
+              chapters
+              type
+              averageScore
+              format
+              nextAiringEpisode {
+                airingAt
+                timeUntilAiring
+                episode
+              }
+              meanScore
             }
-            type
           }
         }
         characters {
@@ -463,21 +489,41 @@ class Media {
         favourites
         isRecommendationBlocked
         recommendations {
-          nodes {
-            mediaRecommendation {
+          edges {
+            node {
               id
-              title {
-                romaji
-                english
-                native
-                userPreferred
+              mediaRecommendation {
+                type
+                id
+                idMal
+                title {
+                  romaji
+                  english
+                  native
+                  userPreferred
+                }
+                status
+                coverImage {
+                  extraLarge
+                  large
+                  medium
+                  color
+                }
+                bannerImage
+                format
+                chapters
+                meanScore
+                nextAiringEpisode {
+                  episode
+                  timeUntilAiring
+                  airingAt
+                }
               }
-              type
             }
           }
         }
       }
-    }
+    }    
     `;
 
     const request = new Request(this.access_token);
