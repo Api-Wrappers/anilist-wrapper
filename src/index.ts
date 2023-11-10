@@ -1,11 +1,11 @@
-import { Activity } from "./activity";
-import { Lists } from "./lists";
-import { Media } from "./media";
-import { People } from "./people";
-import { Recommendation } from "./recommendation";
-import { Search } from "./search";
-import { Thread } from "./thread";
-import { User } from "./user";
+import { Activity } from './activity';
+import { Lists } from './lists';
+import { Media } from './media';
+import { People } from './people';
+import { Recommendation } from './recommendation';
+import { Search } from './search';
+import { Thread } from './thread';
+import { User } from './user';
 
 class Anilist {
   constructor(access_token?: string) {
@@ -29,4 +29,5 @@ class Anilist {
   user: User;
 }
 
+export * from './types';
 export { Anilist };

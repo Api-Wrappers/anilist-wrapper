@@ -1,13 +1,214 @@
+export type AniListMediaTitle = {
+  english: string;
+  native: string;
+  romaji: string;
+};
+
+export type AniListMediaRanking = {
+  rank: number;
+  type: string;
+  context: string;
+  year: number;
+  season: string;
+};
+
+export type AniListMediaListEntry = {
+  progress: number;
+  status: string;
+  score: number;
+  id: number;
+  startedAt: {
+    year: number;
+    month: number;
+    day: number;
+  };
+  completedAt: {
+    year: number;
+    month: number;
+    day: number;
+  };
+  userId: number;
+  mediaId: number;
+  updatedAt: string;
+  createdAt: string;
+};
+
+export type AniListMediaStaff = {
+  id: number;
+  name: {
+    first: string;
+    middle: string;
+    last: string;
+    full: string;
+    native: string;
+    alternative: string;
+    userPreferred: string;
+  };
+  languageV2: string;
+  image: {
+    large: string;
+    medium: string;
+  };
+  description: string;
+  primaryOccupations: string[];
+  gender: string;
+  dateOfBirth: {
+    year: number;
+    month: number;
+    day: number;
+  };
+  dateOfDeath: {
+    year: number;
+    month: number;
+    day: number;
+  };
+};
+
+export type AniListMediaStats = {
+  scoreDistribution: {
+    score: number;
+    amount: number;
+  }[];
+  statusDistribution: {
+    status: string;
+    amount: number;
+  }[];
+};
+
+export type AniListMediaReview = {
+  id: number;
+  score: number;
+  summary: string;
+  body: string;
+};
+
+export type AniListMediaTrend = {
+  mediaId: number;
+  date: string;
+  trending: number;
+  averageScore: number;
+  popularity: number;
+  media: {
+    id: number;
+    coverImage: {
+      extraLarge: string;
+      large: string;
+      medium: string;
+      color: string;
+    };
+    idMal: number;
+    title: AniListMediaTitle;
+  };
+};
+
+export type AniListMediaExternalLink = {
+  url: string;
+  site: string;
+  type: string;
+  language: string;
+};
+
+export type AniListMediaNextAiringEpisode = {
+  airingAt: number;
+  timeUntilAiring: number;
+  episode: number;
+};
+
+export type AniListMediaCharacter = {
+  role: string;
+  node: {
+    id: number;
+    name: {
+      first: string;
+      middle: string;
+      last: string;
+      full: string;
+      native: string;
+      userPreferred: string;
+    };
+    image: {
+      large: string;
+      medium: string;
+    };
+  };
+  voiceActors: {
+    id: number;
+    languageV2: string;
+    name: {
+      first: string;
+      middle: string;
+      last: string;
+      full: string;
+      native: string;
+      userPreferred: string;
+    };
+    image: {
+      large: string;
+      medium: string;
+    };
+  }[];
+};
+
+export type AniListMediaRecommendation = {
+  id: number;
+  mediaRecommendation: {
+    type: string;
+    id: number;
+    idMal: number;
+    title: AniListMediaTitle;
+    status: string;
+    episodes: number;
+    coverImage: {
+      extraLarge: string;
+      large: string;
+      medium: string;
+      color: string;
+    };
+    bannerImage: string;
+    format: string;
+    chapters: number;
+    meanScore: number;
+    nextAiringEpisode: AniListMediaNextAiringEpisode;
+  };
+};
+
+export type AniListMediaRelation = {
+  id: number;
+  relationType: string;
+  node: {
+    id: number;
+    idMal: number;
+    status: string;
+    coverImage: {
+      extraLarge: string;
+      large: string;
+      medium: string;
+      color: string;
+    };
+    bannerImage: string;
+    title: AniListMediaTitle;
+    episodes: number;
+    chapters: number;
+    format: string;
+    nextAiringEpisode: AniListMediaNextAiringEpisode;
+    meanScore: number;
+  };
+};
+
+export type AniListMediaStudio = {
+  isMain: boolean;
+  node: {
+    id: number;
+    name: string;
+  };
+};
+
 export type AniListMedia = {
   data: {
     Media: {
       id: number;
       idMal: number;
-      title: {
-        english: string;
-        native: string;
-        romaji: string;
-      };
+      title: AniListMediaTitle;
       modNotes: string;
       siteUrl: string;
       autoCreateForumThread: boolean;
@@ -16,117 +217,19 @@ export type AniListMedia = {
       isLicensed: boolean;
       isAdult: boolean;
       hashtag: string;
-      rankings: {
-        rank: number;
-        type: string;
-        context: string;
-        year: number;
-        season: string;
-      }[];
-      mediaListEntry: {
-        progress: number;
-        status: string;
-        score: number;
-        id: number;
-        startedAt: {
-          year: number;
-          month: number;
-          day: number;
-        };
-        completedAt: {
-          year: number;
-          month: number;
-          day: number;
-        };
-        userId: number;
-        mediaId: number;
-        updatedAt: string;
-        createdAt: string;
-      };
-      staff: {
-        edges: {
-          node: {
-            id: number;
-            name: {
-              first: string;
-              middle: string;
-              last: string;
-              full: string;
-              native: string;
-              alternative: string;
-              userPreferred: string;
-            };
-            languageV2: string;
-            image: {
-              large: string;
-              medium: string;
-            };
-            description: string;
-            primaryOccupations: string[];
-            gender: string;
-            dateOfBirth: {
-              year: number;
-              month: number;
-              day: number;
-            };
-            dateOfDeath: {
-              year: number;
-              month: number;
-              day: number;
-            };
-          };
-        }[];
-      };
-      stats: {
-        scoreDistribution: {
-          score: number;
-          amount: number;
-        }[];
-        statusDistribution: {
-          status: string;
-          amount: number;
-        }[];
-      };
+      rankings: AniListMediaRanking[];
+      mediaListEntry: AniListMediaListEntry;
+      staff: AniListMediaStaff;
+      stats: AniListMediaStats;
       reviews: {
-        nodes: {
-          id: number;
-          score: number;
-          summary: string;
-          body: string;
-        }[];
+        nodes: AniListMediaReview[];
       };
       trends: {
         edges: {
-          node: {
-            mediaId: number;
-            date: string;
-            trending: number;
-            averageScore: number;
-            popularity: number;
-            media: {
-              id: number;
-              coverImage: {
-                extraLarge: string;
-                large: string;
-                medium: string;
-                color: string;
-              };
-              idMal: number;
-              title: {
-                english: string;
-                native: string;
-                romaji: string;
-              };
-            };
-          };
+          node: AniListMediaTrend;
         }[];
       };
-      externalLinks: {
-        url: string;
-        site: string;
-        type: string;
-        language: string;
-      }[];
+      externalLinks: AniListMediaExternalLink[];
       coverImage: {
         extraLarge: string;
         large: string;
@@ -165,124 +268,19 @@ export type AniListMedia = {
       averageScore: number;
       popularity: number;
       meanScore: number;
-      nextAiringEpisode: {
-        airingAt: number;
-        timeUntilAiring: number;
-        episode: number;
-      };
+      nextAiringEpisode: AniListMediaNextAiringEpisode;
       characters: {
-        edges: {
-          role: string;
-          node: {
-            id: number;
-            name: {
-              first: string;
-              middle: string;
-              last: string;
-              full: string;
-              native: string;
-              userPreferred: string;
-            };
-            image: {
-              large: string;
-              medium: string;
-            };
-          };
-          voiceActors: {
-            id: number;
-            languageV2: string;
-            name: {
-              first: string;
-              middle: string;
-              last: string;
-              full: string;
-              native: string;
-              userPreferred: string;
-            };
-            image: {
-              large: string;
-              medium: string;
-            };
-          }[];
-        }[];
+        edges: AniListMediaCharacter[];
       };
       isFavourite: boolean;
       recommendations: {
-        edges: {
-          node: {
-            id: number;
-            mediaRecommendation: {
-              type: string;
-              id: number;
-              idMal: number;
-              title: {
-                romaji: string;
-                english: string;
-                native: string;
-                userPreferred: string;
-              };
-              status: string;
-              episodes: number;
-              coverImage: {
-                extraLarge: string;
-                large: string;
-                medium: string;
-                color: string;
-              };
-              bannerImage: string;
-              format: string;
-              chapters: number;
-              meanScore: number;
-              nextAiringEpisode: {
-                episode: number;
-                timeUntilAiring: number;
-                airingAt: number;
-              };
-            };
-          };
-        }[];
+        edges: AniListMediaRecommendation[];
       };
       relations: {
-        edges: {
-          id: number;
-          relationType: string;
-          node: {
-            id: number;
-            idMal: number;
-            status: string;
-            coverImage: {
-              extraLarge: string;
-              large: string;
-              medium: string;
-              color: string;
-            };
-            bannerImage: string;
-            title: {
-              romaji: string;
-              english: string;
-              native: string;
-              userPreferred: string;
-            };
-            episodes: number;
-            chapters: number;
-            format: string;
-            nextAiringEpisode: {
-              airingAt: number;
-              timeUntilAiring: number;
-              episode: number;
-            };
-            meanScore: number;
-          };
-        }[];
+        edges: AniListMediaRelation[];
       };
       studios: {
-        edges: {
-          isMain: boolean;
-          node: {
-            id: number;
-            name: string;
-          };
-        }[];
+        edges: AniListMediaStudio[];
       };
       isRecommendationBlocked: boolean;
     };
