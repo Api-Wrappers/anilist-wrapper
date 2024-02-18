@@ -1,11 +1,5 @@
 import { Request } from "./fetcher";
-import {
-  Data,
-  DataRes,
-  Result,
-  ShowMutations,
-  ShowMutationsTypes,
-} from "./types";
+import { Data, DataRes, Result, ShowMutations, ShowMutationsTypes } from "./types";
 import { NotLoggedInException } from "./utils/exceptions";
 import { UserProfileQuery } from "./utils/queries";
 
@@ -44,7 +38,7 @@ class User {
     return response?.data?.Media?.mediaListEntry?.id;
   };
 
-  updateShow = async (variables: ShowMutations) => {
+  updateMedia = async (variables: ShowMutations) => {
     const keys = Object.keys(variables) as Array<keyof ShowMutations>;
     const firstKey = keys.shift()!;
 
