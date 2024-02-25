@@ -1,4 +1,5 @@
 import { BaseQuery, RequestOptions } from '../@types';
+import { DeleteThreadResponse, GetCommentsResponse, GetThreadResponse } from '../@types/thread';
 import { generateQueryHeaders } from '../utils';
 
 export class Thread extends BaseQuery {
@@ -6,7 +7,7 @@ export class Thread extends BaseQuery {
     super(access_token, options);
   }
 
-  get = async (id: number) => {
+  get = async (id: number): Promise<GetThreadResponse> => {
     const queryVars = generateQueryHeaders('Thread', id);
 
     const query = `${queryVars[1]}
@@ -17,16 +18,16 @@ export class Thread extends BaseQuery {
     mediaCategories { id title { english native romaji userPreferred } type }
       } }`;
 
-    return await this.api.get(query, queryVars[0]);
+    return await this.api.get<GetThreadResponse>(query, queryVars[0]);
   };
 
-  delete = async (id: number) => {
+  delete = async (id: number): Promise<DeleteThreadResponse> => {
     const query = `mutation ($id: Int) { DeleteThread(id: $id) { deleted } }`;
 
-    return await this.api.get(query, { id: id });
+    return await this.api.get<DeleteThreadResponse>(query, { id: id });
   };
 
-  getComments = async (id: number, page: number = 1, perPage: number = 25) => {
+  getComments = async (id: number, page: number = 1, perPage: number = 25): Promise<GetCommentsResponse> => {
     const query = `query ($threadID: Int, $page: Int, $perPage: Int) {
       Page(page:$page, perPage:$perPage) {
       threadComments(threadId: $threadID) {
@@ -34,7 +35,7 @@ export class Thread extends BaseQuery {
       likes { id name } childComments isLocked
       } } }`;
 
-    return await this.api.get(query, {
+    return await this.api.get<GetCommentsResponse>(query, {
       threadID: id,
       page: page,
       perPage: perPage,
