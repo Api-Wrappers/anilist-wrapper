@@ -1,15 +1,13 @@
-import { BaseQuery, MediaListStatus, RequestOptions } from '../@types';
+import { AnimeListResponse, BaseQuery, MangaListResponse, MediaListStatus, RequestOptions } from '../@types';
 import { generateQueryHeaders } from '../utils';
 import { NoIdException } from '../utils/exceptions';
-
-// TODO: add return types
 
 export class Lists extends BaseQuery {
   constructor(access_token?: string, options?: RequestOptions) {
     super(access_token, options);
   }
 
-  anime = async (idOrUsername: string, status: MediaListStatus) => {
+  anime = async (idOrUsername: string, status: MediaListStatus): Promise<AnimeListResponse> => {
     if (!idOrUsername) throw new NoIdException('anime');
 
     const queryVals = generateQueryHeaders('MediaListCollection', idOrUsername, 'ANIME', status);
@@ -101,10 +99,10 @@ export class Lists extends BaseQuery {
     }
   }`;
 
-    return await this.api.get(query, queryVals[0]);
+    return await this.api.get<AnimeListResponse>(query, queryVals[0]);
   };
 
-  manga = async (idOrUsername: string, status: MediaListStatus) => {
+  manga = async (idOrUsername: string, status: MediaListStatus): Promise<MangaListResponse> => {
     if (!idOrUsername) throw new NoIdException('manga');
 
     const queryVals = generateQueryHeaders('MediaListCollection', idOrUsername, 'MANGA', status);
@@ -188,6 +186,6 @@ export class Lists extends BaseQuery {
     }
   }`;
 
-    return await this.api.get(query, queryVals[0]);
+    return await this.api.get<MangaListResponse>(query, queryVals[0]);
   };
 }
