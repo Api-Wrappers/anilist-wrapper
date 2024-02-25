@@ -91,3 +91,9 @@ export const ShowMutationsTypes = {
   startedAt: 'FuzzyDate',
   completedAt: 'FuzzyDate',
 };
+
+export interface Reply {
+  id: number;
+  text: string;
+  likeCount: number;
+}
