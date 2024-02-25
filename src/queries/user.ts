@@ -1,4 +1,5 @@
 import { BaseQuery, RequestOptions, ShowMutations, ShowMutationsTypes } from '../@types';
+import { UserProfile } from '../@types/user';
 import { UserProfileQuery } from '../utils';
 import { NotLoggedInException } from '../utils/exceptions';
 
@@ -7,13 +8,13 @@ export class User extends BaseQuery {
     super(access_token, options);
   }
 
-  getCurrentUser = async () => {
-    if (!this.access_token) return new NotLoggedInException();
+  getCurrentUser = async (): Promise<UserProfile> => {
+    if (!this.access_token) throw new NotLoggedInException();
 
-    return await this.api.get(`query{Viewer{${UserProfileQuery}}}`);
+    return await this.api.get<UserProfile>(`query{Viewer{${UserProfileQuery}}}`);
   };
 
-  getMediaIdByAnilistID = async (anilistId: number) => {
+  getMediaIdByAnilistID = async (anilistId: number): Promise<number | undefined> => {
     const query = `query($mediaId:Int){
                       Media(id:$mediaId){
                           mediaListEntry{
@@ -26,13 +27,11 @@ export class User extends BaseQuery {
       mediaId: anilistId,
     };
 
-    const response = (await this.api.get(query, variables)) as {
-      [key: string]: any;
-    };
+    const response = await this.api.get<{ data: { Media: { mediaListEntry: { id: number } } } }>(query, variables);
     return response?.data?.Media?.mediaListEntry?.id;
   };
 
-  updateMedia = async (variables: ShowMutations) => {
+  updateMedia = async (variables: ShowMutations): Promise<{ SaveMediaListEntry: ShowMutations }> => {
     const keys = Object.keys(variables) as Array<keyof ShowMutations>;
     const firstKey = keys.shift()!;
 
@@ -71,10 +70,10 @@ export class User extends BaseQuery {
                         }
                     }`;
 
-    return await this.api.get(query, variables);
+    return await this.api.get<{ SaveMediaListEntry: ShowMutations }>(query, variables);
   };
 
-  deleteShow = async (anilistId: number) => {
+  deleteShow = async (anilistId: number): Promise<{ DeleteMediaListEntry: { deleted: boolean } }> => {
     const mediaListId = await this.getMediaIdByAnilistID(anilistId);
     if (mediaListId) {
       const query = `mutation ($id: Int) {
@@ -87,7 +86,7 @@ export class User extends BaseQuery {
         id: mediaListId,
       };
 
-      return await this.api.get(query, variables);
+      return await this.api.get<{ DeleteMediaListEntry: { deleted: boolean } }>(query, variables);
     } else {
       throw Error('Unexpected media list Id');
     }

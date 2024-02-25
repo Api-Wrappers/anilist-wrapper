@@ -12,7 +12,7 @@ export class API {
     this.options = options;
   }
 
-  async get<T>(query: string, variables?: Record<string, any>): Promise<T> {
+  async get<T = unknown>(query: string, variables?: Record<string, any>): Promise<T> {
     if (!query) throw new Error('No query provided');
 
     if (query.startsWith('mutation') && this.access_token === null) throw new NotLoggedInException();
