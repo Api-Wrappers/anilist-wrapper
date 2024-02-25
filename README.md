@@ -34,13 +34,13 @@ pnpm i @tdanks2000/anilist-wrapper
 To use the AniList TypeScript Wrapper in your TypeScript project, import the necessary classes and functions:
 
 ```typescript
-import { AniList } from '@tdanks2000/anilist-wrapper';
+import { Anilist } from '@tdanks2000/anilist-wrapper';
 ```
 
 Then, create an instance of the AniList class, optionally providing an access token:
 
 ```typescript
-const anilist = new AniList('YOUR_ACCESS_TOKEN');
+const anilist = new Anilist('YOUR_ACCESS_TOKEN');
 ```
 
 You can now use the anilist object to access various functionalities of the AniList API. See the next section for details on available functionality.
