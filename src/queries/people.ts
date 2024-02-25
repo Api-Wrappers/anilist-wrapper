@@ -1,4 +1,12 @@
 import { BaseQuery, RequestOptions } from '../@types';
+import {
+  CharactersBirthdayTodayResponse,
+  FavoriteStaffResponse,
+  PeopleCharacterQuery,
+  PeopleFavoriteCharacterMutationResponse,
+  PeopleStaffResponse,
+  StaffBirthdayTodayResponse,
+} from '../@types/people';
 import { generateQueryHeaders } from '../utils';
 import { NoIdException } from '../utils/exceptions';
 
@@ -7,7 +15,7 @@ export class People extends BaseQuery {
     super(access_token, options);
   }
 
-  character = async (id: number) => {
+  character = async (id: number): Promise<PeopleCharacterQuery> => {
     if (!id) throw new NoIdException('Character');
 
     const queryVars = generateQueryHeaders('Character', id);
@@ -19,10 +27,10 @@ export class People extends BaseQuery {
     isFavourite favourites isFavouriteBlocked 
         media { nodes { id title { romaji english native userPreferred } type } } } }`;
 
-    return await this.api.get(query, queryVars[0]);
+    return await this.api.get<PeopleCharacterQuery>(query, queryVars[0]);
   };
 
-  favouriteCharacter = async (id: number) => {
+  favouriteCharacter = async (id: number): Promise<PeopleFavoriteCharacterMutationResponse> => {
     if (!id) throw new NoIdException('Character');
 
     const query = `mutation ($charID: Int) {
@@ -31,19 +39,19 @@ export class People extends BaseQuery {
         nodes { id }
     } } }`;
 
-    return await this.api.get(query, { charID: id });
+    return await this.api.get<PeopleFavoriteCharacterMutationResponse>(query, { charID: id });
   };
 
-  charactersBirthdayToday = async (page: number = 1) => {
+  charactersBirthdayToday = async (page: number = 1): Promise<CharactersBirthdayTodayResponse> => {
     const query = `query ($page: Int) { Page (page: $page) {
       characters (isBirthday: true) {
         id name { english: full }
     } } }`;
 
-    return await this.api.get(query, { page: page });
+    return await this.api.get<CharactersBirthdayTodayResponse>(query, { page: page });
   };
 
-  staff = async (idOrStaffName: string | number) => {
+  staff = async (idOrStaffName: string | number): Promise<PeopleStaffResponse> => {
     if (!idOrStaffName) throw new NoIdException('Staff');
 
     const queryVars = generateQueryHeaders('Staff', idOrStaffName);
@@ -57,10 +65,10 @@ age yearsActive homeTown bloodType isFavourite isFavouriteBlocked favourites
     characters { nodes { id name { english: full } } }
 characterMedia { nodes { id title { romaji english native userPreferred } type } } } }`;
 
-    return await this.api.get(query, queryVars[0]);
+    return await this.api.get<PeopleStaffResponse>(query, queryVars[0]);
   };
 
-  favouriteStaff = async (id: number) => {
+  favouriteStaff = async (id: number): Promise<FavoriteStaffResponse> => {
     if (!id) throw new NoIdException('Staff');
 
     const query = `mutation ($staffID: Int) {
@@ -69,15 +77,15 @@ characterMedia { nodes { id title { romaji english native userPreferred } type }
         nodes { id } 
     } } }`;
 
-    return await this.api.get(query, { staffID: id });
+    return await this.api.get<FavoriteStaffResponse>(query, { staffID: id });
   };
 
-  staffBirthdayToday = async (page: number = 1) => {
+  staffBirthdayToday = async (page: number = 1): Promise<StaffBirthdayTodayResponse> => {
     const query = `query ($page: Int) { Page (page: $page) {
       staff (isBirthday: true) {
         id name { english: full }
     } } }`;
 
-    return await this.api.get(query, { page: page });
+    return await this.api.get<StaffBirthdayTodayResponse>(query, { page: page });
   };
 }
