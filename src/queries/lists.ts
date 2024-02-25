@@ -1,24 +1,16 @@
-import { Request } from "./fetcher";
-import { MediaListStatus } from "./types";
-import { utils } from "./utils";
-import { NoIdException } from "./utils/exceptions";
+import { AnimeListResponse, BaseQuery, MangaListResponse, MediaListStatus, RequestOptions } from '../@types';
+import { generateQueryHeaders } from '../utils';
+import { NoIdException } from '../utils/exceptions';
 
-class Lists {
-  private access_token?: string;
-
-  constructor(access_token?: string) {
-    this.access_token = access_token;
+export class Lists extends BaseQuery {
+  constructor(access_token?: string, options?: RequestOptions) {
+    super(access_token, options);
   }
 
-  anime = async (idOrUsername: string, status: MediaListStatus) => {
-    if (!idOrUsername) throw new NoIdException("anime");
+  anime = async (idOrUsername: string, status: MediaListStatus): Promise<AnimeListResponse> => {
+    if (!idOrUsername) throw new NoIdException('anime');
 
-    const queryVals = utils.generateQueryHeaders(
-      "MediaListCollection",
-      idOrUsername,
-      "ANIME",
-      status
-    );
+    const queryVals = generateQueryHeaders('MediaListCollection', idOrUsername, 'ANIME', status);
 
     const query =
       queryVals[1] +
@@ -107,20 +99,13 @@ class Lists {
     }
   }`;
 
-    const reqest = new Request();
-
-    return await reqest.makeGQLRequest(query, queryVals[0]);
+    return await this.api.get<AnimeListResponse>(query, queryVals[0]);
   };
 
-  manga = async (idOrUsername: string, status: MediaListStatus) => {
-    if (!idOrUsername) throw new NoIdException("manga");
+  manga = async (idOrUsername: string, status: MediaListStatus): Promise<MangaListResponse> => {
+    if (!idOrUsername) throw new NoIdException('manga');
 
-    const queryVals = utils.generateQueryHeaders(
-      "MediaListCollection",
-      idOrUsername,
-      "MANGA",
-      status
-    );
+    const queryVals = generateQueryHeaders('MediaListCollection', idOrUsername, 'MANGA', status);
 
     const query =
       queryVals[1] +
@@ -201,10 +186,6 @@ class Lists {
     }
   }`;
 
-    const reqest = new Request();
-
-    return await reqest.makeGQLRequest(query, queryVals[0]);
+    return await this.api.get<MangaListResponse>(query, queryVals[0]);
   };
 }
-
-export { Lists };

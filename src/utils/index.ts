@@ -1,3 +1,3 @@
-import * as utils from "./utils";
-
-export { utils };
+export * from './api';
+export * from './queries';
+export * from './utils';

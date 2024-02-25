@@ -1,15 +1,19 @@
-import { Request } from './fetcher';
-import { AniListMedia } from './types/Media';
-import { NoIdException } from './utils/exceptions';
+import {
+  AnimeMediaReturn,
+  BaseQuery,
+  FavoriteAnimeResponse,
+  FavoriteMangaMutationResponse,
+  MangaMediaReturn,
+  RequestOptions,
+} from '../@types';
+import { NoIdException } from '../utils/exceptions';
 
-class Media {
-  private access_token?: string;
-
-  constructor(access_token?: string) {
-    this.access_token = access_token;
+export class Media extends BaseQuery {
+  constructor(access_token?: string, options?: RequestOptions) {
+    super(access_token, options);
   }
 
-  anime = async (id: number) => {
+  anime = async (id: number): Promise<AnimeMediaReturn> => {
     if (!id) throw new NoIdException('anime');
 
     const query = `query ($id: Int) {
@@ -306,12 +310,10 @@ class Media {
       }
     }`;
 
-    const request = new Request(this.access_token);
-
-    return (await request.makeGQLRequest(query, { id })) as AniListMedia;
+    return await this.api.get<AnimeMediaReturn>(query, { id });
   };
 
-  favouriteAnime = async (id: number) => {
+  favouriteAnime = async (id: number): Promise<FavoriteAnimeResponse> => {
     if (!id) throw new NoIdException('anime');
 
     const query = `mutation ($mediaID: Int) {
@@ -320,12 +322,10 @@ class Media {
         nodes { id }
     } } }`;
 
-    const request = new Request(this.access_token);
-
-    return await request.makeGQLRequest(query, { mediaID: id });
+    return await this.api.get<FavoriteAnimeResponse>(query, { mediaID: id });
   };
 
-  manga = async (id: number) => {
+  manga = async (id: number): Promise<MangaMediaReturn> => {
     if (!id) throw new NoIdException('Manga');
 
     const query = `query ($id: Int) {
@@ -526,12 +526,10 @@ class Media {
     }    
     `;
 
-    const request = new Request(this.access_token);
-
-    return await request.makeGQLRequest(query, { id });
+    return await this.api.get<MangaMediaReturn>(query, { id });
   };
 
-  favouriteManga = async (id: number) => {
+  favouriteManga = async (id: number): Promise<FavoriteMangaMutationResponse> => {
     if (!id) throw new NoIdException('anime');
 
     const query = `mutation ($mediaID: Int) {
@@ -540,10 +538,6 @@ class Media {
         nodes { id }
     } } }`;
 
-    const request = new Request(this.access_token);
-
-    return await request.makeGQLRequest(query, { mediaID: id });
+    return await this.api.get<FavoriteMangaMutationResponse>(query, { mediaID: id });
   };
 }
-
-export { Media };

@@ -1,24 +1,20 @@
-import { Request } from "./fetcher";
-import { Data, DataRes, Result, ShowMutations, ShowMutationsTypes } from "./types";
-import { NotLoggedInException } from "./utils/exceptions";
-import { UserProfileQuery } from "./utils/queries";
+import { BaseQuery, RequestOptions, ShowMutations, ShowMutationsTypes } from '../@types';
+import { UserProfile } from '../@types/user';
+import { UserProfileQuery } from '../utils';
+import { NotLoggedInException } from '../utils/exceptions';
 
-class User {
-  private access_token?: string;
-
-  constructor(access_token?: string) {
-    this.access_token = access_token;
+export class User extends BaseQuery {
+  constructor(access_token?: string, options?: RequestOptions) {
+    super(access_token, options);
   }
 
-  getCurrentUser = async () => {
-    if (!this.access_token) return new NotLoggedInException();
+  getCurrentUser = async (): Promise<UserProfile> => {
+    if (!this.access_token) throw new NotLoggedInException();
 
-    const request = new Request(this.access_token);
-
-    return await request.makeGQLRequest(`query{Viewer{${UserProfileQuery}}}`);
+    return await this.api.get<UserProfile>(`query{Viewer{${UserProfileQuery}}}`);
   };
 
-  getMediaIdByAnilistID = async (anilistId: number) => {
+  getMediaIdByAnilistID = async (anilistId: number): Promise<number | undefined> => {
     const query = `query($mediaId:Int){
                       Media(id:$mediaId){
                           mediaListEntry{
@@ -31,14 +27,11 @@ class User {
       mediaId: anilistId,
     };
 
-    const request = new Request(this.access_token);
-    const response = (await request.makeGQLRequest(query, variables)) as {
-      [key: string]: any;
-    };
+    const response = await this.api.get<{ data: { Media: { mediaListEntry: { id: number } } } }>(query, variables);
     return response?.data?.Media?.mediaListEntry?.id;
   };
 
-  updateMedia = async (variables: ShowMutations) => {
+  updateMedia = async (variables: ShowMutations): Promise<{ SaveMediaListEntry: ShowMutations }> => {
     const keys = Object.keys(variables) as Array<keyof ShowMutations>;
     const firstKey = keys.shift()!;
 
@@ -77,30 +70,25 @@ class User {
                         }
                     }`;
 
-    const request = new Request(this.access_token);
-
-    return await request.makeGQLRequest(query, variables);
+    return await this.api.get<{ SaveMediaListEntry: ShowMutations }>(query, variables);
   };
 
-  deleteShow = async (anilistId: number) => {
+  deleteShow = async (anilistId: number): Promise<{ DeleteMediaListEntry: { deleted: boolean } }> => {
     const mediaListId = await this.getMediaIdByAnilistID(anilistId);
     if (mediaListId) {
       const query = `mutation ($id: Int) {
                   DeleteMediaListEntry (id: $id) {
                       deleted
                   }
-             }`;
+            }`;
 
       const variables = {
         id: mediaListId,
       };
 
-      const request = new Request(this.access_token);
-      return await request.makeGQLRequest(query, variables);
+      return await this.api.get<{ DeleteMediaListEntry: { deleted: boolean } }>(query, variables);
     } else {
-      throw Error("Unexpected media list Id");
+      throw Error('Unexpected media list Id');
     }
   };
 }
-
-export { User };
