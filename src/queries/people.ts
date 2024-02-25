@@ -1,18 +1,16 @@
-import { Request } from "./fetcher";
-import { utils } from "./utils";
-import { NoIdException } from "./utils/exceptions";
+import { BaseQuery, RequestOptions } from '../@types';
+import { generateQueryHeaders } from '../utils';
+import { NoIdException } from '../utils/exceptions';
 
-class People {
-  private access_token?: string;
-
-  constructor(access_token?: string) {
-    this.access_token = access_token;
+export class People extends BaseQuery {
+  constructor(access_token?: string, options?: RequestOptions) {
+    super(access_token, options);
   }
 
   character = async (id: number) => {
-    if (!id) throw new NoIdException("Character");
+    if (!id) throw new NoIdException('Character');
 
-    const queryVars = utils.generateQueryHeaders("Character", id);
+    const queryVars = generateQueryHeaders('Character', id);
 
     const query =
       queryVars[1] +
@@ -21,13 +19,11 @@ class People {
     isFavourite favourites isFavouriteBlocked 
         media { nodes { id title { romaji english native userPreferred } type } } } }`;
 
-    const request = new Request();
-
-    return await request.makeGQLRequest(query, queryVars[0]);
+    return await this.api.get(query, queryVars[0]);
   };
 
   favouriteCharacter = async (id: number) => {
-    if (!id) throw new NoIdException("Character");
+    if (!id) throw new NoIdException('Character');
 
     const query = `mutation ($charID: Int) {
       ToggleFavourite(characterId: $charID) {
@@ -35,9 +31,7 @@ class People {
         nodes { id }
     } } }`;
 
-    const request = new Request(this.access_token);
-
-    return await request.makeGQLRequest(query, { charID: id });
+    return await this.api.get(query, { charID: id });
   };
 
   charactersBirthdayToday = async (page: number = 1) => {
@@ -46,15 +40,13 @@ class People {
         id name { english: full }
     } } }`;
 
-    const request = new Request();
-
-    return await request.makeGQLRequest(query, { page: page });
+    return await this.api.get(query, { page: page });
   };
 
   staff = async (idOrStaffName: string | number) => {
-    if (!idOrStaffName) throw new NoIdException("Staff");
+    if (!idOrStaffName) throw new NoIdException('Staff');
 
-    const queryVars = utils.generateQueryHeaders("Staff", idOrStaffName);
+    const queryVars = generateQueryHeaders('Staff', idOrStaffName);
 
     const query =
       queryVars[1] +
@@ -65,13 +57,11 @@ age yearsActive homeTown bloodType isFavourite isFavouriteBlocked favourites
     characters { nodes { id name { english: full } } }
 characterMedia { nodes { id title { romaji english native userPreferred } type } } } }`;
 
-    const request = new Request();
-
-    return await request.makeGQLRequest(query, queryVars[0]);
+    return await this.api.get(query, queryVars[0]);
   };
 
   favouriteStaff = async (id: number) => {
-    if (!id) throw new NoIdException("Staff");
+    if (!id) throw new NoIdException('Staff');
 
     const query = `mutation ($staffID: Int) {
       ToggleFavourite(staffId: $staffID) {
@@ -79,9 +69,7 @@ characterMedia { nodes { id title { romaji english native userPreferred } type }
         nodes { id } 
     } } }`;
 
-    const request = new Request(this.access_token);
-
-    return await request.makeGQLRequest(query, { staffID: id });
+    return await this.api.get(query, { staffID: id });
   };
 
   staffBirthdayToday = async (page: number = 1) => {
@@ -90,10 +78,6 @@ characterMedia { nodes { id title { romaji english native userPreferred } type }
         id name { english: full }
     } } }`;
 
-    const request = new Request();
-
-    return await request.makeGQLRequest(query, { page: page });
+    return await this.api.get(query, { page: page });
   };
 }
-
-export { People };

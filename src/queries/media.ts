@@ -1,12 +1,11 @@
-import { Request } from './fetcher';
-import { AniListMedia } from './types/Media';
-import { NoIdException } from './utils/exceptions';
+import { BaseQuery, MediaReturn, RequestOptions } from '../@types';
+import { NoIdException } from '../utils/exceptions';
 
-class Media {
-  private access_token?: string;
+// TODO: Add the other media types
 
-  constructor(access_token?: string) {
-    this.access_token = access_token;
+class Media extends BaseQuery {
+  constructor(access_token?: string, options?: RequestOptions) {
+    super(access_token, options);
   }
 
   anime = async (id: number) => {
@@ -306,9 +305,7 @@ class Media {
       }
     }`;
 
-    const request = new Request(this.access_token);
-
-    return (await request.makeGQLRequest(query, { id })) as AniListMedia;
+    return await this.api.get<MediaReturn>(query, { id });
   };
 
   favouriteAnime = async (id: number) => {
@@ -320,9 +317,7 @@ class Media {
         nodes { id }
     } } }`;
 
-    const request = new Request(this.access_token);
-
-    return await request.makeGQLRequest(query, { mediaID: id });
+    return await this.api.get(query, { mediaID: id });
   };
 
   manga = async (id: number) => {
@@ -526,9 +521,7 @@ class Media {
     }    
     `;
 
-    const request = new Request(this.access_token);
-
-    return await request.makeGQLRequest(query, { id });
+    return await this.api.get(query, { id });
   };
 
   favouriteManga = async (id: number) => {
@@ -540,9 +533,7 @@ class Media {
         nodes { id }
     } } }`;
 
-    const request = new Request(this.access_token);
-
-    return await request.makeGQLRequest(query, { mediaID: id });
+    return await this.api.get(query, { mediaID: id });
   };
 }
 

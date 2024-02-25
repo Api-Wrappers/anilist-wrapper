@@ -1,11 +1,8 @@
-import { Request } from "./fetcher";
-import { NoIdException } from "./utils/exceptions";
+import { BaseQuery, RequestOptions } from '../@types';
 
-class Recommendation {
-  private access_token?: string;
-
-  constructor(access_token?: string) {
-    this.access_token = access_token;
+export class Recommendation extends BaseQuery {
+  constructor(access_token?: string, options?: RequestOptions) {
+    super(access_token, options);
   }
 
   getList = async (mediaID: number, page: number = 1, perPage: number = 25) => {
@@ -15,9 +12,7 @@ class Recommendation {
     rating userRating user { id name } id
     mediaRecommendation { id title { romaji english native userPreferred } type } } } }`;
 
-    const request = new Request();
-
-    return await request.makeGQLRequest(query, {
+    return await this.api.get(query, {
       id: mediaID,
       page: page,
       perPage: perPage,
@@ -31,12 +26,8 @@ class Recommendation {
       mediaRecommendation { id title { romaji english native userPreferred } type }
       user { id name } } }}`;
 
-    const request = new Request();
-
-    return await request.makeGQLRequest(query, {
+    return await this.api.get(query, {
       id: recommendID,
     });
   };
 }
-
-export { Recommendation };

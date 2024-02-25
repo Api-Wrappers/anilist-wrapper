@@ -1,24 +1,18 @@
-import { Request } from "./fetcher";
-import { MediaListStatus } from "./types";
-import { utils } from "./utils";
-import { NoIdException } from "./utils/exceptions";
+import { BaseQuery, MediaListStatus, RequestOptions } from '../@types';
+import { generateQueryHeaders } from '../utils';
+import { NoIdException } from '../utils/exceptions';
 
-class Lists {
-  private access_token?: string;
+// TODO: add return types
 
-  constructor(access_token?: string) {
-    this.access_token = access_token;
+export class Lists extends BaseQuery {
+  constructor(access_token?: string, options?: RequestOptions) {
+    super(access_token, options);
   }
 
   anime = async (idOrUsername: string, status: MediaListStatus) => {
-    if (!idOrUsername) throw new NoIdException("anime");
+    if (!idOrUsername) throw new NoIdException('anime');
 
-    const queryVals = utils.generateQueryHeaders(
-      "MediaListCollection",
-      idOrUsername,
-      "ANIME",
-      status
-    );
+    const queryVals = generateQueryHeaders('MediaListCollection', idOrUsername, 'ANIME', status);
 
     const query =
       queryVals[1] +
@@ -107,20 +101,13 @@ class Lists {
     }
   }`;
 
-    const reqest = new Request();
-
-    return await reqest.makeGQLRequest(query, queryVals[0]);
+    return await this.api.get(query, queryVals[0]);
   };
 
   manga = async (idOrUsername: string, status: MediaListStatus) => {
-    if (!idOrUsername) throw new NoIdException("manga");
+    if (!idOrUsername) throw new NoIdException('manga');
 
-    const queryVals = utils.generateQueryHeaders(
-      "MediaListCollection",
-      idOrUsername,
-      "MANGA",
-      status
-    );
+    const queryVals = generateQueryHeaders('MediaListCollection', idOrUsername, 'MANGA', status);
 
     const query =
       queryVals[1] +
@@ -201,10 +188,6 @@ class Lists {
     }
   }`;
 
-    const reqest = new Request();
-
-    return await reqest.makeGQLRequest(query, queryVals[0]);
+    return await this.api.get(query, queryVals[0]);
   };
 }
-
-export { Lists };

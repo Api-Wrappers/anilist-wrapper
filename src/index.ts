@@ -1,22 +1,16 @@
-import { Activity } from './activity';
-import { Lists } from './lists';
-import { Media } from './media';
-import { People } from './people';
-import { Recommendation } from './recommendation';
-import { Search } from './search';
-import { Thread } from './thread';
-import { User } from './user';
+import { RequestOptions } from './@types';
+import { Activity, Lists, Media, People, Recommendation, Search, Thread, User } from './queries';
 
 class Anilist {
-  constructor(access_token?: string) {
-    this.activty = new Activity(access_token);
-    this.lists = new Lists(access_token);
-    this.media = new Media(access_token);
-    this.people = new People(access_token);
-    this.recommendation = new Recommendation(access_token);
-    this.search = new Search(access_token);
-    this.thread = new Thread(access_token);
-    this.user = new User(access_token);
+  constructor(access_token?: string, options?: RequestOptions) {
+    this.activty = new Activity(access_token, options);
+    this.lists = new Lists(access_token, options);
+    this.media = new Media(access_token, options);
+    this.people = new People(access_token, options);
+    this.recommendation = new Recommendation(access_token, options);
+    this.search = new Search(access_token, options);
+    this.thread = new Thread(access_token, options);
+    this.user = new User(access_token, options);
   }
 
   activty: Activity;
@@ -29,5 +23,5 @@ class Anilist {
   user: User;
 }
 
-export * from './types';
+export * from './@types';
 export { Anilist };

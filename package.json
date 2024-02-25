@@ -1,6 +1,6 @@
 {
   "name": "@tdanks2000/anilist-wrapper",
-  "version": "1.0.33",
+  "version": "1.1.0",
   "description": "A wrapper for the Anilist graphQL api",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -30,11 +30,12 @@
     "preversion": "tsc"
   },
   "devDependencies": {
-    "@types/node": "^20.3.2",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.1.5"
+    "@types/node": "^20.11.20",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   },
   "dependencies": {
-    "abort-controller": "^3.0.0"
+    "abort-controller": "^3.0.0",
+    "tslib": "^2.6.2"
   }
 }

@@ -1,21 +1,16 @@
-import { Request } from "./fetcher";
-import { Data, DataRes, Result, ShowMutations, ShowMutationsTypes } from "./types";
-import { NotLoggedInException } from "./utils/exceptions";
-import { UserProfileQuery } from "./utils/queries";
+import { BaseQuery, RequestOptions, ShowMutations, ShowMutationsTypes } from '../@types';
+import { UserProfileQuery } from '../utils';
+import { NotLoggedInException } from '../utils/exceptions';
 
-class User {
-  private access_token?: string;
-
-  constructor(access_token?: string) {
-    this.access_token = access_token;
+export class User extends BaseQuery {
+  constructor(access_token?: string, options?: RequestOptions) {
+    super(access_token, options);
   }
 
   getCurrentUser = async () => {
     if (!this.access_token) return new NotLoggedInException();
 
-    const request = new Request(this.access_token);
-
-    return await request.makeGQLRequest(`query{Viewer{${UserProfileQuery}}}`);
+    return await this.api.get(`query{Viewer{${UserProfileQuery}}}`);
   };
 
   getMediaIdByAnilistID = async (anilistId: number) => {
@@ -31,8 +26,7 @@ class User {
       mediaId: anilistId,
     };
 
-    const request = new Request(this.access_token);
-    const response = (await request.makeGQLRequest(query, variables)) as {
+    const response = (await this.api.get(query, variables)) as {
       [key: string]: any;
     };
     return response?.data?.Media?.mediaListEntry?.id;
@@ -77,9 +71,7 @@ class User {
                         }
                     }`;
 
-    const request = new Request(this.access_token);
-
-    return await request.makeGQLRequest(query, variables);
+    return await this.api.get(query, variables);
   };
 
   deleteShow = async (anilistId: number) => {
@@ -89,18 +81,15 @@ class User {
                   DeleteMediaListEntry (id: $id) {
                       deleted
                   }
-             }`;
+            }`;
 
       const variables = {
         id: mediaListId,
       };
 
-      const request = new Request(this.access_token);
-      return await request.makeGQLRequest(query, variables);
+      return await this.api.get(query, variables);
     } else {
-      throw Error("Unexpected media list Id");
+      throw Error('Unexpected media list Id');
     }
   };
 }
-
-export { User };
