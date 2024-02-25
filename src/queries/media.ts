@@ -1,14 +1,19 @@
-import { BaseQuery, MediaReturn, RequestOptions } from '../@types';
+import {
+  AnimeMediaReturn,
+  BaseQuery,
+  FavoriteAnimeResponse,
+  FavoriteMangaMutationResponse,
+  MangaMediaReturn,
+  RequestOptions,
+} from '../@types';
 import { NoIdException } from '../utils/exceptions';
 
-// TODO: Add the other media types
-
-class Media extends BaseQuery {
+export class Media extends BaseQuery {
   constructor(access_token?: string, options?: RequestOptions) {
     super(access_token, options);
   }
 
-  anime = async (id: number) => {
+  anime = async (id: number): Promise<AnimeMediaReturn> => {
     if (!id) throw new NoIdException('anime');
 
     const query = `query ($id: Int) {
@@ -305,10 +310,10 @@ class Media extends BaseQuery {
       }
     }`;
 
-    return await this.api.get<MediaReturn>(query, { id });
+    return await this.api.get<AnimeMediaReturn>(query, { id });
   };
 
-  favouriteAnime = async (id: number) => {
+  favouriteAnime = async (id: number): Promise<FavoriteAnimeResponse> => {
     if (!id) throw new NoIdException('anime');
 
     const query = `mutation ($mediaID: Int) {
@@ -317,10 +322,10 @@ class Media extends BaseQuery {
         nodes { id }
     } } }`;
 
-    return await this.api.get(query, { mediaID: id });
+    return await this.api.get<FavoriteAnimeResponse>(query, { mediaID: id });
   };
 
-  manga = async (id: number) => {
+  manga = async (id: number): Promise<MangaMediaReturn> => {
     if (!id) throw new NoIdException('Manga');
 
     const query = `query ($id: Int) {
@@ -521,10 +526,10 @@ class Media extends BaseQuery {
     }    
     `;
 
-    return await this.api.get(query, { id });
+    return await this.api.get<MangaMediaReturn>(query, { id });
   };
 
-  favouriteManga = async (id: number) => {
+  favouriteManga = async (id: number): Promise<FavoriteMangaMutationResponse> => {
     if (!id) throw new NoIdException('anime');
 
     const query = `mutation ($mediaID: Int) {
@@ -533,8 +538,6 @@ class Media extends BaseQuery {
         nodes { id }
     } } }`;
 
-    return await this.api.get(query, { mediaID: id });
+    return await this.api.get<FavoriteMangaMutationResponse>(query, { mediaID: id });
   };
 }
-
-export { Media };

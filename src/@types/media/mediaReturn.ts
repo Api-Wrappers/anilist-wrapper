@@ -1,5 +1,5 @@
 import { CharacterName, FuzzyDate, Name, Trailer } from '../types';
-import { CoverImage, MediaType } from './media';
+import { CoverImage, MediaTag, MediaType } from './media';
 
 export type MediaStudioEdge = {
   isMain: boolean;
@@ -155,7 +155,7 @@ export type MediaCharacter = {
   }[];
 };
 
-export type MediaReturn = {
+export interface AnimeMediaReturn {
   data: {
     Media: {
       id: number;
@@ -221,4 +221,81 @@ export type MediaReturn = {
       isRecommendationBlocked: boolean;
     };
   };
-};
+}
+
+export interface FavoriteAnimeResponse {
+  ToggleFavourite: {
+    anime: {
+      nodes: {
+        id: number;
+      }[];
+    };
+  };
+}
+
+export interface MangaMediaReturn {
+  Media: {
+    id: number;
+    idMal: number;
+    title: MediaTitle;
+    description: string;
+    format: string;
+    status: string;
+    startDate: FuzzyDate;
+    endDate: FuzzyDate;
+    chapters: number;
+    volumes: number;
+    countryOfOrigin: string;
+    isLicensed: boolean;
+    updatedAt: string;
+    coverImage: CoverImage;
+    bannerImage: string;
+    genres: string[];
+    synonyms: string[];
+    averageScore: number;
+    meanScore: number;
+    siteUrl: string;
+    autoCreateForumThread: boolean;
+    modNotes: string;
+    popularity: number;
+    trending: number;
+    tags: MediaTag[];
+    relations: {
+      edges: MediaRelation[];
+    };
+    characters: {
+      nodes: MediaCharacter[];
+    };
+    staff: {
+      nodes: MediaStaff[];
+    };
+    isFavourite: boolean;
+    isAdult: boolean;
+    isLocked: boolean;
+    trends: {
+      nodes: MediaTrend[];
+    };
+    externalLinks: MediaExternalLink[];
+    rankings: MediaRanking[];
+    mediaListEntry: MediaListEntry;
+    reviews: {
+      nodes: MediaReview[];
+    };
+    stats: MediaStats;
+    favourites: number;
+    isRecommendationBlocked: boolean;
+    recommendations: {
+      edges: MediaRecommendation[];
+    };
+  };
+}
+
+export interface FavoriteMangaMutationResponse {
+  ToggleFavourite: {
+    manga: {
+      nodes: {
+        id: number;
+      }[];
+    };
+  };
+}
