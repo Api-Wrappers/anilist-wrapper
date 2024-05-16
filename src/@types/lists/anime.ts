@@ -60,7 +60,3 @@ interface MediaListCollection {
 export interface AnimeListResponse {
   MediaListCollection: MediaListCollection;
 }
-
-interface MediaListCollection {
-  lists: List[];
-}
