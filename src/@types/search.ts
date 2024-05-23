@@ -1,26 +1,17 @@
-import {
-  CoverImage,
-  MediaFormat,
-  MediaGenre,
-  MediaSeason,
-  MediaSort,
-  MediaStatus,
-  MediaTag,
-  MediaTitle,
-} from './media';
+import { CoverImage, MediaFormat, MediaGenre, MediaSeason, MediaStatus, MediaTag, MediaTitle } from './media';
 import { FuzzyDate, PageInfo } from './types';
 
 export interface AdvancedSearchOptions {
   search?: string;
   page: number;
   size: number;
-  format?: `${MediaFormat}`;
-  sort?: `${MediaSort}`[];
-  genres?: `${MediaGenre}`[];
+  format?: string;
+  sort?: string[];
+  genres?: string[];
   id?: string | number;
   year?: number;
-  status?: `${MediaStatus}`;
-  season?: `${MediaSeason}`;
+  status?: string;
+  season?: string;
 }
 
 export interface SearchRes<T extends string, K extends object> {

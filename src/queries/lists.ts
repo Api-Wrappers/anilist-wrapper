@@ -99,7 +99,7 @@ export class Lists extends BaseQuery {
     }
   }`;
 
-    return await this.api.get<AnimeListResponse>(query, queryVals[0]);
+    return await this.api.get<{ data: AnimeListResponse }>(query, queryVals[0]).then((r) => r.data);
   };
 
   manga = async (idOrUsername: string, status: MediaListStatus): Promise<MangaListResponse> => {
@@ -186,6 +186,6 @@ export class Lists extends BaseQuery {
     }
   }`;
 
-    return await this.api.get<MangaListResponse>(query, queryVals[0]);
+    return await this.api.get<{ data: MangaListResponse }>(query, queryVals[0]).then((r) => r.data);
   };
 }

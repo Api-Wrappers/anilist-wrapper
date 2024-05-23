@@ -2,6 +2,15 @@
   AniList Api Wrapper
 </h1>
 
+<p align="center">
+  <a href="https://www.npmjs.com/package/@tdanks2000/anilist-wrapper">
+    <img alt="NPM Version" src="https://img.shields.io/npm/v/%40tdanks2000%2Fanilist-wrapper">
+  </a>
+  <a href="https://github.com/tdanks2000/tmdb-wrapper/blob/master/LICENSE">
+    <img src="https://img.shields.io/npm/l/@tdanks2000/anilist-wrapper" alt="GitHub">
+  </a>
+</p>
+
 The AniList Api Wrapper simplifies the process of making API requests to AniList, a popular anime and manga database. It encapsulates functionality related to various API endpoints, such as activity, lists, media, people, recommendations, search, threads, and user-related features. With this wrapper, developers can quickly integrate AniList functionality into their TypeScript projects.
 
 ## Table of Contents
