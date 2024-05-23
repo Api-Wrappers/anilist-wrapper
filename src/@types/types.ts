@@ -88,8 +88,8 @@ export const ShowMutationsTypes = {
   hiddenFromStatusLists: 'Boolean',
   customLists: '[String]',
   advancedScores: '[Float]',
-  startedAt: 'FuzzyDate',
-  completedAt: 'FuzzyDate',
+  startedAt: 'FuzzyDateInput',
+  completedAt: 'FuzzyDateInput',
 };
 
 export interface Reply {

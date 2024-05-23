@@ -11,7 +11,7 @@ export class User extends BaseQuery {
   getCurrentUser = async (): Promise<UserProfile> => {
     if (!this.access_token) throw new NotLoggedInException();
 
-    return await this.api.get<UserProfile>(`query{Viewer{${UserProfileQuery}}}`);
+    return await this.api.get<{ data: { Viewer: UserProfile } }>(`query{Viewer{${UserProfileQuery}}}`).then((r) => r.data.Viewer);
   };
 
   getMediaIdByAnilistID = async (anilistId: number): Promise<number | undefined> => {
@@ -70,7 +70,7 @@ export class User extends BaseQuery {
                         }
                     }`;
 
-    return await this.api.get<{ SaveMediaListEntry: ShowMutations }>(query, variables);
+    return await this.api.get<{ data: { SaveMediaListEntry: ShowMutations } }>(query, variables).then((r) => r.data);
   };
 
   deleteShow = async (anilistId: number): Promise<{ DeleteMediaListEntry: { deleted: boolean } }> => {
