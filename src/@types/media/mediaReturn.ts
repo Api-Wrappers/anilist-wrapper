@@ -155,74 +155,6 @@ export type MediaCharacter = {
   }[];
 };
 
-export interface AnimeMediaReturn {
-  data: {
-    Media: {
-      id: number;
-      idMal: number;
-      title: MediaTitle;
-      modNotes: string;
-      siteUrl: string;
-      autoCreateForumThread: boolean;
-      synonyms: string[];
-      countryOfOrigin: string;
-      isLicensed: boolean;
-      isAdult: boolean;
-      hashtag: string;
-      rankings: MediaRanking[];
-      mediaListEntry: MediaListEntry;
-      staff: MediaStaff;
-      stats: MediaStats;
-      reviews: {
-        nodes: MediaReview[];
-      };
-      trends: {
-        edges: {
-          node: MediaTrend;
-        }[];
-      };
-      externalLinks: MediaExternalLink[];
-      coverImage: CoverImage;
-      startDate: FuzzyDate;
-      endDate: FuzzyDate;
-      bannerImage: string;
-      season: string;
-      isLocked: boolean;
-      seasonYear: number;
-      description: string;
-      type: string;
-      format: string;
-      status: string;
-      episodes: number;
-      duration: number;
-      chapters: number;
-      volumes: number;
-      trending: number;
-      trailer: Trailer;
-      genres: string[];
-      source: string;
-      averageScore: number;
-      popularity: number;
-      meanScore: number;
-      nextAiringEpisode: MediaNextAiringEpisode;
-      characters: {
-        edges: MediaCharacter[];
-      };
-      isFavourite: boolean;
-      recommendations: {
-        edges: MediaRecommendation[];
-      };
-      relations: {
-        edges: MediaRelation[];
-      };
-      studios: {
-        edges: MediaStudioEdge[];
-      };
-      isRecommendationBlocked: boolean;
-    };
-  };
-}
-
 export interface FavoriteAnimeResponse {
   ToggleFavourite: {
     anime: {
@@ -233,60 +165,150 @@ export interface FavoriteAnimeResponse {
   };
 }
 
+export interface AnimeMediaReturn {
+  data: { Media: Anime };
+}
+
 export interface MangaMediaReturn {
-  Media: {
-    id: number;
-    idMal: number;
-    title: MediaTitle;
-    description: string;
-    format: string;
-    status: string;
-    startDate: FuzzyDate;
-    endDate: FuzzyDate;
-    chapters: number;
-    volumes: number;
-    countryOfOrigin: string;
-    isLicensed: boolean;
-    updatedAt: string;
-    coverImage: CoverImage;
-    bannerImage: string;
-    genres: string[];
-    synonyms: string[];
-    averageScore: number;
-    meanScore: number;
-    siteUrl: string;
-    autoCreateForumThread: boolean;
-    modNotes: string;
-    popularity: number;
-    trending: number;
-    tags: MediaTag[];
-    relations: {
-      edges: MediaRelation[];
+  data: { Media: Manga };
+}
+
+export interface PagedAnimeMediaReturn {
+  data: {
+    Page: {
+      media: Anime[];
     };
-    characters: {
-      nodes: MediaCharacter[];
+  };
+}
+
+export interface PagedMangaMediaReturn {
+  data: {
+    Page: {
+      media: Manga[];
     };
-    staff: {
-      nodes: MediaStaff[];
-    };
-    isFavourite: boolean;
-    isAdult: boolean;
-    isLocked: boolean;
-    trends: {
-      nodes: MediaTrend[];
-    };
-    externalLinks: MediaExternalLink[];
-    rankings: MediaRanking[];
-    mediaListEntry: MediaListEntry;
-    reviews: {
-      nodes: MediaReview[];
-    };
-    stats: MediaStats;
-    favourites: number;
-    isRecommendationBlocked: boolean;
-    recommendations: {
-      edges: MediaRecommendation[];
-    };
+  };
+}
+
+export interface Media<T = Anime | Manga> {
+  Media: T;
+}
+
+export interface Anime {
+  id: number;
+  idMal: number;
+  title: MediaTitle;
+  modNotes: string;
+  siteUrl: string;
+  autoCreateForumThread: boolean;
+  synonyms: string[];
+  countryOfOrigin: string;
+  isLicensed: boolean;
+  isAdult: boolean;
+  hashtag: string;
+  rankings: MediaRanking[];
+  mediaListEntry: MediaListEntry;
+  staff: MediaStaff;
+  stats: MediaStats;
+  reviews: {
+    nodes: MediaReview[];
+  };
+  trends: {
+    edges: {
+      node: MediaTrend;
+    }[];
+  };
+  externalLinks: MediaExternalLink[];
+  coverImage: CoverImage;
+  startDate: FuzzyDate;
+  endDate: FuzzyDate;
+  bannerImage: string;
+  season: string;
+  isLocked: boolean;
+  seasonYear: number;
+  description: string;
+  type: string;
+  format: string;
+  status: string;
+  episodes: number;
+  duration: number;
+  chapters: number;
+  volumes: number;
+  trending: number;
+  trailer: Trailer;
+  genres: string[];
+  source: string;
+  averageScore: number;
+  popularity: number;
+  meanScore: number;
+  nextAiringEpisode: MediaNextAiringEpisode;
+  characters: {
+    edges: MediaCharacter[];
+  };
+  isFavourite: boolean;
+  recommendations: {
+    edges: MediaRecommendation[];
+  };
+  relations: {
+    edges: MediaRelation[];
+  };
+  studios: {
+    edges: MediaStudioEdge[];
+  };
+  isRecommendationBlocked: boolean;
+}
+
+export interface Manga {
+  id: number;
+  idMal: number;
+  title: MediaTitle;
+  description: string;
+  format: string;
+  status: string;
+  startDate: FuzzyDate;
+  endDate: FuzzyDate;
+  chapters: number;
+  volumes: number;
+  countryOfOrigin: string;
+  isLicensed: boolean;
+  updatedAt: string;
+  coverImage: CoverImage;
+  bannerImage: string;
+  genres: string[];
+  synonyms: string[];
+  averageScore: number;
+  meanScore: number;
+  siteUrl: string;
+  autoCreateForumThread: boolean;
+  modNotes: string;
+  popularity: number;
+  trending: number;
+  tags: MediaTag[];
+  relations: {
+    edges: MediaRelation[];
+  };
+  characters: {
+    nodes: MediaCharacter[];
+  };
+  staff: {
+    nodes: MediaStaff[];
+  };
+  isFavourite: boolean;
+  isAdult: boolean;
+  isLocked: boolean;
+  trends: {
+    nodes: MediaTrend[];
+  };
+  externalLinks: MediaExternalLink[];
+  rankings: MediaRanking[];
+  mediaListEntry: MediaListEntry;
+  reviews: {
+    nodes: MediaReview[];
+  };
+  stats: MediaStats;
+  favourites: number;
+  isRecommendationBlocked: boolean;
+  recommendations: {
+    edges: MediaRecommendation[];
   };
 }
 
