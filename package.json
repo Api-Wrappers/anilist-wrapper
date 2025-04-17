@@ -1,11 +1,31 @@
 {
   "name": "@tdanks2000/anilist-wrapper",
-  "version": "2.0.0",
+  "version": "2.0.1",
+  "description": "A wrapper for the Anilist graphQL api",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "description": "",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Api-Wrappers/anilist-wrapper"
+  },
+  "keywords": [
+    "anilist",
+    "anilistWrapper",
+    "api wrapper",
+    "node",
+    "typescript"
+  ],
+  "author": {
+    "name": "tdanks2000",
+    "url": "https://github.com/tdanks2000"
+  },
+  "license": "MIT",
+  "private": false,
   "exports": {
     "types": "./dist/index.d.ts",
     "import": "./dist/index.js",
