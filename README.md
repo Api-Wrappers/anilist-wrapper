@@ -17,8 +17,8 @@
   </a>
 </p>
 
-<p align="center"> 
-   Simplify your integration with the <a href="https://docs.anilist.co/">AniList API</a>, a comprehensive database for anime and manga. This robust and type-safe TypeScript wrapper provides an intuitive way to access various AniList functionalities, making it easier than ever to build amazing applications related to anime and manga. 
+<p align="center">
+  Simplify your integration with the <a href="https://docs.anilist.co/">AniList API</a>, a comprehensive database for anime and manga. This robust and type-safe TypeScript wrapper provides an intuitive way to access various AniList functionalities, making it easier than ever to build amazing applications related to anime and manga.
 </p>
 
 ## 📖 Table of Contents
