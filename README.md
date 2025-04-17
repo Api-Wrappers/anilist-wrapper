@@ -3,18 +3,10 @@
 </h1>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@tdanks2000/anilist-wrapper">
-    <img alt="npm version" src="https://img.shields.io/npm/v/@tdanks2000/anilist-wrapper">
-  </a>
-  <a href="https://github.com/tdanks2000/anilist-wrapper/blob/master/LICENSE">
-    <img alt="license" src="https://img.shields.io/npm/l/@tdanks2000/anilist-wrapper">
-  </a>
-  <a href="https://github.com/tdanks2000/anilist-wrapper/actions/workflows/ci.yml">
-    <img alt="build status" src="https://github.com/tdanks2000/anilist-wrapper/actions/workflows/ci.yml/badge.svg">
-  </a>
-  <a href="https://bundlephobia.com/package/@tdanks2000/anilist-wrapper">
-    <img alt="bundle size" src="https://img.shields.io/bundlephobia/minzip/@tdanks2000/anilist-wrapper">
-  </a>
+  <a href="https://www.npmjs.com/package/@tdanks2000/anilist-wrapper"><img alt="npm version" src="https://img.shields.io/npm/v/@tdanks2000/anilist-wrapper"></a>
+  <a href="https://github.com/tdanks2000/anilist-wrapper/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/npm/l/@tdanks2000/anilist-wrapper"></a>
+  <a href="https://github.com/tdanks2000/anilist-wrapper/actions/workflows/ci.yml"><img alt="build status" src="https://github.com/tdanks2000/anilist-wrapper/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://bundlephobia.com/package/@tdanks2000/anilist-wrapper"><img alt="bundle size" src="https://img.shields.io/bundlephobia/minzip/@tdanks2000/anilist-wrapper"></a>
 </p>
 
 <p align="center">
