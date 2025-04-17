@@ -1,0 +1,10 @@
+schema: https://graphql.anilist.co
+documents: "src/**/*.{ts,tsx}"
+generates:
+  src/__generated__/anilist-sdk.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-graphql-request
+    config:
+      rawRequest: false

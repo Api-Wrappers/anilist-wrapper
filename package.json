@@ -1,0 +1,40 @@
+{
+  "name": "@tdanks2000/anilist-wrapper",
+  "version": "2.0.0",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "description": "",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "import": "./dist/index.js",
+    "require": "./dist/index.cjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "bun run build.ts",
+    "prepublishOnly": "bun run build",
+    "codegen": "rimraf src/__generated__ && graphql-codegen --config codegen.yml",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.5",
+    "@graphql-codegen/typescript": "^4.1.6",
+    "@graphql-codegen/typescript-graphql-request": "^6.2.0",
+    "@graphql-codegen/typescript-operations": "^4.6.0",
+    "@types/bun": "latest",
+    "bun-plugin-dts": "^0.3.0",
+    "graphql": "^16.10.0",
+    "rimraf": "^6.0.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "graphql-request": "^7.1.2",
+    "ky": "^1.8.1"
+  }
+}
