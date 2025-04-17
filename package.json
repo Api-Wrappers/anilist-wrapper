@@ -1,6 +1,6 @@
 {
   "name": "@tdanks2000/anilist-wrapper",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "A wrapper for the Anilist graphQL api",
   "type": "module",
   "main": "./dist/index.cjs",
