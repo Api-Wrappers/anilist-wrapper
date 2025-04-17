@@ -2,19 +2,19 @@
    🚀 AniList API Wrapper for TypeScript 
 </h1>
 
-<p align="center"> 
-   <a href="https://www.npmjs.com/package/@tdanks2000/anilist-wrapper"> 
-     <img alt="NPM Version" src="https://img.shields.io/npm/v/%40tdanks2000%2Fanilist-wrapper"> 
-   </a> 
-   <a href="https://github.com/tdanks2000/tmdb-wrapper/blob/master/LICENSE"> 
-     <img src="https://img.shields.io/npm/l/@tdanks2000/anilist-wrapper" alt="License"> 
-   </a> 
-   <a href="https://github.com/tdanks2000/anilist-wrapper/actions/workflows/ci.yml"> 
-     <img alt="Build Status" src="https://github.com/tdanks2000/anilist-wrapper/actions/workflows/ci.yml/badge.svg"> 
-   </a> 
-   <a href="https://bundlephobia.com/package/@tdanks2000/anilist-wrapper"> 
-     <img alt="Bundle Size" src="https://img.shields.io/bundlephobia/minzip/@tdanks2000/anilist-wrapper"> 
-   </a> 
+<p align="center">
+  <a href="https://www.npmjs.com/package/@tdanks2000/anilist-wrapper">
+    <img alt="npm version" src="https://img.shields.io/npm/v/@tdanks2000/anilist-wrapper">
+  </a>
+  <a href="https://github.com/tdanks2000/anilist-wrapper/blob/master/LICENSE">
+    <img alt="license" src="https://img.shields.io/npm/l/@tdanks2000/anilist-wrapper">
+  </a>
+  <a href="https://github.com/tdanks2000/anilist-wrapper/actions/workflows/ci.yml">
+    <img alt="build status" src="https://github.com/tdanks2000/anilist-wrapper/actions/workflows/ci.yml/badge.svg">
+  </a>
+  <a href="https://bundlephobia.com/package/@tdanks2000/anilist-wrapper">
+    <img alt="bundle size" src="https://img.shields.io/bundlephobia/minzip/@tdanks2000/anilist-wrapper">
+  </a>
 </p>
 
 <p align="center"> 
