@@ -1,26 +1,61 @@
 import type { ANILISTSDK } from "../@types";
-import type { GetMediaByIdQuery } from "../__generated__/anilist-sdk";
+import {
+	type GetMediaByIdQuery,
+	MediaType,
+} from "../__generated__/anilist-sdk";
 
 /**
- * Service class for retrieving media details from AniList.
+ * Service class responsible for interacting with the AniList API to retrieve media details.
  */
 export class MediaService {
-  private client: ANILISTSDK;
+	private client: ANILISTSDK;
 
-  /**
-   * Constructs a new MediaService instance.
-   * @param client - An instance of the AniList SDK client.
-   */
-  constructor(client: ANILISTSDK) {
-    this.client = client;
-  }
+	/**
+	 * Creates an instance of the MediaService.
+	 * @param client - The AniList SDK client instance used to communicate with the AniList API.
+	 */
+	constructor(client: ANILISTSDK) {
+		this.client = client;
+	}
 
-  /**
-   * Retrieves media details by media ID.
-   * @param id - The unique ID of the media.
-   * @returns A promise resolving to the media data.
-   */
-  getMediaById(id: number): Promise<GetMediaByIdQuery> {
-    return this.client.GetMediaById({ id });
-  }
+	/**
+	 * Fetches media details by its unique ID.
+	 * @param id - The unique identifier for the media (e.g., an Anime or Manga).
+	 * @returns A promise that resolves with the media details, including data like title, genres, etc.
+	 */
+	getMediaById(id: number): Promise<GetMediaByIdQuery> {
+		return this.client.GetMediaById({ id });
+	}
+
+	/**
+	 * Retrieves a user's media list based on the media type (Anime or Manga).
+	 * @param userId - The unique ID of the user whose media list is being requested.
+	 * @param mediaType - The type of media list to fetch: either "ANIME" or "MANGA".
+	 * @returns A promise that resolves with the user's media list.
+	 */
+	GetMediaList(
+		userId: number,
+		mediaType: "ANIME" | "MANGA",
+	): Promise<GetMediaByIdQuery> {
+		return this.client.GetMediaListByUser({
+			mediaType: mediaType === "ANIME" ? MediaType.Anime : MediaType.Manga,
+			userId,
+		});
+	}
+
+	/**
+	 * Retrieves a user's media list by their username, filtered by media type (Anime or Manga).
+	 * @param userName - The username of the user whose media list is being requested.
+	 * @param mediaType - The type of media list to fetch: either "ANIME" or "MANGA".
+	 * @returns A promise that resolves with the user's media list.
+	 */
+	GetMediaListByUserName(
+		userName: string,
+		mediaType: "ANIME" | "MANGA",
+	): Promise<GetMediaByIdQuery> {
+		return this.client.GetMediaListByUserByUserName({
+			mediaType: mediaType === "ANIME" ? MediaType.Anime : MediaType.Manga,
+			userName,
+		});
+	}
 }
