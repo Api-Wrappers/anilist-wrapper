@@ -49,7 +49,10 @@
 		"build": "bun run build.ts",
 		"prepublishOnly": "bun run build",
 		"codegen": "rimraf src/__generated__ && graphql-codegen --config codegen.yml",
-		"test": "bun test"
+		"test": "bun test",
+		"check": "biome check .",
+		"check:unsafe": "biome check --write --unsafe .",
+		"check:write": "biome check --write ."
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.1.3",
