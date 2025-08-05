@@ -1,195 +1,118 @@
-<h1 align="center"> 
-   🚀 AniList API Wrapper for TypeScript 
-</h1>
+# AniList API Wrapper for TypeScript
 
-<p align="center">
-  <a href="https://www.npmjs.com/package/@tdanks2000/anilist-wrapper"><img alt="npm version" src="https://img.shields.io/npm/v/@tdanks2000/anilist-wrapper"></a>
-  <a href="https://github.com/tdanks2000/anilist-wrapper/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/npm/l/@tdanks2000/anilist-wrapper"></a>
-  <a href="https://github.com/tdanks2000/anilist-wrapper/actions/workflows/ci.yml"><img alt="build status" src="https://github.com/tdanks2000/anilist-wrapper/actions/workflows/ci.yml/badge.svg"></a>
-  <a href="https://bundlephobia.com/package/@tdanks2000/anilist-wrapper"><img alt="bundle size" src="https://img.shields.io/bundlephobia/minzip/@tdanks2000/anilist-wrapper"></a>
-</p>
+A simple, type-safe TypeScript wrapper for the AniList API. Build awesome anime and manga apps without the hassle of dealing with raw GraphQL queries.
 
-<p align="center">
-  Simplify your integration with the <a href="https://docs.anilist.co/">AniList API</a>, a comprehensive database for anime and manga. This robust and type-safe TypeScript wrapper provides an intuitive way to access various AniList functionalities, making it easier than ever to build amazing applications related to anime and manga.
-</p>
+[![npm version](https://img.shields.io/npm/v/@tdanks2000/anilist-wrapper)](https://www.npmjs.com/package/@tdanks2000/anilist-wrapper)
+[![license](https://img.shields.io/npm/l/@tdanks2000/anilist-wrapper)](https://github.com/tdanks2000/anilist-wrapper/blob/master/LICENSE)
+[![build status](https://github.com/tdanks2000/anilist-wrapper/actions/workflows/ci.yml/badge.svg)](https://github.com/tdanks2000/anilist-wrapper/actions/workflows/ci.yml)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/@tdanks2000/anilist-wrapper)](https://bundlephobia.com/package/@tdanks2000/anilist-wrapper)
 
-## 📖 Table of Contents
+## What's this?
 
-- [✨ Key Features](#key-features)
-- [🚀 Quick Start](#quick-start)
-- [📦 Installation](#installation)
-- [🛠️ Usage](#usage)
-  - [Basic Initialization](#basic-initialization)
-  - [Making API Calls](#making-api-calls)
-- [🔑 Authentication](#authentication)
-- [⚙️ Functionality](#functionality)
-  - [Anime Service](#anime-service)
-  - [Character Service](#character-service)
-  - [Manga Service](#manga-service)
-  - [Media Service](#media-service)
-  - [MediaList Service](#medialist-service)
-  - [Staff Service](#staff-service)
-  - [User Service](#user-service)
-- [🤝 Contributing](#contributing)
-- [📜 License](#license)
-- [💖 Support](#support)
+Ever wanted to build something cool with anime data but got stuck trying to figure out AniList's GraphQL API? This wrapper makes it dead simple. Just import, initialize, and start fetching data.
 
-## ✨ Key Features
+Built with TypeScript for that sweet autocomplete and type safety. No more guessing what properties are available on your anime objects!
 
-- **Type-Safe TypeScript:** Enjoy the benefits of static typing and improved developer experience.
-- **Comprehensive Coverage:** Access a wide range of AniList API endpoints, including anime, manga, characters, staff, user lists, and more.
-- **Simplified Requests:** Abstract away the complexities of making raw HTTP requests to the AniList GraphQL API.
-- **Modular Design:** Well-organized services for different aspects of the AniList API.
-- **Easy Authentication:** Simple integration with AniList's authentication mechanism.
-
-## 🚀 Quick Start
-
-Get up and running with the AniList API Wrapper in minutes!
-
-1.  **Install the package:**
+## Quick Start
 
 ```bash
-# npm
 npm install @tdanks2000/anilist-wrapper
-# yarn
-yarn install @tdanks2000/anilist-wrapper
-# pnpm
-pnpm install @tdanks2000/anilist-wrapper
-# bun
-bun install @tdanks2000/anilist-wrapper
 ```
 
-2.  **Import and initialize:**
-
-```ts
+```typescript
 import { Anilist } from "@tdanks2000/anilist-wrapper";
 
-// For public endpoints
+// Create an instance (no token needed for public data)
 const anilist = new Anilist();
-// OR for authenticated endpoints
-const anilist = new Anilist("YOUR_ACCESS_TOKEN");
+
+// Get info about Attack on Titan
+const aot = await anilist.anime.getAnimeById(16498);
+console.log(aot.title.english); // "Attack on Titan"
+
+// Search for anime
+const results = await anilist.anime.searchAnime("One Piece");
+console.log(results.length); // Number of results found
 ```
 
-3.  **Start making API calls:**
+## What can you do?
 
-```ts
-const data = await anilist.anime.getAnimeById(1);
-console.log(data);
+### Anime
+- Get anime by ID or search by title
+- Fetch characters, staff, and recommendations
+- Get trending and popular anime
+- Find anime by genre
+
+### Manga
+- Same features as anime, but for manga
+- Search, get details, characters, staff, etc.
+
+### Characters & Staff
+- Get character info and birthdays
+- Find staff members and their work
+- Toggle favorites (with auth)
+
+### Users
+- Get user profiles and statistics
+- Fetch user's anime/manga lists
+- Requires authentication
+
+### Media Lists
+- Manage user's anime and manga lists
+- Add, update, remove entries
+- Requires authentication
+
+## Authentication
+
+Some features need you to be logged in. Get an access token from [AniList's auth guide](https://docs.anilist.co/guide/auth/) and pass it to the constructor:
+
+```typescript
+const anilist = new Anilist("your_access_token_here");
 ```
 
-## 📦 Installation
+## Examples
 
-To integrate the AniList TypeScript Wrapper into your project, use one of the following package managers:
-
-```bash
-# npm
-npm install @tdanks2000/anilist-wrapper
-# yarn
-yarn install @tdanks2000/anilist-wrapper
-# pnpm
-pnpm install @tdanks2000/anilist-wrapper
-# bun
-bun install @tdanks2000/anilist-wrapper
+### Get trending anime
+```typescript
+const trending = await anilist.anime.getAnimeTrending();
+console.log(trending[0].title.english);
 ```
 
-## 🛠️ Usage
-
-Learn how to use the AniList TypeScript Wrapper in your TypeScript project.
-
-### Basic Initialization
-
-Import the `Anilist` class from the package:
-
-```
- import { Anilist } from "@tdanks2000/anilist-wrapper";
+### Search for characters
+```typescript
+const characters = await anilist.character.getCharacterById(1);
+console.log(characters.name.full);
 ```
 
-Create an instance of the `Anilist` class. You can optionally provide an access token for authenticated requests:
-
-```
- // For accessing public endpoints
- const anilist = new Anilist();
-
-// For accessing authenticated endpoints (requires an access token)
-const anilistWithToken = new Anilist("YOUR_ACCESS_TOKEN");
+### Get user's anime list
+```typescript
+const userList = await anilist.user.getUserAnimeList("username");
+console.log(userList.length); // Number of anime in their list
 ```
 
-### Making API Calls
-
-The `anilist` object provides access to various services, each dedicated to a specific area of the AniList API. Here's a basic example of fetching anime details:
-
-```ts
-const data = await anilist.anime.getAnimeById(1);
-console.log(data);
+### Find anime by genre
+```typescript
+const actionAnime = await anilist.anime.getAnimeListByGenre("Action");
+console.log(actionAnime.length); // Number of action anime
 ```
 
-Refer to the [Functionality](#functionality) section for a list of available services and their purpose. Consult the individual service files or generated documentation for specific methods and parameters.
+## Contributing
 
-## 🔑 Authentication
+Found a bug? Want to add a feature? Contributions are welcome! Check out the [contributing guide](CONTRIBUTING.md) to get started.
 
-Some features of the AniList API require authentication. To authenticate, you need to obtain an OAuth access token from the AniList website. [Follow their official documentation](https://docs.anilist.co/guide/auth/) for instructions on how to generate an access token.
+## License
 
-Once you have your access token, you can provide it when creating an instance of the `Anilist` class:
+MIT License - use it however you want!
 
-```
- const anilist = new Anilist("YOUR_ACCESS_TOKEN");
-```
+## Support
 
-This will enable you to access authenticated endpoints and perform actions on behalf of a user.
+Having trouble? Open an issue on [GitHub](https://github.com/tdanks2000/anilist-wrapper/issues) and I'll help you out.
 
-## ⚙️ Functionality
+---
 
-The AniList API Wrapper organizes its functionality into the following services:
-
-### Anime Service
-
-Provides methods for accessing anime-related information, such as:
-
-- Fetching details about a specific anime.
-- Retrieving characters and staff associated with an anime.
-- Getting recommendations for similar anime.
-- Exploring related anime entries.
-
-### Character Service
-
-Allows you to retrieve information about specific anime and manga characters.
-
-### Manga Service
-
-Offers methods for accessing manga-related information, similar to the Anime Service, including details, characters, staff, and recommendations.
-
-### Media Service
-
-Provides general functions for searching and retrieving information about both anime and manga (media). This might include broader search capabilities or combined results.
-
-### MediaList Service
-
-Enables you to manage a user's anime and manga lists, including adding, updating, and retrieving entries. This requires authentication.
-
-### Staff Service
-
-Allows you to retrieve information about staff members involved in the production of anime and manga (e.g., voice actors, directors, writers).
-
-### User Service
-
-Provides access to user profiles, statistics, and their anime and manga lists. Many of these endpoints require authentication.
-
-## 🤝 Contributing
-
-We welcome contributions to the AniList TypeScript Wrapper! If you have any bug reports, feature requests, or would like to contribute code, please follow the guidelines outlined in the repository's `CONTRIBUTING.md` file.
-
-## 📜 License
-
-The AniList TypeScript Wrapper is open-source and licensed under the [MIT License](https://github.com/Api-Wrappers/anilist-wrapper/blob/main/LICENSE). Feel free to use, modify, and distribute this library according to the terms of the license.
-
-## 💖 Support
-
-Thank you for using the AniList API Wrapper! If you encounter any issues or have questions, please don't hesitate to:
-
-- Open an issue on the [GitHub repository](https://github.com/tdanks2000/anilist-wrapper/issues).
+# ❤️
 
 <p align="center">
 <a target="_blank" href="https://tdanks.com/mental-health/quote">
-❤️ Reminder that <strong\><i\>you are great, you are enough, and your presence is valued.</i\>\</strong\> If you are struggling with your mental health, please reach out to someone you love and consult a professional. You are not alone. ❤️
+❤️ Quick reminder: <strong><i>you are great, you are enough, and we value your presence.</i></strong> If you're going through a tough time with your mental health, please reach out to someone you trust and consider talking to a professional. You're never alone. ❤️
 </a>
 </p>
