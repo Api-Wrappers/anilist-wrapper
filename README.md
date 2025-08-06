@@ -16,9 +16,16 @@ Built with TypeScript for that sweet autocomplete and type safety. No more guess
 ## Quick Start
 
 ```bash
+// npm
 npm install @tdanks2000/anilist-wrapper
+
+// bun
 bun add @tdanks2000/anilist-wrapper
+
+// yarn
 yarn add @tdanks2000/anilist-wrapper
+
+// pnpm
 pnpm add @tdanks2000/anilist-wrapper
 ```
 
