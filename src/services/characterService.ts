@@ -38,7 +38,7 @@ export class CharacterService {
 		page = 1,
 		perPage = 25,
 	): Promise<CharactersBirthdayTodayQuery> {
-		return this.client.CharactersBirthdayToday({ page });
+		return this.client.CharactersBirthdayToday({ page, perPage });
 	}
 
 	/**
