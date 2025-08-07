@@ -69,7 +69,6 @@
 		"typescript": "^5.8.3"
 	},
 	"dependencies": {
-		"graphql-request": "^7.2.0",
-		"ky": "^1.8.2"
+		"graphql-request": "^7.2.0"
 	}
 }
