@@ -1,12 +1,5 @@
 import type { ANILISTSDK } from "../@types";
-import type {
-	GetUserAnimeListQuery,
-	GetUserInfoQuery,
-	GetUserListQuery,
-	GetUserMangaListQuery,
-	GetUserStatisticsQuery,
-	MediaListStatus,
-} from "../__generated__/anilist-sdk";
+import { MediaListStatus } from "../__generated__/anilist-sdk";
 
 /**
  * Service class for interacting with AniList user-related queries.
@@ -27,7 +20,7 @@ export class UserService {
 	 * @param userId - The unique ID of the user.
 	 * @returns A promise resolving to the user information.
 	 */
-	getUserInfo(userId: number): Promise<GetUserInfoQuery> {
+	getUserInfo(userId: number) {
 		return this.client.GetUserInfo({ id: userId });
 	}
 
@@ -36,22 +29,19 @@ export class UserService {
 	 * @param userName - The userName of the user.
 	 * @returns A promise resolving to the user information.
 	 */
-	getUserInfoByUserName(userName: string): Promise<GetUserInfoQuery> {
+	getUserInfoByUserName(userName: string) {
 		return this.client.GetUserInfoByUserName({ userName });
 	}
 
 	/**
 	 * Retrieves the user's anime list with optional filtering by status.
 	 * @param userId - The unique ID of the user.
-	 * @param status - Optional media list status filter (e.g., CURRENT, COMPLETED).
+	 * @param status - Optional media list status filter defaults to current.
 	 * @returns A promise resolving to the user's anime list.
 	 */
-	getUserAnimeList(
-		userId: number,
-		status?: MediaListStatus,
-	): Promise<GetUserAnimeListQuery> {
+	getUserAnimeList(userId: number, status?: MediaListStatus) {
 		return this.client.GetUserAnimeList({
-			status,
+			status: status ?? MediaListStatus.Current,
 			userId,
 		});
 	}
@@ -59,15 +49,12 @@ export class UserService {
 	/**
 	 * Retrieves the user's anime list with optional filtering by status.
 	 * @param userName - The userName of the user.
-	 * @param status - Optional media list status filter (e.g., CURRENT, COMPLETED).
+	 * @param status - Optional media list status filter defaults to current.
 	 * @returns A promise resolving to the user's anime list.
 	 */
-	getUserAnimeListByUserName(
-		userName: string,
-		status?: MediaListStatus,
-	): Promise<GetUserAnimeListQuery> {
+	getUserAnimeListByUserName(userName: string, status?: MediaListStatus) {
 		return this.client.GetUserAnimeListByUserName({
-			status,
+			status: status ?? MediaListStatus.Current,
 			userName,
 		});
 	}
@@ -75,15 +62,12 @@ export class UserService {
 	/**
 	 * Retrieves the user's manga list with optional filtering by status.
 	 * @param userId - The unique ID of the user.
-	 * @param status - Optional media list status filter.
+	 * @param status - Optional media list status filter defaults to current.
 	 * @returns A promise resolving to the user's manga list.
 	 */
-	getUserMangaList(
-		userId: number,
-		status?: MediaListStatus,
-	): Promise<GetUserMangaListQuery> {
+	getUserMangaList(userId: number, status?: MediaListStatus) {
 		return this.client.GetUserMangaList({
-			status,
+			status: status ?? MediaListStatus.Current,
 			userId,
 		});
 	}
@@ -91,29 +75,26 @@ export class UserService {
 	/**
 	 * Retrieves the user's manga list with optional filtering by status.
 	 * @param userName - The userName of the user.
-	 * @param status - Optional media list status filter.
+	 * @param status - Optional media list status filter defaults to current.
 	 * @returns A promise resolving to the user's manga list.
 	 */
-	getUserMangaListByUserName(
-		userName: string,
-		status?: MediaListStatus,
-	): Promise<GetUserMangaListQuery> {
+	getUserMangaListByUserName(userName: string, status?: MediaListStatus) {
 		return this.client.GetUserMangaListByUserName({
-			status,
+			status: status ?? MediaListStatus.Current,
 			userName,
 		});
 	}
 
 	/**
 	 * Retrieves a paginated list of users.
-	 * @param page - Optional page number for pagination.
-	 * @param perPage - Optional number of users per page.
+	 * @param page - Optional page number for pagination defaults to 1.
+	 * @param perPage - Optional number of users per page defaults to 10.
 	 * @returns A promise resolving to the paginated user list.
 	 */
-	getUserList(page?: number, perPage?: number): Promise<GetUserListQuery> {
+	getUserList(page?: number, perPage?: number) {
 		return this.client.GetUserList({
-			page,
-			perPage,
+			page: page ?? 1,
+			perPage: perPage ?? 10,
 		});
 	}
 
@@ -122,7 +103,7 @@ export class UserService {
 	 * @param userId - The unique ID of the user.
 	 * @returns A promise resolving to the user's statistics.
 	 */
-	getUserStatistics(userId: number): Promise<GetUserStatisticsQuery> {
+	getUserStatistics(userId: number) {
 		return this.client.GetUserStatistics({ id: userId });
 	}
 
@@ -131,9 +112,7 @@ export class UserService {
 	 * @param userName - The userName of the user.
 	 * @returns A promise resolving to the user's statistics.
 	 */
-	getUserStatisticsByUserName(
-		userName: string,
-	): Promise<GetUserStatisticsQuery> {
+	getUserStatisticsByUserName(userName: string) {
 		return this.client.GetUserStatisticsByUserName({ userName });
 	}
 }

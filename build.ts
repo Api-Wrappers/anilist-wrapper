@@ -1,19 +1,30 @@
 import { rmSync } from "node:fs";
+import { resolve } from "node:path";
 import type { BuildConfig } from "bun";
 import dts from "bun-plugin-dts";
 
-const isProduction = process.env.NODE_ENV === "production";
+// ─────────────────────────────────────────────────────────────
+// Configuration
+// ─────────────────────────────────────────────────────────────
 
-const outdir = "./dist";
+const NODE_ENV = process.env.NODE_ENV ?? "development";
+const isProduction = NODE_ENV === "production";
+
+const LOG_LEVEL = process.env.LOG_LEVEL ?? "info"; // "info" | "silent"
+const log = (...args: unknown[]) =>
+	LOG_LEVEL === "info" && console.log(...args);
+
+const outdir = resolve("./dist");
 
 const defaultBuildConfig: BuildConfig = {
 	entrypoints: ["./src/index.ts"],
 	outdir,
 	minify: isProduction,
 	sourcemap: isProduction ? undefined : "inline",
+	target: "bun",
 };
 
-type Format = "esm" | "cjs" | "iife";
+type Format = "esm" | "cjs";
 
 interface FormatConfig {
 	format: Format;
@@ -33,36 +44,43 @@ const buildFormats: FormatConfig[] = [
 	},
 ];
 
-async function buildAll() {
-	console.log(
-		`Starting build in ${isProduction ? "production" : "development"} mode...`,
-	);
+// ─────────────────────────────────────────────────────────────
+// Build Function
+// ─────────────────────────────────────────────────────────────
 
-	// Remove the dist directory recursively and forcefully before building
+async function buildAll() {
+	log(`\n📦 Starting build in ${NODE_ENV} mode...\n`);
+
+	// Clean output directory
 	try {
 		rmSync(outdir, { recursive: true, force: true });
-		console.log(`Removed existing '${outdir}' directory.`);
+		log(`🧹 Removed existing '${outdir}' directory.`);
 	} catch (err) {
-		console.warn(`Warning: Could not remove '${outdir}' directory.`, err);
+		console.warn(`⚠️ Failed to clean '${outdir}':`, err);
 	}
 
-	try {
-		await Promise.all(
-			buildFormats.map(({ format, naming, plugins }) => {
-				console.log(`Building format: ${format}...`);
-				return Bun.build({
-					...defaultBuildConfig,
-					format,
-					naming,
-					plugins,
-				});
-			}),
-		);
-		console.log("Build completed successfully.");
-	} catch (error) {
-		console.error("Build failed:", error);
-		process.exit(1);
+	// Run builds for each format
+	for (const { format, naming, plugins } of buildFormats) {
+		try {
+			log(`🔧 Building format: ${format}`);
+			await Bun.build({
+				...defaultBuildConfig,
+				format,
+				naming,
+				plugins,
+			});
+			log(`✅ Built ${format} format successfully.`);
+		} catch (error) {
+			console.error(`❌ Build failed for format '${format}':`, error);
+			process.exit(1);
+		}
 	}
+
+	log("\n✅ All builds completed successfully.");
 }
+
+// ─────────────────────────────────────────────────────────────
+// Run Build
+// ─────────────────────────────────────────────────────────────
 
 await buildAll();

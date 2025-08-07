@@ -1,16 +1,4 @@
 import type { ANILISTSDK } from "../@types";
-import type {
-	GetAnimeByIdQuery,
-	GetAnimeByTitleQuery,
-	GetAnimeCharactersQuery,
-	GetAnimeListByGenreQuery,
-	GetAnimePopularQuery,
-	GetAnimeRecommendationsQuery,
-	GetAnimeRelationsQuery,
-	GetAnimeStaffQuery,
-	GetAnimeTrendingQuery,
-	SearchAnimeQuery,
-} from "../__generated__/anilist-sdk";
 
 /**
  * Service class for interacting with AniList anime-related queries.
@@ -31,7 +19,7 @@ export class AnimeService {
 	 * @param id - The unique ID of the anime.
 	 * @returns A promise resolving to the anime data.
 	 */
-	getAnimeById(id: number): Promise<GetAnimeByIdQuery> {
+	getAnimeById(id: number) {
 		return this.client.GetAnimeById({ id });
 	}
 
@@ -42,11 +30,7 @@ export class AnimeService {
 	 * @param perPage - Optional number of results per page. Defaults to 10.
 	 * @returns A promise resolving to the search results.
 	 */
-	getAnimeBySearch(
-		search: string,
-		page = 1,
-		perPage = 10,
-	): Promise<SearchAnimeQuery> {
+	getAnimeBySearch(search: string, page = 1, perPage = 10) {
 		return this.client.SearchAnime({ query: search, page, perPage });
 	}
 
@@ -56,7 +40,7 @@ export class AnimeService {
 	 * @param perPage - Optional number of results per page. Defaults to 10.
 	 * @returns A promise resolving to trending anime.
 	 */
-	getTrendingAnime(page = 1, perPage = 10): Promise<GetAnimeTrendingQuery> {
+	getTrendingAnime(page = 1, perPage = 10) {
 		return this.client.GetAnimeTrending({ page, perPage });
 	}
 
@@ -66,7 +50,7 @@ export class AnimeService {
 	 * @param perPage - Optional number of results per page. Defaults to 10.
 	 * @returns A promise resolving to popular anime.
 	 */
-	getPopularAnime(page = 1, perPage = 10): Promise<GetAnimePopularQuery> {
+	getPopularAnime(page = 1, perPage = 10) {
 		return this.client.GetAnimePopular({ page, perPage });
 	}
 
@@ -75,7 +59,7 @@ export class AnimeService {
 	 * @param mediaId - The ID of the anime to get recommendations for.
 	 * @returns A promise resolving to recommended anime.
 	 */
-	getRecommendations(mediaId: number): Promise<GetAnimeRecommendationsQuery> {
+	getRecommendations(mediaId: number) {
 		return this.client.GetAnimeRecommendations({ id: mediaId });
 	}
 
@@ -84,7 +68,7 @@ export class AnimeService {
 	 * @param mediaId - The ID of the anime.
 	 * @returns A promise resolving to the characters list.
 	 */
-	getCharacters(mediaId: number): Promise<GetAnimeCharactersQuery> {
+	getCharacters(mediaId: number) {
 		return this.client.GetAnimeCharacters({ id: mediaId });
 	}
 
@@ -93,7 +77,7 @@ export class AnimeService {
 	 * @param mediaId - The ID of the anime.
 	 * @returns A promise resolving to the staff list.
 	 */
-	getStaff(mediaId: number): Promise<GetAnimeStaffQuery> {
+	getStaff(mediaId: number) {
 		return this.client.GetAnimeStaff({ id: mediaId });
 	}
 
@@ -102,7 +86,7 @@ export class AnimeService {
 	 * @param mediaId - The ID of the anime.
 	 * @returns A promise resolving to related anime/media.
 	 */
-	getRelations(mediaId: number): Promise<GetAnimeRelationsQuery> {
+	getRelations(mediaId: number) {
 		return this.client.GetAnimeRelations({ id: mediaId });
 	}
 
@@ -111,7 +95,7 @@ export class AnimeService {
 	 * @param title - The title of the anime.
 	 * @returns A promise resolving to the matching anime.
 	 */
-	getAnimeByTitle(title: string): Promise<GetAnimeByTitleQuery> {
+	getAnimeByTitle(title: string) {
 		return this.client.GetAnimeByTitle({ title });
 	}
 
@@ -122,11 +106,7 @@ export class AnimeService {
 	 * @param perPage - Optional number of results per page. Defaults to 10.
 	 * @returns A promise resolving to the filtered anime list.
 	 */
-	getAnimeListByGenre(
-		genre: string,
-		page = 1,
-		perPage = 10,
-	): Promise<GetAnimeListByGenreQuery> {
+	getAnimeListByGenre(genre: string, page = 1, perPage = 10) {
 		return this.client.GetAnimeListByGenre({ genre, page, perPage });
 	}
 }

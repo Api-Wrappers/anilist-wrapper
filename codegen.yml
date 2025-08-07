@@ -8,3 +8,8 @@ generates:
       - typescript-graphql-request
     config:
       rawRequest: false
+      useTypeImports: true
+      dedupeOperationSuffix: true
+      skipTypename: true
+      avoidOptionals: true
+      onlyOperationTypes: true

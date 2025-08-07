@@ -1,9 +1,4 @@
 import type { ANILISTSDK } from "../@types";
-import type {
-	CharactersBirthdayTodayQuery,
-	GetCharacterByIdQuery,
-	ToggleFavoriteCharacterMutation,
-} from "../__generated__/anilist-sdk";
 
 /**
  * Service class for interacting with AniList character-related queries.
@@ -24,7 +19,7 @@ export class CharacterService {
 	 * @param id - The unique ID of the character.
 	 * @returns A promise resolving to the character data.
 	 */
-	getCharacterById(id: number): Promise<GetCharacterByIdQuery> {
+	getCharacterById(id: number) {
 		return this.client.GetCharacterById({ id });
 	}
 
@@ -34,10 +29,7 @@ export class CharacterService {
 	 * @param perPage - Optional number of characters per page. Defaults to 25.
 	 * @returns A promise resolving to the list of today's birthday characters.
 	 */
-	getCharactersBirthdayToday(
-		page = 1,
-		perPage = 25,
-	): Promise<CharactersBirthdayTodayQuery> {
+	getCharactersBirthdayToday(page = 1, perPage = 25) {
 		return this.client.CharactersBirthdayToday({ page, perPage });
 	}
 
@@ -46,9 +38,7 @@ export class CharacterService {
 	 * @param characterId - The ID of the character to toggle as favorite.
 	 * @returns A promise resolving to the result of the toggle mutation.
 	 */
-	toggleFavoriteCharacter(
-		characterId: number,
-	): Promise<ToggleFavoriteCharacterMutation> {
+	toggleFavoriteCharacter(characterId: number) {
 		return this.client.ToggleFavoriteCharacter({ charID: characterId });
 	}
 }

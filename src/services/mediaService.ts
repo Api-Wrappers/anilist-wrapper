@@ -1,8 +1,5 @@
-import type { ANILISTSDK } from "../@types";
-import {
-	type GetMediaByIdQuery,
-	MediaType,
-} from "../__generated__/anilist-sdk";
+import type { ANILISTSDK, MediaTypeNonEnum } from "../@types";
+import { MediaType } from "../__generated__/anilist-sdk";
 
 /**
  * Service class responsible for interacting with the AniList API to retrieve media details.
@@ -23,7 +20,7 @@ export class MediaService {
 	 * @param id - The unique identifier for the media (e.g., an Anime or Manga).
 	 * @returns A promise that resolves with the media details, including data like title, genres, etc.
 	 */
-	getMediaById(id: number): Promise<GetMediaByIdQuery> {
+	getMediaById(id: number) {
 		return this.client.GetMediaById({ id });
 	}
 
@@ -33,10 +30,7 @@ export class MediaService {
 	 * @param mediaType - The type of media list to fetch: either "ANIME" or "MANGA".
 	 * @returns A promise that resolves with the user's media list.
 	 */
-	GetMediaList(
-		userId: number,
-		mediaType: "ANIME" | "MANGA",
-	): Promise<GetMediaByIdQuery> {
+	GetMediaList(userId: number, mediaType: MediaTypeNonEnum) {
 		return this.client.GetMediaListByUser({
 			mediaType: mediaType === "ANIME" ? MediaType.Anime : MediaType.Manga,
 			userId,
@@ -49,10 +43,7 @@ export class MediaService {
 	 * @param mediaType - The type of media list to fetch: either "ANIME" or "MANGA".
 	 * @returns A promise that resolves with the user's media list.
 	 */
-	GetMediaListByUserName(
-		userName: string,
-		mediaType: "ANIME" | "MANGA",
-	): Promise<GetMediaByIdQuery> {
+	GetMediaListByUserName(userName: string, mediaType: MediaTypeNonEnum) {
 		return this.client.GetMediaListByUserByUserName({
 			mediaType: mediaType === "ANIME" ? MediaType.Anime : MediaType.Manga,
 			userName,

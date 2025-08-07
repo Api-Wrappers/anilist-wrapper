@@ -1,9 +1,4 @@
 import type { ANILISTSDK } from "../@types";
-import type {
-	GetStaffByIdQuery,
-	StaffBirthdayTodayQuery,
-	ToggleFavoriteStaffMutation,
-} from "../__generated__/anilist-sdk";
 
 /**
  * Service class for interacting with AniList staff-related queries.
@@ -24,7 +19,7 @@ export class StaffService {
 	 * @param id - The unique ID of the staff member.
 	 * @returns A promise resolving to the staff information.
 	 */
-	getStaffById(id: number): Promise<GetStaffByIdQuery> {
+	getStaffById(id: number) {
 		return this.client.GetStaffById({ id });
 	}
 
@@ -33,7 +28,7 @@ export class StaffService {
 	 * @param page - Optional page number for pagination. Defaults to 1.
 	 * @returns A promise resolving to the staff birthday list.
 	 */
-	getStaffBirthdayToday(page = 1): Promise<StaffBirthdayTodayQuery> {
+	getStaffBirthdayToday(page = 1) {
 		return this.client.StaffBirthdayToday({ page });
 	}
 
@@ -42,7 +37,7 @@ export class StaffService {
 	 * @param staffId - The ID of the staff member to toggle as favorite.
 	 * @returns A promise resolving to the result of the toggle mutation.
 	 */
-	toggleFavoriteStaff(staffId: number): Promise<ToggleFavoriteStaffMutation> {
+	toggleFavoriteStaff(staffId: number) {
 		return this.client.ToggleFavoriteStaff({ staffID: staffId });
 	}
 }
