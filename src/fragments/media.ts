@@ -1,36 +1,9 @@
 import { gql } from "graphql-request";
+import { MEDIA_BASIC_FRAGMENT } from "./media/core.js";
 
 export const MEDIA_FRAGMENT = gql`
+  ${MEDIA_BASIC_FRAGMENT}
   fragment MediaFragment on Media {
-    id
-    title {
-      romaji
-      english
-      native
-    }
-    coverImage {
-      large
-      medium
-    }
-    description
-    format
-    status
-    episodes
-    chapters
-    volumes
-    genres
-    averageScore
-    popularity
-    startDate {
-      year
-      month
-      day
-    }
-    endDate {
-      year
-      month
-      day
-    }
-    siteUrl
+    ...MediaBasicFragment
   }
 `;

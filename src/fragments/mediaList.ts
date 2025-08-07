@@ -1,11 +1,18 @@
 import { gql } from "graphql-request";
+import { DATE_FRAGMENT } from "./common/date.js";
+import { MEDIA_CORE_FRAGMENT } from "./media/core.js";
 
 export const MEDIA_LIST_FRAGMENT = gql`
+  ${DATE_FRAGMENT}
+  ${MEDIA_CORE_FRAGMENT}
   fragment MediaListFragment on MediaList {
     id
+    mediaId
+    userId
     status
     score
     progress
+    progressVolumes
     repeat
     priority
     private
@@ -14,29 +21,15 @@ export const MEDIA_LIST_FRAGMENT = gql`
     customLists
     advancedScores
     startedAt {
-      year
-      month
-      day
+      ...DateFragment
     }
     completedAt {
-      year
-      month
-      day
+      ...DateFragment
     }
     updatedAt
     createdAt
     media {
-      id
-      title {
-        romaji
-        english
-        native
-      }
-      coverImage {
-        large
-        medium
-      }
-      siteUrl
+      ...MediaCoreFragment
     }
   }
 `;

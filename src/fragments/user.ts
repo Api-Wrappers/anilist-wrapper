@@ -1,30 +1,9 @@
 import { gql } from "graphql-request";
+import { USER_BASIC_FRAGMENT } from "./entities/user.js";
 
 export const USER_FRAGMENT = gql`
+  ${USER_BASIC_FRAGMENT}
   fragment UserFragment on User {
-    id
-    name
-    avatar {
-      large
-      medium
-    }
-    about
-    bannerImage
-    options {
-      titleLanguage
-    }
-    statistics {
-      anime {
-        count
-        meanScore
-        minutesWatched
-      }
-      manga {
-        count
-        meanScore
-        chaptersRead
-      }
-    }
-    siteUrl
+    ...UserBasicFragment
   }
 `;

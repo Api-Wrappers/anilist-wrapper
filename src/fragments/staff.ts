@@ -1,25 +1,9 @@
 import { gql } from "graphql-request";
+import { STAFF_BASIC_FRAGMENT } from "./entities/staff.js";
 
 export const STAFF_FRAGMENT = gql`
+  ${STAFF_BASIC_FRAGMENT}
   fragment StaffFragment on Staff {
-    id
-    name {
-      full
-      native
-    }
-    image {
-      large
-      medium
-    }
-    description
-    primaryOccupations
-    gender
-    dateOfBirth {
-      year
-      month
-      day
-    }
-    age
-    siteUrl
+    ...StaffBasicFragment
   }
 `;
