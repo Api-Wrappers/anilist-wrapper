@@ -6,6 +6,7 @@ export const STAFF_EDGE_FRAGMENT = gql`
   fragment StaffEdgeFragment on StaffEdge {
     id
     role
+    favouriteOrder
     node {
       ...StaffBasicFragment
     }

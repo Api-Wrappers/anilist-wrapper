@@ -5,5 +5,14 @@ export const STUDIO_FRAGMENT = gql`
   ${STUDIO_NODE_FRAGMENT}
   fragment StudioFragment on Studio {
     ...StudioNodeFragment
+    media {
+      pageInfo {
+        total
+        perPage
+        currentPage
+        lastPage
+        hasNextPage
+      }
+    }
   }
 `;

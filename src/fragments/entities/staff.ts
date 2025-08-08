@@ -31,6 +31,7 @@ export const STAFF_BASIC_FRAGMENT = gql`
     bloodType
     homeTown
     languageV2
+    yearsActive
     favourites
     isFavourite
     isFavouriteBlocked

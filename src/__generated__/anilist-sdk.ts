@@ -739,6 +739,7 @@ export enum UserTitleLanguage {
 
 export type AnimeFragment = {
 	id: number;
+	idMal: number | null;
 	bannerImage: string | null;
 	description: string | null;
 	format: MediaFormat | null;
@@ -758,17 +759,25 @@ export type AnimeFragment = {
 	countryOfOrigin: any | null;
 	isAdult: boolean | null;
 	isLicensed: boolean | null;
+	isLocked: boolean | null;
+	isFavourite: boolean;
+	isFavouriteBlocked: boolean;
 	hashtag: string | null;
 	synonyms: Array<string | null> | null;
 	season: MediaSeason | null;
 	seasonYear: number | null;
 	siteUrl: string | null;
 	updatedAt: number | null;
+	autoCreateForumThread: boolean | null;
+	isRecommendationBlocked: boolean | null;
+	isReviewBlocked: boolean | null;
+	modNotes: string | null;
 	nextAiringEpisode: {
 		id: number;
 		airingAt: number;
 		timeUntilAiring: number;
 		episode: number;
+		mediaId: number;
 	} | null;
 	streamingEpisodes: Array<{
 		title: string | null;
@@ -779,6 +788,7 @@ export type AnimeFragment = {
 	studios: {
 		edges: Array<{
 			isMain: boolean;
+			favouriteOrder: number | null;
 			node: {
 				id: number;
 				name: string;
@@ -791,7 +801,15 @@ export type AnimeFragment = {
 	} | null;
 	relations: {
 		edges: Array<{
+			id: number | null;
 			relationType: MediaRelation | null;
+			isMainStudio: boolean;
+			characterRole: CharacterRole | null;
+			characterName: string | null;
+			roleNotes: string | null;
+			dubGroup: string | null;
+			staffRole: string | null;
+			favouriteOrder: number | null;
 			node: {
 				id: number;
 				type: MediaType | null;
@@ -814,6 +832,7 @@ export type AnimeFragment = {
 					romaji: string | null;
 					english: string | null;
 					native: string | null;
+					userPreferred: string | null;
 				} | null;
 				coverImage: {
 					large: string | null;
@@ -839,11 +858,17 @@ export type AnimeFragment = {
 			id: number | null;
 			role: CharacterRole | null;
 			name: string | null;
+			favouriteOrder: number | null;
 			voiceActors: Array<{
 				id: number;
 				languageV2: string | null;
 				name: { full: string | null; native: string | null } | null;
 				image: { large: string | null; medium: string | null } | null;
+			} | null> | null;
+			voiceActorRoles: Array<{
+				roleNotes: string | null;
+				dubGroup: string | null;
+				voiceActor: { id: number; name: { full: string | null } | null } | null;
 			} | null> | null;
 			node: {
 				id: number;
@@ -851,9 +876,9 @@ export type AnimeFragment = {
 				gender: string | null;
 				age: string | null;
 				bloodType: string | null;
-				favourites: number | null;
 				isFavourite: boolean;
 				isFavouriteBlocked: boolean;
+				favourites: number | null;
 				siteUrl: string | null;
 				name: {
 					alternative: Array<string | null> | null;
@@ -879,9 +904,9 @@ export type AnimeFragment = {
 			gender: string | null;
 			age: string | null;
 			bloodType: string | null;
-			favourites: number | null;
 			isFavourite: boolean;
 			isFavouriteBlocked: boolean;
+			favourites: number | null;
 			siteUrl: string | null;
 			name: {
 				alternative: Array<string | null> | null;
@@ -905,6 +930,7 @@ export type AnimeFragment = {
 		edges: Array<{
 			id: number | null;
 			role: string | null;
+			favouriteOrder: number | null;
 			node: {
 				id: number;
 				description: string | null;
@@ -913,6 +939,7 @@ export type AnimeFragment = {
 				bloodType: string | null;
 				homeTown: string | null;
 				languageV2: string | null;
+				yearsActive: Array<number | null> | null;
 				favourites: number | null;
 				isFavourite: boolean;
 				isFavouriteBlocked: boolean;
@@ -947,6 +974,7 @@ export type AnimeFragment = {
 			bloodType: string | null;
 			homeTown: string | null;
 			languageV2: string | null;
+			yearsActive: Array<number | null> | null;
 			favourites: number | null;
 			isFavourite: boolean;
 			isFavouriteBlocked: boolean;
@@ -982,6 +1010,7 @@ export type AnimeFragment = {
 		isGeneralSpoiler: boolean | null;
 		isMediaSpoiler: boolean | null;
 		isAdult: boolean | null;
+		userId: number | null;
 	} | null> | null;
 	rankings: Array<{
 		id: number;
@@ -997,10 +1026,13 @@ export type AnimeFragment = {
 		id: number;
 		url: string | null;
 		site: string;
+		siteId: number | null;
 		type: ExternalLinkType | null;
 		language: string | null;
 		color: string | null;
 		icon: string | null;
+		notes: string | null;
+		isDisabled: boolean | null;
 	} | null> | null;
 	stats: {
 		scoreDistribution: Array<{
@@ -1011,16 +1043,24 @@ export type AnimeFragment = {
 			status: MediaListStatus | null;
 			amount: number | null;
 		} | null> | null;
+		airingProgression: Array<{
+			episode: number | null;
+			score: number | null;
+			watching: number | null;
+		} | null> | null;
 	} | null;
 	trailer: {
 		id: string | null;
 		site: string | null;
 		thumbnail: string | null;
 	} | null;
+	reviews: { pageInfo: { total: number | null } | null } | null;
+	recommendations: { pageInfo: { total: number | null } | null } | null;
 	title: {
 		romaji: string | null;
 		english: string | null;
 		native: string | null;
+		userPreferred: string | null;
 	} | null;
 	coverImage: {
 		large: string | null;
@@ -1046,9 +1086,9 @@ export type CharacterFragment = {
 	gender: string | null;
 	age: string | null;
 	bloodType: string | null;
-	favourites: number | null;
 	isFavourite: boolean;
 	isFavouriteBlocked: boolean;
+	favourites: number | null;
 	siteUrl: string | null;
 	name: {
 		alternative: Array<string | null> | null;
@@ -1100,17 +1140,24 @@ export type TitleFragment = {
 	romaji: string | null;
 	english: string | null;
 	native: string | null;
+	userPreferred: string | null;
 };
 
 export type CharacterEdgeFragment = {
 	id: number | null;
 	role: CharacterRole | null;
 	name: string | null;
+	favouriteOrder: number | null;
 	voiceActors: Array<{
 		id: number;
 		languageV2: string | null;
 		name: { full: string | null; native: string | null } | null;
 		image: { large: string | null; medium: string | null } | null;
+	} | null> | null;
+	voiceActorRoles: Array<{
+		roleNotes: string | null;
+		dubGroup: string | null;
+		voiceActor: { id: number; name: { full: string | null } | null } | null;
 	} | null> | null;
 	node: {
 		id: number;
@@ -1118,9 +1165,9 @@ export type CharacterEdgeFragment = {
 		gender: string | null;
 		age: string | null;
 		bloodType: string | null;
-		favourites: number | null;
 		isFavourite: boolean;
 		isFavouriteBlocked: boolean;
+		favourites: number | null;
 		siteUrl: string | null;
 		name: {
 			alternative: Array<string | null> | null;
@@ -1146,11 +1193,17 @@ export type CharacterConnectionFragment = {
 		id: number | null;
 		role: CharacterRole | null;
 		name: string | null;
+		favouriteOrder: number | null;
 		voiceActors: Array<{
 			id: number;
 			languageV2: string | null;
 			name: { full: string | null; native: string | null } | null;
 			image: { large: string | null; medium: string | null } | null;
+		} | null> | null;
+		voiceActorRoles: Array<{
+			roleNotes: string | null;
+			dubGroup: string | null;
+			voiceActor: { id: number; name: { full: string | null } | null } | null;
 		} | null> | null;
 		node: {
 			id: number;
@@ -1158,9 +1211,9 @@ export type CharacterConnectionFragment = {
 			gender: string | null;
 			age: string | null;
 			bloodType: string | null;
-			favourites: number | null;
 			isFavourite: boolean;
 			isFavouriteBlocked: boolean;
+			favourites: number | null;
 			siteUrl: string | null;
 			name: {
 				alternative: Array<string | null> | null;
@@ -1186,9 +1239,9 @@ export type CharacterConnectionFragment = {
 		gender: string | null;
 		age: string | null;
 		bloodType: string | null;
-		favourites: number | null;
 		isFavourite: boolean;
 		isFavouriteBlocked: boolean;
+		favourites: number | null;
 		siteUrl: string | null;
 		name: {
 			alternative: Array<string | null> | null;
@@ -1231,6 +1284,7 @@ export type MediaRelationNodeFragment = {
 		romaji: string | null;
 		english: string | null;
 		native: string | null;
+		userPreferred: string | null;
 	} | null;
 	coverImage: {
 		large: string | null;
@@ -1251,7 +1305,15 @@ export type MediaRelationNodeFragment = {
 };
 
 export type MediaRelationEdgeFragment = {
+	id: number | null;
 	relationType: MediaRelation | null;
+	isMainStudio: boolean;
+	characterRole: CharacterRole | null;
+	characterName: string | null;
+	roleNotes: string | null;
+	dubGroup: string | null;
+	staffRole: string | null;
+	favouriteOrder: number | null;
 	node: {
 		id: number;
 		type: MediaType | null;
@@ -1274,6 +1336,7 @@ export type MediaRelationEdgeFragment = {
 			romaji: string | null;
 			english: string | null;
 			native: string | null;
+			userPreferred: string | null;
 		} | null;
 		coverImage: {
 			large: string | null;
@@ -1296,7 +1359,15 @@ export type MediaRelationEdgeFragment = {
 
 export type MediaRelationConnectionFragment = {
 	edges: Array<{
+		id: number | null;
 		relationType: MediaRelation | null;
+		isMainStudio: boolean;
+		characterRole: CharacterRole | null;
+		characterName: string | null;
+		roleNotes: string | null;
+		dubGroup: string | null;
+		staffRole: string | null;
+		favouriteOrder: number | null;
 		node: {
 			id: number;
 			type: MediaType | null;
@@ -1319,6 +1390,7 @@ export type MediaRelationConnectionFragment = {
 				romaji: string | null;
 				english: string | null;
 				native: string | null;
+				userPreferred: string | null;
 			} | null;
 			coverImage: {
 				large: string | null;
@@ -1343,6 +1415,7 @@ export type MediaRelationConnectionFragment = {
 export type StaffEdgeFragment = {
 	id: number | null;
 	role: string | null;
+	favouriteOrder: number | null;
 	node: {
 		id: number;
 		description: string | null;
@@ -1351,6 +1424,7 @@ export type StaffEdgeFragment = {
 		bloodType: string | null;
 		homeTown: string | null;
 		languageV2: string | null;
+		yearsActive: Array<number | null> | null;
 		favourites: number | null;
 		isFavourite: boolean;
 		isFavouriteBlocked: boolean;
@@ -1382,6 +1456,7 @@ export type StaffConnectionFragment = {
 	edges: Array<{
 		id: number | null;
 		role: string | null;
+		favouriteOrder: number | null;
 		node: {
 			id: number;
 			description: string | null;
@@ -1390,6 +1465,7 @@ export type StaffConnectionFragment = {
 			bloodType: string | null;
 			homeTown: string | null;
 			languageV2: string | null;
+			yearsActive: Array<number | null> | null;
 			favourites: number | null;
 			isFavourite: boolean;
 			isFavouriteBlocked: boolean;
@@ -1424,6 +1500,7 @@ export type StaffConnectionFragment = {
 		bloodType: string | null;
 		homeTown: string | null;
 		languageV2: string | null;
+		yearsActive: Array<number | null> | null;
 		favourites: number | null;
 		isFavourite: boolean;
 		isFavouriteBlocked: boolean;
@@ -1462,6 +1539,7 @@ export type StudioNodeFragment = {
 
 export type StudioEdgeFragment = {
 	isMain: boolean;
+	favouriteOrder: number | null;
 	node: {
 		id: number;
 		name: string;
@@ -1475,6 +1553,7 @@ export type StudioEdgeFragment = {
 export type StudioConnectionFragment = {
 	edges: Array<{
 		isMain: boolean;
+		favouriteOrder: number | null;
 		node: {
 			id: number;
 			name: string;
@@ -1503,9 +1582,9 @@ export type CharacterBasicFragment = {
 	gender: string | null;
 	age: string | null;
 	bloodType: string | null;
-	favourites: number | null;
 	isFavourite: boolean;
 	isFavouriteBlocked: boolean;
+	favourites: number | null;
 	siteUrl: string | null;
 	name: {
 		alternative: Array<string | null> | null;
@@ -1542,6 +1621,7 @@ export type StaffBasicFragment = {
 	bloodType: string | null;
 	homeTown: string | null;
 	languageV2: string | null;
+	yearsActive: Array<number | null> | null;
 	favourites: number | null;
 	isFavourite: boolean;
 	isFavouriteBlocked: boolean;
@@ -1573,15 +1653,26 @@ export type UserOptionsFragment = {
 	displayAdultContent: boolean | null;
 	airingNotifications: boolean | null;
 	profileColor: string | null;
+	timezone: string | null;
+	activityMergeTime: number | null;
+	staffNameLanguage: UserStaffNameLanguage | null;
+	restrictMessagesToFollowing: boolean | null;
 	notificationOptions: Array<{
 		type: NotificationType | null;
 		enabled: boolean | null;
+	} | null> | null;
+	disabledListActivity: Array<{
+		disabled: boolean | null;
+		type: MediaListStatus | null;
 	} | null> | null;
 };
 
 export type UserMediaListOptionsFragment = {
 	scoreFormat: ScoreFormat | null;
 	rowOrder: string | null;
+	useLegacyLists: boolean | null;
+	sharedTheme: any | null;
+	sharedThemeEnabled: boolean | null;
 	animeList: {
 		sectionOrder: Array<string | null> | null;
 		splitCompletedSectionByFormat: boolean | null;
@@ -1633,6 +1724,8 @@ export type UserStatisticsFragment = {
 		standardDeviation: number;
 		minutesWatched: number;
 		episodesWatched: number;
+		chaptersRead: number;
+		volumesRead: number;
 		scores: Array<{
 			score: number | null;
 			count: number;
@@ -1680,6 +1773,34 @@ export type UserStatisticsFragment = {
 			meanScore: number;
 			minutesWatched: number;
 			tag: { name: string } | null;
+		} | null> | null;
+		countries: Array<{
+			country: any | null;
+			count: number;
+			meanScore: number;
+			minutesWatched: number;
+		} | null> | null;
+		voiceActors: Array<{
+			count: number;
+			meanScore: number;
+			minutesWatched: number;
+			characterIds: Array<number | null>;
+			mediaIds: Array<number | null>;
+			voiceActor: { id: number; name: { full: string | null } | null } | null;
+		} | null> | null;
+		staff: Array<{
+			count: number;
+			meanScore: number;
+			minutesWatched: number;
+			mediaIds: Array<number | null>;
+			staff: { id: number; name: { full: string | null } | null } | null;
+		} | null> | null;
+		studios: Array<{
+			count: number;
+			meanScore: number;
+			minutesWatched: number;
+			mediaIds: Array<number | null>;
+			studio: { id: number; name: string } | null;
 		} | null> | null;
 	} | null;
 	manga: {
@@ -1736,6 +1857,26 @@ export type UserStatisticsFragment = {
 			chaptersRead: number;
 			tag: { name: string } | null;
 		} | null> | null;
+		countries: Array<{
+			country: any | null;
+			count: number;
+			meanScore: number;
+			chaptersRead: number;
+		} | null> | null;
+		staff: Array<{
+			count: number;
+			meanScore: number;
+			chaptersRead: number;
+			mediaIds: Array<number | null>;
+			staff: { id: number; name: { full: string | null } | null } | null;
+		} | null> | null;
+		studios: Array<{
+			count: number;
+			meanScore: number;
+			chaptersRead: number;
+			mediaIds: Array<number | null>;
+			studio: { id: number; name: string } | null;
+		} | null> | null;
 	} | null;
 };
 
@@ -1746,13 +1887,15 @@ export type UserBasicFragment = {
 	bannerImage: string | null;
 	donatorTier: number | null;
 	donatorBadge: string | null;
-	createdAt: number | null;
-	updatedAt: number | null;
 	isFollowing: boolean | null;
 	isFollower: boolean | null;
 	isBlocked: boolean | null;
+	createdAt: number | null;
+	updatedAt: number | null;
 	unreadNotificationCount: number | null;
+	bans: any | null;
 	moderatorRoles: Array<ModRole | null> | null;
+	moderatorStatus: string | null;
 	siteUrl: string | null;
 	avatar: { large: string | null; medium: string | null } | null;
 	options: {
@@ -1760,14 +1903,25 @@ export type UserBasicFragment = {
 		displayAdultContent: boolean | null;
 		airingNotifications: boolean | null;
 		profileColor: string | null;
+		timezone: string | null;
+		activityMergeTime: number | null;
+		staffNameLanguage: UserStaffNameLanguage | null;
+		restrictMessagesToFollowing: boolean | null;
 		notificationOptions: Array<{
 			type: NotificationType | null;
 			enabled: boolean | null;
+		} | null> | null;
+		disabledListActivity: Array<{
+			disabled: boolean | null;
+			type: MediaListStatus | null;
 		} | null> | null;
 	} | null;
 	mediaListOptions: {
 		scoreFormat: ScoreFormat | null;
 		rowOrder: string | null;
+		useLegacyLists: boolean | null;
+		sharedTheme: any | null;
+		sharedThemeEnabled: boolean | null;
 		animeList: {
 			sectionOrder: Array<string | null> | null;
 			splitCompletedSectionByFormat: boolean | null;
@@ -1819,6 +1973,8 @@ export type UserBasicFragment = {
 			standardDeviation: number;
 			minutesWatched: number;
 			episodesWatched: number;
+			chaptersRead: number;
+			volumesRead: number;
 			scores: Array<{
 				score: number | null;
 				count: number;
@@ -1866,6 +2022,34 @@ export type UserBasicFragment = {
 				meanScore: number;
 				minutesWatched: number;
 				tag: { name: string } | null;
+			} | null> | null;
+			countries: Array<{
+				country: any | null;
+				count: number;
+				meanScore: number;
+				minutesWatched: number;
+			} | null> | null;
+			voiceActors: Array<{
+				count: number;
+				meanScore: number;
+				minutesWatched: number;
+				characterIds: Array<number | null>;
+				mediaIds: Array<number | null>;
+				voiceActor: { id: number; name: { full: string | null } | null } | null;
+			} | null> | null;
+			staff: Array<{
+				count: number;
+				meanScore: number;
+				minutesWatched: number;
+				mediaIds: Array<number | null>;
+				staff: { id: number; name: { full: string | null } | null } | null;
+			} | null> | null;
+			studios: Array<{
+				count: number;
+				meanScore: number;
+				minutesWatched: number;
+				mediaIds: Array<number | null>;
+				studio: { id: number; name: string } | null;
 			} | null> | null;
 		} | null;
 		manga: {
@@ -1922,12 +2106,39 @@ export type UserBasicFragment = {
 				chaptersRead: number;
 				tag: { name: string } | null;
 			} | null> | null;
+			countries: Array<{
+				country: any | null;
+				count: number;
+				meanScore: number;
+				chaptersRead: number;
+			} | null> | null;
+			staff: Array<{
+				count: number;
+				meanScore: number;
+				chaptersRead: number;
+				mediaIds: Array<number | null>;
+				staff: { id: number; name: { full: string | null } | null } | null;
+			} | null> | null;
+			studios: Array<{
+				count: number;
+				meanScore: number;
+				chaptersRead: number;
+				mediaIds: Array<number | null>;
+				studio: { id: number; name: string } | null;
+			} | null> | null;
 		} | null;
 	} | null;
+	stats: { watchedTime: number | null; chaptersRead: number | null } | null;
+	previousNames: Array<{
+		name: string | null;
+		createdAt: number | null;
+		updatedAt: number | null;
+	} | null> | null;
 };
 
 export type MangaFragment = {
 	id: number;
+	idMal: number | null;
 	bannerImage: string | null;
 	description: string | null;
 	format: MediaFormat | null;
@@ -1947,15 +2158,30 @@ export type MangaFragment = {
 	countryOfOrigin: any | null;
 	isAdult: boolean | null;
 	isLicensed: boolean | null;
+	isLocked: boolean | null;
+	isFavourite: boolean;
+	isFavouriteBlocked: boolean;
 	hashtag: string | null;
 	synonyms: Array<string | null> | null;
 	season: MediaSeason | null;
 	seasonYear: number | null;
 	siteUrl: string | null;
 	updatedAt: number | null;
+	autoCreateForumThread: boolean | null;
+	isRecommendationBlocked: boolean | null;
+	isReviewBlocked: boolean | null;
+	modNotes: string | null;
 	relations: {
 		edges: Array<{
+			id: number | null;
 			relationType: MediaRelation | null;
+			isMainStudio: boolean;
+			characterRole: CharacterRole | null;
+			characterName: string | null;
+			roleNotes: string | null;
+			dubGroup: string | null;
+			staffRole: string | null;
+			favouriteOrder: number | null;
 			node: {
 				id: number;
 				type: MediaType | null;
@@ -1978,6 +2204,7 @@ export type MangaFragment = {
 					romaji: string | null;
 					english: string | null;
 					native: string | null;
+					userPreferred: string | null;
 				} | null;
 				coverImage: {
 					large: string | null;
@@ -2003,11 +2230,17 @@ export type MangaFragment = {
 			id: number | null;
 			role: CharacterRole | null;
 			name: string | null;
+			favouriteOrder: number | null;
 			voiceActors: Array<{
 				id: number;
 				languageV2: string | null;
 				name: { full: string | null; native: string | null } | null;
 				image: { large: string | null; medium: string | null } | null;
+			} | null> | null;
+			voiceActorRoles: Array<{
+				roleNotes: string | null;
+				dubGroup: string | null;
+				voiceActor: { id: number; name: { full: string | null } | null } | null;
 			} | null> | null;
 			node: {
 				id: number;
@@ -2015,9 +2248,9 @@ export type MangaFragment = {
 				gender: string | null;
 				age: string | null;
 				bloodType: string | null;
-				favourites: number | null;
 				isFavourite: boolean;
 				isFavouriteBlocked: boolean;
+				favourites: number | null;
 				siteUrl: string | null;
 				name: {
 					alternative: Array<string | null> | null;
@@ -2043,9 +2276,9 @@ export type MangaFragment = {
 			gender: string | null;
 			age: string | null;
 			bloodType: string | null;
-			favourites: number | null;
 			isFavourite: boolean;
 			isFavouriteBlocked: boolean;
+			favourites: number | null;
 			siteUrl: string | null;
 			name: {
 				alternative: Array<string | null> | null;
@@ -2069,6 +2302,7 @@ export type MangaFragment = {
 		edges: Array<{
 			id: number | null;
 			role: string | null;
+			favouriteOrder: number | null;
 			node: {
 				id: number;
 				description: string | null;
@@ -2077,6 +2311,7 @@ export type MangaFragment = {
 				bloodType: string | null;
 				homeTown: string | null;
 				languageV2: string | null;
+				yearsActive: Array<number | null> | null;
 				favourites: number | null;
 				isFavourite: boolean;
 				isFavouriteBlocked: boolean;
@@ -2111,6 +2346,7 @@ export type MangaFragment = {
 			bloodType: string | null;
 			homeTown: string | null;
 			languageV2: string | null;
+			yearsActive: Array<number | null> | null;
 			favourites: number | null;
 			isFavourite: boolean;
 			isFavouriteBlocked: boolean;
@@ -2146,6 +2382,7 @@ export type MangaFragment = {
 		isGeneralSpoiler: boolean | null;
 		isMediaSpoiler: boolean | null;
 		isAdult: boolean | null;
+		userId: number | null;
 	} | null> | null;
 	rankings: Array<{
 		id: number;
@@ -2161,10 +2398,13 @@ export type MangaFragment = {
 		id: number;
 		url: string | null;
 		site: string;
+		siteId: number | null;
 		type: ExternalLinkType | null;
 		language: string | null;
 		color: string | null;
 		icon: string | null;
+		notes: string | null;
+		isDisabled: boolean | null;
 	} | null> | null;
 	stats: {
 		scoreDistribution: Array<{
@@ -2175,16 +2415,24 @@ export type MangaFragment = {
 			status: MediaListStatus | null;
 			amount: number | null;
 		} | null> | null;
+		airingProgression: Array<{
+			episode: number | null;
+			score: number | null;
+			watching: number | null;
+		} | null> | null;
 	} | null;
 	trailer: {
 		id: string | null;
 		site: string | null;
 		thumbnail: string | null;
 	} | null;
+	reviews: { pageInfo: { total: number | null } | null } | null;
+	recommendations: { pageInfo: { total: number | null } | null } | null;
 	title: {
 		romaji: string | null;
 		english: string | null;
 		native: string | null;
+		userPreferred: string | null;
 	} | null;
 	coverImage: {
 		large: string | null;
@@ -2206,6 +2454,7 @@ export type MangaFragment = {
 
 export type MediaFragment = {
 	id: number;
+	idMal: number | null;
 	bannerImage: string | null;
 	description: string | null;
 	format: MediaFormat | null;
@@ -2225,12 +2474,26 @@ export type MediaFragment = {
 	countryOfOrigin: any | null;
 	isAdult: boolean | null;
 	isLicensed: boolean | null;
+	isLocked: boolean | null;
+	isFavourite: boolean;
+	isFavouriteBlocked: boolean;
 	hashtag: string | null;
 	synonyms: Array<string | null> | null;
 	season: MediaSeason | null;
 	seasonYear: number | null;
 	siteUrl: string | null;
 	updatedAt: number | null;
+	autoCreateForumThread: boolean | null;
+	isRecommendationBlocked: boolean | null;
+	isReviewBlocked: boolean | null;
+	modNotes: string | null;
+	nextAiringEpisode: {
+		id: number;
+		airingAt: number;
+		timeUntilAiring: number;
+		episode: number;
+		mediaId: number;
+	} | null;
 	tags: Array<{
 		id: number;
 		name: string;
@@ -2242,12 +2505,14 @@ export type MediaFragment = {
 		id: number;
 		url: string | null;
 		site: string;
+		siteId: number | null;
 		type: ExternalLinkType | null;
 	} | null> | null;
 	title: {
 		romaji: string | null;
 		english: string | null;
 		native: string | null;
+		userPreferred: string | null;
 	} | null;
 	coverImage: {
 		large: string | null;
@@ -2269,6 +2534,7 @@ export type MediaFragment = {
 
 export type MediaCoreFragment = {
 	id: number;
+	idMal: number | null;
 	bannerImage: string | null;
 	description: string | null;
 	format: MediaFormat | null;
@@ -2288,16 +2554,24 @@ export type MediaCoreFragment = {
 	countryOfOrigin: any | null;
 	isAdult: boolean | null;
 	isLicensed: boolean | null;
+	isLocked: boolean | null;
+	isFavourite: boolean;
+	isFavouriteBlocked: boolean;
 	hashtag: string | null;
 	synonyms: Array<string | null> | null;
 	season: MediaSeason | null;
 	seasonYear: number | null;
 	siteUrl: string | null;
 	updatedAt: number | null;
+	autoCreateForumThread: boolean | null;
+	isRecommendationBlocked: boolean | null;
+	isReviewBlocked: boolean | null;
+	modNotes: string | null;
 	title: {
 		romaji: string | null;
 		english: string | null;
 		native: string | null;
+		userPreferred: string | null;
 	} | null;
 	coverImage: {
 		large: string | null;
@@ -2319,6 +2593,7 @@ export type MediaCoreFragment = {
 
 export type MediaDetailedFragment = {
 	id: number;
+	idMal: number | null;
 	bannerImage: string | null;
 	description: string | null;
 	format: MediaFormat | null;
@@ -2338,12 +2613,19 @@ export type MediaDetailedFragment = {
 	countryOfOrigin: any | null;
 	isAdult: boolean | null;
 	isLicensed: boolean | null;
+	isLocked: boolean | null;
+	isFavourite: boolean;
+	isFavouriteBlocked: boolean;
 	hashtag: string | null;
 	synonyms: Array<string | null> | null;
 	season: MediaSeason | null;
 	seasonYear: number | null;
 	siteUrl: string | null;
 	updatedAt: number | null;
+	autoCreateForumThread: boolean | null;
+	isRecommendationBlocked: boolean | null;
+	isReviewBlocked: boolean | null;
+	modNotes: string | null;
 	tags: Array<{
 		id: number;
 		name: string;
@@ -2353,6 +2635,7 @@ export type MediaDetailedFragment = {
 		isGeneralSpoiler: boolean | null;
 		isMediaSpoiler: boolean | null;
 		isAdult: boolean | null;
+		userId: number | null;
 	} | null> | null;
 	rankings: Array<{
 		id: number;
@@ -2368,10 +2651,13 @@ export type MediaDetailedFragment = {
 		id: number;
 		url: string | null;
 		site: string;
+		siteId: number | null;
 		type: ExternalLinkType | null;
 		language: string | null;
 		color: string | null;
 		icon: string | null;
+		notes: string | null;
+		isDisabled: boolean | null;
 	} | null> | null;
 	stats: {
 		scoreDistribution: Array<{
@@ -2382,16 +2668,24 @@ export type MediaDetailedFragment = {
 			status: MediaListStatus | null;
 			amount: number | null;
 		} | null> | null;
+		airingProgression: Array<{
+			episode: number | null;
+			score: number | null;
+			watching: number | null;
+		} | null> | null;
 	} | null;
 	trailer: {
 		id: string | null;
 		site: string | null;
 		thumbnail: string | null;
 	} | null;
+	reviews: { pageInfo: { total: number | null } | null } | null;
+	recommendations: { pageInfo: { total: number | null } | null } | null;
 	title: {
 		romaji: string | null;
 		english: string | null;
 		native: string | null;
+		userPreferred: string | null;
 	} | null;
 	coverImage: {
 		large: string | null;
@@ -2413,6 +2707,7 @@ export type MediaDetailedFragment = {
 
 export type MediaBasicFragment = {
 	id: number;
+	idMal: number | null;
 	bannerImage: string | null;
 	description: string | null;
 	format: MediaFormat | null;
@@ -2432,12 +2727,19 @@ export type MediaBasicFragment = {
 	countryOfOrigin: any | null;
 	isAdult: boolean | null;
 	isLicensed: boolean | null;
+	isLocked: boolean | null;
+	isFavourite: boolean;
+	isFavouriteBlocked: boolean;
 	hashtag: string | null;
 	synonyms: Array<string | null> | null;
 	season: MediaSeason | null;
 	seasonYear: number | null;
 	siteUrl: string | null;
 	updatedAt: number | null;
+	autoCreateForumThread: boolean | null;
+	isRecommendationBlocked: boolean | null;
+	isReviewBlocked: boolean | null;
+	modNotes: string | null;
 	tags: Array<{
 		id: number;
 		name: string;
@@ -2449,12 +2751,14 @@ export type MediaBasicFragment = {
 		id: number;
 		url: string | null;
 		site: string;
+		siteId: number | null;
 		type: ExternalLinkType | null;
 	} | null> | null;
 	title: {
 		romaji: string | null;
 		english: string | null;
 		native: string | null;
+		userPreferred: string | null;
 	} | null;
 	coverImage: {
 		large: string | null;
@@ -2478,16 +2782,20 @@ export type MediaExternalLinkFragment = {
 	id: number;
 	url: string | null;
 	site: string;
+	siteId: number | null;
 	type: ExternalLinkType | null;
 	language: string | null;
 	color: string | null;
 	icon: string | null;
+	notes: string | null;
+	isDisabled: boolean | null;
 };
 
 export type MediaExternalLinkBasicFragment = {
 	id: number;
 	url: string | null;
 	site: string;
+	siteId: number | null;
 	type: ExternalLinkType | null;
 };
 
@@ -2521,6 +2829,11 @@ export type MediaStatsFragment = {
 		status: MediaListStatus | null;
 		amount: number | null;
 	} | null> | null;
+	airingProgression: Array<{
+		episode: number | null;
+		score: number | null;
+		watching: number | null;
+	} | null> | null;
 };
 
 export type MediaStreamingEpisodeFragment = {
@@ -2535,6 +2848,7 @@ export type AiringScheduleFragment = {
 	airingAt: number;
 	timeUntilAiring: number;
 	episode: number;
+	mediaId: number;
 };
 
 export type MediaTagFragment = {
@@ -2546,6 +2860,7 @@ export type MediaTagFragment = {
 	isGeneralSpoiler: boolean | null;
 	isMediaSpoiler: boolean | null;
 	isAdult: boolean | null;
+	userId: number | null;
 };
 
 export type MediaTagBasicFragment = {
@@ -2591,6 +2906,7 @@ export type MediaListFragment = {
 	} | null;
 	media: {
 		id: number;
+		idMal: number | null;
 		bannerImage: string | null;
 		description: string | null;
 		format: MediaFormat | null;
@@ -2610,16 +2926,24 @@ export type MediaListFragment = {
 		countryOfOrigin: any | null;
 		isAdult: boolean | null;
 		isLicensed: boolean | null;
+		isLocked: boolean | null;
+		isFavourite: boolean;
+		isFavouriteBlocked: boolean;
 		hashtag: string | null;
 		synonyms: Array<string | null> | null;
 		season: MediaSeason | null;
 		seasonYear: number | null;
 		siteUrl: string | null;
 		updatedAt: number | null;
+		autoCreateForumThread: boolean | null;
+		isRecommendationBlocked: boolean | null;
+		isReviewBlocked: boolean | null;
+		modNotes: string | null;
 		title: {
 			romaji: string | null;
 			english: string | null;
 			native: string | null;
+			userPreferred: string | null;
 		} | null;
 		coverImage: {
 			large: string | null;
@@ -2648,6 +2972,7 @@ export type StaffFragment = {
 	bloodType: string | null;
 	homeTown: string | null;
 	languageV2: string | null;
+	yearsActive: Array<number | null> | null;
 	favourites: number | null;
 	isFavourite: boolean;
 	isFavouriteBlocked: boolean;
@@ -2681,6 +3006,15 @@ export type StudioFragment = {
 	favourites: number | null;
 	isFavourite: boolean;
 	siteUrl: string | null;
+	media: {
+		pageInfo: {
+			total: number | null;
+			perPage: number | null;
+			currentPage: number | null;
+			lastPage: number | null;
+			hasNextPage: boolean | null;
+		} | null;
+	} | null;
 };
 
 export type UserFragment = {
@@ -2690,13 +3024,15 @@ export type UserFragment = {
 	bannerImage: string | null;
 	donatorTier: number | null;
 	donatorBadge: string | null;
-	createdAt: number | null;
-	updatedAt: number | null;
 	isFollowing: boolean | null;
 	isFollower: boolean | null;
 	isBlocked: boolean | null;
+	createdAt: number | null;
+	updatedAt: number | null;
 	unreadNotificationCount: number | null;
+	bans: any | null;
 	moderatorRoles: Array<ModRole | null> | null;
+	moderatorStatus: string | null;
 	siteUrl: string | null;
 	avatar: { large: string | null; medium: string | null } | null;
 	options: {
@@ -2704,14 +3040,25 @@ export type UserFragment = {
 		displayAdultContent: boolean | null;
 		airingNotifications: boolean | null;
 		profileColor: string | null;
+		timezone: string | null;
+		activityMergeTime: number | null;
+		staffNameLanguage: UserStaffNameLanguage | null;
+		restrictMessagesToFollowing: boolean | null;
 		notificationOptions: Array<{
 			type: NotificationType | null;
 			enabled: boolean | null;
+		} | null> | null;
+		disabledListActivity: Array<{
+			disabled: boolean | null;
+			type: MediaListStatus | null;
 		} | null> | null;
 	} | null;
 	mediaListOptions: {
 		scoreFormat: ScoreFormat | null;
 		rowOrder: string | null;
+		useLegacyLists: boolean | null;
+		sharedTheme: any | null;
+		sharedThemeEnabled: boolean | null;
 		animeList: {
 			sectionOrder: Array<string | null> | null;
 			splitCompletedSectionByFormat: boolean | null;
@@ -2763,6 +3110,8 @@ export type UserFragment = {
 			standardDeviation: number;
 			minutesWatched: number;
 			episodesWatched: number;
+			chaptersRead: number;
+			volumesRead: number;
 			scores: Array<{
 				score: number | null;
 				count: number;
@@ -2810,6 +3159,34 @@ export type UserFragment = {
 				meanScore: number;
 				minutesWatched: number;
 				tag: { name: string } | null;
+			} | null> | null;
+			countries: Array<{
+				country: any | null;
+				count: number;
+				meanScore: number;
+				minutesWatched: number;
+			} | null> | null;
+			voiceActors: Array<{
+				count: number;
+				meanScore: number;
+				minutesWatched: number;
+				characterIds: Array<number | null>;
+				mediaIds: Array<number | null>;
+				voiceActor: { id: number; name: { full: string | null } | null } | null;
+			} | null> | null;
+			staff: Array<{
+				count: number;
+				meanScore: number;
+				minutesWatched: number;
+				mediaIds: Array<number | null>;
+				staff: { id: number; name: { full: string | null } | null } | null;
+			} | null> | null;
+			studios: Array<{
+				count: number;
+				meanScore: number;
+				minutesWatched: number;
+				mediaIds: Array<number | null>;
+				studio: { id: number; name: string } | null;
 			} | null> | null;
 		} | null;
 		manga: {
@@ -2866,8 +3243,34 @@ export type UserFragment = {
 				chaptersRead: number;
 				tag: { name: string } | null;
 			} | null> | null;
+			countries: Array<{
+				country: any | null;
+				count: number;
+				meanScore: number;
+				chaptersRead: number;
+			} | null> | null;
+			staff: Array<{
+				count: number;
+				meanScore: number;
+				chaptersRead: number;
+				mediaIds: Array<number | null>;
+				staff: { id: number; name: { full: string | null } | null } | null;
+			} | null> | null;
+			studios: Array<{
+				count: number;
+				meanScore: number;
+				chaptersRead: number;
+				mediaIds: Array<number | null>;
+				studio: { id: number; name: string } | null;
+			} | null> | null;
 		} | null;
 	} | null;
+	stats: { watchedTime: number | null; chaptersRead: number | null } | null;
+	previousNames: Array<{
+		name: string | null;
+		createdAt: number | null;
+		updatedAt: number | null;
+	} | null> | null;
 };
 
 export type GetAnimeByIdQueryVariables = Exact<{
@@ -2877,6 +3280,7 @@ export type GetAnimeByIdQueryVariables = Exact<{
 export type GetAnimeByIdQuery = {
 	Media: {
 		id: number;
+		idMal: number | null;
 		bannerImage: string | null;
 		description: string | null;
 		format: MediaFormat | null;
@@ -2896,12 +3300,19 @@ export type GetAnimeByIdQuery = {
 		countryOfOrigin: any | null;
 		isAdult: boolean | null;
 		isLicensed: boolean | null;
+		isLocked: boolean | null;
+		isFavourite: boolean;
+		isFavouriteBlocked: boolean;
 		hashtag: string | null;
 		synonyms: Array<string | null> | null;
 		season: MediaSeason | null;
 		seasonYear: number | null;
 		siteUrl: string | null;
 		updatedAt: number | null;
+		autoCreateForumThread: boolean | null;
+		isRecommendationBlocked: boolean | null;
+		isReviewBlocked: boolean | null;
+		modNotes: string | null;
 		characters: {
 			edges: Array<{
 				role: CharacterRole | null;
@@ -2911,9 +3322,9 @@ export type GetAnimeByIdQuery = {
 					gender: string | null;
 					age: string | null;
 					bloodType: string | null;
-					favourites: number | null;
 					isFavourite: boolean;
 					isFavouriteBlocked: boolean;
+					favourites: number | null;
 					siteUrl: string | null;
 					name: {
 						alternative: Array<string | null> | null;
@@ -2945,6 +3356,7 @@ export type GetAnimeByIdQuery = {
 					bloodType: string | null;
 					homeTown: string | null;
 					languageV2: string | null;
+					yearsActive: Array<number | null> | null;
 					favourites: number | null;
 					isFavourite: boolean;
 					isFavouriteBlocked: boolean;
@@ -2981,8 +3393,24 @@ export type GetAnimeByIdQuery = {
 					favourites: number | null;
 					isFavourite: boolean;
 					siteUrl: string | null;
+					media: {
+						pageInfo: {
+							total: number | null;
+							perPage: number | null;
+							currentPage: number | null;
+							lastPage: number | null;
+							hasNextPage: boolean | null;
+						} | null;
+					} | null;
 				} | null;
 			} | null> | null;
+		} | null;
+		nextAiringEpisode: {
+			id: number;
+			airingAt: number;
+			timeUntilAiring: number;
+			episode: number;
+			mediaId: number;
 		} | null;
 		tags: Array<{
 			id: number;
@@ -2995,12 +3423,14 @@ export type GetAnimeByIdQuery = {
 			id: number;
 			url: string | null;
 			site: string;
+			siteId: number | null;
 			type: ExternalLinkType | null;
 		} | null> | null;
 		title: {
 			romaji: string | null;
 			english: string | null;
 			native: string | null;
+			userPreferred: string | null;
 		} | null;
 		coverImage: {
 			large: string | null;
@@ -3029,6 +3459,7 @@ export type GetAnimeByTitleQuery = {
 	Page: {
 		media: Array<{
 			id: number;
+			idMal: number | null;
 			bannerImage: string | null;
 			description: string | null;
 			format: MediaFormat | null;
@@ -3048,12 +3479,26 @@ export type GetAnimeByTitleQuery = {
 			countryOfOrigin: any | null;
 			isAdult: boolean | null;
 			isLicensed: boolean | null;
+			isLocked: boolean | null;
+			isFavourite: boolean;
+			isFavouriteBlocked: boolean;
 			hashtag: string | null;
 			synonyms: Array<string | null> | null;
 			season: MediaSeason | null;
 			seasonYear: number | null;
 			siteUrl: string | null;
 			updatedAt: number | null;
+			autoCreateForumThread: boolean | null;
+			isRecommendationBlocked: boolean | null;
+			isReviewBlocked: boolean | null;
+			modNotes: string | null;
+			nextAiringEpisode: {
+				id: number;
+				airingAt: number;
+				timeUntilAiring: number;
+				episode: number;
+				mediaId: number;
+			} | null;
 			tags: Array<{
 				id: number;
 				name: string;
@@ -3065,12 +3510,14 @@ export type GetAnimeByTitleQuery = {
 				id: number;
 				url: string | null;
 				site: string;
+				siteId: number | null;
 				type: ExternalLinkType | null;
 			} | null> | null;
 			title: {
 				romaji: string | null;
 				english: string | null;
 				native: string | null;
+				userPreferred: string | null;
 			} | null;
 			coverImage: {
 				large: string | null;
@@ -3107,9 +3554,9 @@ export type GetAnimeCharactersQuery = {
 					gender: string | null;
 					age: string | null;
 					bloodType: string | null;
-					favourites: number | null;
 					isFavourite: boolean;
 					isFavouriteBlocked: boolean;
+					favourites: number | null;
 					siteUrl: string | null;
 					name: {
 						alternative: Array<string | null> | null;
@@ -3143,6 +3590,7 @@ export type GetAnimeListByGenreQuery = {
 	Page: {
 		media: Array<{
 			id: number;
+			idMal: number | null;
 			bannerImage: string | null;
 			description: string | null;
 			format: MediaFormat | null;
@@ -3162,12 +3610,26 @@ export type GetAnimeListByGenreQuery = {
 			countryOfOrigin: any | null;
 			isAdult: boolean | null;
 			isLicensed: boolean | null;
+			isLocked: boolean | null;
+			isFavourite: boolean;
+			isFavouriteBlocked: boolean;
 			hashtag: string | null;
 			synonyms: Array<string | null> | null;
 			season: MediaSeason | null;
 			seasonYear: number | null;
 			siteUrl: string | null;
 			updatedAt: number | null;
+			autoCreateForumThread: boolean | null;
+			isRecommendationBlocked: boolean | null;
+			isReviewBlocked: boolean | null;
+			modNotes: string | null;
+			nextAiringEpisode: {
+				id: number;
+				airingAt: number;
+				timeUntilAiring: number;
+				episode: number;
+				mediaId: number;
+			} | null;
 			tags: Array<{
 				id: number;
 				name: string;
@@ -3179,12 +3641,14 @@ export type GetAnimeListByGenreQuery = {
 				id: number;
 				url: string | null;
 				site: string;
+				siteId: number | null;
 				type: ExternalLinkType | null;
 			} | null> | null;
 			title: {
 				romaji: string | null;
 				english: string | null;
 				native: string | null;
+				userPreferred: string | null;
 			} | null;
 			coverImage: {
 				large: string | null;
@@ -3215,6 +3679,7 @@ export type GetAnimePopularQuery = {
 	Page: {
 		media: Array<{
 			id: number;
+			idMal: number | null;
 			bannerImage: string | null;
 			description: string | null;
 			format: MediaFormat | null;
@@ -3234,12 +3699,26 @@ export type GetAnimePopularQuery = {
 			countryOfOrigin: any | null;
 			isAdult: boolean | null;
 			isLicensed: boolean | null;
+			isLocked: boolean | null;
+			isFavourite: boolean;
+			isFavouriteBlocked: boolean;
 			hashtag: string | null;
 			synonyms: Array<string | null> | null;
 			season: MediaSeason | null;
 			seasonYear: number | null;
 			siteUrl: string | null;
 			updatedAt: number | null;
+			autoCreateForumThread: boolean | null;
+			isRecommendationBlocked: boolean | null;
+			isReviewBlocked: boolean | null;
+			modNotes: string | null;
+			nextAiringEpisode: {
+				id: number;
+				airingAt: number;
+				timeUntilAiring: number;
+				episode: number;
+				mediaId: number;
+			} | null;
 			tags: Array<{
 				id: number;
 				name: string;
@@ -3251,12 +3730,14 @@ export type GetAnimePopularQuery = {
 				id: number;
 				url: string | null;
 				site: string;
+				siteId: number | null;
 				type: ExternalLinkType | null;
 			} | null> | null;
 			title: {
 				romaji: string | null;
 				english: string | null;
 				native: string | null;
+				userPreferred: string | null;
 			} | null;
 			coverImage: {
 				large: string | null;
@@ -3289,6 +3770,7 @@ export type GetAnimeRecommendationsQuery = {
 				node: {
 					media: {
 						id: number;
+						idMal: number | null;
 						bannerImage: string | null;
 						description: string | null;
 						format: MediaFormat | null;
@@ -3308,12 +3790,26 @@ export type GetAnimeRecommendationsQuery = {
 						countryOfOrigin: any | null;
 						isAdult: boolean | null;
 						isLicensed: boolean | null;
+						isLocked: boolean | null;
+						isFavourite: boolean;
+						isFavouriteBlocked: boolean;
 						hashtag: string | null;
 						synonyms: Array<string | null> | null;
 						season: MediaSeason | null;
 						seasonYear: number | null;
 						siteUrl: string | null;
 						updatedAt: number | null;
+						autoCreateForumThread: boolean | null;
+						isRecommendationBlocked: boolean | null;
+						isReviewBlocked: boolean | null;
+						modNotes: string | null;
+						nextAiringEpisode: {
+							id: number;
+							airingAt: number;
+							timeUntilAiring: number;
+							episode: number;
+							mediaId: number;
+						} | null;
 						tags: Array<{
 							id: number;
 							name: string;
@@ -3325,12 +3821,14 @@ export type GetAnimeRecommendationsQuery = {
 							id: number;
 							url: string | null;
 							site: string;
+							siteId: number | null;
 							type: ExternalLinkType | null;
 						} | null> | null;
 						title: {
 							romaji: string | null;
 							english: string | null;
 							native: string | null;
+							userPreferred: string | null;
 						} | null;
 						coverImage: {
 							large: string | null;
@@ -3366,6 +3864,7 @@ export type GetAnimeRelationsQuery = {
 				relationType: MediaRelation | null;
 				node: {
 					id: number;
+					idMal: number | null;
 					bannerImage: string | null;
 					description: string | null;
 					format: MediaFormat | null;
@@ -3385,12 +3884,26 @@ export type GetAnimeRelationsQuery = {
 					countryOfOrigin: any | null;
 					isAdult: boolean | null;
 					isLicensed: boolean | null;
+					isLocked: boolean | null;
+					isFavourite: boolean;
+					isFavouriteBlocked: boolean;
 					hashtag: string | null;
 					synonyms: Array<string | null> | null;
 					season: MediaSeason | null;
 					seasonYear: number | null;
 					siteUrl: string | null;
 					updatedAt: number | null;
+					autoCreateForumThread: boolean | null;
+					isRecommendationBlocked: boolean | null;
+					isReviewBlocked: boolean | null;
+					modNotes: string | null;
+					nextAiringEpisode: {
+						id: number;
+						airingAt: number;
+						timeUntilAiring: number;
+						episode: number;
+						mediaId: number;
+					} | null;
 					tags: Array<{
 						id: number;
 						name: string;
@@ -3402,12 +3915,14 @@ export type GetAnimeRelationsQuery = {
 						id: number;
 						url: string | null;
 						site: string;
+						siteId: number | null;
 						type: ExternalLinkType | null;
 					} | null> | null;
 					title: {
 						romaji: string | null;
 						english: string | null;
 						native: string | null;
+						userPreferred: string | null;
 					} | null;
 					coverImage: {
 						large: string | null;
@@ -3448,6 +3963,7 @@ export type GetAnimeStaffQuery = {
 					bloodType: string | null;
 					homeTown: string | null;
 					languageV2: string | null;
+					yearsActive: Array<number | null> | null;
 					favourites: number | null;
 					isFavourite: boolean;
 					isFavouriteBlocked: boolean;
@@ -3487,6 +4003,7 @@ export type GetAnimeTrendingQuery = {
 	Page: {
 		media: Array<{
 			id: number;
+			idMal: number | null;
 			bannerImage: string | null;
 			description: string | null;
 			format: MediaFormat | null;
@@ -3506,12 +4023,26 @@ export type GetAnimeTrendingQuery = {
 			countryOfOrigin: any | null;
 			isAdult: boolean | null;
 			isLicensed: boolean | null;
+			isLocked: boolean | null;
+			isFavourite: boolean;
+			isFavouriteBlocked: boolean;
 			hashtag: string | null;
 			synonyms: Array<string | null> | null;
 			season: MediaSeason | null;
 			seasonYear: number | null;
 			siteUrl: string | null;
 			updatedAt: number | null;
+			autoCreateForumThread: boolean | null;
+			isRecommendationBlocked: boolean | null;
+			isReviewBlocked: boolean | null;
+			modNotes: string | null;
+			nextAiringEpisode: {
+				id: number;
+				airingAt: number;
+				timeUntilAiring: number;
+				episode: number;
+				mediaId: number;
+			} | null;
 			tags: Array<{
 				id: number;
 				name: string;
@@ -3523,12 +4054,14 @@ export type GetAnimeTrendingQuery = {
 				id: number;
 				url: string | null;
 				site: string;
+				siteId: number | null;
 				type: ExternalLinkType | null;
 			} | null> | null;
 			title: {
 				romaji: string | null;
 				english: string | null;
 				native: string | null;
+				userPreferred: string | null;
 			} | null;
 			coverImage: {
 				large: string | null;
@@ -3560,6 +4093,7 @@ export type SearchAnimeQuery = {
 	Page: {
 		media: Array<{
 			id: number;
+			idMal: number | null;
 			bannerImage: string | null;
 			description: string | null;
 			format: MediaFormat | null;
@@ -3579,12 +4113,26 @@ export type SearchAnimeQuery = {
 			countryOfOrigin: any | null;
 			isAdult: boolean | null;
 			isLicensed: boolean | null;
+			isLocked: boolean | null;
+			isFavourite: boolean;
+			isFavouriteBlocked: boolean;
 			hashtag: string | null;
 			synonyms: Array<string | null> | null;
 			season: MediaSeason | null;
 			seasonYear: number | null;
 			siteUrl: string | null;
 			updatedAt: number | null;
+			autoCreateForumThread: boolean | null;
+			isRecommendationBlocked: boolean | null;
+			isReviewBlocked: boolean | null;
+			modNotes: string | null;
+			nextAiringEpisode: {
+				id: number;
+				airingAt: number;
+				timeUntilAiring: number;
+				episode: number;
+				mediaId: number;
+			} | null;
 			tags: Array<{
 				id: number;
 				name: string;
@@ -3596,12 +4144,14 @@ export type SearchAnimeQuery = {
 				id: number;
 				url: string | null;
 				site: string;
+				siteId: number | null;
 				type: ExternalLinkType | null;
 			} | null> | null;
 			title: {
 				romaji: string | null;
 				english: string | null;
 				native: string | null;
+				userPreferred: string | null;
 			} | null;
 			coverImage: {
 				large: string | null;
@@ -3636,9 +4186,9 @@ export type CharactersBirthdayTodayQuery = {
 			gender: string | null;
 			age: string | null;
 			bloodType: string | null;
-			favourites: number | null;
 			isFavourite: boolean;
 			isFavouriteBlocked: boolean;
+			favourites: number | null;
 			siteUrl: string | null;
 			name: {
 				alternative: Array<string | null> | null;
@@ -3723,6 +4273,7 @@ export type GetMangaByIdQueryVariables = Exact<{
 export type GetMangaByIdQuery = {
 	Media: {
 		id: number;
+		idMal: number | null;
 		bannerImage: string | null;
 		description: string | null;
 		format: MediaFormat | null;
@@ -3742,12 +4293,26 @@ export type GetMangaByIdQuery = {
 		countryOfOrigin: any | null;
 		isAdult: boolean | null;
 		isLicensed: boolean | null;
+		isLocked: boolean | null;
+		isFavourite: boolean;
+		isFavouriteBlocked: boolean;
 		hashtag: string | null;
 		synonyms: Array<string | null> | null;
 		season: MediaSeason | null;
 		seasonYear: number | null;
 		siteUrl: string | null;
 		updatedAt: number | null;
+		autoCreateForumThread: boolean | null;
+		isRecommendationBlocked: boolean | null;
+		isReviewBlocked: boolean | null;
+		modNotes: string | null;
+		nextAiringEpisode: {
+			id: number;
+			airingAt: number;
+			timeUntilAiring: number;
+			episode: number;
+			mediaId: number;
+		} | null;
 		tags: Array<{
 			id: number;
 			name: string;
@@ -3759,12 +4324,14 @@ export type GetMangaByIdQuery = {
 			id: number;
 			url: string | null;
 			site: string;
+			siteId: number | null;
 			type: ExternalLinkType | null;
 		} | null> | null;
 		title: {
 			romaji: string | null;
 			english: string | null;
 			native: string | null;
+			userPreferred: string | null;
 		} | null;
 		coverImage: {
 			large: string | null;
@@ -3793,6 +4360,7 @@ export type GetMangaByTitleQuery = {
 	Page: {
 		media: Array<{
 			id: number;
+			idMal: number | null;
 			bannerImage: string | null;
 			description: string | null;
 			format: MediaFormat | null;
@@ -3812,12 +4380,26 @@ export type GetMangaByTitleQuery = {
 			countryOfOrigin: any | null;
 			isAdult: boolean | null;
 			isLicensed: boolean | null;
+			isLocked: boolean | null;
+			isFavourite: boolean;
+			isFavouriteBlocked: boolean;
 			hashtag: string | null;
 			synonyms: Array<string | null> | null;
 			season: MediaSeason | null;
 			seasonYear: number | null;
 			siteUrl: string | null;
 			updatedAt: number | null;
+			autoCreateForumThread: boolean | null;
+			isRecommendationBlocked: boolean | null;
+			isReviewBlocked: boolean | null;
+			modNotes: string | null;
+			nextAiringEpisode: {
+				id: number;
+				airingAt: number;
+				timeUntilAiring: number;
+				episode: number;
+				mediaId: number;
+			} | null;
 			tags: Array<{
 				id: number;
 				name: string;
@@ -3829,12 +4411,14 @@ export type GetMangaByTitleQuery = {
 				id: number;
 				url: string | null;
 				site: string;
+				siteId: number | null;
 				type: ExternalLinkType | null;
 			} | null> | null;
 			title: {
 				romaji: string | null;
 				english: string | null;
 				native: string | null;
+				userPreferred: string | null;
 			} | null;
 			coverImage: {
 				large: string | null;
@@ -3871,9 +4455,9 @@ export type GetMangaCharactersQuery = {
 					gender: string | null;
 					age: string | null;
 					bloodType: string | null;
-					favourites: number | null;
 					isFavourite: boolean;
 					isFavouriteBlocked: boolean;
+					favourites: number | null;
 					siteUrl: string | null;
 					name: {
 						alternative: Array<string | null> | null;
@@ -3907,6 +4491,7 @@ export type GetMangaListByGenreQuery = {
 	Page: {
 		media: Array<{
 			id: number;
+			idMal: number | null;
 			bannerImage: string | null;
 			description: string | null;
 			format: MediaFormat | null;
@@ -3926,12 +4511,26 @@ export type GetMangaListByGenreQuery = {
 			countryOfOrigin: any | null;
 			isAdult: boolean | null;
 			isLicensed: boolean | null;
+			isLocked: boolean | null;
+			isFavourite: boolean;
+			isFavouriteBlocked: boolean;
 			hashtag: string | null;
 			synonyms: Array<string | null> | null;
 			season: MediaSeason | null;
 			seasonYear: number | null;
 			siteUrl: string | null;
 			updatedAt: number | null;
+			autoCreateForumThread: boolean | null;
+			isRecommendationBlocked: boolean | null;
+			isReviewBlocked: boolean | null;
+			modNotes: string | null;
+			nextAiringEpisode: {
+				id: number;
+				airingAt: number;
+				timeUntilAiring: number;
+				episode: number;
+				mediaId: number;
+			} | null;
 			tags: Array<{
 				id: number;
 				name: string;
@@ -3943,12 +4542,14 @@ export type GetMangaListByGenreQuery = {
 				id: number;
 				url: string | null;
 				site: string;
+				siteId: number | null;
 				type: ExternalLinkType | null;
 			} | null> | null;
 			title: {
 				romaji: string | null;
 				english: string | null;
 				native: string | null;
+				userPreferred: string | null;
 			} | null;
 			coverImage: {
 				large: string | null;
@@ -3979,6 +4580,7 @@ export type GetMangaPopularQuery = {
 	Page: {
 		media: Array<{
 			id: number;
+			idMal: number | null;
 			bannerImage: string | null;
 			description: string | null;
 			format: MediaFormat | null;
@@ -3998,12 +4600,26 @@ export type GetMangaPopularQuery = {
 			countryOfOrigin: any | null;
 			isAdult: boolean | null;
 			isLicensed: boolean | null;
+			isLocked: boolean | null;
+			isFavourite: boolean;
+			isFavouriteBlocked: boolean;
 			hashtag: string | null;
 			synonyms: Array<string | null> | null;
 			season: MediaSeason | null;
 			seasonYear: number | null;
 			siteUrl: string | null;
 			updatedAt: number | null;
+			autoCreateForumThread: boolean | null;
+			isRecommendationBlocked: boolean | null;
+			isReviewBlocked: boolean | null;
+			modNotes: string | null;
+			nextAiringEpisode: {
+				id: number;
+				airingAt: number;
+				timeUntilAiring: number;
+				episode: number;
+				mediaId: number;
+			} | null;
 			tags: Array<{
 				id: number;
 				name: string;
@@ -4015,12 +4631,14 @@ export type GetMangaPopularQuery = {
 				id: number;
 				url: string | null;
 				site: string;
+				siteId: number | null;
 				type: ExternalLinkType | null;
 			} | null> | null;
 			title: {
 				romaji: string | null;
 				english: string | null;
 				native: string | null;
+				userPreferred: string | null;
 			} | null;
 			coverImage: {
 				large: string | null;
@@ -4053,6 +4671,7 @@ export type GetMangaRecommendationsQuery = {
 				node: {
 					media: {
 						id: number;
+						idMal: number | null;
 						bannerImage: string | null;
 						description: string | null;
 						format: MediaFormat | null;
@@ -4072,12 +4691,26 @@ export type GetMangaRecommendationsQuery = {
 						countryOfOrigin: any | null;
 						isAdult: boolean | null;
 						isLicensed: boolean | null;
+						isLocked: boolean | null;
+						isFavourite: boolean;
+						isFavouriteBlocked: boolean;
 						hashtag: string | null;
 						synonyms: Array<string | null> | null;
 						season: MediaSeason | null;
 						seasonYear: number | null;
 						siteUrl: string | null;
 						updatedAt: number | null;
+						autoCreateForumThread: boolean | null;
+						isRecommendationBlocked: boolean | null;
+						isReviewBlocked: boolean | null;
+						modNotes: string | null;
+						nextAiringEpisode: {
+							id: number;
+							airingAt: number;
+							timeUntilAiring: number;
+							episode: number;
+							mediaId: number;
+						} | null;
 						tags: Array<{
 							id: number;
 							name: string;
@@ -4089,12 +4722,14 @@ export type GetMangaRecommendationsQuery = {
 							id: number;
 							url: string | null;
 							site: string;
+							siteId: number | null;
 							type: ExternalLinkType | null;
 						} | null> | null;
 						title: {
 							romaji: string | null;
 							english: string | null;
 							native: string | null;
+							userPreferred: string | null;
 						} | null;
 						coverImage: {
 							large: string | null;
@@ -4130,6 +4765,7 @@ export type GetMangaRelationsQuery = {
 				relationType: MediaRelation | null;
 				node: {
 					id: number;
+					idMal: number | null;
 					bannerImage: string | null;
 					description: string | null;
 					format: MediaFormat | null;
@@ -4149,12 +4785,26 @@ export type GetMangaRelationsQuery = {
 					countryOfOrigin: any | null;
 					isAdult: boolean | null;
 					isLicensed: boolean | null;
+					isLocked: boolean | null;
+					isFavourite: boolean;
+					isFavouriteBlocked: boolean;
 					hashtag: string | null;
 					synonyms: Array<string | null> | null;
 					season: MediaSeason | null;
 					seasonYear: number | null;
 					siteUrl: string | null;
 					updatedAt: number | null;
+					autoCreateForumThread: boolean | null;
+					isRecommendationBlocked: boolean | null;
+					isReviewBlocked: boolean | null;
+					modNotes: string | null;
+					nextAiringEpisode: {
+						id: number;
+						airingAt: number;
+						timeUntilAiring: number;
+						episode: number;
+						mediaId: number;
+					} | null;
 					tags: Array<{
 						id: number;
 						name: string;
@@ -4166,12 +4816,14 @@ export type GetMangaRelationsQuery = {
 						id: number;
 						url: string | null;
 						site: string;
+						siteId: number | null;
 						type: ExternalLinkType | null;
 					} | null> | null;
 					title: {
 						romaji: string | null;
 						english: string | null;
 						native: string | null;
+						userPreferred: string | null;
 					} | null;
 					coverImage: {
 						large: string | null;
@@ -4212,6 +4864,7 @@ export type GetMangaStaffQuery = {
 					bloodType: string | null;
 					homeTown: string | null;
 					languageV2: string | null;
+					yearsActive: Array<number | null> | null;
 					favourites: number | null;
 					isFavourite: boolean;
 					isFavouriteBlocked: boolean;
@@ -4251,6 +4904,7 @@ export type GetMangaTrendingQuery = {
 	Page: {
 		media: Array<{
 			id: number;
+			idMal: number | null;
 			bannerImage: string | null;
 			description: string | null;
 			format: MediaFormat | null;
@@ -4270,12 +4924,26 @@ export type GetMangaTrendingQuery = {
 			countryOfOrigin: any | null;
 			isAdult: boolean | null;
 			isLicensed: boolean | null;
+			isLocked: boolean | null;
+			isFavourite: boolean;
+			isFavouriteBlocked: boolean;
 			hashtag: string | null;
 			synonyms: Array<string | null> | null;
 			season: MediaSeason | null;
 			seasonYear: number | null;
 			siteUrl: string | null;
 			updatedAt: number | null;
+			autoCreateForumThread: boolean | null;
+			isRecommendationBlocked: boolean | null;
+			isReviewBlocked: boolean | null;
+			modNotes: string | null;
+			nextAiringEpisode: {
+				id: number;
+				airingAt: number;
+				timeUntilAiring: number;
+				episode: number;
+				mediaId: number;
+			} | null;
 			tags: Array<{
 				id: number;
 				name: string;
@@ -4287,12 +4955,14 @@ export type GetMangaTrendingQuery = {
 				id: number;
 				url: string | null;
 				site: string;
+				siteId: number | null;
 				type: ExternalLinkType | null;
 			} | null> | null;
 			title: {
 				romaji: string | null;
 				english: string | null;
 				native: string | null;
+				userPreferred: string | null;
 			} | null;
 			coverImage: {
 				large: string | null;
@@ -4321,6 +4991,7 @@ export type GetMediaByIdQueryVariables = Exact<{
 export type GetMediaByIdQuery = {
 	Media: {
 		id: number;
+		idMal: number | null;
 		bannerImage: string | null;
 		description: string | null;
 		format: MediaFormat | null;
@@ -4340,12 +5011,26 @@ export type GetMediaByIdQuery = {
 		countryOfOrigin: any | null;
 		isAdult: boolean | null;
 		isLicensed: boolean | null;
+		isLocked: boolean | null;
+		isFavourite: boolean;
+		isFavouriteBlocked: boolean;
 		hashtag: string | null;
 		synonyms: Array<string | null> | null;
 		season: MediaSeason | null;
 		seasonYear: number | null;
 		siteUrl: string | null;
 		updatedAt: number | null;
+		autoCreateForumThread: boolean | null;
+		isRecommendationBlocked: boolean | null;
+		isReviewBlocked: boolean | null;
+		modNotes: string | null;
+		nextAiringEpisode: {
+			id: number;
+			airingAt: number;
+			timeUntilAiring: number;
+			episode: number;
+			mediaId: number;
+		} | null;
 		tags: Array<{
 			id: number;
 			name: string;
@@ -4357,12 +5042,14 @@ export type GetMediaByIdQuery = {
 			id: number;
 			url: string | null;
 			site: string;
+			siteId: number | null;
 			type: ExternalLinkType | null;
 		} | null> | null;
 		title: {
 			romaji: string | null;
 			english: string | null;
 			native: string | null;
+			userPreferred: string | null;
 		} | null;
 		coverImage: {
 			large: string | null;
@@ -4417,6 +5104,7 @@ export type GetMediaListQuery = {
 		} | null;
 		media: {
 			id: number;
+			idMal: number | null;
 			bannerImage: string | null;
 			description: string | null;
 			format: MediaFormat | null;
@@ -4436,16 +5124,24 @@ export type GetMediaListQuery = {
 			countryOfOrigin: any | null;
 			isAdult: boolean | null;
 			isLicensed: boolean | null;
+			isLocked: boolean | null;
+			isFavourite: boolean;
+			isFavouriteBlocked: boolean;
 			hashtag: string | null;
 			synonyms: Array<string | null> | null;
 			season: MediaSeason | null;
 			seasonYear: number | null;
 			siteUrl: string | null;
 			updatedAt: number | null;
+			autoCreateForumThread: boolean | null;
+			isRecommendationBlocked: boolean | null;
+			isReviewBlocked: boolean | null;
+			modNotes: string | null;
 			title: {
 				romaji: string | null;
 				english: string | null;
 				native: string | null;
+				userPreferred: string | null;
 			} | null;
 			coverImage: {
 				large: string | null;
@@ -4504,6 +5200,7 @@ export type GetMediaListByUserQuery = {
 				} | null;
 				media: {
 					id: number;
+					idMal: number | null;
 					bannerImage: string | null;
 					description: string | null;
 					format: MediaFormat | null;
@@ -4523,16 +5220,24 @@ export type GetMediaListByUserQuery = {
 					countryOfOrigin: any | null;
 					isAdult: boolean | null;
 					isLicensed: boolean | null;
+					isLocked: boolean | null;
+					isFavourite: boolean;
+					isFavouriteBlocked: boolean;
 					hashtag: string | null;
 					synonyms: Array<string | null> | null;
 					season: MediaSeason | null;
 					seasonYear: number | null;
 					siteUrl: string | null;
 					updatedAt: number | null;
+					autoCreateForumThread: boolean | null;
+					isRecommendationBlocked: boolean | null;
+					isReviewBlocked: boolean | null;
+					modNotes: string | null;
 					title: {
 						romaji: string | null;
 						english: string | null;
 						native: string | null;
+						userPreferred: string | null;
 					} | null;
 					coverImage: {
 						large: string | null;
@@ -4593,6 +5298,7 @@ export type GetMediaListByUserByUserNameQuery = {
 				} | null;
 				media: {
 					id: number;
+					idMal: number | null;
 					bannerImage: string | null;
 					description: string | null;
 					format: MediaFormat | null;
@@ -4612,16 +5318,24 @@ export type GetMediaListByUserByUserNameQuery = {
 					countryOfOrigin: any | null;
 					isAdult: boolean | null;
 					isLicensed: boolean | null;
+					isLocked: boolean | null;
+					isFavourite: boolean;
+					isFavouriteBlocked: boolean;
 					hashtag: string | null;
 					synonyms: Array<string | null> | null;
 					season: MediaSeason | null;
 					seasonYear: number | null;
 					siteUrl: string | null;
 					updatedAt: number | null;
+					autoCreateForumThread: boolean | null;
+					isRecommendationBlocked: boolean | null;
+					isReviewBlocked: boolean | null;
+					modNotes: string | null;
 					title: {
 						romaji: string | null;
 						english: string | null;
 						native: string | null;
+						userPreferred: string | null;
 					} | null;
 					coverImage: {
 						large: string | null;
@@ -4660,6 +5374,7 @@ export type GetStaffByIdQuery = {
 		bloodType: string | null;
 		homeTown: string | null;
 		languageV2: string | null;
+		yearsActive: Array<number | null> | null;
 		isFavouriteBlocked: boolean;
 		age: number | null;
 		siteUrl: string | null;
@@ -4682,9 +5397,9 @@ export type GetStaffByIdQuery = {
 				gender: string | null;
 				age: string | null;
 				bloodType: string | null;
-				favourites: number | null;
 				isFavourite: boolean;
 				isFavouriteBlocked: boolean;
+				favourites: number | null;
 				siteUrl: string | null;
 				name: {
 					alternative: Array<string | null> | null;
@@ -4806,6 +5521,7 @@ export type GetUserAnimeListQuery = {
 				} | null;
 				media: {
 					id: number;
+					idMal: number | null;
 					bannerImage: string | null;
 					description: string | null;
 					format: MediaFormat | null;
@@ -4825,16 +5541,24 @@ export type GetUserAnimeListQuery = {
 					countryOfOrigin: any | null;
 					isAdult: boolean | null;
 					isLicensed: boolean | null;
+					isLocked: boolean | null;
+					isFavourite: boolean;
+					isFavouriteBlocked: boolean;
 					hashtag: string | null;
 					synonyms: Array<string | null> | null;
 					season: MediaSeason | null;
 					seasonYear: number | null;
 					siteUrl: string | null;
 					updatedAt: number | null;
+					autoCreateForumThread: boolean | null;
+					isRecommendationBlocked: boolean | null;
+					isReviewBlocked: boolean | null;
+					modNotes: string | null;
 					title: {
 						romaji: string | null;
 						english: string | null;
 						native: string | null;
+						userPreferred: string | null;
 					} | null;
 					coverImage: {
 						large: string | null;
@@ -4895,6 +5619,7 @@ export type GetUserAnimeListByUserNameQuery = {
 				} | null;
 				media: {
 					id: number;
+					idMal: number | null;
 					bannerImage: string | null;
 					description: string | null;
 					format: MediaFormat | null;
@@ -4914,16 +5639,24 @@ export type GetUserAnimeListByUserNameQuery = {
 					countryOfOrigin: any | null;
 					isAdult: boolean | null;
 					isLicensed: boolean | null;
+					isLocked: boolean | null;
+					isFavourite: boolean;
+					isFavouriteBlocked: boolean;
 					hashtag: string | null;
 					synonyms: Array<string | null> | null;
 					season: MediaSeason | null;
 					seasonYear: number | null;
 					siteUrl: string | null;
 					updatedAt: number | null;
+					autoCreateForumThread: boolean | null;
+					isRecommendationBlocked: boolean | null;
+					isReviewBlocked: boolean | null;
+					modNotes: string | null;
 					title: {
 						romaji: string | null;
 						english: string | null;
 						native: string | null;
+						userPreferred: string | null;
 					} | null;
 					coverImage: {
 						large: string | null;
@@ -4959,13 +5692,15 @@ export type GetUserInfoQuery = {
 		bannerImage: string | null;
 		donatorTier: number | null;
 		donatorBadge: string | null;
-		createdAt: number | null;
-		updatedAt: number | null;
 		isFollowing: boolean | null;
 		isFollower: boolean | null;
 		isBlocked: boolean | null;
+		createdAt: number | null;
+		updatedAt: number | null;
 		unreadNotificationCount: number | null;
+		bans: any | null;
 		moderatorRoles: Array<ModRole | null> | null;
+		moderatorStatus: string | null;
 		siteUrl: string | null;
 		avatar: { large: string | null; medium: string | null } | null;
 		options: {
@@ -4973,14 +5708,25 @@ export type GetUserInfoQuery = {
 			displayAdultContent: boolean | null;
 			airingNotifications: boolean | null;
 			profileColor: string | null;
+			timezone: string | null;
+			activityMergeTime: number | null;
+			staffNameLanguage: UserStaffNameLanguage | null;
+			restrictMessagesToFollowing: boolean | null;
 			notificationOptions: Array<{
 				type: NotificationType | null;
 				enabled: boolean | null;
+			} | null> | null;
+			disabledListActivity: Array<{
+				disabled: boolean | null;
+				type: MediaListStatus | null;
 			} | null> | null;
 		} | null;
 		mediaListOptions: {
 			scoreFormat: ScoreFormat | null;
 			rowOrder: string | null;
+			useLegacyLists: boolean | null;
+			sharedTheme: any | null;
+			sharedThemeEnabled: boolean | null;
 			animeList: {
 				sectionOrder: Array<string | null> | null;
 				splitCompletedSectionByFormat: boolean | null;
@@ -5032,6 +5778,8 @@ export type GetUserInfoQuery = {
 				standardDeviation: number;
 				minutesWatched: number;
 				episodesWatched: number;
+				chaptersRead: number;
+				volumesRead: number;
 				scores: Array<{
 					score: number | null;
 					count: number;
@@ -5079,6 +5827,37 @@ export type GetUserInfoQuery = {
 					meanScore: number;
 					minutesWatched: number;
 					tag: { name: string } | null;
+				} | null> | null;
+				countries: Array<{
+					country: any | null;
+					count: number;
+					meanScore: number;
+					minutesWatched: number;
+				} | null> | null;
+				voiceActors: Array<{
+					count: number;
+					meanScore: number;
+					minutesWatched: number;
+					characterIds: Array<number | null>;
+					mediaIds: Array<number | null>;
+					voiceActor: {
+						id: number;
+						name: { full: string | null } | null;
+					} | null;
+				} | null> | null;
+				staff: Array<{
+					count: number;
+					meanScore: number;
+					minutesWatched: number;
+					mediaIds: Array<number | null>;
+					staff: { id: number; name: { full: string | null } | null } | null;
+				} | null> | null;
+				studios: Array<{
+					count: number;
+					meanScore: number;
+					minutesWatched: number;
+					mediaIds: Array<number | null>;
+					studio: { id: number; name: string } | null;
 				} | null> | null;
 			} | null;
 			manga: {
@@ -5135,8 +5914,34 @@ export type GetUserInfoQuery = {
 					chaptersRead: number;
 					tag: { name: string } | null;
 				} | null> | null;
+				countries: Array<{
+					country: any | null;
+					count: number;
+					meanScore: number;
+					chaptersRead: number;
+				} | null> | null;
+				staff: Array<{
+					count: number;
+					meanScore: number;
+					chaptersRead: number;
+					mediaIds: Array<number | null>;
+					staff: { id: number; name: { full: string | null } | null } | null;
+				} | null> | null;
+				studios: Array<{
+					count: number;
+					meanScore: number;
+					chaptersRead: number;
+					mediaIds: Array<number | null>;
+					studio: { id: number; name: string } | null;
+				} | null> | null;
 			} | null;
 		} | null;
+		stats: { watchedTime: number | null; chaptersRead: number | null } | null;
+		previousNames: Array<{
+			name: string | null;
+			createdAt: number | null;
+			updatedAt: number | null;
+		} | null> | null;
 	} | null;
 };
 
@@ -5152,13 +5957,15 @@ export type GetUserInfoByUserNameQuery = {
 		bannerImage: string | null;
 		donatorTier: number | null;
 		donatorBadge: string | null;
-		createdAt: number | null;
-		updatedAt: number | null;
 		isFollowing: boolean | null;
 		isFollower: boolean | null;
 		isBlocked: boolean | null;
+		createdAt: number | null;
+		updatedAt: number | null;
 		unreadNotificationCount: number | null;
+		bans: any | null;
 		moderatorRoles: Array<ModRole | null> | null;
+		moderatorStatus: string | null;
 		siteUrl: string | null;
 		avatar: { large: string | null; medium: string | null } | null;
 		options: {
@@ -5166,14 +5973,25 @@ export type GetUserInfoByUserNameQuery = {
 			displayAdultContent: boolean | null;
 			airingNotifications: boolean | null;
 			profileColor: string | null;
+			timezone: string | null;
+			activityMergeTime: number | null;
+			staffNameLanguage: UserStaffNameLanguage | null;
+			restrictMessagesToFollowing: boolean | null;
 			notificationOptions: Array<{
 				type: NotificationType | null;
 				enabled: boolean | null;
+			} | null> | null;
+			disabledListActivity: Array<{
+				disabled: boolean | null;
+				type: MediaListStatus | null;
 			} | null> | null;
 		} | null;
 		mediaListOptions: {
 			scoreFormat: ScoreFormat | null;
 			rowOrder: string | null;
+			useLegacyLists: boolean | null;
+			sharedTheme: any | null;
+			sharedThemeEnabled: boolean | null;
 			animeList: {
 				sectionOrder: Array<string | null> | null;
 				splitCompletedSectionByFormat: boolean | null;
@@ -5225,6 +6043,8 @@ export type GetUserInfoByUserNameQuery = {
 				standardDeviation: number;
 				minutesWatched: number;
 				episodesWatched: number;
+				chaptersRead: number;
+				volumesRead: number;
 				scores: Array<{
 					score: number | null;
 					count: number;
@@ -5272,6 +6092,37 @@ export type GetUserInfoByUserNameQuery = {
 					meanScore: number;
 					minutesWatched: number;
 					tag: { name: string } | null;
+				} | null> | null;
+				countries: Array<{
+					country: any | null;
+					count: number;
+					meanScore: number;
+					minutesWatched: number;
+				} | null> | null;
+				voiceActors: Array<{
+					count: number;
+					meanScore: number;
+					minutesWatched: number;
+					characterIds: Array<number | null>;
+					mediaIds: Array<number | null>;
+					voiceActor: {
+						id: number;
+						name: { full: string | null } | null;
+					} | null;
+				} | null> | null;
+				staff: Array<{
+					count: number;
+					meanScore: number;
+					minutesWatched: number;
+					mediaIds: Array<number | null>;
+					staff: { id: number; name: { full: string | null } | null } | null;
+				} | null> | null;
+				studios: Array<{
+					count: number;
+					meanScore: number;
+					minutesWatched: number;
+					mediaIds: Array<number | null>;
+					studio: { id: number; name: string } | null;
 				} | null> | null;
 			} | null;
 			manga: {
@@ -5328,8 +6179,34 @@ export type GetUserInfoByUserNameQuery = {
 					chaptersRead: number;
 					tag: { name: string } | null;
 				} | null> | null;
+				countries: Array<{
+					country: any | null;
+					count: number;
+					meanScore: number;
+					chaptersRead: number;
+				} | null> | null;
+				staff: Array<{
+					count: number;
+					meanScore: number;
+					chaptersRead: number;
+					mediaIds: Array<number | null>;
+					staff: { id: number; name: { full: string | null } | null } | null;
+				} | null> | null;
+				studios: Array<{
+					count: number;
+					meanScore: number;
+					chaptersRead: number;
+					mediaIds: Array<number | null>;
+					studio: { id: number; name: string } | null;
+				} | null> | null;
 			} | null;
 		} | null;
+		stats: { watchedTime: number | null; chaptersRead: number | null } | null;
+		previousNames: Array<{
+			name: string | null;
+			createdAt: number | null;
+			updatedAt: number | null;
+		} | null> | null;
 	} | null;
 };
 
@@ -5347,13 +6224,15 @@ export type GetUserListQuery = {
 			bannerImage: string | null;
 			donatorTier: number | null;
 			donatorBadge: string | null;
-			createdAt: number | null;
-			updatedAt: number | null;
 			isFollowing: boolean | null;
 			isFollower: boolean | null;
 			isBlocked: boolean | null;
+			createdAt: number | null;
+			updatedAt: number | null;
 			unreadNotificationCount: number | null;
+			bans: any | null;
 			moderatorRoles: Array<ModRole | null> | null;
+			moderatorStatus: string | null;
 			siteUrl: string | null;
 			avatar: { large: string | null; medium: string | null } | null;
 			options: {
@@ -5361,14 +6240,25 @@ export type GetUserListQuery = {
 				displayAdultContent: boolean | null;
 				airingNotifications: boolean | null;
 				profileColor: string | null;
+				timezone: string | null;
+				activityMergeTime: number | null;
+				staffNameLanguage: UserStaffNameLanguage | null;
+				restrictMessagesToFollowing: boolean | null;
 				notificationOptions: Array<{
 					type: NotificationType | null;
 					enabled: boolean | null;
+				} | null> | null;
+				disabledListActivity: Array<{
+					disabled: boolean | null;
+					type: MediaListStatus | null;
 				} | null> | null;
 			} | null;
 			mediaListOptions: {
 				scoreFormat: ScoreFormat | null;
 				rowOrder: string | null;
+				useLegacyLists: boolean | null;
+				sharedTheme: any | null;
+				sharedThemeEnabled: boolean | null;
 				animeList: {
 					sectionOrder: Array<string | null> | null;
 					splitCompletedSectionByFormat: boolean | null;
@@ -5420,6 +6310,8 @@ export type GetUserListQuery = {
 					standardDeviation: number;
 					minutesWatched: number;
 					episodesWatched: number;
+					chaptersRead: number;
+					volumesRead: number;
 					scores: Array<{
 						score: number | null;
 						count: number;
@@ -5467,6 +6359,37 @@ export type GetUserListQuery = {
 						meanScore: number;
 						minutesWatched: number;
 						tag: { name: string } | null;
+					} | null> | null;
+					countries: Array<{
+						country: any | null;
+						count: number;
+						meanScore: number;
+						minutesWatched: number;
+					} | null> | null;
+					voiceActors: Array<{
+						count: number;
+						meanScore: number;
+						minutesWatched: number;
+						characterIds: Array<number | null>;
+						mediaIds: Array<number | null>;
+						voiceActor: {
+							id: number;
+							name: { full: string | null } | null;
+						} | null;
+					} | null> | null;
+					staff: Array<{
+						count: number;
+						meanScore: number;
+						minutesWatched: number;
+						mediaIds: Array<number | null>;
+						staff: { id: number; name: { full: string | null } | null } | null;
+					} | null> | null;
+					studios: Array<{
+						count: number;
+						meanScore: number;
+						minutesWatched: number;
+						mediaIds: Array<number | null>;
+						studio: { id: number; name: string } | null;
 					} | null> | null;
 				} | null;
 				manga: {
@@ -5523,8 +6446,34 @@ export type GetUserListQuery = {
 						chaptersRead: number;
 						tag: { name: string } | null;
 					} | null> | null;
+					countries: Array<{
+						country: any | null;
+						count: number;
+						meanScore: number;
+						chaptersRead: number;
+					} | null> | null;
+					staff: Array<{
+						count: number;
+						meanScore: number;
+						chaptersRead: number;
+						mediaIds: Array<number | null>;
+						staff: { id: number; name: { full: string | null } | null } | null;
+					} | null> | null;
+					studios: Array<{
+						count: number;
+						meanScore: number;
+						chaptersRead: number;
+						mediaIds: Array<number | null>;
+						studio: { id: number; name: string } | null;
+					} | null> | null;
 				} | null;
 			} | null;
+			stats: { watchedTime: number | null; chaptersRead: number | null } | null;
+			previousNames: Array<{
+				name: string | null;
+				createdAt: number | null;
+				updatedAt: number | null;
+			} | null> | null;
 		} | null> | null;
 	} | null;
 };
@@ -5566,6 +6515,7 @@ export type GetUserMangaListQuery = {
 				} | null;
 				media: {
 					id: number;
+					idMal: number | null;
 					bannerImage: string | null;
 					description: string | null;
 					format: MediaFormat | null;
@@ -5585,16 +6535,24 @@ export type GetUserMangaListQuery = {
 					countryOfOrigin: any | null;
 					isAdult: boolean | null;
 					isLicensed: boolean | null;
+					isLocked: boolean | null;
+					isFavourite: boolean;
+					isFavouriteBlocked: boolean;
 					hashtag: string | null;
 					synonyms: Array<string | null> | null;
 					season: MediaSeason | null;
 					seasonYear: number | null;
 					siteUrl: string | null;
 					updatedAt: number | null;
+					autoCreateForumThread: boolean | null;
+					isRecommendationBlocked: boolean | null;
+					isReviewBlocked: boolean | null;
+					modNotes: string | null;
 					title: {
 						romaji: string | null;
 						english: string | null;
 						native: string | null;
+						userPreferred: string | null;
 					} | null;
 					coverImage: {
 						large: string | null;
@@ -5655,6 +6613,7 @@ export type GetUserMangaListByUserNameQuery = {
 				} | null;
 				media: {
 					id: number;
+					idMal: number | null;
 					bannerImage: string | null;
 					description: string | null;
 					format: MediaFormat | null;
@@ -5674,16 +6633,24 @@ export type GetUserMangaListByUserNameQuery = {
 					countryOfOrigin: any | null;
 					isAdult: boolean | null;
 					isLicensed: boolean | null;
+					isLocked: boolean | null;
+					isFavourite: boolean;
+					isFavouriteBlocked: boolean;
 					hashtag: string | null;
 					synonyms: Array<string | null> | null;
 					season: MediaSeason | null;
 					seasonYear: number | null;
 					siteUrl: string | null;
 					updatedAt: number | null;
+					autoCreateForumThread: boolean | null;
+					isRecommendationBlocked: boolean | null;
+					isReviewBlocked: boolean | null;
+					modNotes: string | null;
 					title: {
 						romaji: string | null;
 						english: string | null;
 						native: string | null;
+						userPreferred: string | null;
 					} | null;
 					coverImage: {
 						large: string | null;
@@ -5746,6 +6713,7 @@ export const TitleFragmentDoc = gql`
   romaji
   english
   native
+  userPreferred
 }
     `;
 export const CoverImageFragmentDoc = gql`
@@ -5766,6 +6734,7 @@ export const DateFragmentDoc = gql`
 export const MediaCoreFragmentDoc = gql`
     fragment MediaCoreFragment on Media {
   id
+  idMal
   title {
     ...TitleFragment
   }
@@ -5791,6 +6760,9 @@ export const MediaCoreFragmentDoc = gql`
   countryOfOrigin
   isAdult
   isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
   hashtag
   synonyms
   startDate {
@@ -5803,6 +6775,10 @@ export const MediaCoreFragmentDoc = gql`
   seasonYear
   siteUrl
   updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
 }
     ${TitleFragmentDoc}
 ${CoverImageFragmentDoc}
@@ -5817,6 +6793,7 @@ export const MediaTagFragmentDoc = gql`
   isGeneralSpoiler
   isMediaSpoiler
   isAdult
+  userId
 }
     `;
 export const MediaRankFragmentDoc = gql`
@@ -5836,10 +6813,13 @@ export const MediaExternalLinkFragmentDoc = gql`
   id
   url
   site
+  siteId
   type
   language
   color
   icon
+  notes
+  isDisabled
 }
     `;
 export const ScoreDistributionFragmentDoc = gql`
@@ -5861,6 +6841,11 @@ export const MediaStatsFragmentDoc = gql`
   }
   statusDistribution {
     ...StatusDistributionFragment
+  }
+  airingProgression {
+    episode
+    score
+    watching
   }
 }
     ${ScoreDistributionFragmentDoc}
@@ -5890,6 +6875,16 @@ export const MediaDetailedFragmentDoc = gql`
   trailer {
     ...MediaTrailerFragment
   }
+  reviews(page: 1, perPage: 1) {
+    pageInfo {
+      total
+    }
+  }
+  recommendations(page: 1, perPage: 1) {
+    pageInfo {
+      total
+    }
+  }
 }
     ${MediaCoreFragmentDoc}
 ${MediaTagFragmentDoc}
@@ -5903,6 +6898,7 @@ export const AiringScheduleFragmentDoc = gql`
   airingAt
   timeUntilAiring
   episode
+  mediaId
 }
     `;
 export const MediaStreamingEpisodeFragmentDoc = gql`
@@ -5926,6 +6922,7 @@ export const StudioNodeFragmentDoc = gql`
 export const StudioEdgeFragmentDoc = gql`
     fragment StudioEdgeFragment on StudioEdge {
   isMain
+  favouriteOrder
   node {
     ...StudioNodeFragment
   }
@@ -5975,7 +6972,15 @@ ${CoverImageFragmentDoc}
 ${DateFragmentDoc}`;
 export const MediaRelationEdgeFragmentDoc = gql`
     fragment MediaRelationEdgeFragment on MediaEdge {
+  id
   relationType
+  isMainStudio
+  characterRole
+  characterName
+  roleNotes
+  dubGroup
+  staffRole
+  favouriteOrder
   node {
     ...MediaRelationNodeFragment
   }
@@ -6022,9 +7027,9 @@ export const CharacterBasicFragmentDoc = gql`
   }
   age
   bloodType
-  favourites
   isFavourite
   isFavouriteBlocked
+  favourites
   siteUrl
 }
     ${CharacterNameFragmentDoc}
@@ -6047,6 +7052,17 @@ export const CharacterEdgeFragmentDoc = gql`
     }
     languageV2
   }
+  voiceActorRoles {
+    roleNotes
+    dubGroup
+    voiceActor {
+      id
+      name {
+        full
+      }
+    }
+  }
+  favouriteOrder
   node {
     ...CharacterBasicFragment
   }
@@ -6094,6 +7110,7 @@ export const StaffBasicFragmentDoc = gql`
   bloodType
   homeTown
   languageV2
+  yearsActive
   favourites
   isFavourite
   isFavouriteBlocked
@@ -6113,6 +7130,7 @@ export const StaffEdgeFragmentDoc = gql`
     fragment StaffEdgeFragment on StaffEdge {
   id
   role
+  favouriteOrder
   node {
     ...StaffBasicFragment
   }
@@ -6194,6 +7212,7 @@ export const MediaExternalLinkBasicFragmentDoc = gql`
   id
   url
   site
+  siteId
   type
 }
     `;
@@ -6213,6 +7232,13 @@ ${MediaExternalLinkBasicFragmentDoc}`;
 export const MediaFragmentDoc = gql`
     fragment MediaFragment on Media {
   ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
 }
     ${MediaBasicFragmentDoc}`;
 export const MediaListFragmentDoc = gql`
@@ -6253,6 +7279,15 @@ export const StaffFragmentDoc = gql`
 export const StudioFragmentDoc = gql`
     fragment StudioFragment on Studio {
   ...StudioNodeFragment
+  media {
+    pageInfo {
+      total
+      perPage
+      currentPage
+      lastPage
+      hasNextPage
+    }
+  }
 }
     ${StudioNodeFragmentDoc}`;
 export const UserAvatarFragmentDoc = gql`
@@ -6271,12 +7306,21 @@ export const UserOptionsFragmentDoc = gql`
     type
     enabled
   }
+  timezone
+  activityMergeTime
+  staffNameLanguage
+  restrictMessagesToFollowing
+  disabledListActivity {
+    disabled
+    type
+  }
 }
     `;
 export const UserMediaListOptionsFragmentDoc = gql`
     fragment UserMediaListOptionsFragment on MediaListOptions {
   scoreFormat
   rowOrder
+  useLegacyLists
   animeList {
     sectionOrder
     splitCompletedSectionByFormat
@@ -6291,6 +7335,8 @@ export const UserMediaListOptionsFragmentDoc = gql`
     advancedScoring
     advancedScoringEnabled
   }
+  sharedTheme
+  sharedThemeEnabled
 }
     `;
 export const UserFavouritesFragmentDoc = gql`
@@ -6343,6 +7389,8 @@ export const UserStatisticsFragmentDoc = gql`
     standardDeviation
     minutesWatched
     episodesWatched
+    chaptersRead
+    volumesRead
     scores {
       score
       count
@@ -6392,6 +7440,47 @@ export const UserStatisticsFragmentDoc = gql`
       count
       meanScore
       minutesWatched
+    }
+    countries {
+      country
+      count
+      meanScore
+      minutesWatched
+    }
+    voiceActors {
+      count
+      meanScore
+      minutesWatched
+      voiceActor {
+        id
+        name {
+          full
+        }
+      }
+      characterIds
+      mediaIds
+    }
+    staff {
+      count
+      meanScore
+      minutesWatched
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      minutesWatched
+      studio {
+        id
+        name
+      }
+      mediaIds
     }
   }
   manga {
@@ -6450,6 +7539,34 @@ export const UserStatisticsFragmentDoc = gql`
       meanScore
       chaptersRead
     }
+    countries {
+      country
+      count
+      meanScore
+      chaptersRead
+    }
+    staff {
+      count
+      meanScore
+      chaptersRead
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      chaptersRead
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
   }
 }
     `;
@@ -6464,13 +7581,15 @@ export const UserBasicFragmentDoc = gql`
   bannerImage
   donatorTier
   donatorBadge
-  createdAt
-  updatedAt
   isFollowing
   isFollower
   isBlocked
+  createdAt
+  updatedAt
   unreadNotificationCount
+  bans
   moderatorRoles
+  moderatorStatus
   options {
     ...UserOptionsFragment
   }
@@ -6484,6 +7603,15 @@ export const UserBasicFragmentDoc = gql`
     ...UserStatisticsFragment
   }
   siteUrl
+  stats {
+    watchedTime
+    chaptersRead
+  }
+  previousNames {
+    name
+    createdAt
+    updatedAt
+  }
 }
     ${UserAvatarFragmentDoc}
 ${UserOptionsFragmentDoc}

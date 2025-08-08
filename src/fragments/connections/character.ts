@@ -19,6 +19,17 @@ export const CHARACTER_EDGE_FRAGMENT = gql`
       }
       languageV2
     }
+    voiceActorRoles {
+      roleNotes
+      dubGroup
+      voiceActor {
+        id
+        name {
+          full
+        }
+      }
+    }
+    favouriteOrder
     node {
       ...CharacterBasicFragment
     }

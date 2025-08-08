@@ -10,6 +10,7 @@ export const MEDIA_TAG_FRAGMENT = gql`
     isGeneralSpoiler
     isMediaSpoiler
     isAdult
+    userId
   }
 `;
 

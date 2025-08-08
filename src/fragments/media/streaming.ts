@@ -6,6 +6,7 @@ export const MEDIA_STREAMING_EPISODE_FRAGMENT = gql`
     thumbnail
     url
     site
+    # no more fields
   }
 `;
 
@@ -15,5 +16,6 @@ export const AIRING_SCHEDULE_FRAGMENT = gql`
     airingAt
     timeUntilAiring
     episode
+    mediaId
   }
 `;

@@ -15,6 +15,7 @@ export const STUDIO_EDGE_FRAGMENT = gql`
   ${STUDIO_NODE_FRAGMENT}
   fragment StudioEdgeFragment on StudioEdge {
     isMain
+    favouriteOrder
     node {
       ...StudioNodeFragment
     }

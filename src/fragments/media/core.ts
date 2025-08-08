@@ -17,6 +17,7 @@ export const MEDIA_CORE_FRAGMENT = gql`
   ${DATE_FRAGMENT}
   fragment MediaCoreFragment on Media {
     id
+    idMal
     title {
       ...TitleFragment
     }
@@ -42,6 +43,9 @@ export const MEDIA_CORE_FRAGMENT = gql`
     countryOfOrigin
     isAdult
     isLicensed
+    isLocked
+    isFavourite
+    isFavouriteBlocked
     hashtag
     synonyms
     startDate {
@@ -54,6 +58,10 @@ export const MEDIA_CORE_FRAGMENT = gql`
     seasonYear
     siteUrl
     updatedAt
+    autoCreateForumThread
+    isRecommendationBlocked
+    isReviewBlocked
+    modNotes
   }
 `;
 
@@ -80,6 +88,16 @@ export const MEDIA_DETAILED_FRAGMENT = gql`
     }
     trailer {
       ...MediaTrailerFragment
+    }
+    reviews(page: 1, perPage: 1) {
+      pageInfo {
+        total
+      }
+    }
+    recommendations(page: 1, perPage: 1) {
+      pageInfo {
+        total
+      }
     }
   }
 `;

@@ -5,10 +5,13 @@ export const MEDIA_EXTERNAL_LINK_FRAGMENT = gql`
     id
     url
     site
+    siteId
     type
     language
     color
     icon
+    notes
+    isDisabled
   }
 `;
 
@@ -17,6 +20,7 @@ export const MEDIA_EXTERNAL_LINK_BASIC_FRAGMENT = gql`
     id
     url
     site
+    siteId
     type
   }
 `;

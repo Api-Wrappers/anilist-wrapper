@@ -5,5 +5,6 @@ export const TITLE_FRAGMENT = gql`
     romaji
     english
     native
+    userPreferred
   }
 `;

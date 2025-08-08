@@ -34,9 +34,9 @@ export const CHARACTER_BASIC_FRAGMENT = gql`
     }
     age
     bloodType
-    favourites
     isFavourite
     isFavouriteBlocked
+    favourites
     siteUrl
   }
 `;

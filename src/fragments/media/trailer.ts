@@ -5,5 +5,6 @@ export const MEDIA_TRAILER_FRAGMENT = gql`
     id
     site
     thumbnail
+    # no more selectable fields in schema
   }
 `;

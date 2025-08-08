@@ -11,6 +11,14 @@ export const USER_OPTIONS_FRAGMENT = gql`
       type
       enabled
     }
+    timezone
+    activityMergeTime
+    staffNameLanguage
+    restrictMessagesToFollowing
+    disabledListActivity {
+      disabled
+      type
+    }
   }
 `;
 
@@ -18,6 +26,7 @@ export const USER_MEDIA_LIST_OPTIONS_FRAGMENT = gql`
   fragment UserMediaListOptionsFragment on MediaListOptions {
     scoreFormat
     rowOrder
+    useLegacyLists
     animeList {
       sectionOrder
       splitCompletedSectionByFormat
@@ -32,6 +41,8 @@ export const USER_MEDIA_LIST_OPTIONS_FRAGMENT = gql`
       advancedScoring
       advancedScoringEnabled
     }
+    sharedTheme
+    sharedThemeEnabled
   }
 `;
 
@@ -86,6 +97,8 @@ export const USER_STATISTICS_FRAGMENT = gql`
       standardDeviation
       minutesWatched
       episodesWatched
+      chaptersRead
+      volumesRead
       scores {
         score
         count
@@ -135,6 +148,47 @@ export const USER_STATISTICS_FRAGMENT = gql`
         count
         meanScore
         minutesWatched
+      }
+      countries {
+        country
+        count
+        meanScore
+        minutesWatched
+      }
+      voiceActors {
+        count
+        meanScore
+        minutesWatched
+        voiceActor {
+          id
+          name {
+            full
+          }
+        }
+        characterIds
+        mediaIds
+      }
+      staff {
+        count
+        meanScore
+        minutesWatched
+        staff {
+          id
+          name {
+            full
+          }
+        }
+        mediaIds
+      }
+      studios {
+        count
+        meanScore
+        minutesWatched
+        studio {
+          id
+          name
+        }
+        mediaIds
       }
     }
     manga {
@@ -193,6 +247,34 @@ export const USER_STATISTICS_FRAGMENT = gql`
         meanScore
         chaptersRead
       }
+      countries {
+        country
+        count
+        meanScore
+        chaptersRead
+      }
+      staff {
+        count
+        meanScore
+        chaptersRead
+        staff {
+          id
+          name {
+            full
+          }
+        }
+        mediaIds
+      }
+      studios {
+        count
+        meanScore
+        chaptersRead
+        studio {
+          id
+          name
+        }
+        mediaIds
+      }
     }
   }
 `;
@@ -213,13 +295,15 @@ export const USER_BASIC_FRAGMENT = gql`
     bannerImage
     donatorTier
     donatorBadge
-    createdAt
-    updatedAt
     isFollowing
     isFollower
     isBlocked
+    createdAt
+    updatedAt
     unreadNotificationCount
+    bans
     moderatorRoles
+    moderatorStatus
     options {
       ...UserOptionsFragment
     }
@@ -233,5 +317,14 @@ export const USER_BASIC_FRAGMENT = gql`
       ...UserStatisticsFragment
     }
     siteUrl
+    stats {
+      watchedTime
+      chaptersRead
+    }
+    previousNames {
+      name
+      createdAt
+      updatedAt
+    }
   }
 `;

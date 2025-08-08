@@ -43,7 +43,15 @@ export const MEDIA_RELATION_NODE_FRAGMENT = gql`
 export const MEDIA_RELATION_EDGE_FRAGMENT = gql`
   ${MEDIA_RELATION_NODE_FRAGMENT}
   fragment MediaRelationEdgeFragment on MediaEdge {
+    id
     relationType
+    isMainStudio
+    characterRole
+    characterName
+    roleNotes
+    dubGroup
+    staffRole
+    favouriteOrder
     node {
       ...MediaRelationNodeFragment
     }

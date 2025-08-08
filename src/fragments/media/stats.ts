@@ -24,5 +24,10 @@ export const MEDIA_STATS_FRAGMENT = gql`
     statusDistribution {
       ...StatusDistributionFragment
     }
+    airingProgression {
+      episode
+      score
+      watching
+    }
   }
 `;
