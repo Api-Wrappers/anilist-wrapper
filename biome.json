@@ -9,9 +9,9 @@
 		"ignoreUnknown": false,
 		"includes": [
 			"src/**/*.ts",
-			"src/**/*.tsx",
 			"!src/__generated__/**/*",
-			"!dist/**/*"
+			"!dist/**/*",
+			"!node_modules/**/*"
 		]
 	},
 	"formatter": {
