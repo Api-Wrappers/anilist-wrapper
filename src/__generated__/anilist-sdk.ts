@@ -7839,7 +7839,7 @@ export const GetMangaListByGenreDocument = gql`
 }
     ${MediaFragmentDoc}`;
 export const GetMangaPopularDocument = gql`
-    query getMangaPopular($page: Int = 1, $perPage: Int = 20) {
+    query GetMangaPopular($page: Int = 1, $perPage: Int = 20) {
   Page(page: $page, perPage: $perPage) {
     media(sort: POPULARITY_DESC, type: MANGA) {
       ...MediaFragment
@@ -7891,7 +7891,7 @@ export const GetMangaStaffDocument = gql`
 }
     ${StaffFragmentDoc}`;
 export const GetMangaTrendingDocument = gql`
-    query getMangaTrending($page: Int = 1, $perPage: Int = 20) {
+    query GetMangaTrending($page: Int = 1, $perPage: Int = 20) {
   Page(page: $page, perPage: $perPage) {
     media(sort: TRENDING_DESC, type: MANGA) {
       ...MediaFragment
@@ -8432,7 +8432,7 @@ export function getSdk(
 				variables,
 			);
 		},
-		getMangaPopular(
+		GetMangaPopular(
 			variables?: GetMangaPopularQueryVariables,
 			requestHeaders?: GraphQLClientRequestHeaders,
 			signal?: RequestInit["signal"],
@@ -8445,7 +8445,7 @@ export function getSdk(
 						requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
 						signal,
 					}),
-				"getMangaPopular",
+				"GetMangaPopular",
 				"query",
 				variables,
 			);
@@ -8504,7 +8504,7 @@ export function getSdk(
 				variables,
 			);
 		},
-		getMangaTrending(
+		GetMangaTrending(
 			variables?: GetMangaTrendingQueryVariables,
 			requestHeaders?: GraphQLClientRequestHeaders,
 			signal?: RequestInit["signal"],
@@ -8517,7 +8517,7 @@ export function getSdk(
 						requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
 						signal,
 					}),
-				"getMangaTrending",
+				"GetMangaTrending",
 				"query",
 				variables,
 			);

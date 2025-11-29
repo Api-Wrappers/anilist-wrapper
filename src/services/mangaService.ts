@@ -100,7 +100,7 @@ export class MangaService {
 		page: number,
 		perPage: number,
 	): Promise<GetMangaTrendingQuery> {
-		return this.client.getMangaTrending({ page, perPage });
+		return this.client.GetMangaTrending({ page, perPage });
 	}
 
 	/**
@@ -113,6 +113,6 @@ export class MangaService {
 		page: number,
 		perPage: number,
 	): Promise<GetMangaPopularQuery> {
-		return this.client.getMangaPopular({ page, perPage });
+		return this.client.GetMangaPopular({ page, perPage });
 	}
 }
