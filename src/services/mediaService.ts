@@ -30,7 +30,7 @@ export class MediaService {
 	 * @param mediaType - The type of media list to fetch: either "ANIME" or "MANGA".
 	 * @returns A promise that resolves with the user's media list.
 	 */
-	GetMediaList(userId: number, mediaType: MediaTypeNonEnum) {
+	getMediaList(userId: number, mediaType: MediaTypeNonEnum) {
 		return this.client.GetMediaListByUser({
 			mediaType: mediaType === "ANIME" ? MediaType.Anime : MediaType.Manga,
 			userId,
@@ -43,7 +43,7 @@ export class MediaService {
 	 * @param mediaType - The type of media list to fetch: either "ANIME" or "MANGA".
 	 * @returns A promise that resolves with the user's media list.
 	 */
-	GetMediaListByUserName(userName: string, mediaType: MediaTypeNonEnum) {
+	getMediaListByUserName(userName: string, mediaType: MediaTypeNonEnum) {
 		return this.client.GetMediaListByUserByUserName({
 			mediaType: mediaType === "ANIME" ? MediaType.Anime : MediaType.Manga,
 			userName,
