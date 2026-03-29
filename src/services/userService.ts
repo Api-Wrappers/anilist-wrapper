@@ -29,8 +29,8 @@ export class UserService {
 	 * @param userName - The userName of the user.
 	 * @returns A promise resolving to the user information.
 	 */
-	getUserInfoByUserName(userName: string) {
-		return this.client.GetUserInfoByUserName({ userName });
+	getUserInfoByUsername(userName: string) {
+		return this.client.GetUserInfoByUsername({ userName });
 	}
 
 	/**
@@ -52,8 +52,8 @@ export class UserService {
 	 * @param status - Optional media list status filter defaults to current.
 	 * @returns A promise resolving to the user's anime list.
 	 */
-	getUserAnimeListByUserName(userName: string, status?: MediaListStatus) {
-		return this.client.GetUserAnimeListByUserName({
+	getUserAnimeListByUsername(userName: string, status?: MediaListStatus) {
+		return this.client.GetUserAnimeListByUsername({
 			status: status ?? MediaListStatus.Current,
 			userName,
 		});
@@ -78,8 +78,8 @@ export class UserService {
 	 * @param status - Optional media list status filter defaults to current.
 	 * @returns A promise resolving to the user's manga list.
 	 */
-	getUserMangaListByUserName(userName: string, status?: MediaListStatus) {
-		return this.client.GetUserMangaListByUserName({
+	getUserMangaListByUsername(userName: string, status?: MediaListStatus) {
+		return this.client.GetUserMangaListByUsername({
 			status: status ?? MediaListStatus.Current,
 			userName,
 		});
@@ -112,7 +112,7 @@ export class UserService {
 	 * @param userName - The userName of the user.
 	 * @returns A promise resolving to the user's statistics.
 	 */
-	getUserStatisticsByUserName(userName: string) {
-		return this.client.GetUserStatisticsByUserName({ userName });
+	getUserStatisticsByUsername(userName: string) {
+		return this.client.GetUserStatisticsByUsername({ userName });
 	}
 }

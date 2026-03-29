@@ -10,7 +10,7 @@ export const GET_ANIME_BY_ID = gql`
   ${STAFF_FRAGMENT}
   ${STUDIO_FRAGMENT}
 
-  query GetAnimeById($id: Int) {
+  query GetAnimeById($id: Int!) {
     Media(id: $id, type: ANIME) {
       ...MediaFragment
       characters {

@@ -2,10 +2,10 @@
 
 A simple, type-safe TypeScript wrapper for the AniList API. Build awesome anime and manga apps without the hassle of dealing with raw GraphQL queries.
 
-[![npm version](https://img.shields.io/npm/v/@tdanks2000/anilist-wrapper)](https://www.npmjs.com/package/@tdanks2000/anilist-wrapper)
-[![license](https://img.shields.io/npm/l/@tdanks2000/anilist-wrapper)](https://github.com/tdanks2000/anilist-wrapper/blob/master/LICENSE)
-[![build status](https://github.com/tdanks2000/anilist-wrapper/actions/workflows/ci.yml/badge.svg)](https://github.com/tdanks2000/anilist-wrapper/actions/workflows/ci.yml)
-[![bundle size](https://img.shields.io/bundlephobia/minzip/@tdanks2000/anilist-wrapper)](https://bundlephobia.com/package/@tdanks2000/anilist-wrapper)
+[![npm version](https://img.shields.io/npm/v/@api-wrappers/anilist-wrapper)](https://www.npmjs.com/package/@api-wrappers/anilist-wrapper)
+[![license](https://img.shields.io/npm/l/@api-wrappers/anilist-wrapper)](https://github.com/api-wrappers/anilist-wrapper/blob/master/LICENSE)
+[![build status](https://github.com/api-wrappers/anilist-wrapper/actions/workflows/ci.yml/badge.svg)](https://github.com/api-wrappers/anilist-wrapper/actions/workflows/ci.yml)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/@api-wrappers/anilist-wrapper)](https://bundlephobia.com/package/@api-wrappers/anilist-wrapper)
 
 ## What's this?
 
@@ -17,20 +17,20 @@ Built with TypeScript for that sweet autocomplete and type safety. No more guess
 
 ```bash
 // npm
-npm install @tdanks2000/anilist-wrapper
+npm install @api-wrappers/anilist-wrapper
 
 // bun
-bun add @tdanks2000/anilist-wrapper
+bun add @api-wrappers/anilist-wrapper
 
 // yarn
-yarn add @tdanks2000/anilist-wrapper
+yarn add @api-wrappers/anilist-wrapper
 
 // pnpm
-pnpm add @tdanks2000/anilist-wrapper
+pnpm add @api-wrappers/anilist-wrapper
 ```
 
 ```typescript
-import { Anilist } from "@tdanks2000/anilist-wrapper";
+import { Anilist } from "@api-wrappers/anilist-wrapper";
 
 // Create an instance (no token needed for public data)
 const anilist = new Anilist();
@@ -115,7 +115,7 @@ MIT License - use it however you want!
 
 ## Support
 
-Having trouble? Open an issue on [GitHub](https://github.com/tdanks2000/anilist-wrapper/issues) and I'll help you out.
+Having trouble? Open an issue on [GitHub](https://github.com/api-wrappers/anilist-wrapper/issues) and I'll help you out.
 
 ---
 

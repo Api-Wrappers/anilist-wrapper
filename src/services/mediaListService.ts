@@ -17,13 +17,11 @@ export class MediaListService {
 
 	/**
 	 * Retrieves a user's media list by ID.
-	 * @param userId - The ID of the user whose media list to retrieve.
-	 * @returns A promise resolving to the user's media list.
+	 * @param id - The ID of the list to retrieve.
+	 * @returns A promise resolving to the media list.
 	 */
-	getMediaList(userId: number) {
-		return this.client.GetMediaList({
-			id: userId,
-		});
+	getMediaList(id: number) {
+		return this.client.GetMediaList({ id });
 	}
 
 	/**

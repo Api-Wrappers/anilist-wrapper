@@ -1,5 +1,5 @@
 {
-	"name": "@tdanks2000/anilist-wrapper",
+	"name": "@api-wrappers/anilist-wrapper",
 	"version": "2.4.1",
 	"description": "A comprehensive and easy-to-use TypeScript wrapper for the Anilist GraphQL API (v2). Simplifies fetching anime/manga data and managing user lists in Node.js applications.",
 	"type": "module",
@@ -32,8 +32,8 @@
 		"library"
 	],
 	"author": {
-		"name": "tdanks2000",
-		"url": "https://github.com/tdanks2000"
+		"name": "api-wrappers",
+		"url": "https://github.com/api-wrappers"
 	},
 	"license": "MIT",
 	"private": false,
