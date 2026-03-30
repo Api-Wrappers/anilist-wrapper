@@ -7,3 +7,5 @@ export * from "./getMangaRecommendations";
 export * from "./getMangaRelations";
 export * from "./getMangaStaff";
 export * from "./getMangaTrending";
+export * from "./searchManga";
+export * from "./toggleFavoriteManga";

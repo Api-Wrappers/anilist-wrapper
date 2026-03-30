@@ -1,4 +1,5 @@
 import type { ANILISTSDK } from "../@types";
+import type { ToggleFavoriteAnimeMutation } from "../__generated__/anilist-sdk";
 
 /**
  * Service class for interacting with AniList anime-related queries.
@@ -108,5 +109,14 @@ export class AnimeService {
 	 */
 	getAnimeListByGenre(genre: string, page = 1, perPage = 10) {
 		return this.client.GetAnimeListByGenre({ genre, page, perPage });
+	}
+
+	/**
+	 * Toggles the favorite status of an anime. Requires authentication.
+	 * @param animeId - The ID of the anime to toggle as favorite.
+	 * @returns A promise resolving to the result of the toggle mutation.
+	 */
+	toggleFavourite(animeId: number): Promise<ToggleFavoriteAnimeMutation> {
+		return this.client.ToggleFavoriteAnime({ animeId });
 	}
 }

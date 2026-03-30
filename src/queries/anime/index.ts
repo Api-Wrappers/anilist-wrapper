@@ -8,3 +8,4 @@ export * from "./getAnimeRelations";
 export * from "./getAnimeStaff";
 export * from "./getAnimeTrending";
 export * from "./searchAnime";
+export * from "./toggleFavoriteAnime";

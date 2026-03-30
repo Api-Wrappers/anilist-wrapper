@@ -481,6 +481,8 @@ export enum NotificationType {
   ActivityReplySubscribed = 'ACTIVITY_REPLY_SUBSCRIBED',
   /** An anime you are currently watching has aired */
   Airing = 'AIRING',
+  /** A user's character submission has been accepted, partially accepted, or rejected */
+  CharacterSubmissionUpdate = 'CHARACTER_SUBMISSION_UPDATE',
   /** A user has followed you */
   Following = 'FOLLOWING',
   /** An anime or manga has had a data change that affects how a user may track it in their lists */
@@ -489,8 +491,12 @@ export enum NotificationType {
   MediaDeletion = 'MEDIA_DELETION',
   /** Anime or manga entries on the user's list have been merged into a single entry */
   MediaMerge = 'MEDIA_MERGE',
+  /** A user's submission has been accepted, partially accepted, or rejected */
+  MediaSubmissionUpdate = 'MEDIA_SUBMISSION_UPDATE',
   /** A new anime or manga has been added to the site where its related media is on the user's list */
   RelatedMediaAddition = 'RELATED_MEDIA_ADDITION',
+  /** A user's staff submission has been accepted, partially accepted, or rejected */
+  StaffSubmissionUpdate = 'STAFF_SUBMISSION_UPDATE',
   /** A user has liked your forum comment */
   ThreadCommentLike = 'THREAD_COMMENT_LIKE',
   /** A user has mentioned you in a forum comment */
@@ -894,6 +900,13 @@ export type SearchAnimeQueryVariables = Exact<{
 
 export type SearchAnimeQuery = { Page: { media: Array<{ id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: any | null, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, nextAiringEpisode: { id: number, airingAt: number, timeUntilAiring: number, episode: number, mediaId: number } | null, tags: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null } | null> | null, externalLinks: Array<{ id: number, url: string | null, site: string, siteId: number | null, type: ExternalLinkType | null } | null> | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null> | null } | null };
 
+export type ToggleFavoriteAnimeMutationVariables = Exact<{
+  animeId: Scalars['Int']['input'];
+}>;
+
+
+export type ToggleFavoriteAnimeMutation = { ToggleFavourite: { anime: { nodes: Array<{ id: number } | null> | null } | null } | null };
+
 export type CharactersBirthdayTodayQueryVariables = Exact<{
   page: InputMaybe<Scalars['Int']['input']>;
   perPage: InputMaybe<Scalars['Int']['input']>;
@@ -983,12 +996,35 @@ export type GetMangaTrendingQueryVariables = Exact<{
 
 export type GetMangaTrendingQuery = { Page: { media: Array<{ id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: any | null, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, nextAiringEpisode: { id: number, airingAt: number, timeUntilAiring: number, episode: number, mediaId: number } | null, tags: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null } | null> | null, externalLinks: Array<{ id: number, url: string | null, site: string, siteId: number | null, type: ExternalLinkType | null } | null> | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null> | null } | null };
 
+export type SearchMangaQueryVariables = Exact<{
+  query: InputMaybe<Scalars['String']['input']>;
+  page: InputMaybe<Scalars['Int']['input']>;
+  perPage: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type SearchMangaQuery = { Page: { media: Array<{ id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: any | null, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, nextAiringEpisode: { id: number, airingAt: number, timeUntilAiring: number, episode: number, mediaId: number } | null, tags: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null } | null> | null, externalLinks: Array<{ id: number, url: string | null, site: string, siteId: number | null, type: ExternalLinkType | null } | null> | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null> | null } | null };
+
+export type ToggleFavoriteMangaMutationVariables = Exact<{
+  mangaId: Scalars['Int']['input'];
+}>;
+
+
+export type ToggleFavoriteMangaMutation = { ToggleFavourite: { manga: { nodes: Array<{ id: number } | null> | null } | null } | null };
+
 export type GetMediaByIdQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
 export type GetMediaByIdQuery = { Media: { id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: any | null, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, nextAiringEpisode: { id: number, airingAt: number, timeUntilAiring: number, episode: number, mediaId: number } | null, tags: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null } | null> | null, externalLinks: Array<{ id: number, url: string | null, site: string, siteId: number | null, type: ExternalLinkType | null } | null> | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null };
+
+export type DeleteMediaListEntryMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type DeleteMediaListEntryMutation = { DeleteMediaListEntry: { deleted: boolean | null } | null };
 
 export type GetMediaListQueryVariables = Exact<{
   id: InputMaybe<Scalars['Int']['input']>;
@@ -1012,6 +1048,22 @@ export type GetMediaListByUserByUsernameQueryVariables = Exact<{
 
 
 export type GetMediaListByUserByUsernameQuery = { MediaListCollection: { lists: Array<{ entries: Array<{ id: number, mediaId: number, userId: number, status: MediaListStatus | null, score: number | null, progress: number | null, progressVolumes: number | null, repeat: number | null, priority: number | null, private: boolean | null, notes: string | null, hiddenFromStatusLists: boolean | null, customLists: any | null, advancedScores: any | null, updatedAt: number | null, createdAt: number | null, startedAt: { year: number | null, month: number | null, day: number | null } | null, completedAt: { year: number | null, month: number | null, day: number | null } | null, media: { id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: any | null, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null } | null> | null } | null> | null } | null };
+
+export type SaveMediaListEntryMutationVariables = Exact<{
+  mediaId: InputMaybe<Scalars['Int']['input']>;
+  status: InputMaybe<MediaListStatus>;
+  score: InputMaybe<Scalars['Float']['input']>;
+  progress: InputMaybe<Scalars['Int']['input']>;
+  progressVolumes: InputMaybe<Scalars['Int']['input']>;
+  repeat: InputMaybe<Scalars['Int']['input']>;
+  private: InputMaybe<Scalars['Boolean']['input']>;
+  notes: InputMaybe<Scalars['String']['input']>;
+  startedAt: InputMaybe<FuzzyDateInput>;
+  completedAt: InputMaybe<FuzzyDateInput>;
+}>;
+
+
+export type SaveMediaListEntryMutation = { SaveMediaListEntry: { id: number, mediaId: number, userId: number, status: MediaListStatus | null, score: number | null, progress: number | null, progressVolumes: number | null, repeat: number | null, priority: number | null, private: boolean | null, notes: string | null, hiddenFromStatusLists: boolean | null, customLists: any | null, advancedScores: any | null, updatedAt: number | null, createdAt: number | null, startedAt: { year: number | null, month: number | null, day: number | null } | null, completedAt: { year: number | null, month: number | null, day: number | null } | null, media: { id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: any | null, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null } | null };
 
 export type GetStaffByIdQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -1093,14 +1145,14 @@ export type GetUserStatisticsQueryVariables = Exact<{
 }>;
 
 
-export type GetUserStatisticsQuery = { User: { statistics: { anime: { count: number, meanScore: number, minutesWatched: number } | null, manga: { count: number, meanScore: number, chaptersRead: number } | null } | null } | null };
+export type GetUserStatisticsQuery = { User: { statistics: { anime: { count: number, meanScore: number, minutesWatched: number, episodesWatched: number, standardDeviation: number, genres: Array<{ genre: string | null, count: number, meanScore: number, minutesWatched: number } | null> | null, tags: Array<{ count: number, meanScore: number, minutesWatched: number, tag: { id: number, name: string } | null } | null> | null, statuses: Array<{ status: MediaListStatus | null, count: number, meanScore: number, minutesWatched: number } | null> | null, formats: Array<{ format: MediaFormat | null, count: number, meanScore: number, minutesWatched: number } | null> | null, releaseYears: Array<{ releaseYear: number | null, count: number, meanScore: number, minutesWatched: number } | null> | null } | null, manga: { count: number, meanScore: number, chaptersRead: number, volumesRead: number, standardDeviation: number, genres: Array<{ genre: string | null, count: number, meanScore: number, chaptersRead: number } | null> | null, tags: Array<{ count: number, meanScore: number, chaptersRead: number, tag: { id: number, name: string } | null } | null> | null, statuses: Array<{ status: MediaListStatus | null, count: number, meanScore: number, chaptersRead: number } | null> | null, formats: Array<{ format: MediaFormat | null, count: number, meanScore: number, chaptersRead: number } | null> | null } | null } | null } | null };
 
 export type GetUserStatisticsByUsernameQueryVariables = Exact<{
   userName: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type GetUserStatisticsByUsernameQuery = { User: { statistics: { anime: { count: number, meanScore: number, minutesWatched: number } | null, manga: { count: number, meanScore: number, chaptersRead: number } | null } | null } | null };
+export type GetUserStatisticsByUsernameQuery = { User: { statistics: { anime: { count: number, meanScore: number, minutesWatched: number, episodesWatched: number, standardDeviation: number, genres: Array<{ genre: string | null, count: number, meanScore: number, minutesWatched: number } | null> | null, tags: Array<{ count: number, meanScore: number, minutesWatched: number, tag: { id: number, name: string } | null } | null> | null, statuses: Array<{ status: MediaListStatus | null, count: number, meanScore: number, minutesWatched: number } | null> | null, formats: Array<{ format: MediaFormat | null, count: number, meanScore: number, minutesWatched: number } | null> | null, releaseYears: Array<{ releaseYear: number | null, count: number, meanScore: number, minutesWatched: number } | null> | null } | null, manga: { count: number, meanScore: number, chaptersRead: number, volumesRead: number, standardDeviation: number, genres: Array<{ genre: string | null, count: number, meanScore: number, chaptersRead: number } | null> | null, tags: Array<{ count: number, meanScore: number, chaptersRead: number, tag: { id: number, name: string } | null } | null> | null, statuses: Array<{ status: MediaListStatus | null, count: number, meanScore: number, chaptersRead: number } | null> | null, formats: Array<{ format: MediaFormat | null, count: number, meanScore: number, chaptersRead: number } | null> | null } | null } | null } | null };
 
 export const TitleFragmentDoc = gql`
     fragment TitleFragment on MediaTitle {
@@ -2152,6 +2204,17 @@ export const SearchAnimeDocument = gql`
   }
 }
     ${MediaFragmentDoc}`;
+export const ToggleFavoriteAnimeDocument = gql`
+    mutation ToggleFavoriteAnime($animeId: Int!) {
+  ToggleFavourite(animeId: $animeId) {
+    anime(page: 1, perPage: 25) {
+      nodes {
+        id
+      }
+    }
+  }
+}
+    `;
 export const CharactersBirthdayTodayDocument = gql`
     query CharactersBirthdayToday($page: Int, $perPage: Int) {
   Page(page: $page, perPage: $perPage) {
@@ -2293,6 +2356,26 @@ export const GetMangaTrendingDocument = gql`
   }
 }
     ${MediaFragmentDoc}`;
+export const SearchMangaDocument = gql`
+    query SearchManga($query: String, $page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    media(search: $query, type: MANGA) {
+      ...MediaFragment
+    }
+  }
+}
+    ${MediaFragmentDoc}`;
+export const ToggleFavoriteMangaDocument = gql`
+    mutation ToggleFavoriteManga($mangaId: Int!) {
+  ToggleFavourite(mangaId: $mangaId) {
+    manga(page: 1, perPage: 25) {
+      nodes {
+        id
+      }
+    }
+  }
+}
+    `;
 export const GetMediaByIdDocument = gql`
     query GetMediaById($id: Int!) {
   Media(id: $id) {
@@ -2300,6 +2383,13 @@ export const GetMediaByIdDocument = gql`
   }
 }
     ${MediaFragmentDoc}`;
+export const DeleteMediaListEntryDocument = gql`
+    mutation DeleteMediaListEntry($id: Int!) {
+  DeleteMediaListEntry(id: $id) {
+    deleted
+  }
+}
+    `;
 export const GetMediaListDocument = gql`
     query GetMediaList($id: Int) {
   MediaList(id: $id) {
@@ -2326,6 +2416,24 @@ export const GetMediaListByUserByUsernameDocument = gql`
         ...MediaListFragment
       }
     }
+  }
+}
+    ${MediaListFragmentDoc}`;
+export const SaveMediaListEntryDocument = gql`
+    mutation SaveMediaListEntry($mediaId: Int, $status: MediaListStatus, $score: Float, $progress: Int, $progressVolumes: Int, $repeat: Int, $private: Boolean, $notes: String, $startedAt: FuzzyDateInput, $completedAt: FuzzyDateInput) {
+  SaveMediaListEntry(
+    mediaId: $mediaId
+    status: $status
+    score: $score
+    progress: $progress
+    progressVolumes: $progressVolumes
+    repeat: $repeat
+    private: $private
+    notes: $notes
+    startedAt: $startedAt
+    completedAt: $completedAt
+  ) {
+    ...MediaListFragment
   }
 }
     ${MediaListFragmentDoc}`;
@@ -2472,11 +2580,75 @@ export const GetUserStatisticsDocument = gql`
         count
         meanScore
         minutesWatched
+        episodesWatched
+        standardDeviation
+        genres(limit: 10, sort: COUNT_DESC) {
+          genre
+          count
+          meanScore
+          minutesWatched
+        }
+        tags(limit: 10, sort: COUNT_DESC) {
+          tag {
+            id
+            name
+          }
+          count
+          meanScore
+          minutesWatched
+        }
+        statuses {
+          status
+          count
+          meanScore
+          minutesWatched
+        }
+        formats {
+          format
+          count
+          meanScore
+          minutesWatched
+        }
+        releaseYears {
+          releaseYear
+          count
+          meanScore
+          minutesWatched
+        }
       }
       manga {
         count
         meanScore
         chaptersRead
+        volumesRead
+        standardDeviation
+        genres(limit: 10, sort: COUNT_DESC) {
+          genre
+          count
+          meanScore
+          chaptersRead
+        }
+        tags(limit: 10, sort: COUNT_DESC) {
+          tag {
+            id
+            name
+          }
+          count
+          meanScore
+          chaptersRead
+        }
+        statuses {
+          status
+          count
+          meanScore
+          chaptersRead
+        }
+        formats {
+          format
+          count
+          meanScore
+          chaptersRead
+        }
       }
     }
   }
@@ -2490,11 +2662,75 @@ export const GetUserStatisticsByUsernameDocument = gql`
         count
         meanScore
         minutesWatched
+        episodesWatched
+        standardDeviation
+        genres(limit: 10, sort: COUNT_DESC) {
+          genre
+          count
+          meanScore
+          minutesWatched
+        }
+        tags(limit: 10, sort: COUNT_DESC) {
+          tag {
+            id
+            name
+          }
+          count
+          meanScore
+          minutesWatched
+        }
+        statuses {
+          status
+          count
+          meanScore
+          minutesWatched
+        }
+        formats {
+          format
+          count
+          meanScore
+          minutesWatched
+        }
+        releaseYears {
+          releaseYear
+          count
+          meanScore
+          minutesWatched
+        }
       }
       manga {
         count
         meanScore
         chaptersRead
+        volumesRead
+        standardDeviation
+        genres(limit: 10, sort: COUNT_DESC) {
+          genre
+          count
+          meanScore
+          chaptersRead
+        }
+        tags(limit: 10, sort: COUNT_DESC) {
+          tag {
+            id
+            name
+          }
+          count
+          meanScore
+          chaptersRead
+        }
+        statuses {
+          status
+          count
+          meanScore
+          chaptersRead
+        }
+        formats {
+          format
+          count
+          meanScore
+          chaptersRead
+        }
       }
     }
   }
@@ -2538,6 +2774,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     SearchAnime(variables?: SearchAnimeQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<SearchAnimeQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<SearchAnimeQuery>({ document: SearchAnimeDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'SearchAnime', 'query', variables);
     },
+    ToggleFavoriteAnime(variables: ToggleFavoriteAnimeMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<ToggleFavoriteAnimeMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ToggleFavoriteAnimeMutation>({ document: ToggleFavoriteAnimeDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'ToggleFavoriteAnime', 'mutation', variables);
+    },
     CharactersBirthdayToday(variables?: CharactersBirthdayTodayQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<CharactersBirthdayTodayQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CharactersBirthdayTodayQuery>({ document: CharactersBirthdayTodayDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'CharactersBirthdayToday', 'query', variables);
     },
@@ -2574,8 +2813,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     GetMangaTrending(variables?: GetMangaTrendingQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMangaTrendingQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetMangaTrendingQuery>({ document: GetMangaTrendingDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMangaTrending', 'query', variables);
     },
+    SearchManga(variables?: SearchMangaQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<SearchMangaQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SearchMangaQuery>({ document: SearchMangaDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'SearchManga', 'query', variables);
+    },
+    ToggleFavoriteManga(variables: ToggleFavoriteMangaMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<ToggleFavoriteMangaMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ToggleFavoriteMangaMutation>({ document: ToggleFavoriteMangaDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'ToggleFavoriteManga', 'mutation', variables);
+    },
     GetMediaById(variables: GetMediaByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMediaByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetMediaByIdQuery>({ document: GetMediaByIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMediaById', 'query', variables);
+    },
+    DeleteMediaListEntry(variables: DeleteMediaListEntryMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<DeleteMediaListEntryMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteMediaListEntryMutation>({ document: DeleteMediaListEntryDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'DeleteMediaListEntry', 'mutation', variables);
     },
     GetMediaList(variables?: GetMediaListQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMediaListQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetMediaListQuery>({ document: GetMediaListDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMediaList', 'query', variables);
@@ -2585,6 +2833,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetMediaListByUserByUsername(variables?: GetMediaListByUserByUsernameQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMediaListByUserByUsernameQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetMediaListByUserByUsernameQuery>({ document: GetMediaListByUserByUsernameDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMediaListByUserByUsername', 'query', variables);
+    },
+    SaveMediaListEntry(variables?: SaveMediaListEntryMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<SaveMediaListEntryMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SaveMediaListEntryMutation>({ document: SaveMediaListEntryDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'SaveMediaListEntry', 'mutation', variables);
     },
     GetStaffById(variables: GetStaffByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetStaffByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetStaffByIdQuery>({ document: GetStaffByIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetStaffById', 'query', variables);

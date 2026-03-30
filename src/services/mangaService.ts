@@ -9,6 +9,8 @@ import type {
 	GetMangaRelationsQuery,
 	GetMangaStaffQuery,
 	GetMangaTrendingQuery,
+	SearchMangaQuery,
+	ToggleFavoriteMangaMutation,
 } from "../__generated__/anilist-sdk";
 
 /**
@@ -44,6 +46,21 @@ export class MangaService {
 	}
 
 	/**
+	 * Searches for manga by title or keyword.
+	 * @param search - The search query string.
+	 * @param page - Optional page number. Defaults to 1.
+	 * @param perPage - Optional number of results per page. Defaults to 10.
+	 * @returns A promise resolving to the search results.
+	 */
+	getMangaBySearch(
+		search: string,
+		page = 1,
+		perPage = 10,
+	): Promise<SearchMangaQuery> {
+		return this.client.SearchManga({ query: search, page, perPage });
+	}
+
+	/**
 	 * Retrieves characters associated with a manga.
 	 * @param mediaId - The ID of the manga.
 	 * @returns A promise resolving to the list of characters.
@@ -55,10 +72,16 @@ export class MangaService {
 	/**
 	 * Retrieves manga entries filtered by genre.
 	 * @param genre - The genre to filter by.
+	 * @param page - Optional page number. Defaults to 1.
+	 * @param perPage - Optional number of results per page. Defaults to 10.
 	 * @returns A promise resolving to the list of manga in that genre.
 	 */
-	getMangaListByGenre(genre: string): Promise<GetMangaListByGenreQuery> {
-		return this.client.GetMangaListByGenre({ genre });
+	getMangaListByGenre(
+		genre: string,
+		page = 1,
+		perPage = 10,
+	): Promise<GetMangaListByGenreQuery> {
+		return this.client.GetMangaListByGenre({ genre, page, perPage });
 	}
 
 	/**
@@ -92,27 +115,30 @@ export class MangaService {
 
 	/**
 	 * Retrieves trending manga entries.
-	 * @param page - The page number to retrieve.
-	 * @param perPage - The number of entries per page.
+	 * @param page - Optional page number. Defaults to 1.
+	 * @param perPage - Optional number of entries per page. Defaults to 20.
 	 * @returns A promise resolving to trending manga.
 	 */
-	getMangaTrending(
-		page: number,
-		perPage: number,
-	): Promise<GetMangaTrendingQuery> {
+	getMangaTrending(page = 1, perPage = 20): Promise<GetMangaTrendingQuery> {
 		return this.client.GetMangaTrending({ page, perPage });
 	}
 
 	/**
 	 * Retrieves popular manga entries.
-	 * @param page - The page number to retrieve.
-	 * @param perPage - The number of entries per page.
+	 * @param page - Optional page number. Defaults to 1.
+	 * @param perPage - Optional number of entries per page. Defaults to 20.
 	 * @returns A promise resolving to popular manga.
 	 */
-	getMangaPopular(
-		page: number,
-		perPage: number,
-	): Promise<GetMangaPopularQuery> {
+	getMangaPopular(page = 1, perPage = 20): Promise<GetMangaPopularQuery> {
 		return this.client.GetMangaPopular({ page, perPage });
+	}
+
+	/**
+	 * Toggles the favorite status of a manga. Requires authentication.
+	 * @param mangaId - The ID of the manga to toggle as favorite.
+	 * @returns A promise resolving to the result of the toggle mutation.
+	 */
+	toggleFavourite(mangaId: number): Promise<ToggleFavoriteMangaMutation> {
+		return this.client.ToggleFavoriteManga({ mangaId });
 	}
 }
