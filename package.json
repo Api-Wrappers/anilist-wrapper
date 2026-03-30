@@ -63,7 +63,7 @@
 		"@biomejs/biome": "^2.4.9",
 		"@graphql-codegen/cli": "^5.0.7",
 		"@graphql-codegen/typescript": "^4.1.6",
-		"@graphql-codegen/typescript-graphql-request": "^6.4.0",
+		"@graphql-codegen/typescript-graphql-request": "^7.0.0",
 		"@graphql-codegen/typescript-operations": "^4.6.1",
 		"@types/bun": "latest",
 		"graphql": "^16.13.2",
