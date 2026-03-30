@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: AniList API Docs
+    url: https://docs.anilist.co
+    about: Official AniList GraphQL API documentation
+  - name: npm Package
+    url: https://www.npmjs.com/package/@api-wrappers/anilist-wrapper
+    about: Package on npm

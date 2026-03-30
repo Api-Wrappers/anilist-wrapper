@@ -7,6 +7,8 @@ A simple, type-safe TypeScript wrapper for the AniList API. Build awesome anime 
 [![build status](https://github.com/api-wrappers/anilist-wrapper/actions/workflows/ci.yml/badge.svg)](https://github.com/api-wrappers/anilist-wrapper/actions/workflows/ci.yml)
 [![bundle size](https://img.shields.io/bundlephobia/minzip/@api-wrappers/anilist-wrapper)](https://bundlephobia.com/package/@api-wrappers/anilist-wrapper)
 
+**[Full documentation →](docs/index.md)**
+
 ## What's this?
 
 Ever wanted to build something cool with anime data but got stuck trying to figure out AniList's GraphQL API? This wrapper makes it dead simple. Just import, initialize, and start fetching data.
@@ -105,9 +107,21 @@ const actionAnime = await anilist.anime.getAnimeListByGenre("Action");
 console.log(actionAnime.length); // Number of action anime
 ```
 
+## More Examples
+
+Check the [`examples/`](examples/) directory for ready-to-run scripts:
+
+| File | Description |
+|------|-------------|
+| [`basic-anime.ts`](examples/basic-anime.ts) | Search, trending, and genre lookups (no auth) |
+| [`characters-and-staff.ts`](examples/characters-and-staff.ts) | Character and staff queries (no auth) |
+| [`authenticated-user.ts`](examples/authenticated-user.ts) | User profile and list management (requires token) |
+
 ## Contributing
 
 Found a bug? Want to add a feature? Contributions are welcome! Check out the [contributing guide](CONTRIBUTING.md) to get started.
+
+Please read our [Code of Conduct](CODE_OF_CONDUCT.md) and [Security Policy](SECURITY.md) before contributing.
 
 ## License
 

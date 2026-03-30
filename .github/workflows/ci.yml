@@ -31,6 +31,10 @@ jobs:
         name: Install dependencies
         run: |
           bun install
+      - id: lint
+        name: Lint
+        run: |
+          bun run check
       - id: test
         name: Run test
         run: |
