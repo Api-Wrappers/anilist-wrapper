@@ -24,7 +24,7 @@ export const createClient = (token?: string) => {
 	const client: GraphQLClient = {
 		request({ document, variables, requestHeaders, signal }) {
 			return httpClient.graphql("", {
-				query: document,
+				query: dedupeFragmentDefinitions(document),
 				variables,
 				headers: requestHeaders,
 				signal,
@@ -35,4 +35,59 @@ export const createClient = (token?: string) => {
 	const sdk = getSdk(client);
 
 	return sdk;
+};
+
+const dedupeFragmentDefinitions = (source: string) => {
+	const seen = new Set<string>();
+	const fragmentPattern =
+		/\bfragment\s+([_A-Za-z][_0-9A-Za-z]*)\s+on\s+[_A-Za-z][_0-9A-Za-z]*/g;
+	let result = "";
+	let cursor = 0;
+	let match = fragmentPattern.exec(source);
+
+	while (match) {
+		const name = match[1];
+		const bodyStart = source.indexOf("{", fragmentPattern.lastIndex);
+
+		if (!name || bodyStart === -1) {
+			match = fragmentPattern.exec(source);
+			continue;
+		}
+
+		const bodyEnd = findMatchingBrace(source, bodyStart);
+
+		if (bodyEnd === -1) {
+			match = fragmentPattern.exec(source);
+			continue;
+		}
+
+		const definitionEnd = bodyEnd + 1;
+
+		if (seen.has(name)) {
+			result += source.slice(cursor, match.index);
+		} else {
+			seen.add(name);
+			result += source.slice(cursor, definitionEnd);
+		}
+
+		cursor = definitionEnd;
+		fragmentPattern.lastIndex = definitionEnd;
+		match = fragmentPattern.exec(source);
+	}
+
+	return result + source.slice(cursor);
+};
+
+const findMatchingBrace = (source: string, start: number) => {
+	let depth = 0;
+
+	for (let index = start; index < source.length; index++) {
+		const character = source[index];
+
+		if (character === "{") depth++;
+		if (character === "}") depth--;
+		if (depth === 0) return index;
+	}
+
+	return -1;
 };
