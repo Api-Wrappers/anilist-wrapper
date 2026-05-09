@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 import { STUDIO_NODE_FRAGMENT } from "./connections/studio.js";
 
 export const STUDIO_FRAGMENT = gql`

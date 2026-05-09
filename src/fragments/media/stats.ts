@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 
 export const SCORE_DISTRIBUTION_FRAGMENT = gql`
   fragment ScoreDistributionFragment on ScoreDistribution {

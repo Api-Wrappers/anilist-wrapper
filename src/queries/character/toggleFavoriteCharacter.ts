@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 
 export const TOGGLE_FAVORITE_CHARACTER = gql`
   mutation ToggleFavoriteCharacter($charID: Int!) {

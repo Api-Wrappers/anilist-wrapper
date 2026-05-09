@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 import { CHARACTER_CONNECTION_FRAGMENT } from "./connections/character";
 import { MEDIA_RELATION_CONNECTION_FRAGMENT } from "./connections/media.js";
 import { STAFF_CONNECTION_FRAGMENT } from "./connections/staff";

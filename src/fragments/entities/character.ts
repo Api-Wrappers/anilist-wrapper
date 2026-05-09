@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 import { DATE_FRAGMENT } from "../common/date.js";
 import { CHARACTER_IMAGE_FRAGMENT } from "../common/image.js";
 

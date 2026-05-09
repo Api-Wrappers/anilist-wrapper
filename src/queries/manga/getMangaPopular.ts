@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 import { MEDIA_FRAGMENT } from "../../fragments/media";
 
 export const GET_MANGA_POPULAR = gql`

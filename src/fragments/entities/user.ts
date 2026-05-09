@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 import { USER_AVATAR_FRAGMENT } from "../common/image.js";
 
 export const USER_OPTIONS_FRAGMENT = gql`

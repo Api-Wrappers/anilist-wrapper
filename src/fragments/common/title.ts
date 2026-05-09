@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 
 export const TITLE_FRAGMENT = gql`
   fragment TitleFragment on MediaTitle {

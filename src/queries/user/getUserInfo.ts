@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 import { USER_FRAGMENT } from "../../fragments/user";
 
 export const GET_USER_INFO = gql`

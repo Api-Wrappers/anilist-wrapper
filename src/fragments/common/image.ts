@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 
 export const CHARACTER_IMAGE_FRAGMENT = gql`
   fragment CharacterImageFragment on CharacterImage {

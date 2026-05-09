@@ -1,7 +1,7 @@
 import type { ANILISTSDK, MediaTypeNonEnum } from "../@types";
 import {
-	MediaType,
 	type DeleteMediaListEntryMutation,
+	MediaType,
 	type SaveMediaListEntryMutation,
 	type SaveMediaListEntryMutationVariables,
 } from "../__generated__/anilist-sdk";

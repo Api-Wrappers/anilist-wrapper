@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 import { CHARACTER_FRAGMENT } from "../../fragments/character";
 import { STAFF_FRAGMENT } from "../../fragments/staff";
 

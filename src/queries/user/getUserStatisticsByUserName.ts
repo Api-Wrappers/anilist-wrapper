@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 
 export const GET_USER_STATISTICS_BY_USERNAME = gql`
   query GetUserStatisticsByUsername($userName: String) {

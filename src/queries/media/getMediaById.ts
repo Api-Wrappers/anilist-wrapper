@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 import { MEDIA_FRAGMENT } from "../../fragments";
 
 export const GET_MEDIA_BY_ID = gql`

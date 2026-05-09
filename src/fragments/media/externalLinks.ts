@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 
 export const MEDIA_EXTERNAL_LINK_FRAGMENT = gql`
   fragment MediaExternalLinkFragment on MediaExternalLink {

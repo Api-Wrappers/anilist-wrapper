@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 import { CHARACTER_BASIC_FRAGMENT } from "../entities/character";
 
 export const CHARACTER_EDGE_FRAGMENT = gql`

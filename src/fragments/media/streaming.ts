@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 
 export const MEDIA_STREAMING_EPISODE_FRAGMENT = gql`
   fragment MediaStreamingEpisodeFragment on MediaStreamingEpisode {

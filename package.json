@@ -53,7 +53,8 @@
 	"scripts": {
 		"build": "tsdown",
 		"prepublishOnly": "bun run build",
-		"codegen": "rimraf src/__generated__ && graphql-codegen --config codegen.yml",
+		"codegen": "rimraf src/__generated__ && graphql-codegen --config codegen.yml && bun run codegen:patch",
+		"codegen:patch": "bun scripts/patch-codegen.ts",
 		"test": "bun test",
 		"check": "biome check .",
 		"check:unsafe": "biome check --write --unsafe .",
@@ -74,6 +75,6 @@
 		"typescript": "^5.8.3"
 	},
 	"dependencies": {
-		"graphql-request": "^7.4.0"
+		"@api-wrappers/api-core": "^0.0.2"
 	}
 }

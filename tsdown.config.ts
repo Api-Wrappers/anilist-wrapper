@@ -10,6 +10,6 @@ export default defineConfig({
 	minify: process.env.NODE_ENV === "production",
 	treeshake: true,
 	deps: {
-		neverBundle: ["graphql-request"],
+		neverBundle: ["@api-wrappers/api-core"],
 	},
 });

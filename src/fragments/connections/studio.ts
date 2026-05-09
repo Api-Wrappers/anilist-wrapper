@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 
 export const STUDIO_NODE_FRAGMENT = gql`
   fragment StudioNodeFragment on Studio {

@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 
 export const DELETE_MEDIA_LIST_ENTRY = gql`
   mutation DeleteMediaListEntry($id: Int!) {

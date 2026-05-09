@@ -1,3 +1,5 @@
+import { RateLimitError } from "@api-wrappers/api-core";
+
 /**
  * Test utilities for the AniList wrapper tests
  */
@@ -6,6 +8,7 @@
  * Type for API errors that might occur during testing
  */
 export interface ApiError {
+	status?: number;
 	response?: {
 		status?: number;
 		headers?: Record<string, string>;
@@ -28,11 +31,11 @@ export const delay = (ms: number) =>
  */
 export const isRateLimitError = (error: unknown): error is ApiError => {
 	return (
-		typeof error === "object" &&
-		error !== null &&
-		"response" in error &&
-		typeof (error as ApiError).response?.status === "number" &&
-		(error as ApiError).response?.status === 429
+		error instanceof RateLimitError ||
+		(typeof error === "object" &&
+			error !== null &&
+			((error as ApiError).status === 429 ||
+				(error as ApiError).response?.status === 429))
 	);
 };
 

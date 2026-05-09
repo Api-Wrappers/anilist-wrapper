@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@api-wrappers/api-core";
 import { CHARACTER_FRAGMENT } from "../../fragments/character";
 
 export const GET_ANIME_CHARACTERS = gql`
