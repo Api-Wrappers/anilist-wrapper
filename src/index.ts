@@ -1,7 +1,9 @@
 import type { ANILISTSDK } from "./@types";
-import { createClient } from "./client";
+import type { GraphQLClient } from "./__generated__/anilist-sdk";
+import { createGraphQLClient, createSdkClient } from "./client";
 import { AnimeService } from "./services/animeService";
 import { CharacterService } from "./services/characterService";
+import { GraphQLService } from "./services/graphqlService";
 import { MangaService } from "./services/mangaService";
 import { MediaListService } from "./services/mediaListService";
 import { MediaService } from "./services/mediaService";
@@ -14,16 +16,19 @@ import { UserService } from "./services/userService";
  */
 class Anilist {
 	private client: ANILISTSDK;
+	private graphQLClient: GraphQLClient;
 
 	/**
 	 * Constructs a new instance of the Anilist client.
 	 * @param token - Optional authentication token for the AniList API.
 	 */
 	constructor(token?: string) {
-		this.client = createClient(token);
+		this.graphQLClient = createGraphQLClient(token);
+		this.client = createSdkClient(this.graphQLClient);
 
 		this.anime = new AnimeService(this.client);
 		this.character = new CharacterService(this.client);
+		this.graphql = new GraphQLService(this.graphQLClient);
 		this.manga = new MangaService(this.client);
 		this.media = new MediaService(this.client);
 		this.mediaList = new MediaListService(this.client);
@@ -42,6 +47,12 @@ class Anilist {
 	 * @type {CharacterService}
 	 */
 	character: CharacterService;
+
+	/**
+	 * Low-level GraphQL access for every AniList query and mutation.
+	 * @type {GraphQLService}
+	 */
+	graphql: GraphQLService;
 
 	/**
 	 * Service class for interacting with AniList's manga-related queries.
@@ -74,4 +85,8 @@ class Anilist {
 	user: UserService;
 }
 
+export { gql } from "@api-wrappers/api-core";
+export * from "./__generated__/anilist-schema";
+export * as AniListOperations from "./__generated__/anilist-sdk";
+export { createClient, createGraphQLClient, createSdkClient } from "./client";
 export { Anilist };

@@ -4,7 +4,7 @@ import { type GraphQLClient, getSdk } from "../__generated__/anilist-sdk";
 const ANILIST_API_URL = "https://graphql.anilist.co";
 const MAX_ATTEMPTS = 4;
 
-export const createClient = (token?: string) => {
+export const createGraphQLClient = (token?: string): GraphQLClient => {
 	const headers: Record<string, string> = {
 		"Content-Type": "application/json",
 	};
@@ -32,9 +32,15 @@ export const createClient = (token?: string) => {
 		},
 	};
 
-	const sdk = getSdk(client);
+	return client;
+};
 
-	return sdk;
+export const createClient = (token?: string) => {
+	return createSdkClient(createGraphQLClient(token));
+};
+
+export const createSdkClient = (client: GraphQLClient) => {
+	return getSdk(client);
 };
 
 const dedupeFragmentDefinitions = (source: string) => {

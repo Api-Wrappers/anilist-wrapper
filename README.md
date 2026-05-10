@@ -1,6 +1,6 @@
 # AniList API Wrapper for TypeScript
 
-A simple, type-safe TypeScript wrapper for the AniList API. Build awesome anime and manga apps without the hassle of dealing with raw GraphQL queries.
+A simple, type-safe TypeScript wrapper for the AniList API. Build anime and manga apps with convenience services for common workflows, plus raw GraphQL access for the full AniList schema.
 
 [![npm version](https://img.shields.io/npm/v/@api-wrappers/anilist-wrapper)](https://www.npmjs.com/package/@api-wrappers/anilist-wrapper)
 [![license](https://img.shields.io/npm/l/@api-wrappers/anilist-wrapper)](https://github.com/api-wrappers/anilist-wrapper/blob/master/LICENSE)
@@ -42,8 +42,8 @@ const aot = await anilist.anime.getAnimeById(16498);
 console.log(aot.title.english); // "Attack on Titan"
 
 // Search for anime
-const results = await anilist.anime.searchAnime("One Piece");
-console.log(results.length); // Number of results found
+const results = await anilist.anime.getAnimeBySearch("One Piece");
+console.log(results.Page?.media?.length); // Number of results found
 ```
 
 ## What can you do?
@@ -73,6 +73,11 @@ console.log(results.length); // Number of results found
 - Add, update, remove entries
 - Requires authentication
 
+### Raw GraphQL
+- Execute any AniList query or mutation through `anilist.graphql.request`
+- Import AniList schema types, enums, generated operation SDK members, and `gql`
+- Covers API features without dedicated convenience methods yet, such as activities, reviews, threads, follows, notifications, site statistics, AniChart settings, and external link sources
+
 ## Authentication
 
 Some features need you to be logged in. Get an access token from [AniList's auth guide](https://docs.anilist.co/guide/auth/) and pass it to the constructor:
@@ -85,8 +90,23 @@ const anilist = new Anilist("your_access_token_here");
 
 ### Get trending anime
 ```typescript
-const trending = await anilist.anime.getAnimeTrending();
-console.log(trending[0].title.english);
+const trending = await anilist.anime.getTrendingAnime();
+console.log(trending.Page?.media?.[0]?.title?.english);
+```
+
+### Use any AniList GraphQL operation
+```typescript
+import { gql } from "@api-wrappers/anilist-wrapper";
+
+const genres = await anilist.graphql.request<{
+	GenreCollection: Array<string | null> | null;
+}>(gql`
+	query Genres {
+		GenreCollection
+	}
+`);
+
+console.log(genres.GenreCollection);
 ```
 
 ### Search for characters

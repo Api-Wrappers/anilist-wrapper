@@ -14,6 +14,7 @@ A type-safe TypeScript wrapper for the [AniList GraphQL API](https://docs.anilis
   - [Users](./api/user.md)
   - [Media](./api/media.md)
   - [Media Lists](./api/media-list.md)
+  - [Raw GraphQL](./api/graphql.md)
 
 ---
 
@@ -70,6 +71,7 @@ The `Anilist` class exposes one property per service:
 | `anilist.user` | `UserService` | User profiles and lists |
 | `anilist.media` | `MediaService` | Generic media queries |
 | `anilist.mediaList` | `MediaListService` | Media list queries |
+| `anilist.graphql` | `GraphQLService` | Raw access to every AniList GraphQL query and mutation |
 
 ---
 
