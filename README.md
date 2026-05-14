@@ -6,8 +6,7 @@ A type-safe TypeScript client for the [AniList GraphQL API](https://docs.anilist
 [![license](https://img.shields.io/npm/l/@api-wrappers/anilist-wrapper)](https://github.com/Api-Wrappers/anilist-wrapper/blob/main/LICENSE)
 [![build status](https://github.com/Api-Wrappers/anilist-wrapper/actions/workflows/ci.yml/badge.svg)](https://github.com/Api-Wrappers/anilist-wrapper/actions/workflows/ci.yml)
 [![bundle size](https://img.shields.io/bundlephobia/minzip/@api-wrappers/anilist-wrapper)](https://bundlephobia.com/package/@api-wrappers/anilist-wrapper)
-
-If this package saves you time, [star the repo](https://github.com/Api-Wrappers/anilist-wrapper) to help other AniList developers find it.
+![GitHub Repo stars](https://img.shields.io/github/stars/api-wrappers/anilist-wrapper)
 
 ## Install
 
