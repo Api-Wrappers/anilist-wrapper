@@ -1,12 +1,20 @@
-# AniList Wrapper
+<h1 align="center">@api-wrappers/anilist-wrapper</h1>
 
-A type-safe TypeScript client for the [AniList GraphQL API](https://docs.anilist.co). Use the convenience services for common anime, manga, character, staff, user, and list workflows, or drop down to raw GraphQL when AniList exposes something the wrapper does not cover yet.
+<p align="center">
+  A type-safe TypeScript client for the <a href="https://docs.anilist.co">AniList GraphQL API</a>.
+</p>
 
-[![npm version](https://img.shields.io/npm/v/@api-wrappers/anilist-wrapper)](https://www.npmjs.com/package/@api-wrappers/anilist-wrapper)
-[![license](https://img.shields.io/npm/l/@api-wrappers/anilist-wrapper)](https://github.com/Api-Wrappers/anilist-wrapper/blob/main/LICENSE)
-[![build status](https://github.com/Api-Wrappers/anilist-wrapper/actions/workflows/ci.yml/badge.svg)](https://github.com/Api-Wrappers/anilist-wrapper/actions/workflows/ci.yml)
-[![bundle size](https://img.shields.io/bundlephobia/minzip/@api-wrappers/anilist-wrapper)](https://bundlephobia.com/package/@api-wrappers/anilist-wrapper)
-![GitHub Repo stars](https://img.shields.io/github/stars/api-wrappers/anilist-wrapper)
+<p align="center">
+  <a href="https://www.npmjs.com/package/@api-wrappers/anilist-wrapper"><img alt="npm version" src="https://img.shields.io/npm/v/@api-wrappers/anilist-wrapper"></a>
+  <a href="https://github.com/Api-Wrappers/anilist-wrapper/blob/main/LICENSE"><img alt="license" src="https://img.shields.io/npm/l/@api-wrappers/anilist-wrapper"></a>
+  <a href="https://github.com/Api-Wrappers/anilist-wrapper/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Api-Wrappers/anilist-wrapper/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://bundlephobia.com/package/@api-wrappers/anilist-wrapper"><img alt="bundle size" src="https://img.shields.io/bundlephobia/minzip/@api-wrappers/anilist-wrapper"></a>
+  <a href="https://github.com/Api-Wrappers/anilist-wrapper/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/api-wrappers/anilist-wrapper"></a>
+</p>
+
+Use the convenience services for common anime, manga, character, staff, user,
+and list workflows, or drop down to raw GraphQL when AniList exposes something
+the wrapper does not cover yet.
 
 ## Install
 
