@@ -3,9 +3,11 @@
 A type-safe TypeScript client for the [AniList GraphQL API](https://docs.anilist.co). Use the convenience services for common anime, manga, character, staff, user, and list workflows, or drop down to raw GraphQL when AniList exposes something the wrapper does not cover yet.
 
 [![npm version](https://img.shields.io/npm/v/@api-wrappers/anilist-wrapper)](https://www.npmjs.com/package/@api-wrappers/anilist-wrapper)
-[![license](https://img.shields.io/npm/l/@api-wrappers/anilist-wrapper)](https://github.com/api-wrappers/anilist-wrapper/blob/master/LICENSE)
-[![build status](https://github.com/api-wrappers/anilist-wrapper/actions/workflows/ci.yml/badge.svg)](https://github.com/api-wrappers/anilist-wrapper/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/@api-wrappers/anilist-wrapper)](https://github.com/Api-Wrappers/anilist-wrapper/blob/main/LICENSE)
+[![build status](https://github.com/Api-Wrappers/anilist-wrapper/actions/workflows/ci.yml/badge.svg)](https://github.com/Api-Wrappers/anilist-wrapper/actions/workflows/ci.yml)
 [![bundle size](https://img.shields.io/bundlephobia/minzip/@api-wrappers/anilist-wrapper)](https://bundlephobia.com/package/@api-wrappers/anilist-wrapper)
+
+If this package saves you time, [star the repo](https://github.com/Api-Wrappers/anilist-wrapper) to help other AniList developers find it.
 
 ## Install
 
