@@ -1,10 +1,25 @@
 import type { ANILISTSDK, MediaTypeNonEnum } from "../@types";
 import {
 	type DeleteMediaListEntryMutation,
+	type FuzzyDateInput,
+	type MediaListStatus,
 	MediaType,
 	type SaveMediaListEntryMutation,
 	type SaveMediaListEntryMutationVariables,
 } from "../__generated__/anilist-sdk";
+
+export type SaveMediaListEntryInput = {
+	mediaId: number;
+	status?: MediaListStatus | null;
+	score?: number | null;
+	progress?: number | null;
+	progressVolumes?: number | null;
+	repeat?: number | null;
+	private?: boolean | null;
+	notes?: string | null;
+	startedAt?: FuzzyDateInput | null;
+	completedAt?: FuzzyDateInput | null;
+};
 
 /**
  * Service class for retrieving and managing media lists from AniList.
@@ -61,9 +76,22 @@ export class MediaListService {
 	 * @returns A promise resolving to the saved media list entry.
 	 */
 	saveEntry(
-		variables: SaveMediaListEntryMutationVariables,
+		variables: SaveMediaListEntryInput,
 	): Promise<SaveMediaListEntryMutation> {
-		return this.client.SaveMediaListEntry(variables);
+		const mutationVariables: SaveMediaListEntryMutationVariables = {
+			completedAt: variables.completedAt,
+			mediaId: variables.mediaId,
+			notes: variables.notes,
+			private: variables.private,
+			progress: variables.progress,
+			progressVolumes: variables.progressVolumes,
+			repeat: variables.repeat,
+			score: variables.score,
+			startedAt: variables.startedAt,
+			status: variables.status,
+		};
+
+		return this.client.SaveMediaListEntry(mutationVariables);
 	}
 
 	/**

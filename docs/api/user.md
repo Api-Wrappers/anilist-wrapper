@@ -1,162 +1,66 @@
 # UserService
 
-Accessed via `anilist.user`.
+Access user profile, statistics, and list workflows through `anilist.user`.
 
-Methods that accept a numeric `userId` require authentication. Methods that accept a `userName` string work on public profiles without a token.
-
----
+Username methods read public profile data and usually work without a token. Numeric user ID methods are intended for authenticated access and may fail on private data without a token.
 
 ## Methods
 
-### `getUserInfo(userId)`
+| Method | Auth | Returns |
+| --- | --- | --- |
+| `getUserInfo(userId)` | Yes | `User` |
+| `getUserInfoByUsername(userName)` | No | `User` |
+| `getUserAnimeList(userId, status?)` | Yes | `MediaListCollection` |
+| `getUserAnimeListByUsername(userName, status?)` | No | `MediaListCollection` |
+| `getUserMangaList(userId, status?)` | Yes | `MediaListCollection` |
+| `getUserMangaListByUsername(userName, status?)` | No | `MediaListCollection` |
+| `getUserList(page?, perPage?)` | No | `Page.users` |
+| `getUserStatistics(userId)` | Yes | `User.statistics` |
+| `getUserStatisticsByUsername(userName)` | No | `User.statistics` |
 
-Retrieves a user's profile by their AniList user ID.
-
-> **Requires authentication.**
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `userId` | `number` | Yes | The AniList user ID |
-
-```typescript
-const anilist = new Anilist(process.env.ANILIST_TOKEN);
-const user = await anilist.user.getUserInfo(12345);
-console.log(user?.User?.name);
-```
-
----
-
-### `getUserInfoByUsername(userName)`
-
-Retrieves a user's public profile by their username.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `userName` | `string` | Yes | The AniList username |
+## Public Profile
 
 ```typescript
-const user = await anilist.user.getUserInfoByUsername("someuser");
-console.log(user?.User?.avatar?.large);
+const profile = await anilist.user.getUserInfoByUsername("example_user");
+
+console.log(profile.User?.name);
+console.log(profile.User?.avatar?.large);
 ```
 
----
-
-### `getUserAnimeList(userId, status?)`
-
-Retrieves the anime list for a user by ID, filtered by list status.
-
-> **Requires authentication.**
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `userId` | `number` | — | The AniList user ID |
-| `status` | `MediaListStatus` | `CURRENT` | Filter by list status |
-
-**`MediaListStatus` values:** `CURRENT`, `PLANNING`, `COMPLETED`, `DROPPED`, `PAUSED`, `REPEATING`
+## Public Lists
 
 ```typescript
 import { MediaListStatus } from "@api-wrappers/anilist-wrapper";
 
-const anilist = new Anilist(process.env.ANILIST_TOKEN);
+const completed = await anilist.user.getUserAnimeListByUsername(
+	"example_user",
+	MediaListStatus.Completed,
+);
 
-// Currently watching
-const watching = await anilist.user.getUserAnimeList(12345);
-
-// Completed anime
-const completed = await anilist.user.getUserAnimeList(12345, MediaListStatus.Completed);
+for (const group of completed.MediaListCollection?.lists ?? []) {
+	for (const entry of group?.entries ?? []) {
+		console.log(entry?.media?.title?.userPreferred, entry?.score);
+	}
+}
 ```
 
----
+When `status` is omitted, list methods default to `MediaListStatus.Current`.
 
-### `getUserAnimeListByUsername(userName, status?)`
-
-Retrieves the anime list for a user by username.
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `userName` | `string` | — | The AniList username |
-| `status` | `MediaListStatus` | `CURRENT` | Filter by list status |
+## Statistics
 
 ```typescript
-const list = await anilist.user.getUserAnimeListByUsername("someuser");
+const stats = await anilist.user.getUserStatisticsByUsername("example_user");
+
+console.log(stats.User?.statistics?.anime?.count);
+console.log(stats.User?.statistics?.manga?.chaptersRead);
 ```
 
----
+## Pagination
 
-### `getUserMangaList(userId, status?)`
-
-Retrieves the manga list for a user by ID, filtered by list status.
-
-> **Requires authentication.**
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `userId` | `number` | — | The AniList user ID |
-| `status` | `MediaListStatus` | `CURRENT` | Filter by list status |
-
-```typescript
-const reading = await anilist.user.getUserMangaList(12345);
-```
-
----
-
-### `getUserMangaListByUsername(userName, status?)`
-
-Retrieves the manga list for a user by username.
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `userName` | `string` | — | The AniList username |
-| `status` | `MediaListStatus` | `CURRENT` | Filter by list status |
-
-```typescript
-const list = await anilist.user.getUserMangaListByUsername("someuser");
-```
-
----
-
-### `getUserList(page?, perPage?)`
-
-Retrieves a paginated list of AniList users.
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `page` | `number` | `1` | Page number |
-| `perPage` | `number` | `10` | Results per page |
+`getUserList(page?, perPage?)` defaults to page `1` and `10` users per page.
 
 ```typescript
 const users = await anilist.user.getUserList(1, 20);
-```
 
----
-
-### `getUserStatistics(userId)`
-
-Retrieves watch/read statistics for a user by ID.
-
-> **Requires authentication.**
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `userId` | `number` | Yes | The AniList user ID |
-
-```typescript
-const anilist = new Anilist(process.env.ANILIST_TOKEN);
-const stats = await anilist.user.getUserStatistics(12345);
-console.log(stats?.User?.statistics?.anime?.count);
-```
-
----
-
-### `getUserStatisticsByUsername(userName)`
-
-Retrieves watch/read statistics for a user by username.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `userName` | `string` | Yes | The AniList username |
-
-```typescript
-const stats = await anilist.user.getUserStatisticsByUsername("someuser");
-console.log(stats?.User?.statistics?.manga?.chaptersRead);
+console.log(users.Page?.users?.map((user) => user?.name));
 ```

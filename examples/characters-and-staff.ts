@@ -1,21 +1,35 @@
 /**
- * Characters and staff examples — no authentication required.
+ * Character and staff workflow example.
  *
- * Run with: bun examples/characters-and-staff.ts
+ * Run with:
+ *   bun examples/characters-and-staff.ts
  */
 import { Anilist } from "../src/index.ts";
 
 const anilist = new Anilist();
 
-// Get a character by ID
 const character = await anilist.character.getCharacterById(1);
-console.log("Character:", character?.Character?.name?.full);
+console.log("Character lookup");
+console.log(`- Name: ${character.Character?.name?.full ?? "unknown"}`);
+console.log(`- URL: ${character.Character?.siteUrl ?? "unknown"}`);
 
-// Characters with birthdays today
-const birthdays = await anilist.character.getCharactersBirthdayToday();
-const names = birthdays?.Page?.characters?.map((c) => c?.name?.full);
-console.log("Birthdays today:", names?.join(", "));
+const characterBirthdays = await anilist.character.getCharactersBirthdayToday(1, 5);
+console.log("\nCharacter birthdays today");
 
-// Get a staff member
+for (const birthday of characterBirthdays.Page?.characters ?? []) {
+	console.log(`- ${birthday?.name?.full ?? "Unknown character"}`);
+}
+
 const staff = await anilist.staff.getStaffById(95269);
-console.log("Staff:", staff?.Staff?.name?.full);
+console.log("\nStaff lookup");
+console.log(`- Name: ${staff.Staff?.name?.full ?? "unknown"}`);
+console.log(
+	`- Occupations: ${staff.Staff?.primaryOccupations?.filter(Boolean).join(", ") || "unknown"}`,
+);
+
+const staffBirthdays = await anilist.staff.getStaffBirthdayToday(1);
+console.log("\nStaff birthdays today");
+
+for (const birthday of staffBirthdays.Page?.staff?.slice(0, 5) ?? []) {
+	console.log(`- ${birthday?.name?.full ?? "Unknown staff member"}`);
+}

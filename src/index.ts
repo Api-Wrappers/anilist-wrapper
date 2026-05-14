@@ -89,4 +89,5 @@ export { gql } from "@api-wrappers/api-core";
 export * from "./__generated__/anilist-schema";
 export * as AniListOperations from "./__generated__/anilist-sdk";
 export { createClient, createGraphQLClient, createSdkClient } from "./client";
+export type { SaveMediaListEntryInput } from "./services/mediaListService";
 export { Anilist };

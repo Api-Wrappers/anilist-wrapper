@@ -1,37 +1,72 @@
 # MediaListService
 
-Accessed via `anilist.mediaList`. Provides lower-level access to AniList media list entries directly by list ID or user ID.
+Access media list entry workflows through `anilist.mediaList`.
 
-For most use cases, prefer [`UserService`](./user.md) (`anilist.user`) or [`MediaService`](./media.md) (`anilist.media`) which offer higher-level list access.
-
----
+Use this service when you need to read a specific list entry, read a user's list by media type, save progress, or delete an entry. For profile-oriented reads, `anilist.user` is often more convenient.
 
 ## Methods
 
-### `getMediaList(id)`
+| Method | Auth | Returns |
+| --- | --- | --- |
+| `getMediaList(id)` | Depends on entry privacy | `MediaList` |
+| `getMediaListByUser(userId, mediaType)` | Depends on list privacy | `MediaListCollection` |
+| `getMediaListByUsername(userName, mediaType)` | Depends on list privacy | `MediaListCollection` |
+| `saveEntry(variables)` | Yes | `SaveMediaListEntry` |
+| `deleteEntry(id)` | Yes | `DeleteMediaListEntry` |
 
-Retrieves a media list entry by its list entry ID.
+`mediaType` is `"ANIME"` or `"MANGA"`.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `id` | `number` | Yes | The media list entry ID |
+## Read A List By Username
 
 ```typescript
-const entry = await anilist.mediaList.getMediaList(123456);
+const list = await anilist.mediaList.getMediaListByUsername(
+	"example_user",
+	"ANIME",
+);
+
+for (const group of list.MediaListCollection?.lists ?? []) {
+	console.log(group?.name, group?.entries?.length ?? 0);
+}
 ```
 
----
-
-### `getMediaListByUser(userId, mediaType)`
-
-Retrieves a user's full media list by their user ID, filtered by media type.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `userId` | `number` | Yes | The AniList user ID |
-| `mediaType` | `"ANIME" \| "MANGA"` | Yes | The type of media list |
+## Save Progress
 
 ```typescript
-const animeList = await anilist.mediaList.getMediaListByUser(12345, "ANIME");
-const mangaList = await anilist.mediaList.getMediaListByUser(12345, "MANGA");
+import { Anilist, MediaListStatus } from "@api-wrappers/anilist-wrapper";
+
+const anilist = new Anilist(process.env.ANILIST_TOKEN);
+
+const saved = await anilist.mediaList.saveEntry({
+	mediaId: 16498,
+	status: MediaListStatus.Current,
+	progress: 5,
+	score: 8,
+});
+
+console.log(saved.SaveMediaListEntry?.id);
+```
+
+`saveEntry` accepts `SaveMediaListEntryInput`. Only `mediaId` is required:
+
+| Field | Description |
+| --- | --- |
+| `mediaId` | AniList media ID to create or update |
+| `status` | `MediaListStatus` enum value |
+| `score` | User score |
+| `progress` | Episode or chapter progress |
+| `progressVolumes` | Volume progress for manga |
+| `repeat` | Rewatch or reread count |
+| `private` | Whether the entry is private |
+| `notes` | User notes |
+| `startedAt` | `{ year, month, day }` |
+| `completedAt` | `{ year, month, day }` |
+
+## Delete An Entry
+
+Use the media list entry ID, not the anime or manga media ID.
+
+```typescript
+const deleted = await anilist.mediaList.deleteEntry(123456);
+
+console.log(deleted.DeleteMediaListEntry?.deleted);
 ```

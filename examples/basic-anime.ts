@@ -1,28 +1,49 @@
 /**
- * Basic anime examples — no authentication required.
+ * Anime workflow example.
  *
- * Run with: bun examples/basic-anime.ts
+ * Run with:
+ *   bun examples/basic-anime.ts
  */
 import { Anilist } from "../src/index.ts";
 
 const anilist = new Anilist();
 
-// Look up an anime by its AniList ID
-const aot = await anilist.anime.getAnimeById(16498);
-console.log("Title:", aot?.Media?.title?.english); // "Attack on Titan"
+const titleOf = (
+	media:
+		| {
+				title?: {
+					userPreferred?: string | null;
+					english?: string | null;
+					romaji?: string | null;
+				} | null;
+		  }
+		| null
+		| undefined,
+) => media?.title?.userPreferred ?? media?.title?.english ?? media?.title?.romaji;
 
-// Search by name
-const results = await anilist.anime.getAnimeBySearch("Fullmetal Alchemist");
-const first = results?.Page?.media?.[0];
-console.log("First result:", first?.title?.english);
+const printTitles = (
+	label: string,
+	media: Array<Parameters<typeof titleOf>[0]> | null | undefined,
+) => {
+	console.log(`\n${label}`);
 
-// Trending anime
-const trending = await anilist.anime.getTrendingAnime();
-console.log(
-  "Trending:",
-  trending?.Page?.media?.map((m) => m?.title?.romaji).join(", "),
-);
+	for (const item of media?.slice(0, 5) ?? []) {
+		console.log(`- ${titleOf(item) ?? "Untitled"}`);
+	}
+};
 
-// Anime by genre
-const action = await anilist.anime.getAnimeListByGenre("Action");
-console.log("Action titles:", action?.Page?.media?.length, "results");
+const anime = await anilist.anime.getAnimeById(16498);
+
+console.log("Lookup by ID");
+console.log(`- Title: ${titleOf(anime.Media)}`);
+console.log(`- Episodes: ${anime.Media?.episodes ?? "unknown"}`);
+console.log(`- URL: ${anime.Media?.siteUrl ?? "unknown"}`);
+
+const search = await anilist.anime.getAnimeBySearch("Fullmetal Alchemist", 1, 5);
+printTitles("Search results", search.Page?.media);
+
+const trending = await anilist.anime.getTrendingAnime(1, 5);
+printTitles("Trending now", trending.Page?.media);
+
+const action = await anilist.anime.getAnimeListByGenre("Action", 1, 5);
+printTitles("Action anime", action.Page?.media);

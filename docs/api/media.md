@@ -1,55 +1,37 @@
 # MediaService
 
-Accessed via `anilist.media`. A generic service for querying media entries (both anime and manga) and user media lists by type.
+Access generic anime or manga workflows through `anilist.media`.
 
----
+Use this service when code should work with either media type. Use `anilist.anime` or `anilist.manga` when you want domain-specific helpers.
 
 ## Methods
 
-### `getMediaById(id)`
+| Method | Auth | Returns |
+| --- | --- | --- |
+| `getMediaById(id)` | No | `Media` |
+| `getMediaList(userId, mediaType)` | Depends on list privacy | `MediaListCollection` |
+| `getMediaListByUsername(userName, mediaType)` | Depends on list privacy | `MediaListCollection` |
 
-Retrieves a media entry (anime or manga) by its AniList ID.
+`mediaType` is `"ANIME"` or `"MANGA"`.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `id` | `number` | Yes | The AniList media ID |
+## Lookup Any Media
 
 ```typescript
 const media = await anilist.media.getMediaById(16498);
-console.log(media?.Media?.type); // "ANIME" or "MANGA"
+
+console.log(media.Media?.type);
+console.log(media.Media?.title?.userPreferred);
 ```
 
----
-
-### `getMediaList(userId, mediaType)`
-
-Retrieves a user's media list filtered by type, using their numeric user ID.
-
-> **Requires authentication.**
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `userId` | `number` | Yes | The AniList user ID |
-| `mediaType` | `"ANIME" \| "MANGA"` | Yes | The type of media list |
+## Read A User List
 
 ```typescript
-const anilist = new Anilist(process.env.ANILIST_TOKEN);
+const animeList = await anilist.media.getMediaListByUsername(
+	"example_user",
+	"ANIME",
+);
 
-const animeList = await anilist.media.getMediaList(12345, "ANIME");
-const mangaList = await anilist.media.getMediaList(12345, "MANGA");
-```
-
----
-
-### `getMediaListByUsername(userName, mediaType)`
-
-Retrieves a user's media list filtered by type, using their username.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `userName` | `string` | Yes | The AniList username |
-| `mediaType` | `"ANIME" \| "MANGA"` | Yes | The type of media list |
-
-```typescript
-const list = await anilist.media.getMediaListByUsername("someuser", "ANIME");
+for (const group of animeList.MediaListCollection?.lists ?? []) {
+	console.log(group?.name, group?.entries?.length ?? 0);
+}
 ```

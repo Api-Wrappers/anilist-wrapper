@@ -1,48 +1,70 @@
 # GraphQLService
 
-Accessed via `anilist.graphql`. Use this low-level service for AniList features that do not have a dedicated convenience method yet, including any current or future root query or mutation in the AniList GraphQL schema.
+Access raw AniList GraphQL through `anilist.graphql`.
 
-The package exports AniList schema types and enums directly, generated operation SDK members under `AniListOperations`, and `gql`.
+Use this service for current or future AniList operations that do not have a convenience method in the wrapper. The package also exports `gql`, generated AniList schema types and enums, and generated operation SDK members under `AniListOperations`.
 
----
+## `request(document, variables?, options?)`
 
-## Methods
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `document` | `string` | GraphQL query or mutation document |
+| `variables` | `object` | Optional operation variables |
+| `options.requestHeaders` | `Record<string, string>` | Extra headers for this request |
+| `options.signal` | `AbortSignal` | Request cancellation signal |
 
-### `request(document, variables?, options?)`
-
-Executes any AniList GraphQL query or mutation.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `document` | `string` | Yes | GraphQL operation document |
-| `variables` | `object` | No | Operation variables |
-| `options.requestHeaders` | `Record<string, string>` | No | Extra headers for this request |
-| `options.signal` | `AbortSignal` | No | Request cancellation signal |
+## Query
 
 ```typescript
 import { Anilist, gql } from "@api-wrappers/anilist-wrapper";
 
 const anilist = new Anilist();
 
-const genres = await anilist.graphql.request<{
+const data = await anilist.graphql.request<{
 	GenreCollection: Array<string | null> | null;
-}>(
-	gql`
-		query Genres {
-			GenreCollection
-		}
-	`,
-);
+}>(gql`
+	query Genres {
+		GenreCollection
+	}
+`);
 
-console.log(genres.GenreCollection);
+console.log(data.GenreCollection);
 ```
 
-Authenticated mutations use the same `Anilist("token")` constructor as the convenience services.
+## Variables
 
 ```typescript
-const anilist = new Anilist("your_access_token");
+const data = await anilist.graphql.request<
+	{
+		Media: {
+			id: number;
+			title: { userPreferred: string | null } | null;
+		} | null;
+	},
+	{ id: number }
+>(
+	gql`
+		query MediaById($id: Int) {
+			Media(id: $id) {
+				id
+				title {
+					userPreferred
+				}
+			}
+		}
+	`,
+	{ id: 16498 },
+);
+```
 
-await anilist.graphql.request(
+## Authenticated Mutation
+
+Authenticated raw GraphQL uses the same token-based constructor as the convenience services.
+
+```typescript
+const anilist = new Anilist(process.env.ANILIST_TOKEN);
+
+await anilist.graphql.request<unknown, { userId: number }>(
 	gql`
 		mutation ToggleFollow($userId: Int) {
 			ToggleFollow(userId: $userId) {
@@ -53,4 +75,23 @@ await anilist.graphql.request(
 	`,
 	{ userId: 12345 },
 );
+```
+
+## Request Cancellation
+
+```typescript
+const controller = new AbortController();
+
+const promise = anilist.graphql.request(
+	gql`
+		query Genres {
+			GenreCollection
+		}
+	`,
+	undefined,
+	{ signal: controller.signal },
+);
+
+controller.abort();
+await promise;
 ```

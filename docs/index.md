@@ -1,91 +1,138 @@
-# AniList Wrapper — Documentation
+# AniList Wrapper Documentation
 
-A type-safe TypeScript wrapper for the [AniList GraphQL API](https://docs.anilist.co).
+This documentation is written for building with the wrapper quickly, then reaching for the API reference when you need exact method names and response shapes.
 
-## Contents
+## Start Here
 
-- [Getting Started](#getting-started)
-- [Authentication](./authentication.md)
-- API Reference
-  - [Anime](./api/anime.md)
-  - [Manga](./api/manga.md)
-  - [Characters](./api/character.md)
-  - [Staff](./api/staff.md)
-  - [Users](./api/user.md)
-  - [Media](./api/media.md)
-  - [Media Lists](./api/media-list.md)
-  - [Raw GraphQL](./api/graphql.md)
+1. [Install the package](#install)
+2. [Create a client](#create-a-client)
+3. [Choose a service](#choose-a-service)
+4. [Run an example](#examples)
 
----
-
-## Getting Started
-
-### Installation
+## Install
 
 ```bash
-# npm
 npm install @api-wrappers/anilist-wrapper
-
-# bun
+# or
 bun add @api-wrappers/anilist-wrapper
-
-# yarn
-yarn add @api-wrappers/anilist-wrapper
-
-# pnpm
+# or
 pnpm add @api-wrappers/anilist-wrapper
+# or
+yarn add @api-wrappers/anilist-wrapper
 ```
 
-### Basic usage
+## Create A Client
+
+Public AniList data does not need a token:
 
 ```typescript
 import { Anilist } from "@api-wrappers/anilist-wrapper";
 
-const anilist = new Anilist(); // no token needed for public data
-
-const aot = await anilist.anime.getAnimeById(16498);
-console.log(aot?.Media?.title?.english); // "Attack on Titan"
+const anilist = new Anilist();
 ```
 
-### Authenticated usage
-
-Some methods require an AniList access token. See the [Authentication guide](./authentication.md) for details.
+Authenticated reads and mutations use the same client with an access token:
 
 ```typescript
-const anilist = new Anilist("your_access_token");
-const viewer = await anilist.user.getUserInfo(12345);
+const anilist = new Anilist(process.env.ANILIST_TOKEN);
 ```
 
----
+Read the [authentication guide](./authentication.md) before using private user data, favorites, or list mutations.
 
-## Client structure
+## Read Response Shapes
 
-The `Anilist` class exposes one property per service:
-
-| Property | Service | Description |
-|----------|---------|-------------|
-| `anilist.anime` | `AnimeService` | Anime search, trending, details |
-| `anilist.manga` | `MangaService` | Manga search, trending, details |
-| `anilist.character` | `CharacterService` | Character lookup and favorites |
-| `anilist.staff` | `StaffService` | Staff lookup and favorites |
-| `anilist.user` | `UserService` | User profiles and lists |
-| `anilist.media` | `MediaService` | Generic media queries |
-| `anilist.mediaList` | `MediaListService` | Media list queries |
-| `anilist.graphql` | `GraphQLService` | Raw access to every AniList GraphQL query and mutation |
-
----
-
-## Pagination
-
-Methods that return lists accept optional `page` and `perPage` parameters. Both default to sensible values (page `1`, perPage `10` or `25` depending on the method).
+The wrapper returns the typed AniList GraphQL response. That means the top-level field usually matches the operation:
 
 ```typescript
-// Page 2, 20 results per page
-const trending = await anilist.anime.getTrendingAnime(2, 20);
+const anime = await anilist.anime.getAnimeById(16498);
+console.log(anime.Media?.title?.userPreferred);
+
+const search = await anilist.anime.getAnimeBySearch("Cowboy Bebop");
+console.log(search.Page?.media?.[0]?.title?.userPreferred);
+
+const list = await anilist.user.getUserAnimeListByUsername("example_user");
+console.log(list.MediaListCollection?.lists?.[0]?.entries?.length);
 ```
 
----
+Most fields are nullable because AniList marks many GraphQL fields as nullable. Prefer optional chaining or explicit null checks when rendering data.
+
+## Choose A Service
+
+| Service | Property | Best for |
+| --- | --- | --- |
+| Anime | `anilist.anime` | Anime details, search, trending, popular, genre filtering, relations, characters, staff, recommendations |
+| Manga | `anilist.manga` | Manga details, search, trending, popular, genre filtering, relations, characters, staff, recommendations |
+| Character | `anilist.character` | Character details, birthday lists, favorite mutations |
+| Staff | `anilist.staff` | Staff details, birthday lists, favorite mutations |
+| User | `anilist.user` | User profiles, statistics, anime lists, manga lists |
+| Media | `anilist.media` | Generic anime or manga records by ID and list access by media type |
+| Media List | `anilist.mediaList` | Media list entries, saving progress, deleting entries |
+| GraphQL | `anilist.graphql` | Any AniList query or mutation |
+
+## Common Patterns
+
+### Pagination
+
+List methods accept `page` and `perPage` arguments. Defaults are documented per method.
+
+```typescript
+const pageTwo = await anilist.anime.getTrendingAnime(2, 20);
+```
+
+### Media list statuses
+
+Use the generated enum when filtering or saving list entries:
+
+```typescript
+import { MediaListStatus } from "@api-wrappers/anilist-wrapper";
+
+const completed = await anilist.user.getUserAnimeListByUsername(
+	"example_user",
+	MediaListStatus.Completed,
+);
+```
+
+### Raw GraphQL
+
+Use raw GraphQL when AniList supports a field that does not have a convenience method yet.
+
+```typescript
+import { gql } from "@api-wrappers/anilist-wrapper";
+
+const data = await anilist.graphql.request<{
+	SiteStatistics: {
+		users: { count: number | null } | null;
+	} | null;
+}>(gql`
+	query SiteStats {
+		SiteStatistics {
+			users {
+				count
+			}
+		}
+	}
+`);
+```
+
+## API Reference
+
+- [Anime](./api/anime.md)
+- [Manga](./api/manga.md)
+- [Characters](./api/character.md)
+- [Staff](./api/staff.md)
+- [Users](./api/user.md)
+- [Media](./api/media.md)
+- [Media Lists](./api/media-list.md)
+- [Raw GraphQL](./api/graphql.md)
 
 ## Examples
 
-See the [`examples/`](../examples/) directory for ready-to-run scripts.
+The [`examples/`](../examples/) directory contains runnable scripts:
+
+```bash
+bun examples/basic-anime.ts
+bun examples/manga-workflow.ts
+bun examples/characters-and-staff.ts
+bun examples/raw-graphql.ts
+ANILIST_TOKEN=... ANILIST_USERNAME=... bun examples/authenticated-user.ts
+```

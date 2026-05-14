@@ -1,33 +1,46 @@
 /**
- * Authenticated user examples — requires an AniList access token.
- * Get one from: https://docs.anilist.co/guide/auth/
+ * Authenticated user example.
  *
- * Run with: ANILIST_TOKEN=your_token bun examples/authenticated-user.ts
+ * Get a token from:
+ *   https://docs.anilist.co/guide/auth/
+ *
+ * Run with:
+ *   ANILIST_TOKEN=your_token ANILIST_USERNAME=your_username bun examples/authenticated-user.ts
  */
-import { Anilist } from "../src/index.ts";
+import { Anilist, MediaListStatus } from "../src/index.ts";
 
 const token = process.env.ANILIST_TOKEN;
-if (!token) {
-  console.error("Set ANILIST_TOKEN environment variable first.");
-  process.exit(1);
-}
-
 const username = process.env.ANILIST_USERNAME;
-if (!username) {
-  console.error("Set ANILIST_USERNAME environment variable first.");
-  process.exit(1);
+
+if (!token || !username) {
+	console.error(
+		"Set ANILIST_TOKEN and ANILIST_USERNAME before running this example.",
+	);
+	process.exit(1);
 }
 
 const anilist = new Anilist(token);
 
-// Fetch the user's profile by username
 const profile = await anilist.user.getUserInfoByUsername(username);
-console.log("User:", profile?.User?.name);
+console.log("Profile");
+console.log(`- Name: ${profile.User?.name ?? "unknown"}`);
+console.log(`- URL: ${profile.User?.siteUrl ?? "unknown"}`);
 
-// Get their current anime list
-const list = await anilist.user.getUserAnimeListByUsername(username);
-console.log("Anime list entries:", list?.MediaListCollection?.lists?.length);
+const currentAnime = await anilist.user.getUserAnimeListByUsername(
+	username,
+	MediaListStatus.Current,
+);
 
-// Get their statistics
+console.log("\nCurrent anime groups");
+for (const group of currentAnime.MediaListCollection?.lists ?? []) {
+	console.log(`- ${group?.name ?? "Unnamed"}: ${group?.entries?.length ?? 0}`);
+}
+
 const stats = await anilist.user.getUserStatisticsByUsername(username);
-console.log("Anime watched:", stats?.User?.statistics?.anime?.count);
+console.log("\nStatistics");
+console.log(`- Anime watched: ${stats.User?.statistics?.anime?.count ?? 0}`);
+console.log(`- Manga read: ${stats.User?.statistics?.manga?.count ?? 0}`);
+
+console.log("\nAuthenticated mutations");
+console.log("- Use anilist.mediaList.saveEntry(...) to save progress.");
+console.log("- Use favorite toggle methods to mutate favorites.");

@@ -1,134 +1,76 @@
 # MangaService
 
-Accessed via `anilist.manga`. All methods are public (no token required).
+Access manga workflows through `anilist.manga`.
 
----
+```typescript
+import { Anilist } from "@api-wrappers/anilist-wrapper";
+
+const anilist = new Anilist();
+```
 
 ## Methods
 
-### `getMangaById(id)`
+| Method | Auth | Returns |
+| --- | --- | --- |
+| `getMangaById(id)` | No | `Media` |
+| `getMangaByTitle(title)` | No | `Page.media` |
+| `getMangaBySearch(search, page?, perPage?)` | No | `Page.media` |
+| `getMangaTrending(page?, perPage?)` | No | `Page.media` |
+| `getMangaPopular(page?, perPage?)` | No | `Page.media` |
+| `getMangaListByGenre(genre, page?, perPage?)` | No | `Page.media` |
+| `getMangaRecommendations(mediaId)` | No | `Media.recommendations` |
+| `getMangaRelations(mediaId)` | No | `Media.relations` |
+| `getMangaCharacters(mediaId)` | No | `Media.characters` |
+| `getMangaStaff(mediaId)` | No | `Media.staff` |
+| `toggleFavourite(mangaId)` | Yes | `ToggleFavourite` |
 
-Retrieves a single manga entry by its AniList ID.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `id` | `number` | Yes | The AniList manga ID |
-
-```typescript
-const manga = await anilist.manga.getMangaById(30013);
-console.log(manga?.Media?.title?.english);
-```
-
----
-
-### `getMangaByTitle(title)`
-
-Retrieves a manga by its exact or closest-matching title.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `title` | `string` | Yes | The manga title to look up |
+## Lookup And Search
 
 ```typescript
-const manga = await anilist.manga.getMangaByTitle("Berserk");
+const berserk = await anilist.manga.getMangaByTitle("Berserk");
+const firstMatch = berserk.Page?.media?.[0];
+
+console.log(firstMatch?.id);
+console.log(firstMatch?.title?.userPreferred);
 ```
-
----
-
-### `getMangaTrending(page, perPage)`
-
-Retrieves currently trending manga.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `page` | `number` | Yes | Page number |
-| `perPage` | `number` | Yes | Results per page |
 
 ```typescript
-const trending = await anilist.manga.getMangaTrending(1, 10);
+const search = await anilist.manga.getMangaBySearch("Witch Hat Atelier", 1, 5);
+
+for (const media of search.Page?.media ?? []) {
+	console.log(media?.title?.userPreferred, media?.chapters);
+}
 ```
 
----
+## Pagination Defaults
 
-### `getMangaPopular(page, perPage)`
+| Method | `page` default | `perPage` default |
+| --- | --- | --- |
+| `getMangaBySearch` | `1` | `10` |
+| `getMangaTrending` | `1` | `20` |
+| `getMangaPopular` | `1` | `20` |
+| `getMangaListByGenre` | `1` | `10` |
 
-Retrieves the most popular manga.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `page` | `number` | Yes | Page number |
-| `perPage` | `number` | Yes | Results per page |
-
-```typescript
-const popular = await anilist.manga.getMangaPopular(1, 10);
-```
-
----
-
-### `getMangaListByGenre(genre)`
-
-Retrieves manga filtered by genre.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `genre` | `string` | Yes | Genre name (e.g. `"Action"`, `"Fantasy"`) |
+## Genre, Relations, And Credits
 
 ```typescript
 const fantasy = await anilist.manga.getMangaListByGenre("Fantasy");
-```
-
----
-
-### `getMangaRecommendations(mediaId)`
-
-Retrieves manga recommendations based on a given manga.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `mediaId` | `number` | Yes | The source manga's AniList ID |
-
-```typescript
-const recs = await anilist.manga.getMangaRecommendations(30013);
-```
-
----
-
-### `getMangaRelations(mediaId)`
-
-Retrieves related media for a manga (sequels, prequels, adaptations, etc.).
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `mediaId` | `number` | Yes | The manga's AniList ID |
-
-```typescript
 const relations = await anilist.manga.getMangaRelations(30013);
-```
-
----
-
-### `getMangaCharacters(mediaId)`
-
-Retrieves the character list for a manga.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `mediaId` | `number` | Yes | The manga's AniList ID |
-
-```typescript
 const characters = await anilist.manga.getMangaCharacters(30013);
+const staff = await anilist.manga.getMangaStaff(30013);
+
+console.log(fantasy.Page?.media?.length);
+console.log(relations.Media?.relations?.edges?.[0]?.relationType);
+console.log(characters.Media?.characters?.edges?.[0]?.node?.name?.full);
+console.log(staff.Media?.staff?.edges?.[0]?.node?.name?.full);
 ```
 
----
+## Favorites
 
-### `getMangaStaff(mediaId)`
-
-Retrieves the staff list for a manga (authors, artists, etc.).
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `mediaId` | `number` | Yes | The manga's AniList ID |
+`toggleFavourite` mutates the authenticated viewer's favorites.
 
 ```typescript
-const staff = await anilist.manga.getMangaStaff(30013);
+const anilist = new Anilist(process.env.ANILIST_TOKEN);
+
+await anilist.manga.toggleFavourite(30013);
 ```

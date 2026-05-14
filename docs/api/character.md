@@ -1,53 +1,42 @@
 # CharacterService
 
-Accessed via `anilist.character`.
-
----
+Access character workflows through `anilist.character`.
 
 ## Methods
 
-### `getCharacterById(id)`
+| Method | Auth | Returns |
+| --- | --- | --- |
+| `getCharacterById(id)` | No | `Character` |
+| `getCharactersBirthdayToday(page?, perPage?)` | No | `Page.characters` |
+| `toggleFavoriteCharacter(characterId)` | Yes | `ToggleFavourite` |
 
-Retrieves a character by their AniList ID.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `id` | `number` | Yes | The AniList character ID |
+## Lookup
 
 ```typescript
 const character = await anilist.character.getCharacterById(1);
-console.log(character?.Character?.name?.full);
+
+console.log(character.Character?.name?.full);
+console.log(character.Character?.siteUrl);
 ```
 
----
+## Birthdays
 
-### `getCharactersBirthdayToday(page?, perPage?)`
-
-Retrieves characters whose birthday is today (based on the AniList calendar).
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `page` | `number` | `1` | Page number |
-| `perPage` | `number` | `25` | Results per page |
+`getCharactersBirthdayToday` defaults to page `1` and `25` characters per page.
 
 ```typescript
 const birthdays = await anilist.character.getCharactersBirthdayToday();
-const names = birthdays?.Page?.characters?.map((c) => c?.name?.full);
+
+const names = birthdays.Page?.characters
+	?.map((character) => character?.name?.full)
+	.filter(Boolean);
+
+console.log(names);
 ```
 
----
-
-### `toggleFavoriteCharacter(characterId)`
-
-Toggles a character's favorite status for the authenticated user.
-
-> **Requires authentication.** See the [Authentication guide](../authentication.md).
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `characterId` | `number` | Yes | The AniList character ID |
+## Favorites
 
 ```typescript
 const anilist = new Anilist(process.env.ANILIST_TOKEN);
+
 await anilist.character.toggleFavoriteCharacter(1);
 ```

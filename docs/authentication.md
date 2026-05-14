@@ -1,45 +1,70 @@
 # Authentication
 
-Most read-only queries work without a token. Methods that access or mutate private user data — such as reading someone's private list, toggling favorites, or fetching the authenticated viewer — require an access token.
+Most read-only AniList data is public. You only need a token for private user data and mutations, such as toggling favorites or saving media list progress.
 
-## Getting a token
+## Get A Token
 
-1. Go to your [AniList developer settings](https://anilist.co/settings/developer) and create an API client.
-2. Use the OAuth 2.0 implicit flow (or the authorization code flow for server apps) to obtain a `Bearer` token.
-3. Full details are in the [official AniList auth guide](https://docs.anilist.co/guide/auth/).
+1. Open [AniList developer settings](https://anilist.co/settings/developer).
+2. Create an API client.
+3. Follow the [official AniList authentication guide](https://docs.anilist.co/guide/auth/) to complete OAuth and receive an access token.
 
-## Passing the token
+For local scripts, store the token in an environment variable:
 
-Pass the token as the first argument to the `Anilist` constructor:
+```bash
+export ANILIST_TOKEN="your_access_token"
+```
+
+## Pass The Token
 
 ```typescript
 import { Anilist } from "@api-wrappers/anilist-wrapper";
 
-const anilist = new Anilist("your_access_token_here");
-```
-
-The token is sent as an `Authorization: Bearer <token>` header on every request automatically.
-
-## Security notes
-
-- Never hard-code a token in source code. Use an environment variable:
-
-```typescript
 const anilist = new Anilist(process.env.ANILIST_TOKEN);
 ```
 
-- Tokens grant access to the user's private data. Treat them like passwords.
-- See [SECURITY.md](../SECURITY.md) for reporting vulnerabilities.
+The wrapper sends `Authorization: Bearer <token>` automatically on every request made through that client.
 
-## Methods that require authentication
+## Public Vs Authenticated Methods
 
-| Service | Method |
-|---------|--------|
-| `user` | `getUserInfo(userId)` |
-| `user` | `getUserAnimeList(userId, status?)` |
-| `user` | `getUserMangaList(userId, status?)` |
-| `user` | `getUserStatistics(userId)` |
-| `character` | `toggleFavoriteCharacter(characterId)` |
-| `staff` | `toggleFavoriteStaff(staffId)` |
+Methods that read public records by username or media ID usually work without a token. Methods that read private user data by numeric user ID or mutate the viewer's account need a token.
 
-Methods that accept a `userName` string instead of a numeric ID generally work without authentication, as they access public profile data.
+| Service | Method | Auth required |
+| --- | --- | --- |
+| `anime` | `toggleFavourite(animeId)` | Yes |
+| `manga` | `toggleFavourite(mangaId)` | Yes |
+| `character` | `toggleFavoriteCharacter(characterId)` | Yes |
+| `staff` | `toggleFavoriteStaff(staffId)` | Yes |
+| `mediaList` | `saveEntry(variables)` | Yes |
+| `mediaList` | `deleteEntry(id)` | Yes |
+| `user` | `getUserInfo(userId)` | Yes |
+| `user` | `getUserAnimeList(userId, status?)` | Yes |
+| `user` | `getUserMangaList(userId, status?)` | Yes |
+| `user` | `getUserStatistics(userId)` | Yes |
+
+Username-based user methods, such as `getUserInfoByUsername`, `getUserAnimeListByUsername`, and `getUserStatisticsByUsername`, read public profile data and can be used without a token.
+
+## Save List Progress
+
+```typescript
+import { Anilist, MediaListStatus } from "@api-wrappers/anilist-wrapper";
+
+const anilist = new Anilist(process.env.ANILIST_TOKEN);
+
+const saved = await anilist.mediaList.saveEntry({
+	mediaId: 16498,
+	status: MediaListStatus.Current,
+	progress: 3,
+	score: 8,
+});
+
+console.log(saved.SaveMediaListEntry?.id);
+```
+
+## Token Safety
+
+- Do not commit tokens.
+- Do not put tokens in frontend bundles.
+- Use server-side routes for browser apps that need authenticated AniList actions.
+- Treat AniList tokens like passwords because they can access or mutate account data.
+
+See [SECURITY.md](../SECURITY.md) for vulnerability reporting.

@@ -1,104 +1,102 @@
-# AniList API Wrapper for TypeScript
+# AniList Wrapper
 
-A simple, type-safe TypeScript wrapper for the AniList API. Build anime and manga apps with convenience services for common workflows, plus raw GraphQL access for the full AniList schema.
+A type-safe TypeScript client for the [AniList GraphQL API](https://docs.anilist.co). Use the convenience services for common anime, manga, character, staff, user, and list workflows, or drop down to raw GraphQL when AniList exposes something the wrapper does not cover yet.
 
 [![npm version](https://img.shields.io/npm/v/@api-wrappers/anilist-wrapper)](https://www.npmjs.com/package/@api-wrappers/anilist-wrapper)
 [![license](https://img.shields.io/npm/l/@api-wrappers/anilist-wrapper)](https://github.com/api-wrappers/anilist-wrapper/blob/master/LICENSE)
 [![build status](https://github.com/api-wrappers/anilist-wrapper/actions/workflows/ci.yml/badge.svg)](https://github.com/api-wrappers/anilist-wrapper/actions/workflows/ci.yml)
 [![bundle size](https://img.shields.io/bundlephobia/minzip/@api-wrappers/anilist-wrapper)](https://bundlephobia.com/package/@api-wrappers/anilist-wrapper)
 
-**[Full documentation →](docs/index.md)**
-
-## What's this?
-
-Ever wanted to build something cool with anime data but got stuck trying to figure out AniList's GraphQL API? This wrapper makes it dead simple. Just import, initialize, and start fetching data.
-
-Built with TypeScript for that sweet autocomplete and type safety. No more guessing what properties are available on your anime objects!
-
-## Quick Start
+## Install
 
 ```bash
-// npm
 npm install @api-wrappers/anilist-wrapper
-
-// bun
+# or
 bun add @api-wrappers/anilist-wrapper
-
-// yarn
-yarn add @api-wrappers/anilist-wrapper
-
-// pnpm
+# or
 pnpm add @api-wrappers/anilist-wrapper
+# or
+yarn add @api-wrappers/anilist-wrapper
 ```
+
+## First Query
 
 ```typescript
 import { Anilist } from "@api-wrappers/anilist-wrapper";
 
-// Create an instance (no token needed for public data)
 const anilist = new Anilist();
 
-// Get info about Attack on Titan
-const aot = await anilist.anime.getAnimeById(16498);
-console.log(aot.title.english); // "Attack on Titan"
+const { Media } = await anilist.anime.getAnimeById(16498);
 
-// Search for anime
-const results = await anilist.anime.getAnimeBySearch("One Piece");
-console.log(results.Page?.media?.length); // Number of results found
+console.log(Media?.title?.userPreferred);
+console.log(Media?.siteUrl);
 ```
 
-## What can you do?
-
-### Anime
-- Get anime by ID or search by title
-- Fetch characters, staff, and recommendations
-- Get trending and popular anime
-- Find anime by genre
-
-### Manga
-- Same features as anime, but for manga
-- Search, get details, characters, staff, etc.
-
-### Characters & Staff
-- Get character info and birthdays
-- Find staff members and their work
-- Toggle favorites (with auth)
-
-### Users
-- Get user profiles and statistics
-- Fetch user's anime/manga lists
-- Requires authentication
-
-### Media Lists
-- Manage user's anime and manga lists
-- Add, update, remove entries
-- Requires authentication
-
-### Raw GraphQL
-- Execute any AniList query or mutation through `anilist.graphql.request`
-- Import AniList schema types, enums, generated operation SDK members, and `gql`
-- Covers API features without dedicated convenience methods yet, such as activities, reviews, threads, follows, notifications, site statistics, AniChart settings, and external link sources
-
-## Authentication
-
-Some features need you to be logged in. Get an access token from [AniList's auth guide](https://docs.anilist.co/guide/auth/) and pass it to the constructor:
+Most read-only methods do not need a token. Create an authenticated client only when you need private user data or mutations:
 
 ```typescript
-const anilist = new Anilist("your_access_token_here");
+const anilist = new Anilist(process.env.ANILIST_TOKEN);
 ```
 
-## Examples
+## Common Workflows
 
-### Get trending anime
+### Search anime
+
 ```typescript
-const trending = await anilist.anime.getTrendingAnime();
-console.log(trending.Page?.media?.[0]?.title?.english);
+const results = await anilist.anime.getAnimeBySearch("Frieren", 1, 5);
+
+for (const media of results.Page?.media ?? []) {
+	console.log(media?.title?.userPreferred, media?.startDate?.year);
+}
 ```
 
-### Use any AniList GraphQL operation
-```typescript
-import { gql } from "@api-wrappers/anilist-wrapper";
+### Get trending manga
 
-const genres = await anilist.graphql.request<{
+```typescript
+const trending = await anilist.manga.getMangaTrending(1, 10);
+
+const titles = trending.Page?.media
+	?.map((media) => media?.title?.userPreferred)
+	.filter(Boolean);
+
+console.log(titles);
+```
+
+### Read a public user list
+
+```typescript
+const list = await anilist.user.getUserAnimeListByUsername("example_user");
+
+for (const group of list.MediaListCollection?.lists ?? []) {
+	console.log(group?.name, group?.entries?.length ?? 0);
+}
+```
+
+### Update the authenticated user's list
+
+```typescript
+import { MediaListStatus } from "@api-wrappers/anilist-wrapper";
+
+const anilist = new Anilist(process.env.ANILIST_TOKEN);
+
+const saved = await anilist.mediaList.saveEntry({
+	mediaId: 16498,
+	status: MediaListStatus.Current,
+	progress: 1,
+	score: 8,
+});
+
+console.log(saved.SaveMediaListEntry?.id);
+```
+
+### Use raw GraphQL
+
+```typescript
+import { Anilist, gql } from "@api-wrappers/anilist-wrapper";
+
+const anilist = new Anilist();
+
+const data = await anilist.graphql.request<{
 	GenreCollection: Array<string | null> | null;
 }>(gql`
 	query Genres {
@@ -106,57 +104,51 @@ const genres = await anilist.graphql.request<{
 	}
 `);
 
-console.log(genres.GenreCollection);
+console.log(data.GenreCollection);
 ```
 
-### Search for characters
-```typescript
-const characters = await anilist.character.getCharacterById(1);
-console.log(characters.name.full);
+## Services
+
+| Property | Use it for |
+| --- | --- |
+| `anilist.anime` | Anime lookup, search, trending, popular, genre, relations, characters, staff, recommendations, favorites |
+| `anilist.manga` | Manga lookup, search, trending, popular, genre, relations, characters, staff, recommendations, favorites |
+| `anilist.character` | Character lookup, birthdays, favorites |
+| `anilist.staff` | Staff lookup, birthdays, favorites |
+| `anilist.user` | User profiles, public lists by username, authenticated list/stat queries by user ID |
+| `anilist.media` | Generic anime/manga media lookup and list access |
+| `anilist.mediaList` | Media list entry lookup, save, and delete |
+| `anilist.graphql` | Any AniList GraphQL query or mutation |
+
+## Docs And Examples
+
+- [Documentation home](docs/index.md)
+- [Authentication guide](docs/authentication.md)
+- [API reference](docs/api/anime.md)
+- [Runnable examples](examples/README.md)
+
+Run examples directly from this repo:
+
+```bash
+bun examples/basic-anime.ts
+bun examples/manga-workflow.ts
+bun examples/raw-graphql.ts
+ANILIST_TOKEN=... ANILIST_USERNAME=... bun examples/authenticated-user.ts
 ```
 
-### Get user's anime list
-```typescript
-const userList = await anilist.user.getUserAnimeList("username");
-console.log(userList.length); // Number of anime in their list
+## Development
+
+```bash
+bun install
+bun test
+bun run check
+bun run build
 ```
-
-### Find anime by genre
-```typescript
-const actionAnime = await anilist.anime.getAnimeListByGenre("Action");
-console.log(actionAnime.length); // Number of action anime
-```
-
-## More Examples
-
-Check the [`examples/`](examples/) directory for ready-to-run scripts:
-
-| File | Description |
-|------|-------------|
-| [`basic-anime.ts`](examples/basic-anime.ts) | Search, trending, and genre lookups (no auth) |
-| [`characters-and-staff.ts`](examples/characters-and-staff.ts) | Character and staff queries (no auth) |
-| [`authenticated-user.ts`](examples/authenticated-user.ts) | User profile and list management (requires token) |
 
 ## Contributing
 
-Found a bug? Want to add a feature? Contributions are welcome! Check out the [contributing guide](CONTRIBUTING.md) to get started.
-
-Please read our [Code of Conduct](CODE_OF_CONDUCT.md) and [Security Policy](SECURITY.md) before contributing.
+Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), and [SECURITY.md](SECURITY.md) before contributing.
 
 ## License
 
-MIT License - use it however you want!
-
-## Support
-
-Having trouble? Open an issue on [GitHub](https://github.com/api-wrappers/anilist-wrapper/issues) and I'll help you out.
-
----
-
-# ❤️
-
-<p align="center">
-<a target="_blank" href="https://tdanks.com/mental-health/quote">
-❤️ Quick reminder: <strong><i>you are great, you are enough, and we value your presence.</i></strong> If you're going through a tough time with your mental health, please reach out to someone you trust and consider talking to a professional. You're never alone. ❤️
-</a>
-</p>
+MIT
