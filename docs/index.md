@@ -8,6 +8,7 @@ This documentation is written for building with the wrapper quickly, then reachi
 2. [Create a client](#create-a-client)
 3. [Choose a service](#choose-a-service)
 4. [Run an example](#examples)
+5. [Find contribution ideas](./contributing-ideas.md)
 
 ## Install
 
@@ -127,6 +128,8 @@ const data = await anilist.graphql.request<{
 
 ## Examples
 
+For copyable snippets, read [Practical examples](./examples.md).
+
 The [`examples/`](../examples/) directory contains runnable scripts:
 
 ```bash
@@ -136,3 +139,14 @@ bun examples/characters-and-staff.ts
 bun examples/raw-graphql.ts
 ANILIST_TOKEN=... ANILIST_USERNAME=... bun examples/authenticated-user.ts
 ```
+
+## Generated GraphQL Types
+
+Generated GraphQL schema and operation types live in `src/__generated__/`.
+They are produced from `codegen.yml`, documents in `src/queries/`, fragments in
+`src/fragments/`, and AniList's remote schema.
+
+Run `bun run codegen` only when GraphQL operations, fragments, or generated
+types need to be refreshed. The generated SDK is patched by
+`scripts/patch-codegen.ts` to use the package's `@api-wrappers/api-core`
+client shape.

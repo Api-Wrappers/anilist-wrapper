@@ -1,0 +1,43 @@
+name: Documentation request
+description: Request clearer docs, examples, or API reference coverage.
+title: "[docs]: "
+labels:
+  - documentation
+body:
+  - type: textarea
+    id: docs-gap
+    attributes:
+      label: Documentation gap
+      description: What is unclear, missing, outdated, or hard to find?
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: Page or file
+      description: Link the README, docs page, example, or source file if known.
+      placeholder: docs/api/anime.md
+  - type: textarea
+    id: expected-docs
+    attributes:
+      label: What should the docs explain?
+      description: Describe the example, method, workflow, or concept you expected to find.
+    validations:
+      required: true
+  - type: dropdown
+    id: audience
+    attributes:
+      label: Audience
+      options:
+        - New user
+        - Existing user
+        - Contributor
+        - Maintainer
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add links, snippets, or related issues.

@@ -32,6 +32,6 @@ const animeList = await anilist.media.getMediaListByUsername(
 );
 
 for (const group of animeList.MediaListCollection?.lists ?? []) {
-	console.log(group?.name, group?.entries?.length ?? 0);
+	console.log(group?.entries?.length ?? 0);
 }
 ```

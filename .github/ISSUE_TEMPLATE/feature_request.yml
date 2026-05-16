@@ -1,0 +1,52 @@
+name: Feature request
+description: Suggest a new wrapper capability or improvement.
+title: "[feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please connect feature requests to a real AniList GraphQL query, mutation, field, or app workflow when possible.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What are you trying to build, and what is missing today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-api
+    attributes:
+      label: Proposed API
+      description: Show the wrapper method or example usage you would like to exist.
+      render: typescript
+    validations:
+      required: true
+  - type: textarea
+    id: anilist-reference
+    attributes:
+      label: AniList GraphQL reference
+      description: Link or paste the relevant AniList query, mutation, or field name.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Can this be done today with an existing service or raw GraphQL request?
+  - type: dropdown
+    id: breaking-change
+    attributes:
+      label: Would this require a breaking change?
+      options:
+        - "No"
+        - "Not sure"
+        - "Yes"
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add screenshots, links, schema notes, or implementation ideas.

@@ -1,20 +1,26 @@
-name: Build, Release and Publish
+name: Release
 
 on:
   push:
     branches:
       - main
-    paths:
-      - 'package.json'
   workflow_dispatch:
 
 permissions:
   contents: write
+  pull-requests: write
   id-token: write
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  build-release-publish:
+  release:
+    name: Version or publish
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -25,7 +31,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: lts/*
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: https://registry.npmjs.org
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -38,43 +44,27 @@ jobs:
       - name: Check formatting and lint
         run: bun run check
 
+      - name: Typecheck
+        run: bun run typecheck
+
       - name: Run tests
-        run: bun run test
+        run: bun test
 
       - name: Build
         run: bun run build
 
-      - name: Get version
-        id: version
-        run: |
-          VERSION="$(node -p "require('./package.json').version")"
-          echo "value=${VERSION}" >> "$GITHUB_OUTPUT"
-          echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
+      - name: Pack dry-run
+        run: bun pm pack --dry-run
 
-      - name: Generate and verify release notes
+      - name: Create release PR or publish
+        uses: changesets/action@v1
+        with:
+          version: bun run version-packages
+          publish: bun run release
+          title: "chore: version packages"
+          commit: "chore: version packages"
         env:
-          GH_TOKEN: ${{ github.token }}
-          TAG: ${{ steps.version.outputs.tag }}
-        run: |
-          gh api "repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
-            -f tag_name="$TAG" \
-            -f target_commitish="$GITHUB_SHA" \
-            --jq '.body // ""' > release-notes.md
-          if ! grep -q '[^[:space:]]' release-notes.md; then
-            echo "GitHub generated empty release notes for ${TAG}" >&2
-            exit 1
-          fi
-
-      - name: Publish to npm
-        run: npm publish --provenance --access public
-
-      - name: Create GitHub Release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TAG: ${{ steps.version.outputs.tag }}
-        run: |
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release edit "$TAG" --title "$TAG" --notes-file release-notes.md
-          else
-            gh release create "$TAG" --target "$GITHUB_SHA" --title "$TAG" --notes-file release-notes.md
-          fi
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true

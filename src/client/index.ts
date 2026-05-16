@@ -27,7 +27,7 @@ export const createGraphQLClient = (token?: string): GraphQLClient => {
 				query: dedupeFragmentDefinitions(document),
 				variables,
 				headers: requestHeaders,
-				signal,
+				signal: signal ?? undefined,
 			});
 		},
 	};

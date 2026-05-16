@@ -25,7 +25,7 @@ const list = await anilist.mediaList.getMediaListByUsername(
 );
 
 for (const group of list.MediaListCollection?.lists ?? []) {
-	console.log(group?.name, group?.entries?.length ?? 0);
+	console.log(group?.entries?.length ?? 0);
 }
 ```
 

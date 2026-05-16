@@ -50,6 +50,9 @@ function removeDuplicateExportedDeclarations(source: string) {
 
 	for (let index = 0; index < matches.length; index++) {
 		const match = matches[index];
+
+		if (!match) continue;
+
 		const name = match[1];
 
 		if (!name || match.index === undefined) continue;

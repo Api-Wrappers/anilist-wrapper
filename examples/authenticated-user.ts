@@ -32,8 +32,10 @@ const currentAnime = await anilist.user.getUserAnimeListByUsername(
 );
 
 console.log("\nCurrent anime groups");
-for (const group of currentAnime.MediaListCollection?.lists ?? []) {
-	console.log(`- ${group?.name ?? "Unnamed"}: ${group?.entries?.length ?? 0}`);
+for (const [index, group] of (
+	currentAnime.MediaListCollection?.lists ?? []
+).entries()) {
+	console.log(`- Group ${index + 1}: ${group?.entries?.length ?? 0}`);
 }
 
 const stats = await anilist.user.getUserStatisticsByUsername(username);

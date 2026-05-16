@@ -27,6 +27,10 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .cache
 *.tsbuildinfo
 
+# local GitHub issue drafts
+docs/issue-drafts.md
+docs/isues-draft*
+
 # IntelliJ based IDEs
 .idea
 

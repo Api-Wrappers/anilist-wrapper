@@ -1,113 +1,146 @@
-# 🤝 Contributing to AniList TypeScript Wrapper
+# Contributing To AniList Wrapper
 
-Thank you for your interest in contributing! We welcome all types of contributions — whether it’s bug reports, new features, improvements to the codebase, or better documentation.
+Thanks for helping improve `@api-wrappers/anilist-wrapper`. This project keeps a
+stable public API around AniList's GraphQL API, so good contributions are small,
+typed, documented, and easy to verify.
 
-This guide will walk you through how to get involved and contribute effectively.
+## Before You Start
 
-## 📋 Table of Contents
+- Check existing issues and pull requests to avoid duplicate work.
+- Open an issue first for new public methods, breaking changes, or larger API
+  design changes.
+- Keep existing method names and response shapes stable unless the change fixes
+  a clear bug.
+- Prefer Bun for local development because the package scripts are written for
+  Bun.
 
-- 🚀 Getting Started
-- 🐞 Reporting Bugs
-- 🌟 Suggesting Enhancements
-- 🛠 Development Setup
-- 📦 Running the Build
-- ✅ Making a Pull Request
-- 📜 License
-- 💖 Code of Conduct
-
-## 🚀 Getting Started
-
-1. **Star** the project on GitHub — it helps others find it!
-2. **Fork** the repository.
-3. **Clone** your forked repository:
+## Setup
 
 ```bash
 git clone https://github.com/your-username/anilist-wrapper.git
-```
-
-4. **Install dependencies**:
-
-```bash
+cd anilist-wrapper
 bun install
 ```
 
-## 🐞 Reporting Bugs
-
-If you find a bug, please help us fix it! Open an issue and include:
-
-- A clear description of the issue.
-- Steps to reproduce the problem.
-- Expected vs actual behavior.
-- Code snippets or screenshots if relevant.
-
-> Bug reports are one of the most valuable contributions you can make!
-
-## 🌟 Suggesting Enhancements
-
-We’re open to suggestions! If you have ideas to improve the wrapper:
-
-- Open a new issue with `[Feature]` in the title.
-- Describe the enhancement clearly and concisely.
-- Bonus points for explaining _why_ it would be helpful to users.
-
-## 🛠 Development Setup
-
-After cloning the repo and installing dependencies, make your changes in a feature branch:
+Create a branch for your change:
 
 ```bash
-git checkout -b feat/your-feature-name
+git switch -c feat/short-description
 ```
 
-Follow the structure and naming conventions already used in the project.
+## Project Scripts
 
-## 📦 Running the Build
+These are the package scripts currently available in `package.json`:
 
-To compile the TypeScript and check for type safety:
+| Command | Purpose |
+| --- | --- |
+| `bun run build` | Build ESM, CJS, and declaration output with `tsdown`. |
+| `bun run changeset` | Create a Changesets entry for user-facing changes. |
+| `bun test` | Run the Bun test suite. |
+| `bun run typecheck` | Run TypeScript with `tsc --noEmit`. |
+| `bun run check` | Run Biome checks. |
+| `bun run check:write` | Apply safe Biome formatting and fixes. |
+| `bun run check:unsafe` | Apply Biome fixes that may be unsafe; review the diff carefully. |
+| `bun run verify` | Run check, typecheck, build, and a Bun pack dry-run. |
+| `bun run version-packages` | Apply pending changesets to package versions and changelog files. |
+| `bun run release` | Publish changed packages with Changesets. Maintainers run this through CI. |
+| `bun run codegen` | Regenerate AniList GraphQL types and SDK files, then patch generated output. |
+| `bun run codegen:patch` | Re-run only the generated SDK patch step. |
+
+There is no `bun run lint` script. Use `bun run check`.
+
+## Development Guidelines
+
+- Keep strict TypeScript.
+- Do not add `any`; prefer `unknown` or generated types.
+- Prefer `Array<Type>` over `Type[]` in new or edited TypeScript.
+- Prefer const functions when adding helpers.
+- Keep Bun support and avoid Node-only runtime assumptions in examples or source.
+- Add tests for behavior changes when the change can be tested without relying
+  on unstable live API state.
+- Update README or docs when changing public behavior, adding service methods,
+  or changing examples.
+
+## Generated GraphQL Types
+
+Generated files live in `src/__generated__/` and are maintained from:
+
+- `codegen.yml`
+- GraphQL documents in `src/queries/`
+- Shared fragments in `src/fragments/`
+- AniList's remote GraphQL schema
+- `scripts/patch-codegen.ts`
+
+Run `bun run codegen` when you add or edit GraphQL operations, fragments, or
+schema-driven generated types. The patch step adapts codegen output to the
+package's `@api-wrappers/api-core` client and removes duplicate generated
+declarations. Do not hand-edit generated files unless you are immediately
+replacing those edits with a codegen or patch-script change.
+
+## Validation Before Opening A Pull Request
+
+Run the relevant checks locally:
 
 ```bash
-bun run build
-```
-
-To run tests (if applicable):
-
-```bash
+bun install
+bun run check
+bun run typecheck
 bun test
+bun run build
+bun run verify
 ```
 
-Lint the code to maintain consistency:
+`bun test` currently exercises the live AniList API, so network or upstream API
+availability can affect it. `bun run verify` is kept to local checks and package
+validation so it is safe to run before every pull request.
+
+Run `bun run codegen` only when your change affects GraphQL operations,
+fragments, or generated type output. Include generated file changes in the pull
+request when codegen is required.
+
+## Release Changes
+
+For user-facing fixes, features, or documentation changes that should appear in
+release notes, run:
 
 ```bash
-bun run lint
+bun run changeset
 ```
 
-## ✅ Making a Pull Request
+The release workflow opens or updates a Changesets version PR on `main`. When
+that version PR is merged, CI validates the package, publishes to npm, and
+creates GitHub release notes. Do not commit npm tokens or bump versions by hand
+unless a maintainer asks for it.
 
-Once your changes are ready:
+## Pull Request Checklist
 
-1. **Commit** with clear, descriptive messages.
-2. **Push** to your fork:
+- The change preserves the existing public API unless the PR explicitly explains
+  a bug fix or migration.
+- New examples use real methods that exist in `src/services/`.
+- Documentation and examples match the current package scripts.
+- Tests or manual verification are listed in the PR description.
+- Generated type updates are explained when `bun run codegen` was needed.
 
-```bash
-git push origin feat/your-feature-name
-```
+## Reporting Bugs
 
-3. Open a pull request on the original repo.
+Use the bug report issue form and include:
 
-Please ensure your PR includes:
+- The package version.
+- Your Bun, Node.js, and TypeScript versions.
+- A minimal code sample.
+- The expected behavior and actual behavior.
+- Whether the issue is in a convenience service or `anilist.graphql.request`.
 
-- Tests for new or changed functionality (if applicable).
-- Updated or added documentation where relevant.
-- A clear description of the change.
+## Suggesting Features
 
-## 📜 License
+Use the feature request issue form and include:
 
-By contributing, you agree that your contributions will be licensed under the [MIT License](./LICENSE).
+- The AniList GraphQL field, query, or mutation you want supported.
+- A proposed wrapper method name and example usage.
+- Whether raw GraphQL already works for your use case.
+- Any backwards compatibility concerns.
 
-## 💖 Code of Conduct
+## Code Of Conduct
 
-Please be respectful and constructive. We follow the [Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/). Harassment, discrimination, or other toxic behavior won’t be tolerated.
-
----
-
-Thank you for helping improve the AniList TypeScript Wrapper! 🚀  
-You're awesome. ✨
+Be respectful and constructive. This project follows the
+[Code of Conduct](CODE_OF_CONDUCT.md).
