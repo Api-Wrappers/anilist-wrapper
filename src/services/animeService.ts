@@ -1,6 +1,9 @@
 import type { ANILISTSDK } from "../@types";
-import type { GetAnimeBrowseQuery, ToggleFavoriteAnimeMutation } from "../__generated__/anilist-sdk";
 import type { MediaFormat, MediaStatus } from "../__generated__/anilist-schema";
+import type {
+	GetAnimeBrowseQuery,
+	ToggleFavoriteAnimeMutation,
+} from "../__generated__/anilist-sdk";
 
 /**
  * Service class for interacting with AniList anime-related queries.
@@ -130,7 +133,14 @@ export class AnimeService {
 		perPage = 10,
 	): Promise<GetAnimeBrowseQuery> {
 		const { genre, format, status, seasonYear } = filters;
-		return this.client.GetAnimeBrowse({ genre, format, status, seasonYear, page, perPage });
+		return this.client.GetAnimeBrowse({
+			genre,
+			format,
+			status,
+			seasonYear,
+			page,
+			perPage,
+		});
 	}
 
 	/**
