@@ -1,3 +1,4 @@
+export * from "./browseAnime";
 export * from "./getAnimeById";
 export * from "./getAnimeByTitle";
 export * from "./getAnimeCharacters";

@@ -10,6 +10,9 @@ export const GET_ANIME_LIST_BY_GENRE = gql`
     $perPage: Int = 10
   ) {
     Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        hasNextPage
+      }
       media(genre: $genre, type: ANIME) {
         ...MediaFragment
       }

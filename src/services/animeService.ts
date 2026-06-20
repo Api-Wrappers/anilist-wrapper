@@ -1,5 +1,6 @@
 import type { ANILISTSDK } from "../@types";
-import type { ToggleFavoriteAnimeMutation } from "../__generated__/anilist-sdk";
+import type { GetAnimeBrowseQuery, ToggleFavoriteAnimeMutation } from "../__generated__/anilist-sdk";
+import type { MediaFormat, MediaStatus } from "../__generated__/anilist-schema";
 
 /**
  * Service class for interacting with AniList anime-related queries.
@@ -109,6 +110,27 @@ export class AnimeService {
 	 */
 	getAnimeListByGenre(genre: string, page = 1, perPage = 10) {
 		return this.client.GetAnimeListByGenre({ genre, page, perPage });
+	}
+
+	/**
+	 * Browses anime with optional filters for genre, format, status, and season year.
+	 * @param filters - Optional filters to narrow the results.
+	 * @param page - Optional page number. Defaults to 1.
+	 * @param perPage - Optional number of results per page. Defaults to 10.
+	 * @returns A promise resolving to the filtered, paginated anime list with pageInfo.
+	 */
+	browseAnime(
+		filters: {
+			genre?: string;
+			format?: MediaFormat;
+			status?: MediaStatus;
+			seasonYear?: number;
+		} = {},
+		page = 1,
+		perPage = 10,
+	): Promise<GetAnimeBrowseQuery> {
+		const { genre, format, status, seasonYear } = filters;
+		return this.client.GetAnimeBrowse({ genre, format, status, seasonYear, page, perPage });
 	}
 
 	/**

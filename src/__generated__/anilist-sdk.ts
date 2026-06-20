@@ -839,6 +839,18 @@ export type StudioFragment = { id: number, name: string, isAnimationStudio: bool
 
 export type UserFragment = { id: number, name: string, about: string | null, bannerImage: string | null, donatorTier: number | null, donatorBadge: string | null, isFollowing: boolean | null, isFollower: boolean | null, isBlocked: boolean | null, createdAt: number | null, updatedAt: number | null, unreadNotificationCount: number | null, bans: unknown, moderatorRoles: Array<ModRole | null> | null, moderatorStatus: string | null, siteUrl: string | null, avatar: { large: string | null, medium: string | null } | null, options: { titleLanguage: UserTitleLanguage | null, displayAdultContent: boolean | null, airingNotifications: boolean | null, profileColor: string | null, timezone: string | null, activityMergeTime: number | null, staffNameLanguage: UserStaffNameLanguage | null, restrictMessagesToFollowing: boolean | null, notificationOptions: Array<{ type: NotificationType | null, enabled: boolean | null } | null> | null, disabledListActivity: Array<{ disabled: boolean | null, type: MediaListStatus | null } | null> | null } | null, mediaListOptions: { scoreFormat: ScoreFormat | null, rowOrder: string | null, useLegacyLists: boolean | null, sharedTheme: unknown, sharedThemeEnabled: boolean | null, animeList: { sectionOrder: Array<string | null> | null, splitCompletedSectionByFormat: boolean | null, customLists: Array<string | null> | null, advancedScoring: Array<string | null> | null, advancedScoringEnabled: boolean | null } | null, mangaList: { sectionOrder: Array<string | null> | null, splitCompletedSectionByFormat: boolean | null, customLists: Array<string | null> | null, advancedScoring: Array<string | null> | null, advancedScoringEnabled: boolean | null } | null } | null, favourites: { anime: { nodes: Array<{ id: number, title: { romaji: string | null } | null } | null> | null } | null, manga: { nodes: Array<{ id: number, title: { romaji: string | null } | null } | null> | null } | null, characters: { nodes: Array<{ id: number, name: { full: string | null } | null } | null> | null } | null, staff: { nodes: Array<{ id: number, name: { full: string | null } | null } | null> | null } | null, studios: { nodes: Array<{ id: number, name: string } | null> | null } | null } | null, statistics: { anime: { count: number, meanScore: number, standardDeviation: number, minutesWatched: number, episodesWatched: number, chaptersRead: number, volumesRead: number, scores: Array<{ score: number | null, count: number, meanScore: number, minutesWatched: number } | null> | null, lengths: Array<{ length: string | null, count: number, meanScore: number, minutesWatched: number } | null> | null, formats: Array<{ format: MediaFormat | null, count: number, meanScore: number, minutesWatched: number } | null> | null, statuses: Array<{ status: MediaListStatus | null, count: number, meanScore: number, minutesWatched: number } | null> | null, releaseYears: Array<{ releaseYear: number | null, count: number, meanScore: number, minutesWatched: number } | null> | null, startYears: Array<{ startYear: number | null, count: number, meanScore: number, minutesWatched: number } | null> | null, genres: Array<{ genre: string | null, count: number, meanScore: number, minutesWatched: number } | null> | null, tags: Array<{ count: number, meanScore: number, minutesWatched: number, tag: { name: string } | null } | null> | null, countries: Array<{ country: unknown, count: number, meanScore: number, minutesWatched: number } | null> | null, voiceActors: Array<{ count: number, meanScore: number, minutesWatched: number, characterIds: Array<number | null>, mediaIds: Array<number | null>, voiceActor: { id: number, name: { full: string | null } | null } | null } | null> | null, staff: Array<{ count: number, meanScore: number, minutesWatched: number, mediaIds: Array<number | null>, staff: { id: number, name: { full: string | null } | null } | null } | null> | null, studios: Array<{ count: number, meanScore: number, minutesWatched: number, mediaIds: Array<number | null>, studio: { id: number, name: string } | null } | null> | null } | null, manga: { count: number, meanScore: number, standardDeviation: number, chaptersRead: number, volumesRead: number, scores: Array<{ score: number | null, count: number, meanScore: number, chaptersRead: number } | null> | null, lengths: Array<{ length: string | null, count: number, meanScore: number, chaptersRead: number } | null> | null, formats: Array<{ format: MediaFormat | null, count: number, meanScore: number, chaptersRead: number } | null> | null, statuses: Array<{ status: MediaListStatus | null, count: number, meanScore: number, chaptersRead: number } | null> | null, releaseYears: Array<{ releaseYear: number | null, count: number, meanScore: number, chaptersRead: number } | null> | null, startYears: Array<{ startYear: number | null, count: number, meanScore: number, chaptersRead: number } | null> | null, genres: Array<{ genre: string | null, count: number, meanScore: number, chaptersRead: number } | null> | null, tags: Array<{ count: number, meanScore: number, chaptersRead: number, tag: { name: string } | null } | null> | null, countries: Array<{ country: unknown, count: number, meanScore: number, chaptersRead: number } | null> | null, staff: Array<{ count: number, meanScore: number, chaptersRead: number, mediaIds: Array<number | null>, staff: { id: number, name: { full: string | null } | null } | null } | null> | null, studios: Array<{ count: number, meanScore: number, chaptersRead: number, mediaIds: Array<number | null>, studio: { id: number, name: string } | null } | null> | null } | null } | null, stats: { watchedTime: number | null, chaptersRead: number | null } | null, previousNames: Array<{ name: string | null, createdAt: number | null, updatedAt: number | null } | null> | null };
 
+export type GetAnimeBrowseQueryVariables = Exact<{
+  genre: string | null | undefined;
+  format: MediaFormat | null | undefined;
+  status: MediaStatus | null | undefined;
+  seasonYear: number | null | undefined;
+  page?: number | null | undefined;
+  perPage?: number | null | undefined;
+}>;
+
+
+export type GetAnimeBrowseQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, media: Array<{ id: number, bannerImage: string | null, genres: Array<string | null> | null, format: MediaFormat | null, status: MediaStatus | null, seasonYear: number | null, averageScore: number | null, episodes: number | null, title: { english: string | null, romaji: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { extraLarge: string | null, large: string | null } | null } | null> | null } | null };
+
 export type GetAnimeByIdQueryVariables = Exact<{
   id: number;
 }>;
@@ -867,7 +879,7 @@ export type GetAnimeListByGenreQueryVariables = Exact<{
 }>;
 
 
-export type GetAnimeListByGenreQuery = { Page: { media: Array<{ id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, nextAiringEpisode: { id: number, airingAt: number, timeUntilAiring: number, episode: number, mediaId: number } | null, tags: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null } | null> | null, externalLinks: Array<{ id: number, url: string | null, site: string, siteId: number | null, type: ExternalLinkType | null } | null> | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null> | null } | null };
+export type GetAnimeListByGenreQuery = { Page: { pageInfo: { hasNextPage: boolean | null } | null, media: Array<{ id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, nextAiringEpisode: { id: number, airingAt: number, timeUntilAiring: number, episode: number, mediaId: number } | null, tags: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null } | null> | null, externalLinks: Array<{ id: number, url: string | null, site: string, siteId: number | null, type: ExternalLinkType | null } | null> | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null> | null } | null };
 
 export type GetAnimePopularQueryVariables = Exact<{
   page?: number | null | undefined;
@@ -2084,6 +2096,45 @@ export const UserFragmentDoc = gql`
   ...UserBasicFragment
 }
     ${UserBasicFragmentDoc}`;
+export const GetAnimeBrowseDocument = gql`
+    query GetAnimeBrowse($genre: String, $format: MediaFormat, $status: MediaStatus, $seasonYear: Int, $page: Int = 1, $perPage: Int = 10) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
+      total
+    }
+    media(
+      genre: $genre
+      format: $format
+      status: $status
+      seasonYear: $seasonYear
+      type: ANIME
+      sort: POPULARITY_DESC
+      isAdult: false
+    ) {
+      id
+      title {
+        english
+        romaji
+        native
+        userPreferred
+      }
+      coverImage {
+        extraLarge
+        large
+      }
+      bannerImage
+      genres
+      format
+      status
+      seasonYear
+      averageScore
+      episodes
+    }
+  }
+}
+    `;
 export const GetAnimeByIdDocument = gql`
     query GetAnimeById($id: Int!) {
   Media(id: $id, type: ANIME) {
@@ -2143,6 +2194,9 @@ export const GetAnimeCharactersDocument = gql`
 export const GetAnimeListByGenreDocument = gql`
     query GetAnimeListByGenre($genre: String!, $page: Int = 1, $perPage: Int = 10) {
   Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+    }
     media(genre: $genre, type: ANIME) {
       ...MediaFragment
     }
@@ -2759,6 +2813,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    GetAnimeBrowse(variables?: GetAnimeBrowseQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimeBrowseQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAnimeBrowseQuery>({ document: GetAnimeBrowseDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimeBrowse', 'query', variables);
+    },
     GetAnimeById(variables: GetAnimeByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimeByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetAnimeByIdQuery>({ document: GetAnimeByIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimeById', 'query', variables);
     },
