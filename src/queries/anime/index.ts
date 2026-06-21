@@ -8,5 +8,6 @@ export * from "./getAnimeRecommendations";
 export * from "./getAnimeRelations";
 export * from "./getAnimeStaff";
 export * from "./getAnimeTrending";
+export * from "./getSeasonalAnime";
 export * from "./searchAnime";
 export * from "./toggleFavoriteAnime";

@@ -1,7 +1,12 @@
 import type { ANILISTSDK } from "../@types";
-import type { MediaFormat, MediaStatus } from "../__generated__/anilist-schema";
+import type {
+	MediaFormat,
+	MediaSeason,
+	MediaStatus,
+} from "../__generated__/anilist-schema";
 import type {
 	GetAnimeBrowseQuery,
+	GetSeasonalAnimeQuery,
 	ToggleFavoriteAnimeMutation,
 } from "../__generated__/anilist-sdk";
 
@@ -137,6 +142,28 @@ export class AnimeService {
 			genre,
 			format,
 			status,
+			seasonYear,
+			page,
+			perPage,
+		});
+	}
+
+	/**
+	 * Retrieves seasonal anime for a specific season and year.
+	 * @param season - The AniList media season to filter by.
+	 * @param seasonYear - The season year to filter by.
+	 * @param page - Optional page number. Defaults to AniList's server default.
+	 * @param perPage - Optional number of results per page. Defaults to AniList's server default.
+	 * @returns A promise resolving to the seasonal anime list with pageInfo.
+	 */
+	getSeasonalAnime(
+		season: MediaSeason,
+		seasonYear: number,
+		page?: number,
+		perPage?: number,
+	): Promise<GetSeasonalAnimeQuery> {
+		return this.client.GetSeasonalAnime({
+			season,
 			seasonYear,
 			page,
 			perPage,

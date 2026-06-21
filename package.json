@@ -1,6 +1,6 @@
 {
 	"name": "@api-wrappers/anilist-wrapper",
-	"version": "2.5.5",
+	"version": "2.5.6",
 	"description": "Typed AniList GraphQL wrapper for anime, manga, characters, staff, users, media lists, and raw GraphQL requests.",
 	"type": "module",
 	"main": "./dist/index.cjs",

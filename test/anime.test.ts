@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "bun:test";
-import { Anilist } from "../src";
+import { Anilist, MediaSeason } from "../src";
 import { delay, handleRateLimit, isRateLimitError } from "./utils";
 
 const testId = 1;
@@ -39,6 +39,39 @@ describe("Anilist Anime API", () => {
 			expect(res).toMatchObject({
 				Page: {
 					media: expect.any(Array),
+				},
+			});
+		} catch (error) {
+			if (isRateLimitError(error)) {
+				handleRateLimit();
+				return;
+			}
+			throw error;
+		}
+	});
+
+	it("should return seasonal anime", async () => {
+		try {
+			const res = await anilist.anime.getSeasonalAnime(
+				MediaSeason.Winter,
+				2024,
+				1,
+				3,
+			);
+
+			expect(res).toMatchObject({
+				Page: {
+					pageInfo: expect.objectContaining({
+						currentPage: expect.any(Number),
+					}),
+					media: expect.arrayContaining([
+						expect.objectContaining({
+							id: expect.any(Number),
+							season: MediaSeason.Winter,
+							seasonYear: 2024,
+							title: expect.any(Object),
+						}),
+					]),
 				},
 			});
 		} catch (error) {

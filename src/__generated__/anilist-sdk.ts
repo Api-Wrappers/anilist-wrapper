@@ -918,6 +918,16 @@ export type GetAnimeTrendingQueryVariables = Exact<{
 
 export type GetAnimeTrendingQuery = { Page: { media: Array<{ id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, nextAiringEpisode: { id: number, airingAt: number, timeUntilAiring: number, episode: number, mediaId: number } | null, tags: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null } | null> | null, externalLinks: Array<{ id: number, url: string | null, site: string, siteId: number | null, type: ExternalLinkType | null } | null> | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null> | null } | null };
 
+export type GetSeasonalAnimeQueryVariables = Exact<{
+  season: MediaSeason | null | undefined;
+  seasonYear: number | null | undefined;
+  page: number | null | undefined;
+  perPage: number | null | undefined;
+}>;
+
+
+export type GetSeasonalAnimeQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null } | null, media: Array<{ id: number, bannerImage: string | null, genres: Array<string | null> | null, seasonYear: number | null, season: MediaSeason | null, title: { english: string | null, romaji: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { extraLarge: string | null, large: string | null } | null } | null> | null } | null };
+
 export type SearchAnimeQueryVariables = Exact<{
   query: string | null | undefined;
   page: number | null | undefined;
@@ -2264,6 +2274,39 @@ export const GetAnimeTrendingDocument = gql`
   }
 }
     ${MediaFragmentDoc}`;
+export const GetSeasonalAnimeDocument = gql`
+    query GetSeasonalAnime($season: MediaSeason, $seasonYear: Int, $page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
+    }
+    media(
+      season: $season
+      seasonYear: $seasonYear
+      type: ANIME
+      sort: POPULARITY_DESC
+      isAdult: false
+    ) {
+      id
+      title {
+        english
+        romaji
+        native
+        userPreferred
+      }
+      coverImage {
+        extraLarge
+        large
+      }
+      bannerImage
+      genres
+      seasonYear
+      season
+    }
+  }
+}
+    `;
 export const SearchAnimeDocument = gql`
     query SearchAnime($query: String, $page: Int, $perPage: Int) {
   Page(page: $page, perPage: $perPage) {
@@ -2842,6 +2885,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetAnimeTrending(variables?: GetAnimeTrendingQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimeTrendingQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetAnimeTrendingQuery>({ document: GetAnimeTrendingDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimeTrending', 'query', variables);
+    },
+    GetSeasonalAnime(variables?: GetSeasonalAnimeQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetSeasonalAnimeQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetSeasonalAnimeQuery>({ document: GetSeasonalAnimeDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetSeasonalAnime', 'query', variables);
     },
     SearchAnime(variables?: SearchAnimeQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<SearchAnimeQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<SearchAnimeQuery>({ document: SearchAnimeDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'SearchAnime', 'query', variables);
