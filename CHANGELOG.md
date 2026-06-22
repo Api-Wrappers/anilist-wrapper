@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.6.0
+
+### Minor Changes
+
+- [`c72e2f8`](https://github.com/Api-Wrappers/anilist-wrapper/commit/c72e2f8a603d0abd7eb7b89e33b8ca3b79501a95) Thanks [@TDanks2000](https://github.com/TDanks2000)! - Added `browseAnime` to `AnimeService` with optional `genre`, `format`, `status`, and `seasonYear` filters, returning a paginated result with `pageInfo` (`hasNextPage`, `currentPage`, `total`) for infinite-scroll use cases.
+
+- [`c72e2f8`](https://github.com/Api-Wrappers/anilist-wrapper/commit/c72e2f8a603d0abd7eb7b89e33b8ca3b79501a95) Thanks [@TDanks2000](https://github.com/TDanks2000)! - Added `pageInfo.hasNextPage` to the `getAnimeListByGenre` response so callers can paginate through genre results.
+
+### Patch Changes
+
+- [`c72e2f8`](https://github.com/Api-Wrappers/anilist-wrapper/commit/c72e2f8a603d0abd7eb7b89e33b8ca3b79501a95) Thanks [@TDanks2000](https://github.com/TDanks2000)! - Added open-source trust-signal documentation for examples, contribution ideas, roadmap, issue templates, and pull request review.
+
+  Added package verification guidance covering check, typecheck, live tests, build, and pack dry-run.
+
+  Clarified package metadata and README positioning without changing the public wrapper API.
+
 All notable changes to `@api-wrappers/anilist-wrapper` should be documented in
 this file.
 
@@ -17,4 +33,3 @@ verification details.
 ### Fixed
 
 - Applied Biome import ordering and formatting to `animeService`.
-
