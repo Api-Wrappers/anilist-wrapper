@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.6.1
+
+### Patch Changes
+
+- Add `toggleFavorite` (American spelling) alias on `AnimeService` and `MangaService` as a convenience alias for `toggleFavourite`. Both spellings now work identically.
+
 ## 2.6.0
 
 ### Minor Changes
