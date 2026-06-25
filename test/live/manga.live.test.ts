@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "bun:test";
-import { Anilist } from "../src";
-import { delay, handleRateLimit, isRateLimitError } from "./utils";
+import { Anilist } from "../../src";
+import { delay, handleRateLimit, isRateLimitError } from "../utils";
 
 const testId = 30001;
 

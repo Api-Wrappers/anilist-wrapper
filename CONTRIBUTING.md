@@ -36,7 +36,8 @@ These are the package scripts currently available in `package.json`:
 | --- | --- |
 | `bun run build` | Build ESM, CJS, and declaration output with `tsdown`. |
 | `bun run changeset` | Create a Changesets entry for user-facing changes. |
-| `bun test` | Run the Bun test suite. |
+| `bun run test` | Run deterministic non-network Bun contract tests. |
+| `bun run test:live` | Run live AniList smoke tests. |
 | `bun run typecheck` | Run TypeScript with `tsc --noEmit`. |
 | `bun run check` | Run Biome checks. |
 | `bun run check:write` | Apply safe Biome formatting and fixes. |
@@ -85,14 +86,16 @@ Run the relevant checks locally:
 bun install
 bun run check
 bun run typecheck
-bun test
+bun run test
 bun run build
 bun run verify
 ```
 
-`bun test` currently exercises the live AniList API, so network or upstream API
-availability can affect it. `bun run verify` is kept to local checks and package
-validation so it is safe to run before every pull request.
+`bun run test` is deterministic and does not call AniList. Run
+`bun run test:live` when you specifically want live smoke coverage; network
+availability, upstream API state, and rate limits can affect that command.
+`bun run verify` is kept to local checks and package validation so it is safe to
+run before every pull request.
 
 Run `bun run codegen` only when your change affects GraphQL operations,
 fragments, or generated type output. Include generated file changes in the pull

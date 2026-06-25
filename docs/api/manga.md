@@ -22,6 +22,7 @@ const anilist = new Anilist();
 | `getMangaRelations(mediaId)` | No | `Media.relations` |
 | `getMangaCharacters(mediaId)` | No | `Media.characters` |
 | `getMangaStaff(mediaId)` | No | `Media.staff` |
+| `toggleFavorite(mangaId)` | Yes | `ToggleFavourite` |
 | `toggleFavourite(mangaId)` | Yes | `ToggleFavourite` |
 
 ## Lookup And Search
@@ -67,10 +68,11 @@ console.log(staff.Media?.staff?.edges?.[0]?.node?.name?.full);
 
 ## Favorites
 
-`toggleFavourite` mutates the authenticated viewer's favorites.
+`toggleFavorite` mutates the authenticated viewer's favorites.
+`toggleFavourite` remains available as a backwards-compatible alias.
 
 ```typescript
 const anilist = new Anilist(process.env.ANILIST_TOKEN);
 
-await anilist.manga.toggleFavourite(30013);
+await anilist.manga.toggleFavorite(30013);
 ```

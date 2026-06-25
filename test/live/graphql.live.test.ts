@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
-import { Anilist, gql } from "../src";
-import { handleRateLimit, isRateLimitError } from "./utils";
+import { Anilist, gql } from "../../src";
+import { handleRateLimit, isRateLimitError } from "../utils";
 
 describe("Anilist raw GraphQL API", () => {
 	const anilist = new Anilist();

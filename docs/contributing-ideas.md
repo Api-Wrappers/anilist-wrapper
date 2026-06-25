@@ -5,7 +5,7 @@ entire wrapper at once.
 
 1. Improve wording in README examples so new users can copy them more easily.
 2. Add missing examples to `docs/api/` pages for existing service methods.
-3. Add tests that confirm service methods pass the correct variables to the SDK.
+3. Expand deterministic tests that confirm service methods pass the correct variables to the SDK.
 4. Add a runnable example for a simple anime tracker workflow.
 5. Add a runnable example for a simple manga tracker workflow.
 6. Improve authentication docs with clearer token safety notes.

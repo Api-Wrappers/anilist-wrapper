@@ -178,4 +178,14 @@ export class AnimeService {
 	toggleFavourite(animeId: number): Promise<ToggleFavoriteAnimeMutation> {
 		return this.client.ToggleFavoriteAnime({ animeId });
 	}
+
+	/**
+	 * Toggles the favorite status of an anime. Requires authentication.
+	 * Alias for {@link toggleFavourite}.
+	 * @param animeId - The ID of the anime to toggle as favorite.
+	 * @returns A promise resolving to the result of the toggle mutation.
+	 */
+	toggleFavorite(animeId: number): Promise<ToggleFavoriteAnimeMutation> {
+		return this.toggleFavourite(animeId);
+	}
 }

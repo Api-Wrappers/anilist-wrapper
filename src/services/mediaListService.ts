@@ -1,12 +1,12 @@
 import type { ANILISTSDK, MediaTypeNonEnum } from "../@types";
-import {
-	type DeleteMediaListEntryMutation,
-	type FuzzyDateInput,
-	type MediaListStatus,
-	MediaType,
-	type SaveMediaListEntryMutation,
-	type SaveMediaListEntryMutationVariables,
+import type {
+	DeleteMediaListEntryMutation,
+	FuzzyDateInput,
+	MediaListStatus,
+	SaveMediaListEntryMutation,
+	SaveMediaListEntryMutationVariables,
 } from "../__generated__/anilist-sdk";
+import { toMediaType } from "./mediaType";
 
 export type SaveMediaListEntryInput = {
 	mediaId: number;
@@ -53,7 +53,7 @@ export class MediaListService {
 	getMediaListByUser(userId: number, mediaType: MediaTypeNonEnum) {
 		return this.client.GetMediaListByUser({
 			userId,
-			mediaType: mediaType === "ANIME" ? MediaType.Anime : MediaType.Manga,
+			mediaType: toMediaType(mediaType),
 		});
 	}
 
@@ -66,7 +66,7 @@ export class MediaListService {
 	getMediaListByUsername(userName: string, mediaType: MediaTypeNonEnum) {
 		return this.client.GetMediaListByUserByUsername({
 			userName,
-			mediaType: mediaType === "ANIME" ? MediaType.Anime : MediaType.Manga,
+			mediaType: toMediaType(mediaType),
 		});
 	}
 

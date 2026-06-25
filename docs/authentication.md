@@ -30,8 +30,8 @@ Methods that read public records by username or media ID usually work without a 
 
 | Service | Method | Auth required |
 | --- | --- | --- |
-| `anime` | `toggleFavourite(animeId)` | Yes |
-| `manga` | `toggleFavourite(mangaId)` | Yes |
+| `anime` | `toggleFavorite(animeId)` | Yes |
+| `manga` | `toggleFavorite(mangaId)` | Yes |
 | `character` | `toggleFavoriteCharacter(characterId)` | Yes |
 | `staff` | `toggleFavoriteStaff(staffId)` | Yes |
 | `mediaList` | `saveEntry(variables)` | Yes |
@@ -42,6 +42,9 @@ Methods that read public records by username or media ID usually work without a 
 | `user` | `getUserStatistics(userId)` | Yes |
 
 Username-based user methods, such as `getUserInfoByUsername`, `getUserAnimeListByUsername`, and `getUserStatisticsByUsername`, read public profile data and can be used without a token.
+
+Anime and manga also keep the older `toggleFavourite(...)` spelling as a
+backwards-compatible alias.
 
 ## Save List Progress
 

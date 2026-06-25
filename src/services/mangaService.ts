@@ -141,4 +141,14 @@ export class MangaService {
 	toggleFavourite(mangaId: number): Promise<ToggleFavoriteMangaMutation> {
 		return this.client.ToggleFavoriteManga({ mangaId });
 	}
+
+	/**
+	 * Toggles the favorite status of a manga. Requires authentication.
+	 * Alias for {@link toggleFavourite}.
+	 * @param mangaId - The ID of the manga to toggle as favorite.
+	 * @returns A promise resolving to the result of the toggle mutation.
+	 */
+	toggleFavorite(mangaId: number): Promise<ToggleFavoriteMangaMutation> {
+		return this.toggleFavourite(mangaId);
+	}
 }

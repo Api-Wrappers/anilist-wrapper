@@ -87,6 +87,10 @@ const anilist = new Anilist(process.env.ANILIST_TOKEN);
 Use an authenticated client for private user data, favorites, and media list
 mutations.
 
+Anime and manga favorite mutations use `toggleFavorite(...)`. The older
+`toggleFavourite(...)` spelling remains available as a backwards-compatible
+alias.
+
 ### Get anime by ID
 
 ```typescript
@@ -254,13 +258,15 @@ ANILIST_TOKEN=... ANILIST_USERNAME=... bun examples/authenticated-user.ts
 bun install
 bun run check
 bun run typecheck
-bun test
+bun run test
 bun run build
 bun run verify
 ```
 
-`bun test` calls the live AniList API. `bun run verify` runs the local checks,
-typecheck, build, and Bun pack dry-run.
+`bun run test` runs deterministic non-network contract tests. Use
+`bun run test:live` for the live AniList smoke tests, which can be affected by
+network availability, upstream API state, and rate limits. `bun run verify` runs
+the local checks, typecheck, build, and Bun pack dry-run.
 
 Use `bun run codegen` only when GraphQL operations, fragments, or generated
 types need to be refreshed.

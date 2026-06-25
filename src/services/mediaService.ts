@@ -1,5 +1,5 @@
 import type { ANILISTSDK, MediaTypeNonEnum } from "../@types";
-import { MediaType } from "../__generated__/anilist-sdk";
+import { toMediaType } from "./mediaType";
 
 /**
  * Service class responsible for interacting with the AniList API to retrieve media details.
@@ -32,7 +32,7 @@ export class MediaService {
 	 */
 	getMediaList(userId: number, mediaType: MediaTypeNonEnum) {
 		return this.client.GetMediaListByUser({
-			mediaType: mediaType === "ANIME" ? MediaType.Anime : MediaType.Manga,
+			mediaType: toMediaType(mediaType),
 			userId,
 		});
 	}
@@ -45,7 +45,7 @@ export class MediaService {
 	 */
 	getMediaListByUsername(userName: string, mediaType: MediaTypeNonEnum) {
 		return this.client.GetMediaListByUserByUsername({
-			mediaType: mediaType === "ANIME" ? MediaType.Anime : MediaType.Manga,
+			mediaType: toMediaType(mediaType),
 			userName,
 		});
 	}
