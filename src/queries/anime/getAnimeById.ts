@@ -1,7 +1,7 @@
 import { gql } from "@api-wrappers/api-core";
 import { CHARACTER_FRAGMENT } from "../../fragments/character";
-import { AIRING_SCHEDULE_FRAGMENT } from "../../fragments/media/streaming";
 import { MEDIA_DETAILED_FRAGMENT } from "../../fragments/media/core";
+import { AIRING_SCHEDULE_FRAGMENT } from "../../fragments/media/streaming";
 import { STAFF_FRAGMENT } from "../../fragments/staff";
 import { STUDIO_FRAGMENT } from "../../fragments/studio";
 
