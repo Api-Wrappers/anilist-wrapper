@@ -1,11 +1,6 @@
 const generatedPath = "src/__generated__/anilist-sdk.ts";
 
-const oldImports =
-	"import type { GraphQLClient, RequestOptions } from 'graphql-request';\nimport gql from 'graphql-tag';\n";
 const newImport = "import { gql } from '@api-wrappers/api-core';\n";
-
-const oldHeadersType =
-	"type GraphQLClientRequestHeaders = RequestOptions['requestHeaders'];";
 const newClientTypes = `type GraphQLClientRequestHeaders = Record<string, string>;
 
 export interface GraphQLClientRequestOptions<TVariables extends object = Record<string, unknown>> {
@@ -23,13 +18,15 @@ export interface GraphQLClient {
 
 let contents = await Bun.file(generatedPath).text();
 
-if (contents.includes(oldImports)) {
-	contents = contents.replace(oldImports, newImport);
-}
-
-if (contents.includes(oldHeadersType)) {
-	contents = contents.replace(oldHeadersType, newClientTypes);
-}
+contents = contents
+	.replace(
+		/import (?:type )?\{[^\n]*GraphQLClient[^\n]*RequestOptions[^\n]*\} from 'graphql-request';\nimport gql from 'graphql-tag';\n/,
+		newImport,
+	)
+	.replace(
+		"type GraphQLClientRequestHeaders = RequestOptions['requestHeaders'];",
+		newClientTypes,
+	);
 
 contents = removeDuplicateExportedDeclarations(contents);
 

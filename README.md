@@ -110,6 +110,38 @@ for (const media of results.Page?.media ?? []) {
 }
 ```
 
+### Select only the fields you need
+
+Pass a `select` object to read endpoints or mutations when you want an exact
+response shape. Selected calls use normalized lowercase roots:
+
+```typescript
+const { media } = await anilist.anime.getAnimeById(16498, {
+	select: {
+		media: {
+			id: true,
+			title: { userPreferred: true },
+			startDate: { year: true },
+		},
+	},
+});
+
+const { page } = await anilist.anime.getAnimeBySearch("Frieren", 1, 5, {
+	select: {
+		page: {
+			pageInfo: { currentPage: true, hasNextPage: true },
+			media: { id: true, title: { userPreferred: true } },
+		},
+	},
+});
+
+console.log(media?.title?.userPreferred);
+console.log(page?.pageInfo?.hasNextPage);
+```
+
+See the [selection migration guide](./docs/selection-migration.md) for all
+endpoint roots, mutation examples, and legacy direct-select compatibility.
+
 ### Get manga
 
 ```typescript

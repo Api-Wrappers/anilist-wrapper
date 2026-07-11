@@ -106,6 +106,27 @@ console.log(saved.SaveMediaListEntry?.id);
 `saveEntry` creates or updates the authenticated user's AniList entry for the
 given media ID.
 
+## Select Exact Fields
+
+```typescript
+const { media } = await anilist.anime.getAnimeById(16498, {
+	select: {
+		media: {
+			id: true,
+			title: { userPreferred: true },
+			trailer: { site: true, thumbnail: true },
+		},
+	},
+});
+
+const { favorites } = await anilist.anime.toggleFavorite(16498, {
+	select: { favorites: { anime: { nodes: { id: true } } } },
+});
+```
+
+Selected calls use normalized roots. Read the
+[selection migration guide](./selection-migration.md) for the full root map.
+
 ## Raw GraphQL Request
 
 ```typescript

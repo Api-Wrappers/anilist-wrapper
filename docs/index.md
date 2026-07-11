@@ -8,7 +8,8 @@ This documentation is written for building with the wrapper quickly, then reachi
 2. [Create a client](#create-a-client)
 3. [Choose a service](#choose-a-service)
 4. [Run an example](#examples)
-5. [Find contribution ideas](./contributing-ideas.md)
+5. [Migrate selected queries](./selection-migration.md)
+6. [Find contribution ideas](./contributing-ideas.md)
 
 ## Install
 
@@ -56,6 +57,34 @@ console.log(list.MediaListCollection?.lists?.[0]?.entries?.length);
 ```
 
 Most fields are nullable because AniList marks many GraphQL fields as nullable. Prefer optional chaining or explicit null checks when rendering data.
+
+## Select Response Fields
+
+Every endpoint that supports selected fields accepts a root-object `select`
+shape and returns the same normalized root:
+
+```typescript
+const { media } = await anilist.anime.getAnimeById(16498, {
+	select: {
+		media: {
+			id: true,
+			title: { userPreferred: true },
+		},
+	},
+});
+
+const { page } = await anilist.anime.getAnimeBySearch("Cowboy Bebop", 1, 10, {
+	select: {
+		page: {
+			pageInfo: { currentPage: true, hasNextPage: true },
+			media: { id: true, title: { userPreferred: true } },
+		},
+	},
+});
+```
+
+Read the [selection migration guide](./selection-migration.md) for the full root
+map, mutation shapes, and the legacy direct-select compatibility path.
 
 ## Choose A Service
 
@@ -125,6 +154,7 @@ const data = await anilist.graphql.request<{
 - [Media](./api/media.md)
 - [Media Lists](./api/media-list.md)
 - [Raw GraphQL](./api/graphql.md)
+- [Selection Migration](./selection-migration.md)
 
 ## Examples
 

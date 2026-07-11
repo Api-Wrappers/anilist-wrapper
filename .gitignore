@@ -31,6 +31,9 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 docs/issue-drafts.md
 docs/isues-draft*
 
+# local agent planning artifacts
+.ai/
+
 # IntelliJ based IDEs
 .idea
 

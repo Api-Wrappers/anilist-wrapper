@@ -10,6 +10,10 @@ Access staff workflows through `anilist.staff`.
 | `getStaffBirthdayToday(page?)` | No | `Page.staff` |
 | `toggleFavoriteStaff(staffId)` | Yes | `ToggleFavourite` |
 
+Selected calls use normalized roots: `staff` for lookups, `page` for birthday
+pagination, and `favorites` for favorite mutations. See the
+[selection migration guide](../selection-migration.md).
+
 ## Lookup
 
 ```typescript
@@ -17,6 +21,12 @@ const staff = await anilist.staff.getStaffById(95269);
 
 console.log(staff.Staff?.name?.full);
 console.log(staff.Staff?.primaryOccupations);
+```
+
+```typescript
+const { staff: selectedStaff } = await anilist.staff.getStaffById(95269, {
+	select: { staff: { id: true, name: { full: true } } },
+});
 ```
 
 ## Birthdays

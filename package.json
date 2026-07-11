@@ -63,7 +63,7 @@
 		"changeset": "changeset",
 		"version-packages": "changeset version",
 		"release": "changeset publish",
-		"codegen": "rimraf src/__generated__ && graphql-codegen --config codegen.yml && bun run codegen:patch",
+		"codegen": "graphql-codegen --config codegen.yml && bun run codegen:patch",
 		"codegen:patch": "bun scripts/patch-codegen.ts",
 		"test": "bun test --timeout 10000 test/*.test.ts",
 		"test:live": "bun test --timeout 10000 test/live/*.live.test.ts",
@@ -74,22 +74,21 @@
 		"verify": "bun run check && bun run typecheck && bun run build && bun pm pack --dry-run"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.5.0",
+		"@biomejs/biome": "^2.5.3",
 		"@changesets/changelog-github": "^0.7.0",
 		"@changesets/cli": "^2.31.0",
-		"@graphql-codegen/cli": "^7.1.3",
-		"@graphql-codegen/typescript": "^6.0.2",
+		"@graphql-codegen/cli": "^7.2.0",
+		"@graphql-codegen/typescript": "^6.1.0",
 		"@graphql-codegen/typescript-graphql-request": "^7.1.0",
-		"@graphql-codegen/typescript-operations": "^6.0.4",
+		"@graphql-codegen/typescript-operations": "^6.1.0",
 		"@types/bun": "^1.3.14",
-		"graphql": "^17.0.1",
-		"rimraf": "^6.1.3",
-		"tsdown": "^0.22.3"
+		"graphql": "^17.0.2",
+		"tsdown": "^0.22.4"
 	},
 	"peerDependencies": {
 		"typescript": "^6.0.3"
 	},
 	"dependencies": {
-		"@api-wrappers/api-core": "^1.0.2"
+		"@api-wrappers/api-core": "^1.0.3"
 	}
 }

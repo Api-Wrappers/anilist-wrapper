@@ -243,14 +243,20 @@ describe("service contracts", () => {
 			mediaType: MediaType.Manga,
 		});
 		expect(fake.lastCall("SaveMediaListEntry").variables).toEqual({
+			advancedScores: undefined,
 			completedAt: undefined,
+			customLists: undefined,
+			hiddenFromStatusLists: undefined,
+			id: undefined,
 			mediaId: 16498,
 			notes: null,
 			private: undefined,
+			priority: undefined,
 			progress: 3,
 			progressVolumes: undefined,
 			repeat: undefined,
 			score: 8,
+			scoreRaw: undefined,
 			startedAt: undefined,
 			status: MediaListStatus.Current,
 		});

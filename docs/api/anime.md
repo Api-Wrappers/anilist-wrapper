@@ -25,6 +25,10 @@ const anilist = new Anilist();
 | `toggleFavorite(animeId)` | Yes | `ToggleFavourite` |
 | `toggleFavourite(animeId)` | Yes | `ToggleFavourite` |
 
+Selected calls use normalized roots: `media` for anime detail/sub-resource
+methods, `page` for paginated methods, and `favorites` for favorite mutations.
+See the [selection migration guide](../selection-migration.md).
+
 ## Lookup By ID
 
 ```typescript
@@ -79,4 +83,10 @@ console.log(recommendations.Media?.recommendations?.edges?.[0]?.node?.rating);
 const anilist = new Anilist(process.env.ANILIST_TOKEN);
 
 await anilist.anime.toggleFavorite(16498);
+```
+
+```typescript
+const { favorites } = await anilist.anime.toggleFavorite(16498, {
+	select: { favorites: { anime: { nodes: { id: true } } } },
+});
 ```

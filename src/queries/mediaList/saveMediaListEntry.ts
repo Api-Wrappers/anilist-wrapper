@@ -5,8 +5,10 @@ export const SAVE_MEDIA_LIST_ENTRY = gql`
   ${MEDIA_LIST_FRAGMENT}
   mutation SaveMediaListEntry(
     $mediaId: Int
+    $id: Int
     $status: MediaListStatus
     $score: Float
+    $scoreRaw: Int
     $progress: Int
     $progressVolumes: Int
     $repeat: Int
@@ -14,11 +16,17 @@ export const SAVE_MEDIA_LIST_ENTRY = gql`
     $notes: String
     $startedAt: FuzzyDateInput
     $completedAt: FuzzyDateInput
+    $advancedScores: [Float]
+    $customLists: [String]
+    $hiddenFromStatusLists: Boolean
+    $priority: Int
   ) {
     SaveMediaListEntry(
       mediaId: $mediaId
+      id: $id
       status: $status
       score: $score
+      scoreRaw: $scoreRaw
       progress: $progress
       progressVolumes: $progressVolumes
       repeat: $repeat
@@ -26,6 +34,10 @@ export const SAVE_MEDIA_LIST_ENTRY = gql`
       notes: $notes
       startedAt: $startedAt
       completedAt: $completedAt
+      advancedScores: $advancedScores
+      customLists: $customLists
+      hiddenFromStatusLists: $hiddenFromStatusLists
+      priority: $priority
     ) {
       ...MediaListFragment
     }

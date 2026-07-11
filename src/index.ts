@@ -26,14 +26,14 @@ class Anilist {
 		this.graphQLClient = createGraphQLClient(token);
 		this.client = createSdkClient(this.graphQLClient);
 
-		this.anime = new AnimeService(this.client);
-		this.character = new CharacterService(this.client);
+		this.anime = new AnimeService(this.client, this.graphQLClient);
+		this.character = new CharacterService(this.client, this.graphQLClient);
 		this.graphql = new GraphQLService(this.graphQLClient);
-		this.manga = new MangaService(this.client);
-		this.media = new MediaService(this.client);
-		this.mediaList = new MediaListService(this.client);
-		this.staff = new StaffService(this.client);
-		this.user = new UserService(this.client);
+		this.manga = new MangaService(this.client, this.graphQLClient);
+		this.media = new MediaService(this.client, this.graphQLClient);
+		this.mediaList = new MediaListService(this.client, this.graphQLClient);
+		this.staff = new StaffService(this.client, this.graphQLClient);
+		this.user = new UserService(this.client, this.graphQLClient);
 	}
 
 	/**
@@ -89,5 +89,34 @@ export { gql } from "@api-wrappers/api-core";
 export * from "./__generated__/anilist-schema";
 export * as AniListOperations from "./__generated__/anilist-sdk";
 export { createClient, createGraphQLClient, createSdkClient } from "./client";
+export type {
+	CharacterPageSelect,
+	CharacterSelect,
+	DeletedSelect,
+	FavouritesSelect,
+	MediaListCollectionSelect,
+	MediaListSelect,
+	MediaPageSelect,
+	MediaSelect,
+	PageInfoSelect,
+	SelectedCharacter,
+	SelectedCharacterPage,
+	SelectedDeleted,
+	SelectedFavourites,
+	SelectedFields,
+	SelectedMedia,
+	SelectedMediaList,
+	SelectedMediaListCollection,
+	SelectedMediaPage,
+	SelectedStaff,
+	SelectedStaffPage,
+	SelectedUser,
+	SelectedUserPage,
+	StaffPageSelect,
+	StaffSelect,
+	ToSelect,
+	UserPageSelect,
+	UserSelect,
+} from "./selections";
 export type { SaveMediaListEntryInput } from "./services/mediaListService";
 export { Anilist };

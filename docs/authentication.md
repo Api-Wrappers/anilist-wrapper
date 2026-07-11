@@ -63,6 +63,15 @@ const saved = await anilist.mediaList.saveEntry({
 console.log(saved.SaveMediaListEntry?.id);
 ```
 
+Selected mutations can return only the fields you need:
+
+```typescript
+const { mediaList } = await anilist.mediaList.saveEntry(
+	{ mediaId: 16498, status: MediaListStatus.Current, progress: 3 },
+	{ select: { mediaList: { id: true, status: true, progress: true } } },
+);
+```
+
 ## Token Safety
 
 - Do not commit tokens.
