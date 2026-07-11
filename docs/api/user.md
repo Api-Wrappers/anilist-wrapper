@@ -18,6 +18,10 @@ Username methods read public profile data and usually work without a token. Nume
 | `getUserStatistics(userId)` | Yes | `User.statistics` |
 | `getUserStatisticsByUsername(userName)` | No | `User.statistics` |
 
+Selected calls use normalized roots: `user` for profile/statistics methods,
+`mediaListCollection` for anime and manga list methods, and `page` for
+`getUserList`. See the [selection migration guide](../selection-migration.md).
+
 ## Public Profile
 
 ```typescript
@@ -63,4 +67,19 @@ console.log(stats.User?.statistics?.manga?.chaptersRead);
 const users = await anilist.user.getUserList(1, 20);
 
 console.log(users.Page?.users?.map((user) => user?.name));
+```
+
+```typescript
+const { user } = await anilist.user.getUserInfoByUsername("example_user", {
+	select: { user: { id: true, name: true } },
+});
+
+const { mediaListCollection } =
+	await anilist.user.getUserAnimeListByUsername("example_user", undefined, {
+		select: {
+			mediaListCollection: {
+				lists: { entries: { id: true, media: { id: true } } },
+			},
+		},
+	});
 ```

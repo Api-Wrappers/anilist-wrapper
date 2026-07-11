@@ -25,6 +25,10 @@ const anilist = new Anilist();
 | `toggleFavorite(mangaId)` | Yes | `ToggleFavourite` |
 | `toggleFavourite(mangaId)` | Yes | `ToggleFavourite` |
 
+Selected calls use normalized roots: `media` for manga detail/sub-resource
+methods, `page` for paginated methods, and `favorites` for favorite mutations.
+See the [selection migration guide](../selection-migration.md).
+
 ## Lookup And Search
 
 ```typescript
@@ -75,4 +79,10 @@ console.log(staff.Media?.staff?.edges?.[0]?.node?.name?.full);
 const anilist = new Anilist(process.env.ANILIST_TOKEN);
 
 await anilist.manga.toggleFavorite(30013);
+```
+
+```typescript
+const { favorites } = await anilist.manga.toggleFavorite(30013, {
+	select: { favorites: { manga: { nodes: { id: true } } } },
+});
 ```

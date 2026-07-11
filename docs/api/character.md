@@ -10,6 +10,10 @@ Access character workflows through `anilist.character`.
 | `getCharactersBirthdayToday(page?, perPage?)` | No | `Page.characters` |
 | `toggleFavoriteCharacter(characterId)` | Yes | `ToggleFavourite` |
 
+Selected calls use normalized roots: `character` for lookups, `page` for
+birthday pagination, and `favorites` for favorite mutations. See the
+[selection migration guide](../selection-migration.md).
+
 ## Lookup
 
 ```typescript
@@ -17,6 +21,13 @@ const character = await anilist.character.getCharacterById(1);
 
 console.log(character.Character?.name?.full);
 console.log(character.Character?.siteUrl);
+```
+
+```typescript
+const { character: selectedCharacter } =
+	await anilist.character.getCharacterById(1, {
+		select: { character: { id: true, name: { full: true } } },
+	});
 ```
 
 ## Birthdays

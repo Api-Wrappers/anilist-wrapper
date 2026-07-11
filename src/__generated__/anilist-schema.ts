@@ -751,6 +751,8 @@ export type InternalPageMediaArgs = {
   chapters_greater: InputMaybe<Scalars['Int']['input']>;
   chapters_lesser: InputMaybe<Scalars['Int']['input']>;
   countryOfOrigin: InputMaybe<Scalars['CountryCode']['input']>;
+  countryOfOrigin_in: InputMaybe<Array<InputMaybe<Scalars['CountryCode']['input']>>>;
+  countryOfOrigin_not_in: InputMaybe<Array<InputMaybe<Scalars['CountryCode']['input']>>>;
   duration: InputMaybe<Scalars['Int']['input']>;
   duration_greater: InputMaybe<Scalars['Int']['input']>;
   duration_lesser: InputMaybe<Scalars['Int']['input']>;
@@ -2652,6 +2654,8 @@ export type PageMediaArgs = {
   chapters_greater: InputMaybe<Scalars['Int']['input']>;
   chapters_lesser: InputMaybe<Scalars['Int']['input']>;
   countryOfOrigin: InputMaybe<Scalars['CountryCode']['input']>;
+  countryOfOrigin_in: InputMaybe<Array<InputMaybe<Scalars['CountryCode']['input']>>>;
+  countryOfOrigin_not_in: InputMaybe<Array<InputMaybe<Scalars['CountryCode']['input']>>>;
   duration: InputMaybe<Scalars['Int']['input']>;
   duration_greater: InputMaybe<Scalars['Int']['input']>;
   duration_lesser: InputMaybe<Scalars['Int']['input']>;
@@ -3048,6 +3052,8 @@ export type QueryMediaArgs = {
   chapters_greater: InputMaybe<Scalars['Int']['input']>;
   chapters_lesser: InputMaybe<Scalars['Int']['input']>;
   countryOfOrigin: InputMaybe<Scalars['CountryCode']['input']>;
+  countryOfOrigin_in: InputMaybe<Array<InputMaybe<Scalars['CountryCode']['input']>>>;
+  countryOfOrigin_not_in: InputMaybe<Array<InputMaybe<Scalars['CountryCode']['input']>>>;
   duration: InputMaybe<Scalars['Int']['input']>;
   duration_greater: InputMaybe<Scalars['Int']['input']>;
   duration_lesser: InputMaybe<Scalars['Int']['input']>;
@@ -4202,6 +4208,7 @@ export type User = {
   avatar: Maybe<UserAvatar>;
   /** The user's banner images */
   bannerImage: Maybe<Scalars['String']['output']>;
+  /** List of active bans. Mod-only */
   bans: Maybe<Scalars['Json']['output']>;
   /** When the user's account was created. (Does not exist for accounts created before 2020) */
   createdAt: Maybe<Scalars['Int']['output']>;
@@ -4261,7 +4268,7 @@ export type UserFavouritesArgs = {
   page: InputMaybe<Scalars['Int']['input']>;
 };
 
-/** A user's activity history stats. */
+/** A user's activity history stats for the previous 6 months. Refreshes only periodically */
 export type UserActivityHistory = {
   /** The amount of activity on the day */
   amount: Maybe<Scalars['Int']['output']>;
