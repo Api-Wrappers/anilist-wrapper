@@ -77,7 +77,7 @@ describe("client transport", () => {
 		});
 	});
 
-	it("forwards request options and removes duplicate fragment definitions", async () => {
+	it("forwards request options and removes equivalent fragments", async () => {
 		const signal = new AbortController().signal;
 		const client = createGraphQLClient("token-123");
 
@@ -87,25 +87,14 @@ describe("client transport", () => {
 					Media(id: $id) {
 						...TitleFields
 						...TitleFields
-						...IdFields
 					}
 				}
 
 				fragment TitleFields on Media {
-					title {
-						romaji
-					}
+					title { romaji }
 				}
 
-				fragment TitleFields on Media {
-					title {
-						english
-					}
-				}
-
-				fragment IdFields on Media {
-					id
-				}
+				fragment TitleFields on Media { title { romaji } }
 			`,
 			variables: { id: 16498 },
 			requestHeaders: { "x-request": "test" },
@@ -126,10 +115,20 @@ describe("client transport", () => {
 			graphQLCalls[0]?.options.query.match(/fragment\s+TitleFields\s+on/g)
 				?.length,
 		).toBe(1);
-		expect(
-			graphQLCalls[0]?.options.query.match(/fragment\s+IdFields\s+on/g)?.length,
-		).toBe(1);
-		expect(graphQLCalls[0]?.options.query).toContain("romaji");
-		expect(graphQLCalls[0]?.options.query).not.toContain("english");
+	});
+
+	it("rejects conflicting fragment definitions", async () => {
+		const client = createGraphQLClient();
+
+		await expect(
+			client.request({
+				document: `
+					query Example { Media { ...TitleFields } }
+					fragment TitleFields on Media { title { romaji } }
+					fragment TitleFields on Media { title { english } }
+				`,
+			}),
+		).rejects.toThrow("Conflicting GraphQL fragment definition: TitleFields");
+		expect(graphQLCalls).toHaveLength(0);
 	});
 });

@@ -44,7 +44,7 @@ export const createSdkClient = (client: GraphQLClient) => {
 };
 
 const dedupeFragmentDefinitions = (source: string) => {
-	const seen = new Set<string>();
+	const seen = new Map<string, string>();
 	const fragmentPattern =
 		/\bfragment\s+([_A-Za-z][_0-9A-Za-z]*)\s+on\s+[_A-Za-z][_0-9A-Za-z]*/g;
 	let result = "";
@@ -68,12 +68,19 @@ const dedupeFragmentDefinitions = (source: string) => {
 		}
 
 		const definitionEnd = bodyEnd + 1;
+		const normalizedDefinition = source
+			.slice(match.index, definitionEnd)
+			.replace(/\s+/g, " ")
+			.trim();
+		const previousDefinition = seen.get(name);
 
-		if (seen.has(name)) {
+		if (previousDefinition === undefined) {
+			seen.set(name, normalizedDefinition);
+			result += source.slice(cursor, definitionEnd);
+		} else if (previousDefinition === normalizedDefinition) {
 			result += source.slice(cursor, match.index);
 		} else {
-			seen.add(name);
-			result += source.slice(cursor, definitionEnd);
+			throw new Error(`Conflicting GraphQL fragment definition: ${name}`);
 		}
 
 		cursor = definitionEnd;
