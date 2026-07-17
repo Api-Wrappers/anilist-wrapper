@@ -117,10 +117,10 @@ describe("client transport", () => {
 		).toBe(1);
 	});
 
-	it("rejects conflicting fragment definitions", async () => {
+	it("rejects conflicting fragment definitions", () => {
 		const client = createGraphQLClient();
 
-		await expect(
+		expect(() =>
 			client.request({
 				document: `
 					query Example { Media { ...TitleFields } }
@@ -128,7 +128,7 @@ describe("client transport", () => {
 					fragment TitleFields on Media { title { english } }
 				`,
 			}),
-		).rejects.toThrow("Conflicting GraphQL fragment definition: TitleFields");
+		).toThrow("Conflicting GraphQL fragment definition: TitleFields");
 		expect(graphQLCalls).toHaveLength(0);
 	});
 });
