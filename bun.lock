@@ -5,7 +5,7 @@
     "": {
       "name": "@api-wrappers/anilist-wrapper",
       "dependencies": {
-        "@api-wrappers/api-core": "^1.0.3",
+        "@api-wrappers/api-core": "^1.1.0",
       },
       "devDependencies": {
         "@biomejs/biome": "^2.5.3",
@@ -25,7 +25,7 @@
     },
   },
   "packages": {
-    "@api-wrappers/api-core": ["@api-wrappers/api-core@1.0.3", "", { "peerDependencies": { "typescript": "^5 || ^6" } }, "sha512-+TX4Nts0mjyJmzmhI+vSbbV5ROie3wTiahHiUyqvLRhhYdB78Z613RmJMh9/E7GSbvwqPn5OEPWS1+AWlaAaAw=="],
+    "@api-wrappers/api-core": ["@api-wrappers/api-core@1.1.0", "", { "peerDependencies": { "typescript": "^5 || ^6" } }, "sha512-a/9WidSFSBRD6r89xK6P+TXbbmVxs7WX3LBBtqEKYhspYXxSeMFee6wJLMPyH6clLO0IbrnAkSQm85p814Yw1A=="],
 
     "@ardatan/relay-compiler": ["@ardatan/relay-compiler@13.0.1", "", { "dependencies": { "@babel/runtime": "^7.29.2", "immutable": "^5.1.5", "invariant": "^2.2.4" }, "peerDependencies": { "graphql": "*" } }, "sha512-afG3YPwuSA0E5foouZusz5GlXKs74dObv4cuWyLyfKsYFj2r7oGRNB28v18HvwuLSQtQFCi+DpIe0TZkgQDYyg=="],
 
