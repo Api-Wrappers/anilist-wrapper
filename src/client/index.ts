@@ -1,12 +1,35 @@
 import {
 	type BaseHttpClient,
+	type ClientConfig,
 	createClient as createApiCoreClient,
+	createAuthPlugin,
 	dedupeGraphQLFragmentDefinitions,
+	type HeaderInput,
+	type MaybePromise,
+	mergeHeaders,
 } from "@api-wrappers/api-core";
 import { type GraphQLClient, getSdk } from "../__generated__/anilist-sdk";
 
 const ANILIST_API_URL = "https://graphql.anilist.co";
 const MAX_ATTEMPTS = 4;
+
+export type AnilistToken =
+	| string
+	| (() => MaybePromise<string | null | undefined>);
+
+export interface AnilistOptions {
+	/** Static token or a token provider evaluated before every request. */
+	token?: AnilistToken;
+	/** Optional api-core overrides. AniList defaults are applied when omitted. */
+	core?: Omit<ClientConfig, "baseUrl" | "defaultHeaders"> & {
+		baseUrl?: string;
+		defaultHeaders?: HeaderInput;
+	};
+	/** Existing api-core client to use instead of constructing one. */
+	httpClient?: BaseHttpClient;
+}
+
+export type AnilistClientInput = string | AnilistOptions | undefined;
 
 export interface AnilistClientBundle {
 	httpClient: BaseHttpClient;
@@ -14,17 +37,25 @@ export interface AnilistClientBundle {
 	sdkClient: ReturnType<typeof getSdk>;
 }
 
-export const createHttpClient = (token?: string): BaseHttpClient => {
-	const headers: Record<string, string> = {
-		"Content-Type": "application/json",
-	};
+export const createHttpClient = (
+	input?: AnilistClientInput,
+): BaseHttpClient => {
+	const options = normalizeOptions(input);
+	if (options.httpClient) return options.httpClient;
 
-	if (token) headers.Authorization = `Bearer ${token}`;
+	const core = options.core ?? {};
+	const plugins = [...(core.plugins ?? [])];
+	if (options.token) plugins.push(createAuthPlugin(options.token));
 
 	return createApiCoreClient({
-		baseUrl: ANILIST_API_URL,
-		defaultHeaders: headers,
-		retry: {
+		...core,
+		baseUrl: core.baseUrl ?? ANILIST_API_URL,
+		defaultHeaders: mergeHeaders(
+			{ "content-type": "application/json" },
+			core.defaultHeaders,
+		),
+		plugins,
+		retry: core.retry ?? {
 			maxAttempts: MAX_ATTEMPTS,
 			delayMs: 1000,
 			retriableStatusCodes: [429],
@@ -32,12 +63,16 @@ export const createHttpClient = (token?: string): BaseHttpClient => {
 	});
 };
 
-export const createGraphQLClient = (token?: string): GraphQLClient => {
-	return createGraphQLClientFromHttpClient(createHttpClient(token));
+export const createGraphQLClient = (
+	input?: AnilistClientInput,
+): GraphQLClient => {
+	return createGraphQLClientFromHttpClient(createHttpClient(input));
 };
 
-export const createClientBundle = (token?: string): AnilistClientBundle => {
-	const httpClient = createHttpClient(token);
+export const createClientBundle = (
+	input?: AnilistClientInput,
+): AnilistClientBundle => {
+	const httpClient = createHttpClient(input);
 	const graphQLClient = createGraphQLClientFromHttpClient(httpClient);
 
 	return {
@@ -47,8 +82,8 @@ export const createClientBundle = (token?: string): AnilistClientBundle => {
 	};
 };
 
-export const createClient = (token?: string) => {
-	return createSdkClient(createGraphQLClient(token));
+export const createClient = (input?: AnilistClientInput) => {
+	return createSdkClient(createGraphQLClient(input));
 };
 
 export const createSdkClient = (client: GraphQLClient) => {
@@ -68,4 +103,8 @@ const createGraphQLClientFromHttpClient = (
 			});
 		},
 	};
+};
+
+const normalizeOptions = (input?: AnilistClientInput): AnilistOptions => {
+	return typeof input === "string" ? { token: input } : (input ?? {});
 };

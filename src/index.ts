@@ -1,7 +1,7 @@
 import type { BaseHttpClient } from "@api-wrappers/api-core";
 import type { ANILISTSDK } from "./@types";
 import type { GraphQLClient } from "./__generated__/anilist-sdk";
-import { createClientBundle } from "./client";
+import { type AnilistClientInput, createClientBundle } from "./client";
 import { AnimeService } from "./services/animeService";
 import { CharacterService } from "./services/characterService";
 import { GraphQLService } from "./services/graphqlService";
@@ -17,8 +17,11 @@ class Anilist {
 	private graphQLClient: GraphQLClient;
 	readonly http: BaseHttpClient;
 
-	constructor(token?: string) {
-		const { graphQLClient, httpClient, sdkClient } = createClientBundle(token);
+	constructor();
+	constructor(token: string);
+	constructor(options: Exclude<AnilistClientInput, string | undefined>);
+	constructor(input?: AnilistClientInput) {
+		const { graphQLClient, httpClient, sdkClient } = createClientBundle(input);
 		this.http = httpClient;
 		this.graphQLClient = graphQLClient;
 		this.client = sdkClient;
@@ -51,7 +54,12 @@ class Anilist {
 export { gql } from "@api-wrappers/api-core";
 export * from "./__generated__/anilist-schema";
 export * as AniListOperations from "./__generated__/anilist-sdk";
-export type { AnilistClientBundle } from "./client";
+export type {
+	AnilistClientBundle,
+	AnilistClientInput,
+	AnilistOptions,
+	AnilistToken,
+} from "./client";
 export {
 	createClient,
 	createClientBundle,
