@@ -8,7 +8,11 @@ import {
 	type MaybePromise,
 	mergeHeaders,
 } from "@api-wrappers/api-core";
-import { type GraphQLClient, getSdk } from "../__generated__/anilist-sdk";
+import {
+	type GraphQLClient,
+	type GraphQLClientRequestOptions,
+	getSdk,
+} from "../__generated__/anilist-sdk";
 
 const ANILIST_API_URL = "https://graphql.anilist.co";
 const MAX_ATTEMPTS = 4;
@@ -27,6 +31,15 @@ export interface AnilistOptions {
 	};
 	/** Existing api-core client to use instead of constructing one. */
 	httpClient?: BaseHttpClient;
+}
+
+export interface AnilistRequestOptions {
+	requestHeaders?: Record<string, string>;
+	signal?: RequestInit["signal"];
+	timeoutMs?: number;
+	cacheKey?: string;
+	tags?: string[];
+	operationName?: string;
 }
 
 export type AnilistClientInput = string | AnilistOptions | undefined;
@@ -94,12 +107,20 @@ const createGraphQLClientFromHttpClient = (
 	httpClient: Pick<BaseHttpClient, "graphql">,
 ): GraphQLClient => {
 	return {
-		request({ document, variables, requestHeaders, signal }) {
+		request(options) {
+			const { document, variables, requestHeaders, signal } = options;
+			const requestOptions = options as GraphQLClientRequestOptions &
+				AnilistRequestOptions;
+
 			return httpClient.graphql("", {
 				query: dedupeGraphQLFragmentDefinitions(document),
 				variables,
 				headers: requestHeaders,
 				signal: signal ?? undefined,
+				timeoutMs: requestOptions.timeoutMs,
+				cacheKey: requestOptions.cacheKey,
+				tags: requestOptions.tags,
+				operationName: requestOptions.operationName,
 			});
 		},
 	};
