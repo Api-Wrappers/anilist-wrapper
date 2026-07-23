@@ -1,137 +1,46 @@
-import { beforeEach, describe, expect, it, mock } from "bun:test";
+import { beforeEach, describe, expect, it } from "bun:test";
+import type { RequestContext } from "@api-wrappers/api-core";
+import { createGraphQLClient } from "../src/client";
 
-type CoreClientConfig = {
-	baseUrl: string;
-	defaultHeaders: Record<string, string>;
-	retry: {
-		maxAttempts: number;
-		delayMs: number;
-		retriableStatusCodes: Array<number>;
-	};
-};
+const requests: RequestContext[] = [];
 
-type GraphQLCall = {
-	path: string;
-	options: {
-		query: string;
-		variables?: object;
-		headers?: Record<string, string>;
-		signal?: RequestInit["signal"];
-	};
-};
-
-const coreClientConfigs: Array<CoreClientConfig> = [];
-const graphQLCalls: Array<GraphQLCall> = [];
-const graphQLResponse = { ok: true };
-
-const dedupeGraphQLFragmentDefinitions = (source: string): string => {
-	const seen = new Map<string, string>();
-	const pattern =
-		/\bfragment\s+([_A-Za-z][_0-9A-Za-z]*)\s+on\s+[_A-Za-z][_0-9A-Za-z]*/g;
-	let result = "";
-	let cursor = 0;
-	let match = pattern.exec(source);
-
-	while (match) {
-		const name = match[1];
-		const bodyStart = source.indexOf("{", pattern.lastIndex);
-		if (!name || bodyStart === -1) break;
-
-		let depth = 0;
-		let bodyEnd = -1;
-		for (let index = bodyStart; index < source.length; index++) {
-			if (source[index] === "{") depth++;
-			if (source[index] === "}") depth--;
-			if (depth === 0) {
-				bodyEnd = index;
-				break;
-			}
-		}
-		if (bodyEnd === -1) break;
-
-		const definitionEnd = bodyEnd + 1;
-		const normalized = source
-			.slice(match.index, definitionEnd)
-			.replace(/\s+/g, " ")
-			.trim();
-		const previous = seen.get(name);
-
-		if (previous === undefined) {
-			seen.set(name, normalized);
-			result += source.slice(cursor, definitionEnd);
-		} else if (previous === normalized) {
-			result += source.slice(cursor, match.index);
-		} else {
-			throw new Error(`Conflicting GraphQL fragment definition: ${name}`);
-		}
-
-		cursor = definitionEnd;
-		pattern.lastIndex = definitionEnd;
-		match = pattern.exec(source);
-	}
-
-	return result + source.slice(cursor);
-};
-
-mock.module("@api-wrappers/api-core", () => ({
-	createClient: (config: CoreClientConfig) => {
-		coreClientConfigs.push(config);
-
-		return {
-			graphql: async (path: string, options: GraphQLCall["options"]) => {
-				graphQLCalls.push({ path, options });
-				return graphQLResponse;
-			},
-			request: async () => graphQLResponse,
-			dispose: async () => {},
-		};
+const transport = {
+	async execute(ctx: RequestContext) {
+		requests.push(ctx);
+		return new Response(JSON.stringify({ data: { ok: true } }), {
+			headers: { "content-type": "application/json" },
+		});
 	},
-	dedupeGraphQLFragmentDefinitions,
-	gql: (strings: TemplateStringsArray, ...values: Array<unknown>) =>
-		strings.reduce(
-			(source, segment, index) => `${source}${segment}${values[index] ?? ""}`,
-			"",
-		),
-}));
-
-const { createGraphQLClient } = await import("../src/client");
+};
 
 describe("client transport", () => {
 	beforeEach(() => {
-		coreClientConfigs.length = 0;
-		graphQLCalls.length = 0;
+		requests.length = 0;
 	});
 
-	it("configures the AniList transport without auth headers by default", () => {
-		createGraphQLClient();
+	it("configures the AniList endpoint and JSON headers by default", async () => {
+		const client = createGraphQLClient({ core: { transport } });
 
-		expect(coreClientConfigs).toEqual([
-			{
-				baseUrl: "https://graphql.anilist.co",
-				defaultHeaders: {
-					"Content-Type": "application/json",
-				},
-				retry: {
-					maxAttempts: 4,
-					delayMs: 1000,
-					retriableStatusCodes: [429],
-				},
-			},
-		]);
+		await client.request({ document: "query Viewer { Viewer { id } }" });
+
+		expect(requests[0]?.url).toBe("https://graphql.anilist.co");
+		expect(requests[0]?.headers["content-type"]).toBe("application/json");
 	});
 
-	it("adds bearer auth when a token is provided", () => {
-		createGraphQLClient("token-123");
-
-		expect(coreClientConfigs[0]?.defaultHeaders).toEqual({
-			"Content-Type": "application/json",
-			Authorization: "Bearer token-123",
+	it("adds bearer auth when a token is provided", async () => {
+		const client = createGraphQLClient({
+			token: "token-123",
+			core: { transport },
 		});
+
+		await client.request({ document: "query Viewer { Viewer { id } }" });
+
+		expect(requests[0]?.headers.authorization).toBe("Bearer token-123");
 	});
 
 	it("forwards request options and removes equivalent fragments", async () => {
 		const signal = new AbortController().signal;
-		const client = createGraphQLClient("token-123");
+		const client = createGraphQLClient({ core: { transport } });
 
 		const result = await client.request({
 			document: `
@@ -152,25 +61,17 @@ describe("client transport", () => {
 			requestHeaders: { "x-request": "test" },
 			signal,
 		});
+		const body = requests[0]?.body as { query: string; variables?: object };
 
-		expect(result).toBe(graphQLResponse);
-		expect(graphQLCalls).toHaveLength(1);
-		expect(graphQLCalls[0]).toMatchObject({
-			path: "",
-			options: {
-				variables: { id: 16498 },
-				headers: { "x-request": "test" },
-				signal,
-			},
-		});
-		expect(
-			graphQLCalls[0]?.options.query.match(/fragment\s+TitleFields\s+on/g)
-				?.length,
-		).toBe(1);
+		expect(result).toEqual({ ok: true });
+		expect(body.variables).toEqual({ id: 16498 });
+		expect(requests[0]?.headers["x-request"]).toBe("test");
+		expect(requests[0]?.signal).toBe(signal);
+		expect(body.query.match(/fragment\s+TitleFields\s+on/g)?.length).toBe(1);
 	});
 
-	it("rejects conflicting fragment definitions", () => {
-		const client = createGraphQLClient();
+	it("rejects conflicting fragment definitions before transport", () => {
+		const client = createGraphQLClient({ core: { transport } });
 
 		expect(() =>
 			client.request({
@@ -181,6 +82,6 @@ describe("client transport", () => {
 				`,
 			}),
 		).toThrow("Conflicting GraphQL fragment definition: TitleFields");
-		expect(graphQLCalls).toHaveLength(0);
+		expect(requests).toHaveLength(0);
 	});
 });
