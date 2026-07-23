@@ -3,6 +3,7 @@ import {
 	type ClientConfig,
 	createClient as createApiCoreClient,
 	createAuthPlugin,
+	createGraphQLRequester,
 	dedupeGraphQLFragmentDefinitions,
 	type HeaderInput,
 	type MaybePromise,
@@ -10,7 +11,6 @@ import {
 } from "@api-wrappers/api-core";
 import {
 	type GraphQLClient,
-	type GraphQLClientRequestOptions,
 	getSdk,
 } from "../__generated__/anilist-sdk";
 
@@ -47,7 +47,7 @@ export type AnilistClientInput = string | AnilistOptions | undefined;
 export interface AnilistClientBundle {
 	httpClient: BaseHttpClient;
 	graphQLClient: GraphQLClient;
-	sdkClient: ReturnType<typeof getSdk>;
+	sdkClient: ReturnType<typeof createSdkClient>;
 }
 
 export const createHttpClient = (
@@ -100,27 +100,27 @@ export const createClient = (input?: AnilistClientInput) => {
 };
 
 export const createSdkClient = (client: GraphQLClient) => {
-	return getSdk(client);
+	return getSdk<AnilistRequestOptions>((document, variables, options) =>
+		client.request({
+			document: String(document),
+			variables: variables as Record<string, unknown> | undefined,
+			...options,
+		}),
+	);
 };
 
 const createGraphQLClientFromHttpClient = (
 	httpClient: Pick<BaseHttpClient, "graphql">,
 ): GraphQLClient => {
-	return {
-		request(options) {
-			const { document, variables, requestHeaders, signal } = options;
-			const requestOptions = options as GraphQLClientRequestOptions &
-				AnilistRequestOptions;
+	const requester = createGraphQLRequester(httpClient, {
+		transformDocument: dedupeGraphQLFragmentDefinitions,
+	});
 
-			return httpClient.graphql("", {
-				query: dedupeGraphQLFragmentDefinitions(document),
-				variables,
-				headers: requestHeaders,
+	return {
+		request({ signal, ...options }) {
+			return requester.request({
+				...options,
 				signal: signal ?? undefined,
-				timeoutMs: requestOptions.timeoutMs,
-				cacheKey: requestOptions.cacheKey,
-				tags: requestOptions.tags,
-				operationName: requestOptions.operationName,
 			});
 		},
 	};
