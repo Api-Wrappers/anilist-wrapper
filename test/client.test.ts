@@ -24,6 +24,55 @@ const coreClientConfigs: Array<CoreClientConfig> = [];
 const graphQLCalls: Array<GraphQLCall> = [];
 const graphQLResponse = { ok: true };
 
+const dedupeGraphQLFragmentDefinitions = (source: string): string => {
+	const seen = new Map<string, string>();
+	const pattern =
+		/\bfragment\s+([_A-Za-z][_0-9A-Za-z]*)\s+on\s+[_A-Za-z][_0-9A-Za-z]*/g;
+	let result = "";
+	let cursor = 0;
+	let match = pattern.exec(source);
+
+	while (match) {
+		const name = match[1];
+		const bodyStart = source.indexOf("{", pattern.lastIndex);
+		if (!name || bodyStart === -1) break;
+
+		let depth = 0;
+		let bodyEnd = -1;
+		for (let index = bodyStart; index < source.length; index++) {
+			if (source[index] === "{") depth++;
+			if (source[index] === "}") depth--;
+			if (depth === 0) {
+				bodyEnd = index;
+				break;
+			}
+		}
+		if (bodyEnd === -1) break;
+
+		const definitionEnd = bodyEnd + 1;
+		const normalized = source
+			.slice(match.index, definitionEnd)
+			.replace(/\s+/g, " ")
+			.trim();
+		const previous = seen.get(name);
+
+		if (previous === undefined) {
+			seen.set(name, normalized);
+			result += source.slice(cursor, definitionEnd);
+		} else if (previous === normalized) {
+			result += source.slice(cursor, match.index);
+		} else {
+			throw new Error(`Conflicting GraphQL fragment definition: ${name}`);
+		}
+
+		cursor = definitionEnd;
+		pattern.lastIndex = definitionEnd;
+		match = pattern.exec(source);
+	}
+
+	return result + source.slice(cursor);
+};
+
 mock.module("@api-wrappers/api-core", () => ({
 	createClient: (config: CoreClientConfig) => {
 		coreClientConfigs.push(config);
@@ -33,8 +82,11 @@ mock.module("@api-wrappers/api-core", () => ({
 				graphQLCalls.push({ path, options });
 				return graphQLResponse;
 			},
+			request: async () => graphQLResponse,
+			dispose: async () => {},
 		};
 	},
+	dedupeGraphQLFragmentDefinitions,
 	gql: (strings: TemplateStringsArray, ...values: Array<unknown>) =>
 		strings.reduce(
 			(source, segment, index) => `${source}${segment}${values[index] ?? ""}`,
