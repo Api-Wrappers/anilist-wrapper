@@ -9,10 +9,7 @@ import {
 	type MaybePromise,
 	mergeHeaders,
 } from "@api-wrappers/api-core";
-import {
-	type GraphQLClient,
-	getSdk,
-} from "../__generated__/anilist-sdk";
+import { type GraphQLClient, getSdk } from "../__generated__/anilist-sdk";
 
 const ANILIST_API_URL = "https://graphql.anilist.co";
 const MAX_ATTEMPTS = 4;
