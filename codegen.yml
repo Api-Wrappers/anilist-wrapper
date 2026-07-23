@@ -1,5 +1,7 @@
 schema: https://graphql.anilist.co
-documents: "src/**/*.{ts,tsx}"
+documents:
+  - "src/**/*.{ts,tsx}"
+  - "!src/__generated__/**"
 generates:
   src/__generated__/anilist-schema.ts:
     plugins:
@@ -10,13 +12,13 @@ generates:
       avoidOptionals: true
   src/__generated__/anilist-sdk.ts:
     plugins:
-      - typescript
+      - ./scripts/codegen-string-documents.mjs
       - typescript-operations
-      - typescript-graphql-request
+      - typescript-generic-sdk
     config:
+      documentMode: string
       rawRequest: false
       useTypeImports: true
       dedupeOperationSuffix: true
       skipTypename: true
       avoidOptionals: true
-      onlyOperationTypes: true
