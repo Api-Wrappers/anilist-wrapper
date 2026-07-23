@@ -63,8 +63,7 @@
 		"changeset": "changeset",
 		"version-packages": "changeset version",
 		"release": "changeset publish",
-		"codegen": "graphql-codegen --config codegen.yml && bun run codegen:patch",
-		"codegen:patch": "bun scripts/patch-codegen.ts",
+		"codegen": "graphql-codegen --config codegen.yml",
 		"test": "bun test --timeout 10000 test/*.test.ts",
 		"test:live": "bun test --timeout 10000 test/live/*.live.test.ts",
 		"typecheck": "tsc --noEmit",
@@ -79,10 +78,11 @@
 		"@changesets/cli": "^2.31.0",
 		"@graphql-codegen/cli": "^7.2.0",
 		"@graphql-codegen/typescript": "^6.1.0",
-		"@graphql-codegen/typescript-graphql-request": "^7.1.0",
+		"@graphql-codegen/typescript-generic-sdk": "^5.0.1",
 		"@graphql-codegen/typescript-operations": "^6.1.0",
 		"@types/bun": "^1.3.14",
-		"graphql": "^17.0.2",
+		"graphql": "^16.11.0",
+		"graphql-tag": "^2.12.6",
 		"tsdown": "^0.22.4"
 	},
 	"peerDependencies": {
