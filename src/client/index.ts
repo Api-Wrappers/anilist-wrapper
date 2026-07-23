@@ -1,8 +1,8 @@
 import {
 	type BaseHttpClient,
 	type ClientConfig,
-	createAuthPlugin,
 	createClient as createApiCoreClient,
+	createAuthPlugin,
 	dedupeGraphQLFragmentDefinitions,
 	type HeaderInput,
 	type MaybePromise,
