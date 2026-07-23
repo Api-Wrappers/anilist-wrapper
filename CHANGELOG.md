@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.1.0
+
+### Minor Changes
+
+- 234b999: Add configurable api-core 1.1.0 options, injected HTTP clients, and per-request dynamic token providers while preserving backwards compatibility with the string-token constructor.
+- c8f5c16: Generate the AniList SDK with the generic requester plugin, route requests through api-core 1.1.0's requester bridge, and remove the post-generation patch script.
+- 86b2bd6: Expose api-core timeout, cache, tag, operation-name, header, and abort controls through raw GraphQL requests.
+- a82be96: Expose the underlying api-core HTTP client, client bundle factory, and disposal lifecycle.
+
+### Patch Changes
+
+- 49c6e88: Reject conflicting duplicate GraphQL fragments instead of silently keeping the first definition.
+- a3da0c6: Update the runtime dependency to `@api-wrappers/api-core` 1.1.0.
+
 ## 3.0.0
 
 ### Major Changes
