@@ -58,6 +58,7 @@ export type {
 	AnilistClientBundle,
 	AnilistClientInput,
 	AnilistOptions,
+	AnilistRequestOptions,
 	AnilistToken,
 } from "./client";
 export {
