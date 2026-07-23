@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "bun:test";
 import type { RequestContext } from "@api-wrappers/api-core";
-import { createGraphQLClient } from "../src/client";
+import type { GraphQLClientRequestOptions } from "../src/__generated__/anilist-sdk";
+import { createGraphQLClient, type AnilistRequestOptions } from "../src/client";
 
 const requests: RequestContext[] = [];
 
@@ -68,6 +69,34 @@ describe("client transport", () => {
 		expect(requests[0]?.headers["x-request"]).toBe("test");
 		expect(requests[0]?.signal).toBe(signal);
 		expect(body.query.match(/fragment\s+TitleFields\s+on/g)?.length).toBe(1);
+	});
+
+	it("forwards api-core request controls", async () => {
+		const signal = new AbortController().signal;
+		const client = createGraphQLClient({ core: { transport } });
+		const request = client.request as <TData = unknown>(
+			options: GraphQLClientRequestOptions & AnilistRequestOptions,
+		) => Promise<TData>;
+
+		await request({
+			document: "query Viewer { Viewer { id } }",
+			requestHeaders: { "x-request": "test" },
+			signal,
+			timeoutMs: 5_000,
+			cacheKey: "viewer",
+			tags: ["viewer"],
+			operationName: "Viewer",
+		});
+
+		expect(requests[0]).toMatchObject({
+			headers: { "x-request": "test" },
+			signal,
+			timeoutMs: 5_000,
+			cacheKey: "viewer",
+			tags: ["viewer"],
+		});
+		const body = requests[0]?.body as { operationName?: string };
+		expect(body.operationName).toBe("Viewer");
 	});
 
 	it("rejects conflicting fragment definitions before transport", () => {
