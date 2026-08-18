@@ -51,7 +51,10 @@ const titles = results.Page?.media
 console.log(titles);
 ```
 
-## Pagination Defaults
+## Pagination
+
+The list methods accept an optional `page` and `perPage`. Leave them off and you
+get the first page, with 10 results for every anime list method.
 
 | Method | `page` default | `perPage` default |
 | --- | --- | --- |
@@ -59,6 +62,21 @@ console.log(titles);
 | `getTrendingAnime` | `1` | `10` |
 | `getPopularAnime` | `1` | `10` |
 | `getAnimeListByGenre` | `1` | `10` |
+
+Pass both values when you want a specific window of results:
+
+```typescript
+// second page, 25 results per page
+const page2 = await anilist.anime.getPopularAnime(2, 25);
+
+for (const media of page2.Page?.media ?? []) {
+	console.log(media?.title?.userPreferred);
+}
+```
+
+AniList can return `null` at any level, including the `Page` itself and the
+entries inside `media`. Use optional chaining, and fall back to an empty array
+before you loop, the way the example does with `?? []`.
 
 ## Related Data
 
