@@ -9,6 +9,7 @@ import { MangaService } from "./services/mangaService";
 import { MediaListService } from "./services/mediaListService";
 import { MediaService } from "./services/mediaService";
 import { StaffService } from "./services/staffService";
+import { StudioService } from "./services/studioService";
 import { UserService } from "./services/userService";
 
 /** Main class for interacting with the AniList API. */
@@ -33,6 +34,7 @@ class Anilist {
 		this.media = new MediaService(this.client, this.graphQLClient);
 		this.mediaList = new MediaListService(this.client, this.graphQLClient);
 		this.staff = new StaffService(this.client, this.graphQLClient);
+		this.studio = new StudioService(this.client, this.graphQLClient);
 		this.user = new UserService(this.client, this.graphQLClient);
 	}
 
@@ -48,6 +50,7 @@ class Anilist {
 	media: MediaService;
 	mediaList: MediaListService;
 	staff: StaffService;
+	studio: StudioService;
 	user: UserService;
 }
 
@@ -89,10 +92,14 @@ export type {
 	SelectedMediaPage,
 	SelectedStaff,
 	SelectedStaffPage,
+	SelectedStudio,
+	SelectedStudioPage,
 	SelectedUser,
 	SelectedUserPage,
 	StaffPageSelect,
 	StaffSelect,
+	StudioPageSelect,
+	StudioSelect,
 	ToSelect,
 	UserPageSelect,
 	UserSelect,
