@@ -1154,6 +1154,22 @@ export type ToggleFavoriteStaffMutationVariables = Exact<{
 
 export type ToggleFavoriteStaffMutation = { ToggleFavourite: { staff: { nodes: Array<{ id: number } | null> | null } | null } | null };
 
+export type GetStudioByIdQueryVariables = Exact<{
+  id: number;
+}>;
+
+
+export type GetStudioByIdQuery = { Studio: { id: number, name: string, isAnimationStudio: boolean, favourites: number | null, isFavourite: boolean, siteUrl: string | null, media: { pageInfo: { total: number | null, perPage: number | null, currentPage: number | null, lastPage: number | null, hasNextPage: boolean | null } | null } | null } | null };
+
+export type SearchStudioQueryVariables = Exact<{
+  query: string | null | undefined;
+  page: number | null | undefined;
+  perPage: number | null | undefined;
+}>;
+
+
+export type SearchStudioQuery = { Page: { studios: Array<{ id: number, name: string, isAnimationStudio: boolean, favourites: number | null, isFavourite: boolean, siteUrl: string | null } | null> | null } | null };
+
 export type GetUserAnimeListQueryVariables = Exact<{
   userId: number | null | undefined;
   status: MediaListStatus | null | undefined;
@@ -7247,6 +7263,48 @@ export const ToggleFavoriteStaffDocument = new TypedDocumentString(`
   }
 }
     `);
+export const GetStudioByIdDocument = new TypedDocumentString(`
+    query GetStudioById($id: Int!) {
+  Studio(id: $id) {
+    ...StudioFragment
+  }
+}
+    fragment StudioNodeFragment on Studio {
+  id
+  name
+  isAnimationStudio
+  favourites
+  isFavourite
+  siteUrl
+}
+fragment StudioFragment on Studio {
+  ...StudioNodeFragment
+  media {
+    pageInfo {
+      total
+      perPage
+      currentPage
+      lastPage
+      hasNextPage
+    }
+  }
+}`);
+export const SearchStudioDocument = new TypedDocumentString(`
+    query SearchStudio($query: String, $page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    studios(search: $query) {
+      ...StudioNodeFragment
+    }
+  }
+}
+    fragment StudioNodeFragment on Studio {
+  id
+  name
+  isAnimationStudio
+  favourites
+  isFavourite
+  siteUrl
+}`);
 export const GetUserAnimeListDocument = new TypedDocumentString(`
     query GetUserAnimeList($userId: Int, $status: MediaListStatus) {
   MediaListCollection(userId: $userId, type: ANIME, status: $status) {
@@ -8894,6 +8952,12 @@ export function getSdk<C>(requester: Requester<C>) {
     },
     ToggleFavoriteStaff(variables: ToggleFavoriteStaffMutationVariables, options?: C): Promise<ToggleFavoriteStaffMutation> {
       return requester<ToggleFavoriteStaffMutation, ToggleFavoriteStaffMutationVariables>(ToggleFavoriteStaffDocument, variables, options) as Promise<ToggleFavoriteStaffMutation>;
+    },
+    GetStudioById(variables: GetStudioByIdQueryVariables, options?: C): Promise<GetStudioByIdQuery> {
+      return requester<GetStudioByIdQuery, GetStudioByIdQueryVariables>(GetStudioByIdDocument, variables, options) as Promise<GetStudioByIdQuery>;
+    },
+    SearchStudio(variables?: SearchStudioQueryVariables, options?: C): Promise<SearchStudioQuery> {
+      return requester<SearchStudioQuery, SearchStudioQueryVariables>(SearchStudioDocument, variables, options) as Promise<SearchStudioQuery>;
     },
     GetUserAnimeList(variables?: GetUserAnimeListQueryVariables, options?: C): Promise<GetUserAnimeListQuery> {
       return requester<GetUserAnimeListQuery, GetUserAnimeListQueryVariables>(GetUserAnimeListDocument, variables, options) as Promise<GetUserAnimeListQuery>;
