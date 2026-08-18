@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.2.0
+
+### Minor Changes
+
+- bbaad44: Add a `StudioService` (`anilist.studio`) for querying studios directly: `getStudioById` for a single studio and `getStudioBySearch` for a paginated search. Both support the `select` API, and the new `StudioSelect`, `StudioPageSelect`, `SelectedStudio`, and `SelectedStudioPage` types are exported.
+
 ## 3.1.0
 
 ### Minor Changes
