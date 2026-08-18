@@ -6,6 +6,13 @@ export const SEARCH_STUDIO = gql`
 
   query SearchStudio($query: String, $page: Int, $perPage: Int) {
     Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        total
+        perPage
+        currentPage
+        lastPage
+        hasNextPage
+      }
       studios(search: $query) {
         ...StudioNodeFragment
       }

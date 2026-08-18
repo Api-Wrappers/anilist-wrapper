@@ -37,7 +37,9 @@ const { studio } = await anilist.studio.getStudioById(21, {
 ## Search
 
 `getStudioBySearch` keeps AniList's paginated `Page` shape, the same as the anime
-and manga search methods. It defaults to page `1` with `10` results per page.
+and manga search methods. It defaults to page `1` with `10` results per page, and
+the default response includes `pageInfo`, so you can page through results without
+reaching for `select`.
 
 ```typescript
 const results = await anilist.studio.getStudioBySearch("Trigger", 1, 5);
@@ -47,6 +49,8 @@ const names = results.Page?.studios
 	.filter(Boolean);
 
 console.log(names);
+console.log(results.Page?.pageInfo?.currentPage);
+console.log(results.Page?.pageInfo?.hasNextPage);
 ```
 
 AniList can return `null` at any level, including the `Page` itself and the

@@ -1168,7 +1168,7 @@ export type SearchStudioQueryVariables = Exact<{
 }>;
 
 
-export type SearchStudioQuery = { Page: { studios: Array<{ id: number, name: string, isAnimationStudio: boolean, favourites: number | null, isFavourite: boolean, siteUrl: string | null } | null> | null } | null };
+export type SearchStudioQuery = { Page: { pageInfo: { total: number | null, perPage: number | null, currentPage: number | null, lastPage: number | null, hasNextPage: boolean | null } | null, studios: Array<{ id: number, name: string, isAnimationStudio: boolean, favourites: number | null, isFavourite: boolean, siteUrl: string | null } | null> | null } | null };
 
 export type GetUserAnimeListQueryVariables = Exact<{
   userId: number | null | undefined;
@@ -7292,6 +7292,13 @@ fragment StudioFragment on Studio {
 export const SearchStudioDocument = new TypedDocumentString(`
     query SearchStudio($query: String, $page: Int, $perPage: Int) {
   Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      total
+      perPage
+      currentPage
+      lastPage
+      hasNextPage
+    }
     studios(search: $query) {
       ...StudioNodeFragment
     }
