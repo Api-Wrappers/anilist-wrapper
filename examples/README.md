@@ -17,6 +17,16 @@ Authenticated examples require an AniList access token:
 ANILIST_TOKEN="your_token" ANILIST_USERNAME="your_username" bun examples/authenticated-user.ts
 ```
 
+For a browser-facing example that uses the published package:
+
+```bash
+cd examples/anime-search-app
+bun install
+bun run start
+```
+
+Then open `http://localhost:3000`.
+
 ## Files
 
 | File | What it demonstrates | Auth |
@@ -26,11 +36,14 @@ ANILIST_TOKEN="your_token" ANILIST_USERNAME="your_username" bun examples/authent
 | [`characters-and-staff.ts`](./characters-and-staff.ts) | Character and staff lookup, birthday lists | No |
 | [`raw-graphql.ts`](./raw-graphql.ts) | Typed raw GraphQL queries with and without variables | No |
 | [`authenticated-user.ts`](./authenticated-user.ts) | Authenticated client setup and public username list/stat reads | Yes |
+| [`anime-search-app/`](./anime-search-app/) | Runnable Bun web app with search, field selection, cover art, and a browser UI | No |
 
 ## Use The Published Package
 
-Inside this repo, examples import from `../src/index.ts`. In your app, import from the package instead:
+Inside this repo, the script examples import from `../src/index.ts`. In your app, import from the package instead:
 
 ```typescript
 import { Anilist } from "@api-wrappers/anilist-wrapper";
 ```
+
+The `anime-search-app` example already uses the published package so it can be copied into another project without changing its import path.
