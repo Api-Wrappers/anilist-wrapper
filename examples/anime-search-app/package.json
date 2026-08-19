@@ -1,0 +1,11 @@
+{
+  "name": "anilist-search-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "bun server.ts"
+  },
+  "dependencies": {
+    "@api-wrappers/anilist-wrapper": "latest"
+  }
+}
