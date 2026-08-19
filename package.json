@@ -86,7 +86,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.3",
 		"@changesets/changelog-github": "^0.7.0",
-		"@changesets/cli": "^2.31.0",
+		"@changesets/cli": "^3.0.0",
 		"@graphql-codegen/cli": "^7.2.0",
 		"@graphql-codegen/typescript": "^6.1.0",
 		"@graphql-codegen/typescript-generic-sdk": "^5.0.1",
