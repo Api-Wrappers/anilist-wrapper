@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f1320" />
+  <title>AniBoard · AniList Dashboard Example</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <button id="brand" class="brand" type="button" aria-label="Go to discover">
+        <span class="brand-mark">A</span>
+        <span>AniBoard</span>
+      </button>
+      <span class="powered">Powered by @api-wrappers/anilist-wrapper</span>
+    </div>
+
+    <nav class="nav" aria-label="Main navigation">
+      <button class="nav-button active" data-view="discover" type="button">Discover</button>
+      <button class="nav-button" data-view="library" type="button">
+        My List
+        <span id="library-badge" class="badge hidden">0</span>
+      </button>
+    </nav>
+
+    <div id="auth-chip" class="auth-chip">Checking auth…</div>
+  </header>
+
+  <main>
+    <section id="discover-view" class="view active">
+      <div class="hero shell">
+        <div>
+          <p class="eyebrow">Real-world SDK example</p>
+          <h1>Discover anime, inspect details, and manage an AniList watchlist.</h1>
+          <p class="hero-copy">
+            This example uses the wrapper for seasonal, trending, popular, search,
+            detail, relations, and authenticated media-list workflows.
+          </p>
+        </div>
+
+        <form id="search-form" class="search-form" role="search">
+          <label class="sr-only" for="search-input">Search anime</label>
+          <input
+            id="search-input"
+            type="search"
+            name="q"
+            placeholder="Search anime…"
+            autocomplete="off"
+          />
+          <button type="submit">Search</button>
+        </form>
+      </div>
+
+      <section id="search-section" class="shell content-section hidden">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Search</p>
+            <h2 id="search-title">Results</h2>
+          </div>
+          <button id="clear-search" class="ghost-button" type="button">Clear</button>
+        </div>
+        <div id="search-results" class="media-grid"></div>
+        <div id="search-pagination" class="pagination"></div>
+      </section>
+
+      <div id="discover-sections" class="shell discover-stack">
+        <section class="content-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">This season</p>
+              <h2 id="season-title">Seasonal anime</h2>
+            </div>
+          </div>
+          <div id="seasonal-grid" class="media-row"></div>
+        </section>
+
+        <section class="content-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Right now</p>
+              <h2>Trending</h2>
+            </div>
+          </div>
+          <div id="trending-grid" class="media-row"></div>
+        </section>
+
+        <section class="content-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">All time</p>
+              <h2>Popular</h2>
+            </div>
+          </div>
+          <div id="popular-grid" class="media-row"></div>
+        </section>
+      </div>
+    </section>
+
+    <section id="library-view" class="view shell">
+      <div class="library-header">
+        <div>
+          <p class="eyebrow">Authenticated workflow</p>
+          <h1>My AniList</h1>
+          <p id="library-subtitle" class="muted">Loading your library…</p>
+        </div>
+        <button id="refresh-library" class="ghost-button" type="button">Refresh</button>
+      </div>
+
+      <div id="library-empty" class="empty-state hidden"></div>
+      <div id="library-groups" class="library-groups"></div>
+    </section>
+  </main>
+
+  <div id="loading" class="loading hidden" role="status" aria-live="polite">
+    <div class="spinner"></div>
+    <span>Loading AniList…</span>
+  </div>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <dialog id="details-dialog" class="details-dialog">
+    <button id="close-details" class="dialog-close" type="button" aria-label="Close details">×</button>
+    <div id="details-content"></div>
+  </dialog>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
