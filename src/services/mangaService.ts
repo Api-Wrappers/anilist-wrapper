@@ -21,7 +21,11 @@ import type {
 	RootSelectionOption,
 	SelectionOption,
 } from "../selections/options";
-import { getSelection, hasSelection } from "../selections/options";
+import {
+	hasSelection,
+	resolvePageSelection,
+	resolveSelection,
+} from "../selections/options";
 import type {
 	FavouritesSelect,
 	MediaPageSelect,
@@ -96,10 +100,9 @@ export class MangaService {
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
-			const wrapped =
-				(options.select as Record<string, unknown>).media !== undefined;
-			return this.selectedMedia(getSelection(options, "media"), { id }).then(
-				(raw) => (wrapped ? { media: raw.Media } : raw),
+			const { select, wrapped } = resolveSelection(options, "media");
+			return this.selectedMedia(select, { id }).then((raw) =>
+				wrapped ? { media: raw.Media } : raw,
 			);
 		}
 		return this.client.GetMangaById({ id });
@@ -126,12 +129,12 @@ export class MangaService {
 				"SelectedMangaByTitle",
 				"($title: String, $page: Int, $perPage: Int)",
 				["search: $title", "type: MANGA"],
-				options.select.page,
+				resolvePageSelection<TSelect>(options.select, "media"),
 			);
 			return this.selectedMediaPage<TSelect>(document, {
 				title,
 				page: 1,
-				perPage: 10,
+				perPage: 1,
 			});
 		}
 		return this.client.GetMangaByTitle({ title });
@@ -167,7 +170,9 @@ export class MangaService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const document = buildMangaSearchDocument(options.select.page);
+			const document = buildMangaSearchDocument(
+				resolvePageSelection<TSelect>(options.select, "media"),
+			);
 			const p: Promise<{ page: SelectedMediaPage<TSelect> | null }> =
 				this.graphQLClient
 					.request<
@@ -199,9 +204,8 @@ export class MangaService {
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
-			const wrapped =
-				(options.select as Record<string, unknown>).media !== undefined;
-			return this.selectedMedia(getSelection(options, "media"), {
+			const { select, wrapped } = resolveSelection(options, "media");
+			return this.selectedMedia(select, {
 				id: mediaId,
 			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
 		}
@@ -239,7 +243,7 @@ export class MangaService {
 				"SelectedMangaListByGenre",
 				"($genre: String, $page: Int, $perPage: Int)",
 				["genre: $genre", "type: MANGA"],
-				options.select.page,
+				resolvePageSelection<TSelect>(options.select, "media"),
 			);
 			return this.selectedMediaPage<TSelect>(document, {
 				genre,
@@ -271,9 +275,8 @@ export class MangaService {
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
-			const wrapped =
-				(options.select as Record<string, unknown>).media !== undefined;
-			return this.selectedMedia(getSelection(options, "media"), {
+			const { select, wrapped } = resolveSelection(options, "media");
+			return this.selectedMedia(select, {
 				id: mediaId,
 			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
 		}
@@ -299,9 +302,8 @@ export class MangaService {
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
-			const wrapped =
-				(options.select as Record<string, unknown>).media !== undefined;
-			return this.selectedMedia(getSelection(options, "media"), {
+			const { select, wrapped } = resolveSelection(options, "media");
+			return this.selectedMedia(select, {
 				id: mediaId,
 			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
 		}
@@ -327,9 +329,8 @@ export class MangaService {
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
-			const wrapped =
-				(options.select as Record<string, unknown>).media !== undefined;
-			return this.selectedMedia(getSelection(options, "media"), {
+			const { select, wrapped } = resolveSelection(options, "media");
+			return this.selectedMedia(select, {
 				id: mediaId,
 			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
 		}
@@ -363,7 +364,7 @@ export class MangaService {
 				"SelectedMangaTrending",
 				"($page: Int, $perPage: Int)",
 				["type: MANGA", "sort: TRENDING_DESC"],
-				options.select.page,
+				resolvePageSelection<TSelect>(options.select, "media"),
 			);
 			return this.selectedMediaPage<TSelect>(document, { page, perPage });
 		}
@@ -397,7 +398,7 @@ export class MangaService {
 				"SelectedMangaPopular",
 				"($page: Int, $perPage: Int)",
 				["type: MANGA", "sort: POPULARITY_DESC"],
-				options.select.page,
+				resolvePageSelection<TSelect>(options.select, "media"),
 			);
 			return this.selectedMediaPage<TSelect>(document, { page, perPage });
 		}
@@ -422,22 +423,8 @@ export class MangaService {
 		mangaId: number,
 		options?: SelectionOption<"favorites", TSelect>,
 	): unknown {
-		if (hasSelection(options)) {
-			if (!this.graphQLClient) {
-				throw new Error("graphQLClient is required for selected queries.");
-			}
-			const select = getSelection(options, "favorites");
-			const wrapped =
-				(options.select as Record<string, unknown>).favorites !== undefined;
-			const document = buildToggleFavouriteDocument(select, "mangaId");
-			return this.graphQLClient
-				.request<
-					{ ToggleFavourite: SelectedFavourites<TSelect> | null },
-					{ id: number }
-				>({ document, variables: { id: mangaId } })
-				.then((raw) => (wrapped ? { favorites: raw.ToggleFavourite } : raw));
-		}
-		return this.toggleFavorite(mangaId);
+		if (options === undefined) return this.toggleFavorite(mangaId);
+		return this.toggleFavorite(mangaId, options as { select: TSelect });
 	}
 
 	/**
@@ -463,9 +450,7 @@ export class MangaService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "favorites");
-			const wrapped =
-				(options.select as Record<string, unknown>).favorites !== undefined;
+			const { select, wrapped } = resolveSelection(options, "favorites");
 			const document = buildToggleFavouriteDocument(select, "mangaId");
 			return this.graphQLClient
 				.request<

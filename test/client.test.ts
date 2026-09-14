@@ -77,36 +77,37 @@ describe("client transport", () => {
 		});
 	});
 
-	it("forwards request options and removes duplicate fragment definitions", async () => {
+	it("forwards request options and the document unchanged", async () => {
 		const signal = new AbortController().signal;
 		const client = createGraphQLClient("token-123");
+		const document = `
+			query Example($id: Int) {
+				Media(id: $id) {
+					...TitleFields
+					...TitleFields
+					...IdFields
+				}
+			}
+
+			fragment TitleFields on Media {
+				title {
+					romaji
+				}
+			}
+
+			fragment TitleFields on Media {
+				title {
+					english
+				}
+			}
+
+			fragment IdFields on Media {
+				id
+			}
+		`;
 
 		const result = await client.request({
-			document: `
-				query Example($id: Int) {
-					Media(id: $id) {
-						...TitleFields
-						...TitleFields
-						...IdFields
-					}
-				}
-
-				fragment TitleFields on Media {
-					title {
-						romaji
-					}
-				}
-
-				fragment TitleFields on Media {
-					title {
-						english
-					}
-				}
-
-				fragment IdFields on Media {
-					id
-				}
-			`,
+			document,
 			variables: { id: 16498 },
 			requestHeaders: { "x-request": "test" },
 			signal,
@@ -114,22 +115,14 @@ describe("client transport", () => {
 
 		expect(result).toBe(graphQLResponse);
 		expect(graphQLCalls).toHaveLength(1);
-		expect(graphQLCalls[0]).toMatchObject({
+		expect(graphQLCalls[0]).toEqual({
 			path: "",
 			options: {
+				query: document,
 				variables: { id: 16498 },
 				headers: { "x-request": "test" },
 				signal,
 			},
 		});
-		expect(
-			graphQLCalls[0]?.options.query.match(/fragment\s+TitleFields\s+on/g)
-				?.length,
-		).toBe(1);
-		expect(
-			graphQLCalls[0]?.options.query.match(/fragment\s+IdFields\s+on/g)?.length,
-		).toBe(1);
-		expect(graphQLCalls[0]?.options.query).toContain("romaji");
-		expect(graphQLCalls[0]?.options.query).not.toContain("english");
 	});
 });

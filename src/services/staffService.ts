@@ -9,7 +9,11 @@ import type {
 	RootSelectionOption,
 	SelectionOption,
 } from "../selections/options";
-import { getSelection, hasSelection } from "../selections/options";
+import {
+	hasSelection,
+	resolvePageSelection,
+	resolveSelection,
+} from "../selections/options";
 import type {
 	FavouritesSelect,
 	SelectedFavourites,
@@ -58,9 +62,7 @@ export class StaffService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "staff");
-			const wrapped =
-				(options.select as Record<string, unknown>).staff !== undefined;
+			const { select, wrapped } = resolveSelection(options, "staff");
 			const document = buildStaffByIdDocument(select);
 			return this.graphQLClient
 				.request<{ Staff: SelectedStaff<TSelect> | null }, { id: number }>({
@@ -75,17 +77,21 @@ export class StaffService {
 	/**
 	 * Retrieves a list of staff members who have birthdays today.
 	 * @param page - Optional page number for pagination. Defaults to 1.
+	 * @param perPage - Optional number of staff members per page. Defaults to 25.
 	 * @returns A promise resolving to the staff birthday list.
 	 */
 	getStaffBirthdayToday(
 		page?: number,
+		perPage?: number,
 	): ReturnType<ANILISTSDK["StaffBirthdayToday"]>;
 	getStaffBirthdayToday<TSelect extends StaffPageSelect>(
 		page: number,
+		perPage: number,
 		options: { select: { page: TSelect } },
 	): Promise<{ page: SelectedStaffPage<TSelect> | null }>;
 	getStaffBirthdayToday<TSelect extends StaffPageSelect>(
 		page = 1,
+		perPage = 25,
 		options?: { select: { page: TSelect } },
 	):
 		| ReturnType<ANILISTSDK["StaffBirthdayToday"]>
@@ -98,18 +104,18 @@ export class StaffService {
 				"SelectedStaffBirthdayToday",
 				"($page: Int, $perPage: Int)",
 				["isBirthday: true"],
-				options.select.page,
+				resolvePageSelection<TSelect>(options.select, "staff"),
 			);
 			const selected: Promise<{ page: SelectedStaffPage<TSelect> | null }> =
 				this.graphQLClient
 					.request<
 						{ Page: SelectedStaffPage<TSelect> | null },
 						{ page: number; perPage: number }
-					>({ document, variables: { page, perPage: 25 } })
+					>({ document, variables: { page, perPage } })
 					.then((raw) => ({ page: raw.Page }));
 			return selected;
 		}
-		return this.client.StaffBirthdayToday({ page });
+		return this.client.StaffBirthdayToday({ page, perPage });
 	}
 
 	/**
@@ -136,9 +142,7 @@ export class StaffService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "favorites");
-			const wrapped =
-				(options.select as Record<string, unknown>).favorites !== undefined;
+			const { select, wrapped } = resolveSelection(options, "favorites");
 			const document = buildToggleFavouriteDocument(select, "staffId");
 			return this.graphQLClient
 				.request<

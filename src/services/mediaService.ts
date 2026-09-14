@@ -1,5 +1,8 @@
 import type { ANILISTSDK, MediaTypeNonEnum } from "../@types";
-import type { GraphQLClient } from "../__generated__/anilist-sdk";
+import type {
+	GraphQLClient,
+	MediaListStatus,
+} from "../__generated__/anilist-sdk";
 import {
 	buildMediaByIdDocument,
 	buildMediaListCollectionByUserDocument,
@@ -8,7 +11,7 @@ import type {
 	RootSelectionOption,
 	SelectionOption,
 } from "../selections/options";
-import { getSelection, hasSelection } from "../selections/options";
+import { hasSelection, resolveSelection } from "../selections/options";
 import type {
 	MediaListCollectionSelect,
 	MediaSelect,
@@ -56,9 +59,7 @@ export class MediaService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "media");
-			const wrapped =
-				(options.select as Record<string, unknown>).media !== undefined;
+			const { select, wrapped } = resolveSelection(options, "media");
 			const document = buildMediaByIdDocument(select);
 			return this.graphQLClient
 				.request<{ Media: SelectedMedia<TSelect> | null }, { id: number }>({
@@ -74,15 +75,18 @@ export class MediaService {
 	 * Retrieves a user's media list based on the media type (Anime or Manga).
 	 * @param userId - The unique ID of the user whose media list is being requested.
 	 * @param mediaType - The type of media list to fetch: either "ANIME" or "MANGA".
+	 * @param status - Optional media list status filter for selected queries.
 	 * @returns A promise that resolves with the user's media list.
 	 */
 	getMediaList(
 		userId: number,
 		mediaType: MediaTypeNonEnum,
+		status?: MediaListStatus,
 	): ReturnType<ANILISTSDK["GetMediaListByUser"]>;
 	getMediaList<TSelect extends MediaListCollectionSelect>(
 		userId: number,
 		mediaType: MediaTypeNonEnum,
+		status: MediaListStatus | undefined,
 		options: { select: TSelect },
 	): Promise<{
 		MediaListCollection: SelectedMediaListCollection<TSelect> | null;
@@ -90,6 +94,7 @@ export class MediaService {
 	getMediaList<TSelect extends MediaListCollectionSelect>(
 		userId: number,
 		mediaType: MediaTypeNonEnum,
+		status: MediaListStatus | undefined,
 		options: RootSelectionOption<"mediaListCollection", TSelect>,
 	): Promise<{
 		mediaListCollection: SelectedMediaListCollection<TSelect> | null;
@@ -97,6 +102,7 @@ export class MediaService {
 	getMediaList<TSelect extends MediaListCollectionSelect>(
 		userId: number,
 		mediaType: MediaTypeNonEnum,
+		status?: MediaListStatus,
 		options?: SelectionOption<"mediaListCollection", TSelect>,
 	): unknown {
 		const normalizedType = toMediaType(mediaType);
@@ -104,16 +110,27 @@ export class MediaService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "mediaListCollection");
-			const wrapped =
-				(options.select as Record<string, unknown>).mediaListCollection !==
-				undefined;
+			const { select, wrapped } = resolveSelection(
+				options,
+				"mediaListCollection",
+			);
 			const document = buildMediaListCollectionByUserDocument(select, "id");
 			return this.graphQLClient
 				.request<
 					{ MediaListCollection: SelectedMediaListCollection<TSelect> | null },
-					{ userId: number; mediaType: ReturnType<typeof toMediaType> }
-				>({ document, variables: { userId, mediaType: normalizedType } })
+					{
+						userId: number;
+						mediaType: ReturnType<typeof toMediaType>;
+						status?: MediaListStatus;
+					}
+				>({
+					document,
+					variables: {
+						userId,
+						mediaType: normalizedType,
+						...(status !== undefined ? { status } : {}),
+					},
+				})
 				.then((raw) =>
 					wrapped ? { mediaListCollection: raw.MediaListCollection } : raw,
 				);
@@ -128,15 +145,18 @@ export class MediaService {
 	 * Retrieves a user's media list by their username, filtered by media type (Anime or Manga).
 	 * @param userName - The username of the user whose media list is being requested.
 	 * @param mediaType - The type of media list to fetch: either "ANIME" or "MANGA".
+	 * @param status - Optional media list status filter for selected queries.
 	 * @returns A promise that resolves with the user's media list.
 	 */
 	getMediaListByUsername(
 		userName: string,
 		mediaType: MediaTypeNonEnum,
+		status?: MediaListStatus,
 	): ReturnType<ANILISTSDK["GetMediaListByUserByUsername"]>;
 	getMediaListByUsername<TSelect extends MediaListCollectionSelect>(
 		userName: string,
 		mediaType: MediaTypeNonEnum,
+		status: MediaListStatus | undefined,
 		options: { select: TSelect },
 	): Promise<{
 		MediaListCollection: SelectedMediaListCollection<TSelect> | null;
@@ -144,6 +164,7 @@ export class MediaService {
 	getMediaListByUsername<TSelect extends MediaListCollectionSelect>(
 		userName: string,
 		mediaType: MediaTypeNonEnum,
+		status: MediaListStatus | undefined,
 		options: RootSelectionOption<"mediaListCollection", TSelect>,
 	): Promise<{
 		mediaListCollection: SelectedMediaListCollection<TSelect> | null;
@@ -151,6 +172,7 @@ export class MediaService {
 	getMediaListByUsername<TSelect extends MediaListCollectionSelect>(
 		userName: string,
 		mediaType: MediaTypeNonEnum,
+		status?: MediaListStatus,
 		options?: SelectionOption<"mediaListCollection", TSelect>,
 	): unknown {
 		const normalizedType = toMediaType(mediaType);
@@ -158,10 +180,10 @@ export class MediaService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "mediaListCollection");
-			const wrapped =
-				(options.select as Record<string, unknown>).mediaListCollection !==
-				undefined;
+			const { select, wrapped } = resolveSelection(
+				options,
+				"mediaListCollection",
+			);
 			const document = buildMediaListCollectionByUserDocument(
 				select,
 				"username",
@@ -169,8 +191,19 @@ export class MediaService {
 			return this.graphQLClient
 				.request<
 					{ MediaListCollection: SelectedMediaListCollection<TSelect> | null },
-					{ userName: string; mediaType: ReturnType<typeof toMediaType> }
-				>({ document, variables: { userName, mediaType: normalizedType } })
+					{
+						userName: string;
+						mediaType: ReturnType<typeof toMediaType>;
+						status?: MediaListStatus;
+					}
+				>({
+					document,
+					variables: {
+						userName,
+						mediaType: normalizedType,
+						...(status !== undefined ? { status } : {}),
+					},
+				})
 				.then((raw) =>
 					wrapped ? { mediaListCollection: raw.MediaListCollection } : raw,
 				);

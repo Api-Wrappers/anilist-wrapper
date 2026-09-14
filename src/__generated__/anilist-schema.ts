@@ -1718,6 +1718,8 @@ export enum MediaRelation {
   Parent = 'PARENT',
   /** Released before the relation */
   Prequel = 'PREQUEL',
+  /** Version 3 only. The media is set in the same universe as another media */
+  SameUniverse = 'SAME_UNIVERSE',
   /** Released after the relation */
   Sequel = 'SEQUEL',
   /** A side story of the parent media */

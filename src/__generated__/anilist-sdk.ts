@@ -275,6 +275,8 @@ export enum MediaRelation {
   Parent = 'PARENT',
   /** Released before the relation */
   Prequel = 'PREQUEL',
+  /** Version 3 only. The media is set in the same universe as another media */
+  SameUniverse = 'SAME_UNIVERSE',
   /** Released after the relation */
   Sequel = 'SEQUEL',
   /** A side story of the parent media */
@@ -994,7 +996,7 @@ export type GetMangaListByGenreQueryVariables = Exact<{
 }>;
 
 
-export type GetMangaListByGenreQuery = { Page: { media: Array<{ id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, nextAiringEpisode: { id: number, airingAt: number, timeUntilAiring: number, episode: number, mediaId: number } | null, tags: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null } | null> | null, externalLinks: Array<{ id: number, url: string | null, site: string, siteId: number | null, type: ExternalLinkType | null } | null> | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null> | null } | null };
+export type GetMangaListByGenreQuery = { Page: { pageInfo: { hasNextPage: boolean | null } | null, media: Array<{ id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, nextAiringEpisode: { id: number, airingAt: number, timeUntilAiring: number, episode: number, mediaId: number } | null, tags: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null } | null> | null, externalLinks: Array<{ id: number, url: string | null, site: string, siteId: number | null, type: ExternalLinkType | null } | null> | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null> | null } | null };
 
 export type GetMangaPopularQueryVariables = Exact<{
   page?: number | null | undefined;
@@ -1117,6 +1119,7 @@ export type GetStaffByIdQuery = { Staff: { isFavourite: boolean, favourites: num
 
 export type StaffBirthdayTodayQueryVariables = Exact<{
   page: number | null | undefined;
+  perPage: number | null | undefined;
 }>;
 
 
@@ -2411,6 +2414,9 @@ export const GetMangaCharactersDocument = gql`
 export const GetMangaListByGenreDocument = gql`
     query GetMangaListByGenre($genre: String, $page: Int = 1, $perPage: Int = 10) {
   Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+    }
     media(genre: $genre, type: MANGA) {
       ...MediaFragment
     }
@@ -2605,8 +2611,8 @@ export const GetStaffByIdDocument = gql`
     ${StaffFragmentDoc}
 ${CharacterFragmentDoc}`;
 export const StaffBirthdayTodayDocument = gql`
-    query StaffBirthdayToday($page: Int) {
-  Page(page: $page) {
+    query StaffBirthdayToday($page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
     staff(isBirthday: true) {
       id
       name {
