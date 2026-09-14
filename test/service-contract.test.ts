@@ -5,12 +5,14 @@ import {
 	MediaSeason,
 	MediaStatus,
 	MediaType,
+	StudioSort,
 } from "../src";
 import { AnimeService } from "../src/services/animeService";
 import { GraphQLService } from "../src/services/graphqlService";
 import { MangaService } from "../src/services/mangaService";
 import { MediaListService } from "../src/services/mediaListService";
 import { MediaService } from "../src/services/mediaService";
+import { StudioService } from "../src/services/studioService";
 import { UserService } from "../src/services/userService";
 import type { GraphQLClientRequestOptions } from "../src/__generated__/anilist-sdk";
 import { FakeSdk, sdkResult } from "./fakeSdk";
@@ -261,6 +263,60 @@ describe("service contracts", () => {
 			status: MediaListStatus.Current,
 		});
 		expect(fake.lastCall("DeleteMediaListEntry").variables).toEqual({ id: 99 });
+	});
+
+	it("maps reference read endpoints to generated SDK operations", async () => {
+		const fake = new FakeSdk()
+			.respond("GetGenres", sdkResult("GetGenres", { GenreCollection: null }))
+			.respond(
+				"GetMediaTags",
+				sdkResult("GetMediaTags", { MediaTagCollection: null }),
+			)
+			.respond(
+				"GetAiringSchedule",
+				sdkResult("GetAiringSchedule", { AiringSchedule: null }),
+			)
+			.respond(
+				"GetAiringSchedulesByMedia",
+				sdkResult("GetAiringSchedulesByMedia", { Page: null }),
+			)
+			.respond("GetStudioById", sdkResult("GetStudioById", { Studio: null }))
+			.respond("SearchStudios", sdkResult("SearchStudios", { Page: null }))
+			.respond("GetViewer", sdkResult("GetViewer", { Viewer: null }))
+			.respond(
+				"GetViewerStatistics",
+				sdkResult("GetViewerStatistics", { Viewer: null }),
+			);
+		const media = new MediaService(fake.client());
+		const studio = new StudioService(fake.client());
+		const user = new UserService(fake.client());
+
+		await media.getGenres();
+		await media.getMediaTags(1);
+		await media.getAiringSchedule(5);
+		await media.getAiringSchedulesByMedia(3, 2, 50);
+		await studio.getStudioById(7);
+		await studio.searchStudios({ search: "MAPPA", sort: [StudioSort.Name] }, 2, 5);
+		await user.getViewer();
+		await user.getViewerStatistics();
+
+		expect(fake.lastCall("GetGenres").variables).toBeUndefined();
+		expect(fake.lastCall("GetMediaTags").variables).toEqual({ status: 1 });
+		expect(fake.lastCall("GetAiringSchedule").variables).toEqual({ id: 5 });
+		expect(fake.lastCall("GetAiringSchedulesByMedia").variables).toEqual({
+			mediaId: 3,
+			page: 2,
+			perPage: 50,
+		});
+		expect(fake.lastCall("GetStudioById").variables).toEqual({ id: 7 });
+		expect(fake.lastCall("SearchStudios").variables).toEqual({
+			search: "MAPPA",
+			sort: [StudioSort.Name],
+			page: 2,
+			perPage: 5,
+		});
+		expect(fake.lastCall("GetViewer").variables).toBeUndefined();
+		expect(fake.lastCall("GetViewerStatistics").variables).toBeUndefined();
 	});
 });
 

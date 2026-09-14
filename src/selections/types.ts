@@ -1,14 +1,18 @@
 import type {
+	AiringSchedule,
 	Character,
 	Deleted,
 	Favourites,
 	Media,
 	MediaList,
 	MediaListCollection,
+	MediaTag,
 	Page,
 	PageInfo,
 	Staff,
+	Studio,
 	User,
+	UserStatisticTypes,
 } from "../__generated__/anilist-schema";
 
 // ── Generic utilities ─────────────────────────────────────────────────────────
@@ -85,6 +89,10 @@ export type MediaSelect = ToSelect<Media>;
 export type PageInfoSelect = ToSelect<PageInfo>;
 export type CharacterSelect = ToSelect<Character>;
 export type StaffSelect = ToSelect<Staff>;
+export type StudioSelect = ToSelect<Studio>;
+export type MediaTagSelect = ToSelect<MediaTag>;
+export type AiringScheduleSelect = ToSelect<AiringSchedule>;
+export type UserStatisticTypesSelect = ToSelect<UserStatisticTypes>;
 export type UserSelect = ToSelect<User>;
 export type MediaListSelect = ToSelect<MediaList>;
 export type MediaListCollectionSelect = ToSelect<MediaListCollection>;
@@ -111,6 +119,16 @@ export type StaffPageSelect = {
 export type UserPageSelect = {
 	pageInfo?: PageInfoSelect;
 	users?: UserSelect;
+};
+
+export type StudioPageSelect = {
+	pageInfo?: PageInfoSelect;
+	studios?: StudioSelect;
+};
+
+export type AiringSchedulePageSelect = {
+	pageInfo?: PageInfoSelect;
+	airingSchedules?: AiringScheduleSelect;
 };
 
 // ── Public result mapped types ────────────────────────────────────────────────
@@ -169,3 +187,27 @@ export type SelectedUserPage<TSelect extends UserPageSelect> = SelectedFields<
 	Page,
 	TSelect
 >;
+
+export type SelectedStudio<TSelect extends StudioSelect> = SelectedFields<
+	Studio,
+	TSelect
+>;
+
+export type SelectedStudioPage<TSelect extends StudioPageSelect> =
+	SelectedFields<Page, TSelect>;
+
+export type SelectedMediaTag<TSelect extends MediaTagSelect> = SelectedFields<
+	MediaTag,
+	TSelect
+>;
+
+export type SelectedAiringSchedule<TSelect extends AiringScheduleSelect> =
+	SelectedFields<AiringSchedule, TSelect>;
+
+export type SelectedAiringSchedulePage<
+	TSelect extends AiringSchedulePageSelect,
+> = SelectedFields<Page, TSelect>;
+
+export type SelectedUserStatisticTypes<
+	TSelect extends UserStatisticTypesSelect,
+> = SelectedFields<UserStatisticTypes, TSelect>;

@@ -10,6 +10,7 @@ import { MediaListService } from "../src/services/mediaListService";
 import { MediaService } from "../src/services/mediaService";
 import { toMediaType } from "../src/services/mediaType";
 import { StaffService } from "../src/services/staffService";
+import { StudioService } from "../src/services/studioService";
 import { UserService } from "../src/services/userService";
 import { FakeSdk, sdkResult } from "./fakeSdk";
 
@@ -87,6 +88,13 @@ function makeStaffService() {
 	const sdk = new FakeSdk();
 	const gql = new FakeGraphQLClient();
 	const service = new StaffService(sdk.client(), gql.client());
+	return { sdk, gql, service };
+}
+
+function makeStudioService() {
+	const sdk = new FakeSdk();
+	const gql = new FakeGraphQLClient();
+	const service = new StudioService(sdk.client(), gql.client());
 	return { sdk, gql, service };
 }
 
@@ -1106,5 +1114,94 @@ describe("media type conversion", () => {
 		expect(() => toMediaType("anime" as MediaTypeNonEnum)).toThrow(
 			'mediaType must be "ANIME" or "MANGA".',
 		);
+	});
+});
+
+// ── Reference and read paths ──────────────────────────────────────────────────
+
+describe("reference and read endpoint selections", () => {
+	it("MediaService.getMediaTags supports normalized tag selections", async () => {
+		const { gql, service } = makeMediaService();
+		gql.setResponse({ MediaTagCollection: [{ id: 1, name: "Isekai" }] });
+
+		const result = await service.getMediaTags(0, {
+			select: { mediaTagCollection: { id: true, name: true } },
+		});
+
+		const req = gql.lastRequest();
+		expect(req.variables).toEqual({ status: 0 });
+		expect(req.document).toContain("MediaTagCollection(status: $status)");
+		expect(result).toEqual({
+			mediaTagCollection: [{ id: 1, name: "Isekai" }],
+		});
+	});
+
+	it("MediaService.getAiringSchedule supports normalized schedule selections", async () => {
+		const { gql, service } = makeMediaService();
+		gql.setResponse({ AiringSchedule: { id: 4, episode: 3 } });
+
+		await service.getAiringSchedule(4, {
+			select: { airingSchedule: { id: true, episode: true } },
+		});
+
+		const req = gql.lastRequest();
+		expect(req.variables).toEqual({ id: 4 });
+		expect(req.document).toContain("AiringSchedule(id: $id)");
+	});
+
+	it("MediaService.getAiringSchedulesByMedia maps page selections", async () => {
+		const { gql, service } = makeMediaService();
+		gql.setResponse({ Page: { airingSchedules: [{ id: 1 }] } });
+
+		const result = await service.getAiringSchedulesByMedia(16498, 2, 25, {
+			select: { page: { airingSchedules: { id: true } } },
+		});
+
+		const req = gql.lastRequest();
+		expect(req.variables).toEqual({ mediaId: 16498, page: 2, perPage: 25 });
+		expect(req.document).toContain("airingSchedules(mediaId: $mediaId)");
+		expect(result).toEqual({ page: { airingSchedules: [{ id: 1 }] } });
+	});
+
+	it("StudioService endpoints support selections", async () => {
+		const studio = makeStudioService();
+		studio.gql.setResponse({ Studio: { id: 1, name: "MAPPA" } });
+
+		const result = await studio.service.getStudioById(1, {
+			select: { studio: { id: true, name: true } },
+		});
+		expect(result).toEqual({ studio: { id: 1, name: "MAPPA" } });
+		expect(studio.gql.lastRequest().document).toContain("Studio(id: $id)");
+
+		studio.gql.setResponse({ Page: { studios: [{ id: 1 }] } });
+		await studio.service.searchStudios({ search: "MAPPA" }, 1, 10, {
+			select: { page: { studios: { id: true } } },
+		});
+		const req = studio.gql.lastRequest();
+		expect(req.document).toContain("studios(search: $search, sort: $sort)");
+		expect(req.variables).toMatchObject({
+			search: "MAPPA",
+			page: 1,
+			perPage: 10,
+		});
+	});
+
+	it("UserService viewer endpoints support selections", async () => {
+		const user = makeUserService();
+		user.gql.setResponse({ Viewer: { id: 1, name: "example" } });
+
+		const viewer = await user.service.getViewer({
+			select: { viewer: { id: true, name: true } },
+		});
+		expect(viewer).toEqual({ viewer: { id: 1, name: "example" } });
+		expect(user.gql.lastRequest().document).toContain("Viewer");
+
+		user.gql.setResponse({ Viewer: { statistics: { anime: { count: 5 } } } });
+		const statistics = await user.service.getViewerStatistics({
+			select: { viewerStatistics: { anime: { count: true } } },
+		});
+		expect(statistics).toEqual({
+			viewerStatistics: { anime: { count: 5 } },
+		});
 	});
 });

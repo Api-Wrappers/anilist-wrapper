@@ -9,6 +9,8 @@ import {
 	buildUserByIdDocument,
 	buildUserByUsernameDocument,
 	buildUserPageDocument,
+	buildViewerDocument,
+	buildViewerStatisticsDocument,
 } from "../selections/builder";
 import type {
 	RootSelectionOption,
@@ -24,8 +26,10 @@ import type {
 	SelectedMediaListCollection,
 	SelectedUser,
 	SelectedUserPage,
+	SelectedUserStatisticTypes,
 	UserPageSelect,
 	UserSelect,
+	UserStatisticTypesSelect,
 } from "../selections/types";
 
 /**
@@ -494,5 +498,67 @@ export class UserService {
 				.then((raw) => (wrapped ? { user: raw.User } : raw));
 		}
 		return this.client.GetUserStatisticsByUsername({ userName });
+	}
+
+	/**
+	 * Retrieves the authenticated user's profile. Requires authentication.
+	 * When `options.select` is provided, only the selected fields are returned.
+	 */
+	getViewer(): ReturnType<ANILISTSDK["GetViewer"]>;
+	getViewer<TSelect extends UserSelect>(options: {
+		select: TSelect;
+	}): Promise<{ Viewer: SelectedUser<TSelect> | null }>;
+	getViewer<TSelect extends UserSelect>(
+		options: RootSelectionOption<"viewer", TSelect>,
+	): Promise<{ viewer: SelectedUser<TSelect> | null }>;
+	getViewer<TSelect extends UserSelect>(
+		options?: SelectionOption<"viewer", TSelect>,
+	): unknown {
+		if (hasSelection(options)) {
+			if (!this.graphQLClient) {
+				throw new Error("graphQLClient is required for selected queries.");
+			}
+			const { select, wrapped } = resolveSelection(options, "viewer");
+			const document = buildViewerDocument(select);
+			return this.graphQLClient
+				.request<{ Viewer: SelectedUser<TSelect> | null }>({ document })
+				.then((raw) => (wrapped ? { viewer: raw.Viewer } : raw));
+		}
+		return this.client.GetViewer();
+	}
+
+	/**
+	 * Retrieves the authenticated user's statistics. Requires authentication.
+	 * When `options.select` is provided, only the selected statistics are returned.
+	 */
+	getViewerStatistics(): ReturnType<ANILISTSDK["GetViewerStatistics"]>;
+	getViewerStatistics<TSelect extends UserStatisticTypesSelect>(options: {
+		select: TSelect;
+	}): Promise<{
+		Viewer: { statistics: SelectedUserStatisticTypes<TSelect> | null } | null;
+	}>;
+	getViewerStatistics<TSelect extends UserStatisticTypesSelect>(
+		options: RootSelectionOption<"viewerStatistics", TSelect>,
+	): Promise<{ viewerStatistics: SelectedUserStatisticTypes<TSelect> | null }>;
+	getViewerStatistics<TSelect extends UserStatisticTypesSelect>(
+		options?: SelectionOption<"viewerStatistics", TSelect>,
+	): unknown {
+		if (hasSelection(options)) {
+			if (!this.graphQLClient) {
+				throw new Error("graphQLClient is required for selected queries.");
+			}
+			const { select, wrapped } = resolveSelection(options, "viewerStatistics");
+			const document = buildViewerStatisticsDocument(select);
+			return this.graphQLClient
+				.request<{
+					Viewer: {
+						statistics: SelectedUserStatisticTypes<TSelect> | null;
+					} | null;
+				}>({ document })
+				.then((raw) =>
+					wrapped ? { viewerStatistics: raw.Viewer?.statistics ?? null } : raw,
+				);
+		}
+		return this.client.GetViewerStatistics();
 	}
 }

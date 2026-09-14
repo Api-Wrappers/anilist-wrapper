@@ -12,6 +12,7 @@ import { MangaService } from "./services/mangaService";
 import { MediaListService } from "./services/mediaListService";
 import { MediaService } from "./services/mediaService";
 import { StaffService } from "./services/staffService";
+import { StudioService } from "./services/studioService";
 import { UserService } from "./services/userService";
 
 /**
@@ -38,6 +39,7 @@ class Anilist {
 		this.media = new MediaService(this.client, this.graphQLClient);
 		this.mediaList = new MediaListService(this.client, this.graphQLClient);
 		this.staff = new StaffService(this.client, this.graphQLClient);
+		this.studio = new StudioService(this.client, this.graphQLClient);
 		this.user = new UserService(this.client, this.graphQLClient);
 	}
 
@@ -78,13 +80,19 @@ class Anilist {
 	mediaList: MediaListService;
 
 	/**
-	 * Service class for interacting with AniList's staff-related queries.
+	 * Service class for interacting with AniList staff-related queries.
 	 * @type {StaffService}
 	 */
 	staff: StaffService;
 
 	/**
-	 * Service class for interacting with AniList's user-related queries.
+	 * Service class for interacting with AniList studio-related queries.
+	 * @type {StudioService}
+	 */
+	studio: StudioService;
+
+	/**
+	 * Service class for interacting with AniList user-related queries.
 	 * @type {UserService}
 	 */
 	user: UserService;
@@ -115,6 +123,8 @@ export * as AniListOperations from "./__generated__/anilist-sdk";
 export type { AnilistClientOptions } from "./client";
 export { createClient, createGraphQLClient, createSdkClient } from "./client";
 export type {
+	AiringSchedulePageSelect,
+	AiringScheduleSelect,
 	CharacterPageSelect,
 	CharacterSelect,
 	DeletedSelect,
@@ -123,7 +133,10 @@ export type {
 	MediaListSelect,
 	MediaPageSelect,
 	MediaSelect,
+	MediaTagSelect,
 	PageInfoSelect,
+	SelectedAiringSchedule,
+	SelectedAiringSchedulePage,
 	SelectedCharacter,
 	SelectedCharacterPage,
 	SelectedDeleted,
@@ -133,16 +146,24 @@ export type {
 	SelectedMediaList,
 	SelectedMediaListCollection,
 	SelectedMediaPage,
+	SelectedMediaTag,
 	SelectedStaff,
 	SelectedStaffPage,
+	SelectedStudio,
+	SelectedStudioPage,
 	SelectedUser,
 	SelectedUserPage,
+	SelectedUserStatisticTypes,
 	StaffPageSelect,
 	StaffSelect,
+	StudioPageSelect,
+	StudioSelect,
 	ToSelect,
 	UserPageSelect,
 	UserSelect,
+	UserStatisticTypesSelect,
 } from "./selections";
 export type { GraphQLDocument } from "./services/graphqlService";
 export type { SaveMediaListEntryInput } from "./services/mediaListService";
+export type { StudioSearchFilters } from "./services/studioService";
 export { Anilist, Anilist as AniList };
