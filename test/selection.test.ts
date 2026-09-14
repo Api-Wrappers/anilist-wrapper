@@ -1,5 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import {
+	LikeableType,
 	MediaListStatus,
 	MediaSeason,
 	RecommendationRating,
@@ -14,6 +15,7 @@ import { MangaService } from "../src/services/mangaService";
 import { MediaListService } from "../src/services/mediaListService";
 import { MediaService } from "../src/services/mediaService";
 import { toMediaType } from "../src/services/mediaType";
+import { SocialService } from "../src/services/socialService";
 import { StaffService } from "../src/services/staffService";
 import { StudioService } from "../src/services/studioService";
 import { UserService } from "../src/services/userService";
@@ -100,6 +102,13 @@ function makeStudioService() {
 	const sdk = new FakeSdk();
 	const gql = new FakeGraphQLClient();
 	const service = new StudioService(sdk.client(), gql.client());
+	return { sdk, gql, service };
+}
+
+function makeSocialService() {
+	const sdk = new FakeSdk();
+	const gql = new FakeGraphQLClient();
+	const service = new SocialService(sdk.client(), gql.client());
 	return { sdk, gql, service };
 }
 
@@ -1357,5 +1366,87 @@ describe("review and recommendation endpoint selections", () => {
 		const req = user.gql.lastRequest();
 		expect(req.variables).toEqual({ userId: 1, page: 1, perPage: 5 });
 		expect(req.document).toContain("reviews(userId: $userId)");
+	});
+});
+
+// ── Social and forum endpoints ────────────────────────────────────────────────
+
+describe("social and forum endpoint selections", () => {
+	it("SocialService.getFollowing maps page selections", async () => {
+		const { gql, service } = makeSocialService();
+		gql.setResponse({ Page: { following: [{ id: 1, name: "example" }] } });
+
+		const result = await service.getFollowing(1, 1, 25, {
+			select: { page: { following: { id: true, name: true } } },
+		});
+
+		const req = gql.lastRequest();
+		expect(req.variables).toEqual({ userId: 1, page: 1, perPage: 25 });
+		expect(req.document).toContain("following(userId: $userId)");
+		expect(result).toEqual({ page: { following: [{ id: 1, name: "example" }] } });
+	});
+
+	it("SocialService thread, statistics, markdown, and follow selections", async () => {
+		const { gql, service } = makeSocialService();
+
+		gql.setResponse({ Thread: { id: 5, title: "News" } });
+		const thread = await service.getThread(5, {
+			select: { thread: { id: true, title: true } },
+		});
+		expect(thread).toEqual({ thread: { id: 5, title: "News" } });
+		expect(gql.lastRequest().document).toContain("Thread(id: $id)");
+
+		gql.setResponse({ SiteStatistics: { users: { nodes: [{ count: 1 }] } } });
+		await service.getSiteStatistics({
+			select: { siteStatistics: { users: { nodes: { count: true } } } },
+		});
+		expect(gql.lastRequest().document).toContain("SiteStatistics");
+
+		gql.setResponse({ Markdown: { html: "<p>hi</p>" } });
+		const markdown = await service.getMarkdown("# hi", {
+			select: { markdown: { html: true } },
+		});
+		expect(markdown).toEqual({ markdown: { html: "<p>hi</p>" } });
+
+		gql.setResponse({ ToggleFollow: { id: 2, isFollowing: true } });
+		const follow = await service.toggleFollow(2, {
+			select: { user: { id: true, isFollowing: true } },
+		});
+		expect(follow).toEqual({ user: { id: 2, isFollowing: true } });
+		expect(gql.lastRequest().document).toContain(
+			"ToggleFollow(userId: $userId)",
+		);
+	});
+
+	it("union social reads use the generated SDK", async () => {
+		const sdk = new FakeSdk()
+			.respond(
+				"GetNotifications",
+				sdkResult("GetNotifications", { Page: null }),
+			)
+			.respond("GetActivities", sdkResult("GetActivities", { Page: null }))
+			.respond("GetActivity", sdkResult("GetActivity", { Activity: null }))
+			.respond("ToggleLike", sdkResult("ToggleLike", { ToggleLikeV2: null }));
+		const service = new SocialService(sdk.client());
+
+		await service.getNotifications(1, 10);
+		await service.getActivities(5, 1, 10);
+		await service.getActivity(3);
+		await service.toggleLike(3, LikeableType.Thread);
+
+		expect(sdk.lastCall("GetNotifications").variables).toEqual({
+			page: 1,
+			perPage: 10,
+		});
+		expect(sdk.lastCall("GetActivities").variables).toEqual({
+			userId: 5,
+			page: 1,
+			perPage: 10,
+		});
+		expect(sdk.lastCall("GetActivity").variables).toEqual({ id: 3 });
+		expect(sdk.lastCall("ToggleLike").variables).toEqual({
+			id: 3,
+			type: LikeableType.Thread,
+		});
 	});
 });
