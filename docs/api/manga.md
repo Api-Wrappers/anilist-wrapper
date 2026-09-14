@@ -47,7 +47,11 @@ for (const media of search.Page?.media ?? []) {
 }
 ```
 
-## Pagination Defaults
+## Pagination
+
+The list methods accept an optional `page` and `perPage`. Leave them off and you
+get the first page. The per-page default is not the same for every call: search
+and genre lookups return 10, while trending and popular return 20.
 
 | Method | `page` default | `perPage` default |
 | --- | --- | --- |
@@ -55,6 +59,21 @@ for (const media of search.Page?.media ?? []) {
 | `getMangaTrending` | `1` | `20` |
 | `getMangaPopular` | `1` | `20` |
 | `getMangaListByGenre` | `1` | `10` |
+
+Pass both values when you want a specific window of results:
+
+```typescript
+// second page, 15 results per page
+const page2 = await anilist.manga.getMangaTrending(2, 15);
+
+for (const media of page2.Page?.media ?? []) {
+	console.log(media?.title?.userPreferred, media?.chapters);
+}
+```
+
+AniList responses are nullable at every level, from the `Page` down to each
+entry in `media`. Guard with optional chaining and default to an empty array
+before looping, as the example does with `?? []`.
 
 ## Genre, Relations, And Credits
 

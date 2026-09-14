@@ -150,6 +150,7 @@ const data = await anilist.graphql.request<{
 - [Manga](./api/manga.md)
 - [Characters](./api/character.md)
 - [Staff](./api/staff.md)
+- [Studios](./api/studio.md)
 - [Users](./api/user.md)
 - [Media](./api/media.md)
 - [Media Lists](./api/media-list.md)

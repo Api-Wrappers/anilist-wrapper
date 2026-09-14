@@ -11,6 +11,7 @@ import { GraphQLService } from "../src/services/graphqlService";
 import { MangaService } from "../src/services/mangaService";
 import { MediaListService } from "../src/services/mediaListService";
 import { MediaService } from "../src/services/mediaService";
+import { StudioService } from "../src/services/studioService";
 import { UserService } from "../src/services/userService";
 import type { GraphQLClientRequestOptions } from "../src/__generated__/anilist-sdk";
 import { FakeSdk, sdkResult } from "./fakeSdk";
@@ -122,6 +123,23 @@ describe("service contracts", () => {
 				.filter((call) => call.operation === "ToggleFavoriteManga")
 				.map((call) => call.variables),
 		).toEqual([{ mangaId: 30013 }, { mangaId: 30014 }]);
+	});
+
+	it("maps StudioService lookup and search defaults", async () => {
+		const fake = new FakeSdk()
+			.respond("GetStudioById", sdkResult("GetStudioById", { Studio: null }))
+			.respond("SearchStudio", sdkResult("SearchStudio", { Page: null }));
+		const service = new StudioService(fake.client());
+
+		await service.getStudioById(21);
+		await service.getStudioBySearch("Trigger");
+
+		expect(fake.lastCall("GetStudioById").variables).toEqual({ id: 21 });
+		expect(fake.lastCall("SearchStudio").variables).toEqual({
+			query: "Trigger",
+			page: 1,
+			perPage: 10,
+		});
 	});
 
 	it("maps UserService IDs, usernames, pagination, and status defaults", async () => {
