@@ -5,6 +5,8 @@ import {
 	MediaSeason,
 	MediaStatus,
 	MediaType,
+	RecommendationRating,
+	ReviewRating,
 	StudioSort,
 } from "../src";
 import { AnimeService } from "../src/services/animeService";
@@ -350,6 +352,69 @@ describe("service contracts", () => {
 		});
 		expect(fake.lastCall("ToggleFavoriteStudio").variables).toEqual({
 			studioId: 9,
+		});
+	});
+
+	it("maps review and recommendation endpoints to generated SDK operations", async () => {
+		const fake = new FakeSdk()
+			.respond(
+				"GetMediaReviews",
+				sdkResult("GetMediaReviews", { Page: null }),
+			)
+			.respond("GetUserReviews", sdkResult("GetUserReviews", { Page: null }))
+			.respond(
+				"GetRecommendationsPage",
+				sdkResult("GetRecommendationsPage", { Page: null }),
+			)
+			.respond(
+				"SaveRecommendation",
+				sdkResult("SaveRecommendation", { SaveRecommendation: null }),
+			)
+			.respond("RateReview", sdkResult("RateReview", { RateReview: null }))
+			.respond("SaveReview", sdkResult("SaveReview", { SaveReview: null }))
+			.respond(
+				"DeleteReview",
+				sdkResult("DeleteReview", { DeleteReview: null }),
+			);
+		const media = new MediaService(fake.client());
+		const user = new UserService(fake.client());
+
+		await media.getReviews(16498, 1, 10);
+		await media.getRecommendationsPage(16498, 1, 10);
+		await media.saveRecommendation(16498, 5114, RecommendationRating.RateUp);
+		await media.rateReview(7, ReviewRating.UpVote);
+		await media.saveReview({ mediaId: 16498, summary: "Great" });
+		await media.deleteReview(7);
+		await user.getReviews(1, 1, 10);
+
+		expect(fake.lastCall("GetMediaReviews").variables).toEqual({
+			mediaId: 16498,
+			page: 1,
+			perPage: 10,
+		});
+		expect(fake.lastCall("GetRecommendationsPage").variables).toEqual({
+			mediaId: 16498,
+			page: 1,
+			perPage: 10,
+		});
+		expect(fake.lastCall("SaveRecommendation").variables).toEqual({
+			mediaId: 16498,
+			mediaRecommendationId: 5114,
+			rating: RecommendationRating.RateUp,
+		});
+		expect(fake.lastCall("RateReview").variables).toEqual({
+			reviewId: 7,
+			rating: ReviewRating.UpVote,
+		});
+		expect(fake.lastCall("SaveReview").variables).toMatchObject({
+			mediaId: 16498,
+			summary: "Great",
+		});
+		expect(fake.lastCall("DeleteReview").variables).toEqual({ id: 7 });
+		expect(fake.lastCall("GetUserReviews").variables).toEqual({
+			userId: 1,
+			page: 1,
+			perPage: 10,
 		});
 	});
 });

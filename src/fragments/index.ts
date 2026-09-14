@@ -67,6 +67,8 @@ export {
 export { MEDIA_TAG_BASIC_FRAGMENT, MEDIA_TAG_FRAGMENT } from "./media/tags";
 export { MEDIA_TRAILER_FRAGMENT } from "./media/trailer";
 export { MEDIA_LIST_FRAGMENT } from "./mediaList";
+export { RECOMMENDATION_FRAGMENT } from "./recommendation";
+export { REVIEW_FRAGMENT } from "./review";
 export { STAFF_FRAGMENT } from "./staff";
 export { STUDIO_FRAGMENT } from "./studio";
 export { USER_FRAGMENT } from "./user";

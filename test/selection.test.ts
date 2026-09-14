@@ -1,5 +1,10 @@
 import { describe, expect, it } from "bun:test";
-import { MediaListStatus, MediaSeason } from "../src";
+import {
+	MediaListStatus,
+	MediaSeason,
+	RecommendationRating,
+	ReviewRating,
+} from "../src";
 import type { MediaTypeNonEnum } from "../src/@types";
 import type { GraphQLClientRequestOptions } from "../src/__generated__/anilist-sdk";
 import { buildPageDocument, buildRootDocument } from "../src/selections/builder";
@@ -1262,5 +1267,95 @@ describe("list write endpoint selections", () => {
 		const req = studio.gql.lastRequest();
 		expect(req.variables).toEqual({ id: 1 });
 		expect(req.document).toContain("ToggleFavourite(studioId: $id)");
+	});
+});
+
+// ── Review and recommendation endpoints ───────────────────────────────────────
+
+describe("review and recommendation endpoint selections", () => {
+	it("MediaService.getReviews and getRecommendationsPage map page selections", async () => {
+		const { gql, service } = makeMediaService();
+		gql.setResponse({ Page: { reviews: [{ id: 1, summary: "Great" }] } });
+
+		const reviews = await service.getReviews(16498, 2, 10, {
+			select: { page: { reviews: { id: true, summary: true } } },
+		});
+		const reviewsRequest = gql.lastRequest();
+		expect(reviewsRequest.variables).toEqual({
+			mediaId: 16498,
+			page: 2,
+			perPage: 10,
+		});
+		expect(reviewsRequest.document).toContain("reviews(mediaId: $mediaId)");
+		expect(reviews).toEqual({
+			page: { reviews: [{ id: 1, summary: "Great" }] },
+		});
+
+		gql.setResponse({ Page: { recommendations: [{ id: 2 }] } });
+		await service.getRecommendationsPage(16498, 1, 10, {
+			select: { page: { recommendations: { id: true } } },
+		});
+		expect(gql.lastRequest().document).toContain(
+			"recommendations(mediaId: $mediaId)",
+		);
+	});
+
+	it("MediaService review and recommendation mutations support selections", async () => {
+		const { gql, service } = makeMediaService();
+
+		gql.setResponse({ SaveRecommendation: { id: 1, rating: -1 } });
+		await service.saveRecommendation(
+			16498,
+			5114,
+			RecommendationRating.RateDown,
+			{ select: { recommendation: { id: true, rating: true } } },
+		);
+		const saveRecommendationRequest = gql.lastRequest();
+		expect(saveRecommendationRequest.variables).toEqual({
+			mediaId: 16498,
+			mediaRecommendationId: 5114,
+			rating: RecommendationRating.RateDown,
+		});
+		expect(saveRecommendationRequest.document).toContain(
+			"SaveRecommendation(mediaId: $mediaId",
+		);
+
+		gql.setResponse({ SaveReview: { id: 7, summary: "Great" } });
+		await service.saveReview(
+			{ mediaId: 16498, summary: "Great", score: 90 },
+			{ select: { review: { id: true, summary: true } } },
+		);
+		expect(gql.lastRequest().variables).toMatchObject({
+			mediaId: 16498,
+			summary: "Great",
+			score: 90,
+		});
+
+		gql.setResponse({ RateReview: { id: 7, rating: 10 } });
+		await service.rateReview(7, ReviewRating.UpVote, {
+			select: { review: { id: true, rating: true } },
+		});
+		expect(gql.lastRequest().document).toContain(
+			"RateReview(reviewId: $reviewId, rating: $rating)",
+		);
+
+		gql.setResponse({ DeleteReview: { deleted: true } });
+		const deleted = await service.deleteReview(7, {
+			select: { deleteReview: { deleted: true } },
+		});
+		expect(deleted).toEqual({ deleteReview: { deleted: true } });
+	});
+
+	it("UserService.getReviews maps page selections", async () => {
+		const user = makeUserService();
+		user.gql.setResponse({ Page: { reviews: [{ id: 3 }] } });
+
+		await user.service.getReviews(1, 1, 5, {
+			select: { page: { reviews: { id: true } } },
+		});
+
+		const req = user.gql.lastRequest();
+		expect(req.variables).toEqual({ userId: 1, page: 1, perPage: 5 });
+		expect(req.document).toContain("reviews(userId: $userId)");
 	});
 });
