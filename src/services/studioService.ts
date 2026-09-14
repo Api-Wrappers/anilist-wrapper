@@ -8,7 +8,7 @@ import type {
 	RootSelectionOption,
 	SelectionOption,
 } from "../selections/options";
-import { getSelection, hasSelection } from "../selections/options";
+import { hasSelection, resolveSelection } from "../selections/options";
 import type {
 	SelectedStudio,
 	SelectedStudioPage,
@@ -55,9 +55,7 @@ export class StudioService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "studio");
-			const wrapped =
-				(options.select as Record<string, unknown>).studio !== undefined;
+			const { select, wrapped } = resolveSelection(options, "studio");
 			const document = buildStudioByIdDocument(select);
 			return this.graphQLClient
 				.request<{ Studio: SelectedStudio<TSelect> | null }, { id: number }>({

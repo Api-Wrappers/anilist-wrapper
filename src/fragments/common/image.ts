@@ -20,5 +20,3 @@ export const USER_AVATAR_FRAGMENT = gql`
     medium
   }
 `;
-
-3;

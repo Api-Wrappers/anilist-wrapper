@@ -9,7 +9,11 @@ import type {
 	RootSelectionOption,
 	SelectionOption,
 } from "../selections/options";
-import { getSelection, hasSelection } from "../selections/options";
+import {
+	hasSelection,
+	resolvePageSelection,
+	resolveSelection,
+} from "../selections/options";
 import type {
 	CharacterPageSelect,
 	CharacterSelect,
@@ -58,9 +62,7 @@ export class CharacterService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "character");
-			const wrapped =
-				(options.select as Record<string, unknown>).character !== undefined;
+			const { select, wrapped } = resolveSelection(options, "character");
 			const document = buildCharacterByIdDocument(select);
 			return this.graphQLClient
 				.request<
@@ -102,7 +104,7 @@ export class CharacterService {
 				"SelectedCharactersBirthdayToday",
 				"($page: Int, $perPage: Int)",
 				["isBirthday: true"],
-				options.select.page,
+				resolvePageSelection<TSelect>(options.select, "characters"),
 			);
 			const selected: Promise<{ page: SelectedCharacterPage<TSelect> | null }> =
 				this.graphQLClient
@@ -140,9 +142,7 @@ export class CharacterService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "favorites");
-			const wrapped =
-				(options.select as Record<string, unknown>).favorites !== undefined;
+			const { select, wrapped } = resolveSelection(options, "favorites");
 			const document = buildToggleFavouriteDocument(select, "characterId");
 			return this.graphQLClient
 				.request<
