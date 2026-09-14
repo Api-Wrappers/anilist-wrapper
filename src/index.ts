@@ -1,6 +1,10 @@
 import type { ANILISTSDK } from "./@types";
 import type { GraphQLClient } from "./__generated__/anilist-sdk";
-import { createGraphQLClient, createSdkClient } from "./client";
+import {
+	type AnilistClientOptions,
+	createGraphQLClient,
+	createSdkClient,
+} from "./client";
 import { AnimeService } from "./services/animeService";
 import { CharacterService } from "./services/characterService";
 import { GraphQLService } from "./services/graphqlService";
@@ -20,10 +24,11 @@ class Anilist {
 
 	/**
 	 * Constructs a new instance of the Anilist client.
-	 * @param token - Optional authentication token for the AniList API.
+	 * @param input - Optional authentication token, or client options including
+	 * token, endpoint, headers, timeout, retry, plugins, and transport.
 	 */
-	constructor(token?: string) {
-		this.graphQLClient = createGraphQLClient(token);
+	constructor(input?: string | AnilistClientOptions) {
+		this.graphQLClient = createGraphQLClient(input);
 		this.client = createSdkClient(this.graphQLClient);
 
 		this.anime = new AnimeService(this.client, this.graphQLClient);
@@ -85,9 +90,29 @@ class Anilist {
 	user: UserService;
 }
 
-export { gql } from "@api-wrappers/api-core";
+export type {
+	ApiCoreError,
+	ApiPlugin,
+	GraphQLErrorDetail,
+	RateLimitPluginOptions,
+	RetryConfig,
+	Transport,
+} from "@api-wrappers/api-core";
+export {
+	ApiError,
+	createRateLimitPlugin,
+	GraphQLRequestError,
+	gql,
+	isApiError,
+	isGraphQLRequestError,
+	isRateLimitError,
+	isTimeoutError,
+	RateLimitError,
+	TimeoutError,
+} from "@api-wrappers/api-core";
 export * from "./__generated__/anilist-schema";
 export * as AniListOperations from "./__generated__/anilist-sdk";
+export type { AnilistClientOptions } from "./client";
 export { createClient, createGraphQLClient, createSdkClient } from "./client";
 export type {
 	CharacterPageSelect,
@@ -118,5 +143,6 @@ export type {
 	UserPageSelect,
 	UserSelect,
 } from "./selections";
+export type { GraphQLDocument } from "./services/graphqlService";
 export type { SaveMediaListEntryInput } from "./services/mediaListService";
-export { Anilist };
+export { Anilist, Anilist as AniList };

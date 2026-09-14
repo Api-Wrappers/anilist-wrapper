@@ -38,7 +38,7 @@ class FakeGraphQLClient {
 				options: GraphQLClientRequestOptions<TVariables>,
 			): Promise<TData> => {
 				this.requests.push({
-					document: options.document,
+					document: options.document.toString(),
 					variables: (options.variables ?? {}) as Record<string, unknown>,
 				});
 				return this.response as TData;

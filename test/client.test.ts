@@ -1,4 +1,6 @@
 import { beforeEach, describe, expect, it, mock } from "bun:test";
+import type { ApiPlugin, Transport } from "@api-wrappers/api-core";
+import * as apiCore from "@api-wrappers/api-core";
 
 type CoreClientConfig = {
 	baseUrl: string;
@@ -8,6 +10,9 @@ type CoreClientConfig = {
 		delayMs: number;
 		retriableStatusCodes: Array<number>;
 	};
+	plugins?: ApiPlugin[];
+	transport?: Transport;
+	timeoutMs?: number;
 };
 
 type GraphQLCall = {
@@ -25,6 +30,7 @@ const graphQLCalls: Array<GraphQLCall> = [];
 const graphQLResponse = { ok: true };
 
 mock.module("@api-wrappers/api-core", () => ({
+	...apiCore,
 	createClient: (config: CoreClientConfig) => {
 		coreClientConfigs.push(config);
 
@@ -124,5 +130,74 @@ describe("client transport", () => {
 				signal,
 			},
 		});
+	});
+
+	it("accepts an options object for endpoint, headers, timeout, retry, plugins, and transport", () => {
+		const plugin: ApiPlugin = { name: "test-plugin" };
+		const transport: Transport = {
+			execute: async () => new Response(),
+		};
+
+		createGraphQLClient({
+			token: "token-456",
+			url: "https://example.com/graphql",
+			headers: { "x-app": "test" },
+			timeoutMs: 30_000,
+			retry: { maxAttempts: 2, delayMs: 200, retriableStatusCodes: [429, 500] },
+			plugins: [plugin],
+			transport,
+		});
+
+		expect(coreClientConfigs).toEqual([
+			{
+				baseUrl: "https://example.com/graphql",
+				defaultHeaders: {
+					"Content-Type": "application/json",
+					Authorization: "Bearer token-456",
+					"x-app": "test",
+				},
+				retry: {
+					maxAttempts: 2,
+					delayMs: 200,
+					retriableStatusCodes: [429, 500],
+				},
+				plugins: [plugin],
+				transport,
+				timeoutMs: 30_000,
+			},
+		]);
+	});
+
+	it("keeps the default endpoint and retry policy when only options headers are provided", () => {
+		createGraphQLClient({ headers: { "x-app": "test" } });
+
+		expect(coreClientConfigs).toEqual([
+			{
+				baseUrl: "https://graphql.anilist.co",
+				defaultHeaders: {
+					"Content-Type": "application/json",
+					"x-app": "test",
+				},
+				retry: {
+					maxAttempts: 4,
+					delayMs: 1000,
+					retriableStatusCodes: [429],
+				},
+			},
+		]);
+	});
+
+	it("accepts typed documents and forwards their string form", async () => {
+		const typedDocument = {
+			toString: () => "query Typed { Media(id: 1) { id } }",
+		};
+		const client = createGraphQLClient();
+
+		await client.request({ document: typedDocument });
+
+		expect(graphQLCalls).toHaveLength(1);
+		expect(graphQLCalls[0]?.options.query).toBe(
+			"query Typed { Media(id: 1) { id } }",
+		);
 	});
 });

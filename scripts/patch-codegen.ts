@@ -4,7 +4,7 @@ const newImport = "import { gql } from '@api-wrappers/api-core';\n";
 const newClientTypes = `type GraphQLClientRequestHeaders = Record<string, string>;
 
 export interface GraphQLClientRequestOptions<TVariables extends object = Record<string, unknown>> {
-  document: string;
+  document: string | { toString(): string };
   variables?: TVariables;
   requestHeaders?: GraphQLClientRequestHeaders;
   signal?: RequestInit['signal'];

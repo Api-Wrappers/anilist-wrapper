@@ -13,53 +13,67 @@ import type {
 
 // ── Generic utilities ─────────────────────────────────────────────────────────
 
+// Opaque scalars are generated as `unknown` (e.g. CountryCode, Json), so a
+// plain `extends object` check would wrongly treat them as nested objects.
+type IsOpaqueScalar<T> = unknown extends T ? true : false;
+
+// Unwraps null/undefined and every array level to the innermost element type.
+// Handles nested arrays such as `Array<Array<MediaList>>` without mapping
+// over array members.
+type UnwrapSelectionType<T> =
+	NonNullable<T> extends ReadonlyArray<infer Item>
+		? UnwrapSelectionType<Item>
+		: NonNullable<T>;
+
+// A field is scalar-selectable (`true`) when it is an opaque scalar or a
+// scalar/array-of-scalars; object fields recurse.
+type IsScalarField<T> =
+	IsOpaqueScalar<T> extends true
+		? true
+		: UnwrapSelectionType<T> extends object
+			? false
+			: true;
+
 // Recursively converts a schema type into a selection type.
-// Scalars and unknown (e.g. CountryCode) map to `true`.
-// Arrays of scalars map to `true`; arrays of objects recurse.
-// Objects recurse. Depth limit of 5 breaks circular schema references
-// (e.g. Media → MediaConnection → MediaEdge → Media).
+// Scalars and opaque scalars map to `true`; arrays of scalars map to `true`;
+// arrays of objects and objects recurse. Depth limit of 5 breaks circular
+// schema references (e.g. Media → MediaConnection → MediaEdge → Media).
 type ScalarSelect<T> = {
-	[K in keyof T as NonNullable<T[K]> extends Array<infer Item>
-		? NonNullable<Item> extends object
-			? never
-			: K
-		: NonNullable<T[K]> extends object
-			? never
-			: K]?: true;
+	[K in keyof T as IsScalarField<T[K]> extends true ? K : never]?: true;
 };
+
+type ToSelectField<T, D extends unknown[]> =
+	IsScalarField<T> extends true ? true : ToSelect<UnwrapSelectionType<T>, D>;
 
 export type ToSelect<T, D extends unknown[] = []> = D["length"] extends 5
 	? ScalarSelect<T>
 	: {
-			[K in keyof T]?: NonNullable<T[K]> extends Array<infer Item>
-				? NonNullable<Item> extends object
-					? ToSelect<NonNullable<Item>, [unknown, ...D]>
-					: true
-				: NonNullable<T[K]> extends object
-					? ToSelect<NonNullable<T[K]>, [unknown, ...D]>
-					: true;
+			[K in keyof T]?: ToSelectField<T[K], [unknown, ...D]>;
 		};
 
 // Maps a selection back to the result shape.
 // `true` fields keep the source type (including its nullability).
-// Object fields recurse; arrays of objects recurse per item.
-export type SelectedFields<TSource, TSelect> = {
-	[K in keyof TSelect & keyof TSource]: TSelect[K] extends true
-		? TSource[K]
-		: NonNullable<TSource[K]> extends Array<infer Item>
-			? TSelect[K] extends object
-				?
-						| Array<
-								| SelectedFields<NonNullable<Item>, TSelect[K]>
-								| Extract<Item, null>
-						  >
-						| Extract<TSource[K], null>
-				: never
-			: TSelect[K] extends object
-				?
-						| SelectedFields<NonNullable<TSource[K]>, TSelect[K]>
-						| Extract<TSource[K], null>
+// Object fields recurse; arrays of objects recurse per item, preserving every
+// array/nullability layer.
+type SelectedField<TSource, TSelect> =
+	NonNullable<TSelect> extends true
+		? TSource
+		: NonNullable<TSource> extends ReadonlyArray<infer Item>
+			?
+					| Array<
+							SelectedField<Item, NonNullable<TSelect>> | Extract<Item, null>
+					  >
+					| Extract<TSource, null>
+			: NonNullable<TSource> extends object
+				? NonNullable<TSelect> extends object
+					?
+							| SelectedFields<NonNullable<TSource>, NonNullable<TSelect>>
+							| Extract<TSource, null>
+					: never
 				: never;
+
+export type SelectedFields<TSource, TSelect> = {
+	[K in keyof TSelect & keyof TSource]: SelectedField<TSource[K], TSelect[K]>;
 };
 
 // ── Public selection input types ──────────────────────────────────────────────
@@ -138,15 +152,10 @@ export type SelectedDeleted<TSelect extends DeletedSelect> = SelectedFields<
 	TSelect
 >;
 
-export type SelectedMediaPage<TSelect extends MediaPageSelect> =
-	(TSelect["pageInfo"] extends PageInfoSelect
-		? { pageInfo: SelectedFields<PageInfo, TSelect["pageInfo"]> | null }
-		: unknown) &
-		(TSelect["media"] extends MediaSelect
-			? {
-					media: Array<SelectedFields<Media, TSelect["media"]> | null> | null;
-				}
-			: unknown);
+export type SelectedMediaPage<TSelect extends MediaPageSelect> = SelectedFields<
+	Page,
+	TSelect
+>;
 
 export type SelectedCharacterPage<TSelect extends CharacterPageSelect> =
 	SelectedFields<Page, TSelect>;
