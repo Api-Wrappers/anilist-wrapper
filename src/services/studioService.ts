@@ -3,6 +3,7 @@ import type { GraphQLClient, StudioSort } from "../__generated__/anilist-sdk";
 import {
 	buildStudioByIdDocument,
 	buildStudioPageDocument,
+	buildToggleFavouriteDocument,
 } from "../selections/builder";
 import type {
 	RootSelectionOption,
@@ -14,6 +15,8 @@ import {
 	resolveSelection,
 } from "../selections/options";
 import type {
+	FavouritesSelect,
+	SelectedFavourites,
 	SelectedStudio,
 	SelectedStudioPage,
 	StudioPageSelect,
@@ -136,5 +139,41 @@ export class StudioService {
 			return selected;
 		}
 		return this.client.SearchStudios({ search, sort, page, perPage });
+	}
+
+	/**
+	 * Toggles the favorite status of a studio. Requires authentication.
+	 * @param studioId - The ID of the studio to toggle as favorite.
+	 * @returns A promise resolving to the result of the toggle mutation.
+	 */
+	toggleFavorite(
+		studioId: number,
+	): ReturnType<ANILISTSDK["ToggleFavoriteStudio"]>;
+	toggleFavorite<TSelect extends FavouritesSelect>(
+		studioId: number,
+		options: { select: TSelect },
+	): Promise<{ ToggleFavourite: SelectedFavourites<TSelect> | null }>;
+	toggleFavorite<TSelect extends FavouritesSelect>(
+		studioId: number,
+		options: RootSelectionOption<"favorites", TSelect>,
+	): Promise<{ favorites: SelectedFavourites<TSelect> | null }>;
+	toggleFavorite<TSelect extends FavouritesSelect>(
+		studioId: number,
+		options?: SelectionOption<"favorites", TSelect>,
+	): unknown {
+		if (hasSelection(options)) {
+			if (!this.graphQLClient) {
+				throw new Error("graphQLClient is required for selected queries.");
+			}
+			const { select, wrapped } = resolveSelection(options, "favorites");
+			const document = buildToggleFavouriteDocument(select, "studioId");
+			return this.graphQLClient
+				.request<
+					{ ToggleFavourite: SelectedFavourites<TSelect> | null },
+					{ id: number }
+				>({ document, variables: { id: studioId } })
+				.then((raw) => (wrapped ? { favorites: raw.ToggleFavourite } : raw));
+		}
+		return this.client.ToggleFavoriteStudio({ studioId });
 	}
 }

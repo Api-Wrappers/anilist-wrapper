@@ -1086,6 +1086,14 @@ export type GetMediaTagsQueryVariables = Exact<{
 
 export type GetMediaTagsQuery = { MediaTagCollection: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null, isGeneralSpoiler: boolean | null, isMediaSpoiler: boolean | null, isAdult: boolean | null, userId: number | null } | null> | null };
 
+export type DeleteCustomListMutationVariables = Exact<{
+  customList: string | null | undefined;
+  type: MediaType | null | undefined;
+}>;
+
+
+export type DeleteCustomListMutation = { DeleteCustomList: { deleted: boolean | null } | null };
+
 export type DeleteMediaListEntryMutationVariables = Exact<{
   id: number;
 }>;
@@ -1138,6 +1146,26 @@ export type SaveMediaListEntryMutationVariables = Exact<{
 
 export type SaveMediaListEntryMutation = { SaveMediaListEntry: { id: number, mediaId: number, userId: number, status: MediaListStatus | null, score: number | null, progress: number | null, progressVolumes: number | null, repeat: number | null, priority: number | null, private: boolean | null, notes: string | null, hiddenFromStatusLists: boolean | null, customLists: unknown, advancedScores: unknown, updatedAt: number | null, createdAt: number | null, startedAt: { year: number | null, month: number | null, day: number | null } | null, completedAt: { year: number | null, month: number | null, day: number | null } | null, media: { id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null } | null };
 
+export type UpdateMediaListEntriesMutationVariables = Exact<{
+  ids: Array<number | null | undefined> | number | null | undefined;
+  status: MediaListStatus | null | undefined;
+  score: number | null | undefined;
+  scoreRaw: number | null | undefined;
+  progress: number | null | undefined;
+  progressVolumes: number | null | undefined;
+  repeat: number | null | undefined;
+  private: boolean | null | undefined;
+  notes: string | null | undefined;
+  startedAt: FuzzyDateInput | null | undefined;
+  completedAt: FuzzyDateInput | null | undefined;
+  advancedScores: Array<number | null | undefined> | number | null | undefined;
+  hiddenFromStatusLists: boolean | null | undefined;
+  priority: number | null | undefined;
+}>;
+
+
+export type UpdateMediaListEntriesMutation = { UpdateMediaListEntries: Array<{ id: number, mediaId: number, userId: number, status: MediaListStatus | null, score: number | null, progress: number | null, progressVolumes: number | null, repeat: number | null, priority: number | null, private: boolean | null, notes: string | null, hiddenFromStatusLists: boolean | null, customLists: unknown, advancedScores: unknown, updatedAt: number | null, createdAt: number | null, startedAt: { year: number | null, month: number | null, day: number | null } | null, completedAt: { year: number | null, month: number | null, day: number | null } | null, media: { id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null } | null> | null };
+
 export type GetStaffByIdQueryVariables = Exact<{
   id: number;
 }>;
@@ -1176,6 +1204,13 @@ export type SearchStudiosQueryVariables = Exact<{
 
 
 export type SearchStudiosQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, studios: Array<{ id: number, name: string, isAnimationStudio: boolean, favourites: number | null, isFavourite: boolean, siteUrl: string | null } | null> | null } | null };
+
+export type ToggleFavoriteStudioMutationVariables = Exact<{
+  studioId: number;
+}>;
+
+
+export type ToggleFavoriteStudioMutation = { ToggleFavourite: { studios: { nodes: Array<{ id: number } | null> | null } | null } | null };
 
 export type GetUserAnimeListQueryVariables = Exact<{
   userId: number | null | undefined;
@@ -2599,6 +2634,13 @@ export const GetMediaTagsDocument = gql`
   }
 }
     ${MediaTagFragmentDoc}`;
+export const DeleteCustomListDocument = gql`
+    mutation DeleteCustomList($customList: String, $type: MediaType) {
+  DeleteCustomList(customList: $customList, type: $type) {
+    deleted
+  }
+}
+    `;
 export const DeleteMediaListEntryDocument = gql`
     mutation DeleteMediaListEntry($id: Int!) {
   DeleteMediaListEntry(id: $id) {
@@ -2652,6 +2694,28 @@ export const SaveMediaListEntryDocument = gql`
     completedAt: $completedAt
     advancedScores: $advancedScores
     customLists: $customLists
+    hiddenFromStatusLists: $hiddenFromStatusLists
+    priority: $priority
+  ) {
+    ...MediaListFragment
+  }
+}
+    ${MediaListFragmentDoc}`;
+export const UpdateMediaListEntriesDocument = gql`
+    mutation UpdateMediaListEntries($ids: [Int], $status: MediaListStatus, $score: Float, $scoreRaw: Int, $progress: Int, $progressVolumes: Int, $repeat: Int, $private: Boolean, $notes: String, $startedAt: FuzzyDateInput, $completedAt: FuzzyDateInput, $advancedScores: [Float], $hiddenFromStatusLists: Boolean, $priority: Int) {
+  UpdateMediaListEntries(
+    ids: $ids
+    status: $status
+    score: $score
+    scoreRaw: $scoreRaw
+    progress: $progress
+    progressVolumes: $progressVolumes
+    repeat: $repeat
+    private: $private
+    notes: $notes
+    startedAt: $startedAt
+    completedAt: $completedAt
+    advancedScores: $advancedScores
     hiddenFromStatusLists: $hiddenFromStatusLists
     priority: $priority
   ) {
@@ -2748,6 +2812,17 @@ export const SearchStudiosDocument = gql`
   }
 }
     ${StudioNodeFragmentDoc}`;
+export const ToggleFavoriteStudioDocument = gql`
+    mutation ToggleFavoriteStudio($studioId: Int!) {
+  ToggleFavourite(studioId: $studioId) {
+    studios(page: 1, perPage: 25) {
+      nodes {
+        id
+      }
+    }
+  }
+}
+    `;
 export const GetUserAnimeListDocument = gql`
     query GetUserAnimeList($userId: Int, $status: MediaListStatus) {
   MediaListCollection(userId: $userId, type: ANIME, status: $status) {
@@ -3099,6 +3174,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     GetMediaTags(variables?: GetMediaTagsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMediaTagsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetMediaTagsQuery>({ document: GetMediaTagsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMediaTags', 'query', variables);
     },
+    DeleteCustomList(variables?: DeleteCustomListMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<DeleteCustomListMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteCustomListMutation>({ document: DeleteCustomListDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'DeleteCustomList', 'mutation', variables);
+    },
     DeleteMediaListEntry(variables: DeleteMediaListEntryMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<DeleteMediaListEntryMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeleteMediaListEntryMutation>({ document: DeleteMediaListEntryDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'DeleteMediaListEntry', 'mutation', variables);
     },
@@ -3114,6 +3192,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     SaveMediaListEntry(variables?: SaveMediaListEntryMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<SaveMediaListEntryMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<SaveMediaListEntryMutation>({ document: SaveMediaListEntryDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'SaveMediaListEntry', 'mutation', variables);
     },
+    UpdateMediaListEntries(variables?: UpdateMediaListEntriesMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<UpdateMediaListEntriesMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateMediaListEntriesMutation>({ document: UpdateMediaListEntriesDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'UpdateMediaListEntries', 'mutation', variables);
+    },
     GetStaffById(variables: GetStaffByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetStaffByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetStaffByIdQuery>({ document: GetStaffByIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetStaffById', 'query', variables);
     },
@@ -3128,6 +3209,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     SearchStudios(variables?: SearchStudiosQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<SearchStudiosQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<SearchStudiosQuery>({ document: SearchStudiosDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'SearchStudios', 'query', variables);
+    },
+    ToggleFavoriteStudio(variables: ToggleFavoriteStudioMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<ToggleFavoriteStudioMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ToggleFavoriteStudioMutation>({ document: ToggleFavoriteStudioDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'ToggleFavoriteStudio', 'mutation', variables);
     },
     GetUserAnimeList(variables?: GetUserAnimeListQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserAnimeListQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetUserAnimeListQuery>({ document: GetUserAnimeListDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserAnimeList', 'query', variables);

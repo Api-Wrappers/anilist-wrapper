@@ -1205,3 +1205,62 @@ describe("reference and read endpoint selections", () => {
 		});
 	});
 });
+
+// ── List write endpoints ──────────────────────────────────────────────────────
+
+describe("list write endpoint selections", () => {
+	it("MediaListService.updateEntries supports normalized selections", async () => {
+		const { gql, service } = makeMediaListService();
+		gql.setResponse({ UpdateMediaListEntries: [{ id: 1, progress: 3 }] });
+
+		const result = await service.updateEntries(
+			{ ids: [1, 2], status: MediaListStatus.Current, progress: 3 },
+			{ select: { updateMediaListEntries: { id: true, progress: true } } },
+		);
+
+		const req = gql.lastRequest();
+		expect(req.variables).toMatchObject({
+			ids: [1, 2],
+			status: MediaListStatus.Current,
+			progress: 3,
+		});
+		expect(req.document).toContain("UpdateMediaListEntries(ids: $ids");
+		expect(result).toEqual({
+			updateMediaListEntries: [{ id: 1, progress: 3 }],
+		});
+	});
+
+	it("MediaListService.deleteCustomList supports normalized selections", async () => {
+		const { gql, service } = makeMediaListService();
+		gql.setResponse({ DeleteCustomList: { deleted: true } });
+
+		const result = await service.deleteCustomList("Favorites", "ANIME", {
+			select: { deleteCustomList: { deleted: true } },
+		});
+
+		const req = gql.lastRequest();
+		expect(req.variables).toEqual({
+			customList: "Favorites",
+			type: "ANIME",
+		});
+		expect(req.document).toContain(
+			"DeleteCustomList(customList: $customList, type: $type)",
+		);
+		expect(result).toEqual({ deleteCustomList: { deleted: true } });
+	});
+
+	it("StudioService.toggleFavorite supports normalized selections", async () => {
+		const studio = makeStudioService();
+		studio.gql.setResponse({
+			ToggleFavourite: { studios: { nodes: [{ id: 1 }] } },
+		});
+
+		await studio.service.toggleFavorite(1, {
+			select: { favorites: { studios: { nodes: { id: true } } } },
+		});
+
+		const req = studio.gql.lastRequest();
+		expect(req.variables).toEqual({ id: 1 });
+		expect(req.document).toContain("ToggleFavourite(studioId: $id)");
+	});
+});

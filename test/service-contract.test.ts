@@ -318,6 +318,40 @@ describe("service contracts", () => {
 		expect(fake.lastCall("GetViewer").variables).toBeUndefined();
 		expect(fake.lastCall("GetViewerStatistics").variables).toBeUndefined();
 	});
+
+	it("maps list write endpoints to generated SDK operations", async () => {
+		const fake = new FakeSdk()
+			.respond(
+				"UpdateMediaListEntries",
+				sdkResult("UpdateMediaListEntries", { UpdateMediaListEntries: null }),
+			)
+			.respond(
+				"DeleteCustomList",
+				sdkResult("DeleteCustomList", { DeleteCustomList: null }),
+			)
+			.respond(
+				"ToggleFavoriteStudio",
+				sdkResult("ToggleFavoriteStudio", { ToggleFavourite: null }),
+			);
+		const mediaList = new MediaListService(fake.client());
+		const studio = new StudioService(fake.client());
+
+		await mediaList.updateEntries({ ids: [1, 2], progress: 4 });
+		await mediaList.deleteCustomList("Favorites", "ANIME");
+		await studio.toggleFavorite(9);
+
+		expect(fake.lastCall("UpdateMediaListEntries").variables).toMatchObject({
+			ids: [1, 2],
+			progress: 4,
+		});
+		expect(fake.lastCall("DeleteCustomList").variables).toEqual({
+			customList: "Favorites",
+			type: MediaType.Anime,
+		});
+		expect(fake.lastCall("ToggleFavoriteStudio").variables).toEqual({
+			studioId: 9,
+		});
+	});
 });
 
 describe("GraphQLService contracts", () => {

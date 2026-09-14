@@ -275,13 +275,14 @@ export function buildMediaListCollectionByUserDocument(
 
 export function buildToggleFavouriteDocument(
 	select: FavouritesSelect,
-	field: "animeId" | "mangaId" | "characterId" | "staffId",
+	field: "animeId" | "mangaId" | "characterId" | "staffId" | "studioId",
 ): string {
 	const operationNameByField = {
 		animeId: "SelectedToggleFavoriteAnime",
 		mangaId: "SelectedToggleFavoriteManga",
 		characterId: "SelectedToggleFavoriteCharacter",
 		staffId: "SelectedToggleFavoriteStaff",
+		studioId: "SelectedToggleFavoriteStudio",
 	} satisfies Record<typeof field, string>;
 
 	return buildMutationDocument({
@@ -333,6 +334,46 @@ export function buildDeleteMediaListEntryDocument(
 		variableDefinitions: "($id: Int)",
 		rootField: "DeleteMediaListEntry",
 		rootArgs: ["id: $id"],
+		select: select as Record<string, unknown>,
+		context: "DeletedSelect",
+	});
+}
+
+export function buildUpdateMediaListEntriesDocument(
+	select: MediaListSelect,
+): string {
+	return buildMutationDocument({
+		operationName: "SelectedUpdateMediaListEntries",
+		variableDefinitions:
+			"($ids: [Int], $status: MediaListStatus, $score: Float, $scoreRaw: Int, $progress: Int, $progressVolumes: Int, $repeat: Int, $private: Boolean, $notes: String, $startedAt: FuzzyDateInput, $completedAt: FuzzyDateInput, $advancedScores: [Float], $hiddenFromStatusLists: Boolean, $priority: Int)",
+		rootField: "UpdateMediaListEntries",
+		rootArgs: [
+			"ids: $ids",
+			"status: $status",
+			"score: $score",
+			"scoreRaw: $scoreRaw",
+			"progress: $progress",
+			"progressVolumes: $progressVolumes",
+			"repeat: $repeat",
+			"private: $private",
+			"notes: $notes",
+			"startedAt: $startedAt",
+			"completedAt: $completedAt",
+			"advancedScores: $advancedScores",
+			"hiddenFromStatusLists: $hiddenFromStatusLists",
+			"priority: $priority",
+		],
+		select: select as Record<string, unknown>,
+		context: "MediaListSelect",
+	});
+}
+
+export function buildDeleteCustomListDocument(select: DeletedSelect): string {
+	return buildMutationDocument({
+		operationName: "SelectedDeleteCustomList",
+		variableDefinitions: "($customList: String, $type: MediaType)",
+		rootField: "DeleteCustomList",
+		rootArgs: ["customList: $customList", "type: $type"],
 		select: select as Record<string, unknown>,
 		context: "DeletedSelect",
 	});
