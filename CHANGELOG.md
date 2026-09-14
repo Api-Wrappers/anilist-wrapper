@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.2.1
+
+### Patch Changes
+
+- 8f08843: Improve npm package discovery with more specific AniList, anime, manga, GraphQL, and TypeScript search keywords.
+
 ## 3.2.0
 
 ### Minor Changes
