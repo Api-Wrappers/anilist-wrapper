@@ -230,6 +230,17 @@ export function buildStaffByIdDocument(select: StaffSelect): string {
 	});
 }
 
+export function buildStudioByIdDocument(select: StudioSelect): string {
+	return buildRootDocument({
+		operationName: "SelectedStudioById",
+		variableDefinitions: "($id: Int)",
+		rootField: "Studio",
+		rootArgs: ["id: $id"],
+		select: select as Record<string, unknown>,
+		context: "StudioSelect",
+	});
+}
+
 export function buildUserByIdDocument(select: UserSelect): string {
 	return buildRootDocument({
 		operationName: "SelectedUserById",
@@ -464,33 +475,6 @@ export function buildStaffPageDocument(
 	});
 }
 
-export function buildUserPageDocument(
-	operationName: string,
-	variableDefinitions: string,
-	fieldArgs: string[],
-	select: UserPageSelect,
-): string {
-	return buildPageDocument({
-		operationName,
-		variableDefinitions,
-		fieldName: "users",
-		fieldArgs,
-		select: select as Record<string, unknown>,
-		context: "page select",
-	});
-}
-
-export function buildStudioByIdDocument(select: StudioSelect): string {
-	return buildRootDocument({
-		operationName: "SelectedStudioById",
-		variableDefinitions: "($id: Int)",
-		rootField: "Studio",
-		rootArgs: ["id: $id"],
-		select: select as Record<string, unknown>,
-		context: "StudioSelect",
-	});
-}
-
 export function buildStudioPageDocument(
 	operationName: string,
 	variableDefinitions: string,
@@ -501,6 +485,22 @@ export function buildStudioPageDocument(
 		operationName,
 		variableDefinitions,
 		fieldName: "studios",
+		fieldArgs,
+		select: select as Record<string, unknown>,
+		context: "page select",
+	});
+}
+
+export function buildUserPageDocument(
+	operationName: string,
+	variableDefinitions: string,
+	fieldArgs: string[],
+	select: UserPageSelect,
+): string {
+	return buildPageDocument({
+		operationName,
+		variableDefinitions,
+		fieldName: "users",
 		fieldArgs,
 		select: select as Record<string, unknown>,
 		context: "page select",

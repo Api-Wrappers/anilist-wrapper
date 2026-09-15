@@ -1188,13 +1188,13 @@ describe("reference and read endpoint selections", () => {
 		expect(studio.gql.lastRequest().document).toContain("Studio(id: $id)");
 
 		studio.gql.setResponse({ Page: { studios: [{ id: 1 }] } });
-		await studio.service.searchStudios({ search: "MAPPA" }, 1, 10, {
+		await studio.service.getStudioBySearch("MAPPA", 1, 10, {
 			select: { page: { studios: { id: true } } },
 		});
 		const req = studio.gql.lastRequest();
-		expect(req.document).toContain("studios(search: $search, sort: $sort)");
+		expect(req.document).toContain("studios(search: $query)");
 		expect(req.variables).toMatchObject({
-			search: "MAPPA",
+			query: "MAPPA",
 			page: 1,
 			perPage: 10,
 		});

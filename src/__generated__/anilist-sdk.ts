@@ -2,750 +2,805 @@
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** Internal type. DO NOT USE DIRECTLY. */
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-import { gql } from '@api-wrappers/api-core';
-export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
-type GraphQLClientRequestHeaders = Record<string, string>;
 
-export interface GraphQLClientRequestOptions<TVariables extends object = Record<string, unknown>> {
+export interface GraphQLClientRequestOptions<
+  TVariables extends object = Record<string, unknown>,
+> {
   document: string | { toString(): string };
   variables?: TVariables;
-  requestHeaders?: GraphQLClientRequestHeaders;
-  signal?: RequestInit['signal'];
+  requestHeaders?: Record<string, string>;
+  signal?: RequestInit["signal"];
+  timeoutMs?: number;
+  cacheKey?: string;
+  tags?: string[];
+  operationName?: string;
 }
 
 export interface GraphQLClient {
-  request<TData = unknown, TVariables extends object = Record<string, unknown>>(
-    options: GraphQLClientRequestOptions<TVariables>
-  ): Promise<TData>;
+  request<
+    TData = unknown,
+    TVariables extends object = Record<string, unknown>,
+  >(options: GraphQLClientRequestOptions<TVariables>): Promise<TData>;
 }
-/** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  CountryCode: { input: unknown; output: unknown; }
-  FuzzyDateInt: { input: unknown; output: unknown; }
-  Json: { input: unknown; output: unknown; }
+
+export const ActivitySort = {
+  Id: "ID",
+  IdDesc: "ID_DESC",
+  Pinned: "PINNED",
+} as const;
+
+export const ActivityType = {
+  AnimeList: "ANIME_LIST",
+  MangaList: "MANGA_LIST",
+  MediaList: "MEDIA_LIST",
+  Message: "MESSAGE",
+  Text: "TEXT",
+} as const;
+
+export const AiringSort = {
+  Episode: "EPISODE",
+  EpisodeDesc: "EPISODE_DESC",
+  Id: "ID",
+  IdDesc: "ID_DESC",
+  MediaId: "MEDIA_ID",
+  MediaIdDesc: "MEDIA_ID_DESC",
+  Time: "TIME",
+  TimeDesc: "TIME_DESC",
+} as const;
+
+export const CharacterRole = {
+  Background: "BACKGROUND",
+  Main: "MAIN",
+  Supporting: "SUPPORTING",
+} as const;
+
+export const CharacterSort = {
+  Favourites: "FAVOURITES",
+  FavouritesDesc: "FAVOURITES_DESC",
+  Id: "ID",
+  IdDesc: "ID_DESC",
+  Relevance: "RELEVANCE",
+  Role: "ROLE",
+  RoleDesc: "ROLE_DESC",
+  SearchMatch: "SEARCH_MATCH",
+} as const;
+
+export const ExternalLinkMediaType = {
+  Anime: "ANIME",
+  Manga: "MANGA",
+  Staff: "STAFF",
+} as const;
+
+export const ExternalLinkType = {
+  Info: "INFO",
+  Social: "SOCIAL",
+  Streaming: "STREAMING",
+} as const;
+
+export const LikeableType = {
+  Activity: "ACTIVITY",
+  ActivityReply: "ACTIVITY_REPLY",
+  Thread: "THREAD",
+  ThreadComment: "THREAD_COMMENT",
+} as const;
+
+export const MediaFormat = {
+  Manga: "MANGA",
+  Movie: "MOVIE",
+  Music: "MUSIC",
+  Novel: "NOVEL",
+  Ona: "ONA",
+  OneShot: "ONE_SHOT",
+  Ova: "OVA",
+  Special: "SPECIAL",
+  Tv: "TV",
+  TvShort: "TV_SHORT",
+} as const;
+
+export const MediaListSort = {
+  AddedTime: "ADDED_TIME",
+  AddedTimeDesc: "ADDED_TIME_DESC",
+  FinishedOn: "FINISHED_ON",
+  FinishedOnDesc: "FINISHED_ON_DESC",
+  MediaId: "MEDIA_ID",
+  MediaIdDesc: "MEDIA_ID_DESC",
+  MediaPopularity: "MEDIA_POPULARITY",
+  MediaPopularityDesc: "MEDIA_POPULARITY_DESC",
+  MediaTitleEnglish: "MEDIA_TITLE_ENGLISH",
+  MediaTitleEnglishDesc: "MEDIA_TITLE_ENGLISH_DESC",
+  MediaTitleNative: "MEDIA_TITLE_NATIVE",
+  MediaTitleNativeDesc: "MEDIA_TITLE_NATIVE_DESC",
+  MediaTitleRomaji: "MEDIA_TITLE_ROMAJI",
+  MediaTitleRomajiDesc: "MEDIA_TITLE_ROMAJI_DESC",
+  Priority: "PRIORITY",
+  PriorityDesc: "PRIORITY_DESC",
+  Progress: "PROGRESS",
+  ProgressDesc: "PROGRESS_DESC",
+  ProgressVolumes: "PROGRESS_VOLUMES",
+  ProgressVolumesDesc: "PROGRESS_VOLUMES_DESC",
+  Repeat: "REPEAT",
+  RepeatDesc: "REPEAT_DESC",
+  Score: "SCORE",
+  ScoreDesc: "SCORE_DESC",
+  StartedOn: "STARTED_ON",
+  StartedOnDesc: "STARTED_ON_DESC",
+  Status: "STATUS",
+  StatusDesc: "STATUS_DESC",
+  UpdatedTime: "UPDATED_TIME",
+  UpdatedTimeDesc: "UPDATED_TIME_DESC",
+} as const;
+
+export const MediaListStatus = {
+  Completed: "COMPLETED",
+  Current: "CURRENT",
+  Dropped: "DROPPED",
+  Paused: "PAUSED",
+  Planning: "PLANNING",
+  Repeating: "REPEATING",
+} as const;
+
+export const MediaRankType = {
+  Popular: "POPULAR",
+  Rated: "RATED",
+} as const;
+
+export const MediaRelation = {
+  Adaptation: "ADAPTATION",
+  Alternative: "ALTERNATIVE",
+  Character: "CHARACTER",
+  Compilation: "COMPILATION",
+  Contains: "CONTAINS",
+  Other: "OTHER",
+  Parent: "PARENT",
+  Prequel: "PREQUEL",
+  SameUniverse: "SAME_UNIVERSE",
+  Sequel: "SEQUEL",
+  SideStory: "SIDE_STORY",
+  Source: "SOURCE",
+  SpinOff: "SPIN_OFF",
+  Summary: "SUMMARY",
+} as const;
+
+export const MediaSeason = {
+  Fall: "FALL",
+  Spring: "SPRING",
+  Summer: "SUMMER",
+  Winter: "WINTER",
+} as const;
+
+export const MediaSort = {
+  Chapters: "CHAPTERS",
+  ChaptersDesc: "CHAPTERS_DESC",
+  Duration: "DURATION",
+  DurationDesc: "DURATION_DESC",
+  EndDate: "END_DATE",
+  EndDateDesc: "END_DATE_DESC",
+  Episodes: "EPISODES",
+  EpisodesDesc: "EPISODES_DESC",
+  Favourites: "FAVOURITES",
+  FavouritesDesc: "FAVOURITES_DESC",
+  Format: "FORMAT",
+  FormatDesc: "FORMAT_DESC",
+  Id: "ID",
+  IdDesc: "ID_DESC",
+  Popularity: "POPULARITY",
+  PopularityDesc: "POPULARITY_DESC",
+  Score: "SCORE",
+  ScoreDesc: "SCORE_DESC",
+  SearchMatch: "SEARCH_MATCH",
+  StartDate: "START_DATE",
+  StartDateDesc: "START_DATE_DESC",
+  Status: "STATUS",
+  StatusDesc: "STATUS_DESC",
+  TitleEnglish: "TITLE_ENGLISH",
+  TitleEnglishDesc: "TITLE_ENGLISH_DESC",
+  TitleNative: "TITLE_NATIVE",
+  TitleNativeDesc: "TITLE_NATIVE_DESC",
+  TitleRomaji: "TITLE_ROMAJI",
+  TitleRomajiDesc: "TITLE_ROMAJI_DESC",
+  Trending: "TRENDING",
+  TrendingDesc: "TRENDING_DESC",
+  Type: "TYPE",
+  TypeDesc: "TYPE_DESC",
+  UpdatedAt: "UPDATED_AT",
+  UpdatedAtDesc: "UPDATED_AT_DESC",
+  Volumes: "VOLUMES",
+  VolumesDesc: "VOLUMES_DESC",
+} as const;
+
+export const MediaSource = {
+  Anime: "ANIME",
+  Comic: "COMIC",
+  Doujinshi: "DOUJINSHI",
+  Game: "GAME",
+  LightNovel: "LIGHT_NOVEL",
+  LiveAction: "LIVE_ACTION",
+  Manga: "MANGA",
+  MultimediaProject: "MULTIMEDIA_PROJECT",
+  Novel: "NOVEL",
+  Original: "ORIGINAL",
+  Other: "OTHER",
+  PictureBook: "PICTURE_BOOK",
+  VideoGame: "VIDEO_GAME",
+  VisualNovel: "VISUAL_NOVEL",
+  WebNovel: "WEB_NOVEL",
+} as const;
+
+export const MediaStatus = {
+  Cancelled: "CANCELLED",
+  Finished: "FINISHED",
+  Hiatus: "HIATUS",
+  NotYetReleased: "NOT_YET_RELEASED",
+  Releasing: "RELEASING",
+} as const;
+
+export const MediaTrendSort = {
+  Date: "DATE",
+  DateDesc: "DATE_DESC",
+  Episode: "EPISODE",
+  EpisodeDesc: "EPISODE_DESC",
+  Id: "ID",
+  IdDesc: "ID_DESC",
+  MediaId: "MEDIA_ID",
+  MediaIdDesc: "MEDIA_ID_DESC",
+  Popularity: "POPULARITY",
+  PopularityDesc: "POPULARITY_DESC",
+  Score: "SCORE",
+  ScoreDesc: "SCORE_DESC",
+  Trending: "TRENDING",
+  TrendingDesc: "TRENDING_DESC",
+} as const;
+
+export const MediaType = {
+  Anime: "ANIME",
+  Manga: "MANGA",
+} as const;
+
+export const ModActionType = {
+  Anon: "ANON",
+  Ban: "BAN",
+  Delete: "DELETE",
+  Edit: "EDIT",
+  Expire: "EXPIRE",
+  Note: "NOTE",
+  Report: "REPORT",
+  Reset: "RESET",
+} as const;
+
+export const ModRole = {
+  Admin: "ADMIN",
+  AnimeData: "ANIME_DATA",
+  CharacterData: "CHARACTER_DATA",
+  Community: "COMMUNITY",
+  Developer: "DEVELOPER",
+  DiscordCommunity: "DISCORD_COMMUNITY",
+  LeadAnimeData: "LEAD_ANIME_DATA",
+  LeadCommunity: "LEAD_COMMUNITY",
+  LeadDeveloper: "LEAD_DEVELOPER",
+  LeadMangaData: "LEAD_MANGA_DATA",
+  LeadSocialMedia: "LEAD_SOCIAL_MEDIA",
+  MangaData: "MANGA_DATA",
+  Retired: "RETIRED",
+  SocialMedia: "SOCIAL_MEDIA",
+  StaffData: "STAFF_DATA",
+} as const;
+
+export const NotificationType = {
+  ActivityLike: "ACTIVITY_LIKE",
+  ActivityMention: "ACTIVITY_MENTION",
+  ActivityMessage: "ACTIVITY_MESSAGE",
+  ActivityReply: "ACTIVITY_REPLY",
+  ActivityReplyLike: "ACTIVITY_REPLY_LIKE",
+  ActivityReplySubscribed: "ACTIVITY_REPLY_SUBSCRIBED",
+  Airing: "AIRING",
+  CharacterSubmissionUpdate: "CHARACTER_SUBMISSION_UPDATE",
+  Following: "FOLLOWING",
+  MediaDataChange: "MEDIA_DATA_CHANGE",
+  MediaDeletion: "MEDIA_DELETION",
+  MediaMerge: "MEDIA_MERGE",
+  MediaSubmissionUpdate: "MEDIA_SUBMISSION_UPDATE",
+  RelatedMediaAddition: "RELATED_MEDIA_ADDITION",
+  StaffSubmissionUpdate: "STAFF_SUBMISSION_UPDATE",
+  ThreadCommentLike: "THREAD_COMMENT_LIKE",
+  ThreadCommentMention: "THREAD_COMMENT_MENTION",
+  ThreadCommentReply: "THREAD_COMMENT_REPLY",
+  ThreadLike: "THREAD_LIKE",
+  ThreadSubscribed: "THREAD_SUBSCRIBED",
+} as const;
+
+export const RecommendationRating = {
+  NoRating: "NO_RATING",
+  RateDown: "RATE_DOWN",
+  RateUp: "RATE_UP",
+} as const;
+
+export const RecommendationSort = {
+  Id: "ID",
+  IdDesc: "ID_DESC",
+  Rating: "RATING",
+  RatingDesc: "RATING_DESC",
+} as const;
+
+export const ReviewRating = {
+  DownVote: "DOWN_VOTE",
+  NoVote: "NO_VOTE",
+  UpVote: "UP_VOTE",
+} as const;
+
+export const ReviewSort = {
+  CreatedAt: "CREATED_AT",
+  CreatedAtDesc: "CREATED_AT_DESC",
+  Id: "ID",
+  IdDesc: "ID_DESC",
+  Rating: "RATING",
+  RatingDesc: "RATING_DESC",
+  Score: "SCORE",
+  ScoreDesc: "SCORE_DESC",
+  UpdatedAt: "UPDATED_AT",
+  UpdatedAtDesc: "UPDATED_AT_DESC",
+} as const;
+
+export const RevisionHistoryAction = {
+  Create: "CREATE",
+  Edit: "EDIT",
+} as const;
+
+export const ScoreFormat = {
+  Point3: "POINT_3",
+  Point5: "POINT_5",
+  Point10: "POINT_10",
+  Point10Decimal: "POINT_10_DECIMAL",
+  Point100: "POINT_100",
+} as const;
+
+export const SiteTrendSort = {
+  Change: "CHANGE",
+  ChangeDesc: "CHANGE_DESC",
+  Count: "COUNT",
+  CountDesc: "COUNT_DESC",
+  Date: "DATE",
+  DateDesc: "DATE_DESC",
+} as const;
+
+export const StaffLanguage = {
+  English: "ENGLISH",
+  French: "FRENCH",
+  German: "GERMAN",
+  Hebrew: "HEBREW",
+  Hungarian: "HUNGARIAN",
+  Italian: "ITALIAN",
+  Japanese: "JAPANESE",
+  Korean: "KOREAN",
+  Portuguese: "PORTUGUESE",
+  Spanish: "SPANISH",
+} as const;
+
+export const StaffSort = {
+  Favourites: "FAVOURITES",
+  FavouritesDesc: "FAVOURITES_DESC",
+  Id: "ID",
+  IdDesc: "ID_DESC",
+  Language: "LANGUAGE",
+  LanguageDesc: "LANGUAGE_DESC",
+  Relevance: "RELEVANCE",
+  Role: "ROLE",
+  RoleDesc: "ROLE_DESC",
+  SearchMatch: "SEARCH_MATCH",
+} as const;
+
+export const StudioSort = {
+  Favourites: "FAVOURITES",
+  FavouritesDesc: "FAVOURITES_DESC",
+  Id: "ID",
+  IdDesc: "ID_DESC",
+  Name: "NAME",
+  NameDesc: "NAME_DESC",
+  SearchMatch: "SEARCH_MATCH",
+} as const;
+
+export const SubmissionSort = {
+  Id: "ID",
+  IdDesc: "ID_DESC",
+} as const;
+
+export const SubmissionStatus = {
+  Accepted: "ACCEPTED",
+  PartiallyAccepted: "PARTIALLY_ACCEPTED",
+  Pending: "PENDING",
+  Rejected: "REJECTED",
+} as const;
+
+export const ThreadCommentSort = {
+  Id: "ID",
+  IdDesc: "ID_DESC",
+} as const;
+
+export const ThreadSort = {
+  CreatedAt: "CREATED_AT",
+  CreatedAtDesc: "CREATED_AT_DESC",
+  Id: "ID",
+  IdDesc: "ID_DESC",
+  IsSticky: "IS_STICKY",
+  RepliedAt: "REPLIED_AT",
+  RepliedAtDesc: "REPLIED_AT_DESC",
+  ReplyCount: "REPLY_COUNT",
+  ReplyCountDesc: "REPLY_COUNT_DESC",
+  SearchMatch: "SEARCH_MATCH",
+  Title: "TITLE",
+  TitleDesc: "TITLE_DESC",
+  UpdatedAt: "UPDATED_AT",
+  UpdatedAtDesc: "UPDATED_AT_DESC",
+  ViewCount: "VIEW_COUNT",
+  ViewCountDesc: "VIEW_COUNT_DESC",
+} as const;
+
+export const UserSort = {
+  ChaptersRead: "CHAPTERS_READ",
+  ChaptersReadDesc: "CHAPTERS_READ_DESC",
+  Id: "ID",
+  IdDesc: "ID_DESC",
+  SearchMatch: "SEARCH_MATCH",
+  Username: "USERNAME",
+  UsernameDesc: "USERNAME_DESC",
+  WatchedTime: "WATCHED_TIME",
+  WatchedTimeDesc: "WATCHED_TIME_DESC",
+} as const;
+
+export const UserStaffNameLanguage = {
+  Native: "NATIVE",
+  Romaji: "ROMAJI",
+  RomajiWestern: "ROMAJI_WESTERN",
+} as const;
+
+export const UserStatisticsSort = {
+  Count: "COUNT",
+  CountDesc: "COUNT_DESC",
+  Id: "ID",
+  IdDesc: "ID_DESC",
+  MeanScore: "MEAN_SCORE",
+  MeanScoreDesc: "MEAN_SCORE_DESC",
+  Progress: "PROGRESS",
+  ProgressDesc: "PROGRESS_DESC",
+} as const;
+
+export const UserTitleLanguage = {
+  English: "ENGLISH",
+  EnglishStylised: "ENGLISH_STYLISED",
+  Native: "NATIVE",
+  NativeStylised: "NATIVE_STYLISED",
+  Romaji: "ROMAJI",
+  RomajiStylised: "ROMAJI_STYLISED",
+} as const;
+
+type TypedDocumentStringConstructor = {
+  new <TResult = unknown, TVariables = unknown>(
+    value: string,
+    meta?: Record<string, unknown>,
+  ): string;
 };
 
-/** Activity sort enums */
-export enum ActivitySort {
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Pinned = 'PINNED'
-}
+const TypedDocumentString = class extends String {
+  readonly value: string;
+  readonly __meta__?: Record<string, unknown>;
+
+  constructor(value: string, meta?: Record<string, unknown>) {
+    super(value);
+    this.value = value;
+    this.__meta__ = meta;
+  }
+
+  override toString(): string {
+    return this.value;
+  }
+} as unknown as TypedDocumentStringConstructor;
 
 /** Activity type enum. */
-export enum ActivityType {
+export type ActivityType =
   /** A anime list update activity */
-  AnimeList = 'ANIME_LIST',
+  | 'ANIME_LIST'
   /** A manga list update activity */
-  MangaList = 'MANGA_LIST',
+  | 'MANGA_LIST'
   /** Anime & Manga list update, only used in query arguments */
-  MediaList = 'MEDIA_LIST',
+  | 'MEDIA_LIST'
   /** A text message activity sent to another user */
-  Message = 'MESSAGE',
+  | 'MESSAGE'
   /** A text activity */
-  Text = 'TEXT'
-}
-
-export type AiringScheduleInput = {
-  airingAt: InputMaybe<Scalars['Int']['input']>;
-  episode: InputMaybe<Scalars['Int']['input']>;
-  timeUntilAiring: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** Airing schedule sort enums */
-export enum AiringSort {
-  Episode = 'EPISODE',
-  EpisodeDesc = 'EPISODE_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  MediaId = 'MEDIA_ID',
-  MediaIdDesc = 'MEDIA_ID_DESC',
-  Time = 'TIME',
-  TimeDesc = 'TIME_DESC'
-}
-
-export type AniChartHighlightInput = {
-  highlight: InputMaybe<Scalars['String']['input']>;
-  mediaId: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** The names of the character */
-export type CharacterNameInput = {
-  /** Other names the character might be referred by */
-  alternative: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  /** Other names the character might be referred to as but are spoilers */
-  alternativeSpoiler: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  /** The character's given name */
-  first: InputMaybe<Scalars['String']['input']>;
-  /** The character's surname */
-  last: InputMaybe<Scalars['String']['input']>;
-  /** The character's middle name */
-  middle: InputMaybe<Scalars['String']['input']>;
-  /** The character's full name in their native language */
-  native: InputMaybe<Scalars['String']['input']>;
-};
+  | 'TEXT';
 
 /** The role the character plays in the media */
-export enum CharacterRole {
+export type CharacterRole =
   /** A background character in the media */
-  Background = 'BACKGROUND',
+  | 'BACKGROUND'
   /** A primary character role in the media */
-  Main = 'MAIN',
+  | 'MAIN'
   /** A supporting character role in the media */
-  Supporting = 'SUPPORTING'
-}
+  | 'SUPPORTING';
 
-/** Character sort enums */
-export enum CharacterSort {
-  Favourites = 'FAVOURITES',
-  FavouritesDesc = 'FAVOURITES_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  /** Order manually decided by moderators */
-  Relevance = 'RELEVANCE',
-  Role = 'ROLE',
-  RoleDesc = 'ROLE_DESC',
-  SearchMatch = 'SEARCH_MATCH'
-}
-
-export enum ExternalLinkMediaType {
-  Anime = 'ANIME',
-  Manga = 'MANGA',
-  Staff = 'STAFF'
-}
-
-export enum ExternalLinkType {
-  Info = 'INFO',
-  Social = 'SOCIAL',
-  Streaming = 'STREAMING'
-}
+export type ExternalLinkType =
+  | 'INFO'
+  | 'SOCIAL'
+  | 'STREAMING';
 
 /** Date object that allows for incomplete date values (fuzzy) */
 export type FuzzyDateInput = {
   /** Numeric Day (24) */
-  day: InputMaybe<Scalars['Int']['input']>;
+  day: number | null | undefined;
   /** Numeric Month (3) */
-  month: InputMaybe<Scalars['Int']['input']>;
+  month: number | null | undefined;
   /** Numeric Year (2017) */
-  year: InputMaybe<Scalars['Int']['input']>;
+  year: number | null | undefined;
 };
 
 /** Types that can be liked */
-export enum LikeableType {
-  Activity = 'ACTIVITY',
-  ActivityReply = 'ACTIVITY_REPLY',
-  Thread = 'THREAD',
-  ThreadComment = 'THREAD_COMMENT'
-}
-
-export type ListActivityOptionInput = {
-  disabled: InputMaybe<Scalars['Boolean']['input']>;
-  type: InputMaybe<MediaListStatus>;
-};
-
-/** An external link to another site related to the media */
-export type MediaExternalLinkInput = {
-  /** The id of the external link */
-  id: Scalars['Int']['input'];
-  /** The site location of the external link */
-  site: Scalars['String']['input'];
-  /** The url of the external link */
-  url: Scalars['String']['input'];
-};
+export type LikeableType =
+  | 'ACTIVITY'
+  | 'ACTIVITY_REPLY'
+  | 'THREAD'
+  | 'THREAD_COMMENT';
 
 /** The format the media was released in */
-export enum MediaFormat {
+export type MediaFormat =
   /** Professionally published manga with more than one chapter */
-  Manga = 'MANGA',
+  | 'MANGA'
   /** Anime movies with a theatrical release */
-  Movie = 'MOVIE',
+  | 'MOVIE'
   /** Short anime released as a music video */
-  Music = 'MUSIC',
+  | 'MUSIC'
   /** Written books released as a series of light novels */
-  Novel = 'NOVEL',
+  | 'NOVEL'
   /** (Original Net Animation) Anime that have been originally released online or are only available through streaming services. */
-  Ona = 'ONA',
+  | 'ONA'
   /** Manga with just one chapter */
-  OneShot = 'ONE_SHOT',
+  | 'ONE_SHOT'
   /** (Original Video Animation) Anime that have been released directly on DVD/Blu-ray without originally going through a theatrical release or television broadcast */
-  Ova = 'OVA',
+  | 'OVA'
   /** Special episodes that have been included in DVD/Blu-ray releases, picture dramas, pilots, etc */
-  Special = 'SPECIAL',
+  | 'SPECIAL'
   /** Anime broadcast on television */
-  Tv = 'TV',
+  | 'TV'
   /** Anime which are under 15 minutes in length and broadcast on television */
-  TvShort = 'TV_SHORT'
-}
-
-/** A user's list options for anime or manga lists */
-export type MediaListOptionsInput = {
-  /** The names of the user's advanced scoring sections */
-  advancedScoring: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  /** If advanced scoring is enabled */
-  advancedScoringEnabled: InputMaybe<Scalars['Boolean']['input']>;
-  /** The names of the user's custom lists */
-  customLists: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  /** The order each list should be displayed in */
-  sectionOrder: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  /** If the completed sections of the list should be separated by format */
-  splitCompletedSectionByFormat: InputMaybe<Scalars['Boolean']['input']>;
-  /** list theme */
-  theme: InputMaybe<Scalars['String']['input']>;
-};
-
-/** Media list sort enums */
-export enum MediaListSort {
-  AddedTime = 'ADDED_TIME',
-  AddedTimeDesc = 'ADDED_TIME_DESC',
-  FinishedOn = 'FINISHED_ON',
-  FinishedOnDesc = 'FINISHED_ON_DESC',
-  MediaId = 'MEDIA_ID',
-  MediaIdDesc = 'MEDIA_ID_DESC',
-  MediaPopularity = 'MEDIA_POPULARITY',
-  MediaPopularityDesc = 'MEDIA_POPULARITY_DESC',
-  MediaTitleEnglish = 'MEDIA_TITLE_ENGLISH',
-  MediaTitleEnglishDesc = 'MEDIA_TITLE_ENGLISH_DESC',
-  MediaTitleNative = 'MEDIA_TITLE_NATIVE',
-  MediaTitleNativeDesc = 'MEDIA_TITLE_NATIVE_DESC',
-  MediaTitleRomaji = 'MEDIA_TITLE_ROMAJI',
-  MediaTitleRomajiDesc = 'MEDIA_TITLE_ROMAJI_DESC',
-  Priority = 'PRIORITY',
-  PriorityDesc = 'PRIORITY_DESC',
-  Progress = 'PROGRESS',
-  ProgressDesc = 'PROGRESS_DESC',
-  ProgressVolumes = 'PROGRESS_VOLUMES',
-  ProgressVolumesDesc = 'PROGRESS_VOLUMES_DESC',
-  Repeat = 'REPEAT',
-  RepeatDesc = 'REPEAT_DESC',
-  Score = 'SCORE',
-  ScoreDesc = 'SCORE_DESC',
-  StartedOn = 'STARTED_ON',
-  StartedOnDesc = 'STARTED_ON_DESC',
-  Status = 'STATUS',
-  StatusDesc = 'STATUS_DESC',
-  UpdatedTime = 'UPDATED_TIME',
-  UpdatedTimeDesc = 'UPDATED_TIME_DESC'
-}
+  | 'TV_SHORT';
 
 /** Media list watching/reading status enum. */
-export enum MediaListStatus {
+export type MediaListStatus =
   /** Finished watching/reading */
-  Completed = 'COMPLETED',
+  | 'COMPLETED'
   /** Currently watching/reading */
-  Current = 'CURRENT',
+  | 'CURRENT'
   /** Stopped watching/reading before completing */
-  Dropped = 'DROPPED',
+  | 'DROPPED'
   /** Paused watching/reading */
-  Paused = 'PAUSED',
+  | 'PAUSED'
   /** Planning to watch/read */
-  Planning = 'PLANNING',
+  | 'PLANNING'
   /** Re-watching/reading */
-  Repeating = 'REPEATING'
-}
+  | 'REPEATING';
 
 /** The type of ranking */
-export enum MediaRankType {
+export type MediaRankType =
   /** Ranking is based on the media's popularity */
-  Popular = 'POPULAR',
+  | 'POPULAR'
   /** Ranking is based on the media's ratings/score */
-  Rated = 'RATED'
-}
+  | 'RATED';
 
 /** Type of relation media has to its parent. */
-export enum MediaRelation {
+export type MediaRelation =
   /** An adaption of this media into a different format */
-  Adaptation = 'ADAPTATION',
+  | 'ADAPTATION'
   /** An alternative version of the same media */
-  Alternative = 'ALTERNATIVE',
+  | 'ALTERNATIVE'
   /** Shares at least 1 character */
-  Character = 'CHARACTER',
+  | 'CHARACTER'
   /** Version 2 only. */
-  Compilation = 'COMPILATION',
+  | 'COMPILATION'
   /** Version 2 only. */
-  Contains = 'CONTAINS',
+  | 'CONTAINS'
   /** Other */
-  Other = 'OTHER',
+  | 'OTHER'
   /** The media a side story is from */
-  Parent = 'PARENT',
+  | 'PARENT'
   /** Released before the relation */
-  Prequel = 'PREQUEL',
+  | 'PREQUEL'
   /** Version 3 only. The media is set in the same universe as another media */
-  SameUniverse = 'SAME_UNIVERSE',
+  | 'SAME_UNIVERSE'
   /** Released after the relation */
-  Sequel = 'SEQUEL',
+  | 'SEQUEL'
   /** A side story of the parent media */
-  SideStory = 'SIDE_STORY',
+  | 'SIDE_STORY'
   /** Version 2 only. The source material the media was adapted from */
-  Source = 'SOURCE',
+  | 'SOURCE'
   /** An alternative version of the media with a different primary focus */
-  SpinOff = 'SPIN_OFF',
+  | 'SPIN_OFF'
   /** A shortened and summarized version */
-  Summary = 'SUMMARY'
-}
+  | 'SUMMARY';
 
-export enum MediaSeason {
+export type MediaSeason =
   /** Predominantly started airing between October and November */
-  Fall = 'FALL',
+  | 'FALL'
   /** Predominantly started airing between April and June */
-  Spring = 'SPRING',
+  | 'SPRING'
   /** Predominantly started airing between July and September */
-  Summer = 'SUMMER',
+  | 'SUMMER'
   /** Predominantly started airing between January and March */
-  Winter = 'WINTER'
-}
-
-/** Media sort enums */
-export enum MediaSort {
-  Chapters = 'CHAPTERS',
-  ChaptersDesc = 'CHAPTERS_DESC',
-  Duration = 'DURATION',
-  DurationDesc = 'DURATION_DESC',
-  EndDate = 'END_DATE',
-  EndDateDesc = 'END_DATE_DESC',
-  Episodes = 'EPISODES',
-  EpisodesDesc = 'EPISODES_DESC',
-  Favourites = 'FAVOURITES',
-  FavouritesDesc = 'FAVOURITES_DESC',
-  Format = 'FORMAT',
-  FormatDesc = 'FORMAT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Popularity = 'POPULARITY',
-  PopularityDesc = 'POPULARITY_DESC',
-  Score = 'SCORE',
-  ScoreDesc = 'SCORE_DESC',
-  SearchMatch = 'SEARCH_MATCH',
-  StartDate = 'START_DATE',
-  StartDateDesc = 'START_DATE_DESC',
-  Status = 'STATUS',
-  StatusDesc = 'STATUS_DESC',
-  TitleEnglish = 'TITLE_ENGLISH',
-  TitleEnglishDesc = 'TITLE_ENGLISH_DESC',
-  TitleNative = 'TITLE_NATIVE',
-  TitleNativeDesc = 'TITLE_NATIVE_DESC',
-  TitleRomaji = 'TITLE_ROMAJI',
-  TitleRomajiDesc = 'TITLE_ROMAJI_DESC',
-  Trending = 'TRENDING',
-  TrendingDesc = 'TRENDING_DESC',
-  Type = 'TYPE',
-  TypeDesc = 'TYPE_DESC',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
-  Volumes = 'VOLUMES',
-  VolumesDesc = 'VOLUMES_DESC'
-}
+  | 'WINTER';
 
 /** Source type the media was adapted from */
-export enum MediaSource {
+export type MediaSource =
   /** Version 2+ only. Japanese Anime */
-  Anime = 'ANIME',
+  | 'ANIME'
   /** Version 3 only. Comics excluding manga */
-  Comic = 'COMIC',
+  | 'COMIC'
   /** Version 2+ only. Self-published works */
-  Doujinshi = 'DOUJINSHI',
+  | 'DOUJINSHI'
   /** Version 3 only. Games excluding video games */
-  Game = 'GAME',
+  | 'GAME'
   /** Written work published in volumes */
-  LightNovel = 'LIGHT_NOVEL',
+  | 'LIGHT_NOVEL'
   /** Version 3 only. Live action media such as movies or TV show */
-  LiveAction = 'LIVE_ACTION',
+  | 'LIVE_ACTION'
   /** Asian comic book */
-  Manga = 'MANGA',
+  | 'MANGA'
   /** Version 3 only. Multimedia project */
-  MultimediaProject = 'MULTIMEDIA_PROJECT',
+  | 'MULTIMEDIA_PROJECT'
   /** Version 2+ only. Written works not published in volumes */
-  Novel = 'NOVEL',
+  | 'NOVEL'
   /** An original production not based of another work */
-  Original = 'ORIGINAL',
+  | 'ORIGINAL'
   /** Other */
-  Other = 'OTHER',
+  | 'OTHER'
   /** Version 3 only. Picture book */
-  PictureBook = 'PICTURE_BOOK',
+  | 'PICTURE_BOOK'
   /** Video game */
-  VideoGame = 'VIDEO_GAME',
+  | 'VIDEO_GAME'
   /** Video game driven primary by text and narrative */
-  VisualNovel = 'VISUAL_NOVEL',
+  | 'VISUAL_NOVEL'
   /** Version 3 only. Written works published online */
-  WebNovel = 'WEB_NOVEL'
-}
+  | 'WEB_NOVEL';
 
 /** The current releasing status of the media */
-export enum MediaStatus {
+export type MediaStatus =
   /** Ended before the work could be finished */
-  Cancelled = 'CANCELLED',
+  | 'CANCELLED'
   /** Has completed and is no longer being released */
-  Finished = 'FINISHED',
+  | 'FINISHED'
   /** Version 2 only. Is currently paused from releasing and will resume at a later date */
-  Hiatus = 'HIATUS',
+  | 'HIATUS'
   /** To be released at a later date */
-  NotYetReleased = 'NOT_YET_RELEASED',
+  | 'NOT_YET_RELEASED'
   /** Currently releasing */
-  Releasing = 'RELEASING'
-}
-
-/** The official titles of the media in various languages */
-export type MediaTitleInput = {
-  /** The official english title */
-  english: InputMaybe<Scalars['String']['input']>;
-  /** Official title in it's native language */
-  native: InputMaybe<Scalars['String']['input']>;
-  /** The romanization of the native language title */
-  romaji: InputMaybe<Scalars['String']['input']>;
-};
-
-/** Media trend sort enums */
-export enum MediaTrendSort {
-  Date = 'DATE',
-  DateDesc = 'DATE_DESC',
-  Episode = 'EPISODE',
-  EpisodeDesc = 'EPISODE_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  MediaId = 'MEDIA_ID',
-  MediaIdDesc = 'MEDIA_ID_DESC',
-  Popularity = 'POPULARITY',
-  PopularityDesc = 'POPULARITY_DESC',
-  Score = 'SCORE',
-  ScoreDesc = 'SCORE_DESC',
-  Trending = 'TRENDING',
-  TrendingDesc = 'TRENDING_DESC'
-}
+  | 'RELEASING';
 
 /** Media type enum, anime or manga. */
-export enum MediaType {
+export type MediaType =
   /** Japanese Anime */
-  Anime = 'ANIME',
+  | 'ANIME'
   /** Asian comic */
-  Manga = 'MANGA'
-}
-
-export enum ModActionType {
-  Anon = 'ANON',
-  Ban = 'BAN',
-  Delete = 'DELETE',
-  Edit = 'EDIT',
-  Expire = 'EXPIRE',
-  Note = 'NOTE',
-  Report = 'REPORT',
-  Reset = 'RESET'
-}
+  | 'MANGA';
 
 /** Mod role enums */
-export enum ModRole {
+export type ModRole =
   /** An AniList administrator */
-  Admin = 'ADMIN',
+  | 'ADMIN'
   /** An anime data moderator */
-  AnimeData = 'ANIME_DATA',
+  | 'ANIME_DATA'
   /** A character data moderator */
-  CharacterData = 'CHARACTER_DATA',
+  | 'CHARACTER_DATA'
   /** A community moderator */
-  Community = 'COMMUNITY',
+  | 'COMMUNITY'
   /** An AniList developer */
-  Developer = 'DEVELOPER',
+  | 'DEVELOPER'
   /** A discord community moderator */
-  DiscordCommunity = 'DISCORD_COMMUNITY',
+  | 'DISCORD_COMMUNITY'
   /** A lead anime data moderator */
-  LeadAnimeData = 'LEAD_ANIME_DATA',
+  | 'LEAD_ANIME_DATA'
   /** A lead community moderator */
-  LeadCommunity = 'LEAD_COMMUNITY',
+  | 'LEAD_COMMUNITY'
   /** A head developer of AniList */
-  LeadDeveloper = 'LEAD_DEVELOPER',
+  | 'LEAD_DEVELOPER'
   /** A lead manga data moderator */
-  LeadMangaData = 'LEAD_MANGA_DATA',
+  | 'LEAD_MANGA_DATA'
   /** A lead social media moderator */
-  LeadSocialMedia = 'LEAD_SOCIAL_MEDIA',
+  | 'LEAD_SOCIAL_MEDIA'
   /** A manga data moderator */
-  MangaData = 'MANGA_DATA',
+  | 'MANGA_DATA'
   /** A retired moderator */
-  Retired = 'RETIRED',
+  | 'RETIRED'
   /** A social media moderator */
-  SocialMedia = 'SOCIAL_MEDIA',
+  | 'SOCIAL_MEDIA'
   /** A staff data moderator */
-  StaffData = 'STAFF_DATA'
-}
-
-/** Notification option input */
-export type NotificationOptionInput = {
-  /** Whether this type of notification is enabled */
-  enabled: InputMaybe<Scalars['Boolean']['input']>;
-  /** The type of notification */
-  type: InputMaybe<NotificationType>;
-};
+  | 'STAFF_DATA';
 
 /** Notification type enum */
-export enum NotificationType {
+export type NotificationType =
   /** A user has liked your activity */
-  ActivityLike = 'ACTIVITY_LIKE',
+  | 'ACTIVITY_LIKE'
   /** A user has mentioned you in their activity */
-  ActivityMention = 'ACTIVITY_MENTION',
+  | 'ACTIVITY_MENTION'
   /** A user has sent you message */
-  ActivityMessage = 'ACTIVITY_MESSAGE',
+  | 'ACTIVITY_MESSAGE'
   /** A user has replied to your activity */
-  ActivityReply = 'ACTIVITY_REPLY',
+  | 'ACTIVITY_REPLY'
   /** A user has liked your activity reply */
-  ActivityReplyLike = 'ACTIVITY_REPLY_LIKE',
+  | 'ACTIVITY_REPLY_LIKE'
   /** A user has replied to activity you have also replied to */
-  ActivityReplySubscribed = 'ACTIVITY_REPLY_SUBSCRIBED',
+  | 'ACTIVITY_REPLY_SUBSCRIBED'
   /** An anime you are currently watching has aired */
-  Airing = 'AIRING',
+  | 'AIRING'
   /** A user's character submission has been accepted, partially accepted, or rejected */
-  CharacterSubmissionUpdate = 'CHARACTER_SUBMISSION_UPDATE',
+  | 'CHARACTER_SUBMISSION_UPDATE'
   /** A user has followed you */
-  Following = 'FOLLOWING',
+  | 'FOLLOWING'
   /** An anime or manga has had a data change that affects how a user may track it in their lists */
-  MediaDataChange = 'MEDIA_DATA_CHANGE',
+  | 'MEDIA_DATA_CHANGE'
   /** An anime or manga on the user's list has been deleted from the site */
-  MediaDeletion = 'MEDIA_DELETION',
+  | 'MEDIA_DELETION'
   /** Anime or manga entries on the user's list have been merged into a single entry */
-  MediaMerge = 'MEDIA_MERGE',
+  | 'MEDIA_MERGE'
   /** A user's submission has been accepted, partially accepted, or rejected */
-  MediaSubmissionUpdate = 'MEDIA_SUBMISSION_UPDATE',
+  | 'MEDIA_SUBMISSION_UPDATE'
   /** A new anime or manga has been added to the site where its related media is on the user's list */
-  RelatedMediaAddition = 'RELATED_MEDIA_ADDITION',
+  | 'RELATED_MEDIA_ADDITION'
   /** A user's staff submission has been accepted, partially accepted, or rejected */
-  StaffSubmissionUpdate = 'STAFF_SUBMISSION_UPDATE',
+  | 'STAFF_SUBMISSION_UPDATE'
   /** A user has liked your forum comment */
-  ThreadCommentLike = 'THREAD_COMMENT_LIKE',
+  | 'THREAD_COMMENT_LIKE'
   /** A user has mentioned you in a forum comment */
-  ThreadCommentMention = 'THREAD_COMMENT_MENTION',
+  | 'THREAD_COMMENT_MENTION'
   /** A user has replied to your forum comment */
-  ThreadCommentReply = 'THREAD_COMMENT_REPLY',
+  | 'THREAD_COMMENT_REPLY'
   /** A user has liked your forum thread */
-  ThreadLike = 'THREAD_LIKE',
+  | 'THREAD_LIKE'
   /** A user has commented in one of your subscribed forum threads */
-  ThreadSubscribed = 'THREAD_SUBSCRIBED'
-}
+  | 'THREAD_SUBSCRIBED';
 
 /** Recommendation rating enums */
-export enum RecommendationRating {
-  NoRating = 'NO_RATING',
-  RateDown = 'RATE_DOWN',
-  RateUp = 'RATE_UP'
-}
-
-/** Recommendation sort enums */
-export enum RecommendationSort {
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Rating = 'RATING',
-  RatingDesc = 'RATING_DESC'
-}
+export type RecommendationRating =
+  | 'NO_RATING'
+  | 'RATE_DOWN'
+  | 'RATE_UP';
 
 /** Review rating enums */
-export enum ReviewRating {
-  DownVote = 'DOWN_VOTE',
-  NoVote = 'NO_VOTE',
-  UpVote = 'UP_VOTE'
-}
-
-/** Review sort enums */
-export enum ReviewSort {
-  /** @deprecated Use ID instead */
-  CreatedAt = 'CREATED_AT',
-  /** @deprecated Use ID_DESC instead */
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Rating = 'RATING',
-  RatingDesc = 'RATING_DESC',
-  Score = 'SCORE',
-  ScoreDesc = 'SCORE_DESC',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC'
-}
-
-/** Revision history actions */
-export enum RevisionHistoryAction {
-  Create = 'CREATE',
-  Edit = 'EDIT'
-}
+export type ReviewRating =
+  | 'DOWN_VOTE'
+  | 'NO_VOTE'
+  | 'UP_VOTE';
 
 /** Media list scoring type */
-export enum ScoreFormat {
+export type ScoreFormat =
   /** An integer from 0-3. Should be represented in Smileys. 0 => No Score, 1 => :(, 2 => :|, 3 => :) */
-  Point_3 = 'POINT_3',
+  | 'POINT_3'
   /** An integer from 0-5. Should be represented in Stars */
-  Point_5 = 'POINT_5',
+  | 'POINT_5'
   /** An integer from 0-10 */
-  Point_10 = 'POINT_10',
+  | 'POINT_10'
   /** A float from 0-10 with 1 decimal place */
-  Point_10Decimal = 'POINT_10_DECIMAL',
+  | 'POINT_10_DECIMAL'
   /** An integer from 0-100 */
-  Point_100 = 'POINT_100'
-}
-
-/** Site trend sort enums */
-export enum SiteTrendSort {
-  Change = 'CHANGE',
-  ChangeDesc = 'CHANGE_DESC',
-  Count = 'COUNT',
-  CountDesc = 'COUNT_DESC',
-  Date = 'DATE',
-  DateDesc = 'DATE_DESC'
-}
-
-/** The primary language of the voice actor */
-export enum StaffLanguage {
-  /** English */
-  English = 'ENGLISH',
-  /** French */
-  French = 'FRENCH',
-  /** German */
-  German = 'GERMAN',
-  /** Hebrew */
-  Hebrew = 'HEBREW',
-  /** Hungarian */
-  Hungarian = 'HUNGARIAN',
-  /** Italian */
-  Italian = 'ITALIAN',
-  /** Japanese */
-  Japanese = 'JAPANESE',
-  /** Korean */
-  Korean = 'KOREAN',
-  /** Portuguese */
-  Portuguese = 'PORTUGUESE',
-  /** Spanish */
-  Spanish = 'SPANISH'
-}
-
-/** The names of the staff member */
-export type StaffNameInput = {
-  /** Other names the character might be referred by */
-  alternative: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  /** The person's given name */
-  first: InputMaybe<Scalars['String']['input']>;
-  /** The person's surname */
-  last: InputMaybe<Scalars['String']['input']>;
-  /** The person's middle name */
-  middle: InputMaybe<Scalars['String']['input']>;
-  /** The person's full name in their native language */
-  native: InputMaybe<Scalars['String']['input']>;
-};
-
-/** Staff sort enums */
-export enum StaffSort {
-  Favourites = 'FAVOURITES',
-  FavouritesDesc = 'FAVOURITES_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Language = 'LANGUAGE',
-  LanguageDesc = 'LANGUAGE_DESC',
-  /** Order manually decided by moderators */
-  Relevance = 'RELEVANCE',
-  Role = 'ROLE',
-  RoleDesc = 'ROLE_DESC',
-  SearchMatch = 'SEARCH_MATCH'
-}
-
-/** Studio sort enums */
-export enum StudioSort {
-  Favourites = 'FAVOURITES',
-  FavouritesDesc = 'FAVOURITES_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Name = 'NAME',
-  NameDesc = 'NAME_DESC',
-  SearchMatch = 'SEARCH_MATCH'
-}
-
-/** Submission sort enums */
-export enum SubmissionSort {
-  Id = 'ID',
-  IdDesc = 'ID_DESC'
-}
-
-/** Submission status */
-export enum SubmissionStatus {
-  Accepted = 'ACCEPTED',
-  PartiallyAccepted = 'PARTIALLY_ACCEPTED',
-  Pending = 'PENDING',
-  Rejected = 'REJECTED'
-}
-
-/** Thread comments sort enums */
-export enum ThreadCommentSort {
-  Id = 'ID',
-  IdDesc = 'ID_DESC'
-}
-
-/** Thread sort enums */
-export enum ThreadSort {
-  /** @deprecated Use ID instead */
-  CreatedAt = 'CREATED_AT',
-  /** @deprecated Use ID_DESC instead */
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  IsSticky = 'IS_STICKY',
-  RepliedAt = 'REPLIED_AT',
-  RepliedAtDesc = 'REPLIED_AT_DESC',
-  ReplyCount = 'REPLY_COUNT',
-  ReplyCountDesc = 'REPLY_COUNT_DESC',
-  SearchMatch = 'SEARCH_MATCH',
-  Title = 'TITLE',
-  TitleDesc = 'TITLE_DESC',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
-  ViewCount = 'VIEW_COUNT',
-  ViewCountDesc = 'VIEW_COUNT_DESC'
-}
-
-/** User sort enums */
-export enum UserSort {
-  ChaptersRead = 'CHAPTERS_READ',
-  ChaptersReadDesc = 'CHAPTERS_READ_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  SearchMatch = 'SEARCH_MATCH',
-  Username = 'USERNAME',
-  UsernameDesc = 'USERNAME_DESC',
-  WatchedTime = 'WATCHED_TIME',
-  WatchedTimeDesc = 'WATCHED_TIME_DESC'
-}
+  | 'POINT_100';
 
 /** The language the user wants to see staff and character names in */
-export enum UserStaffNameLanguage {
+export type UserStaffNameLanguage =
   /** The staff or character's name in their native language */
-  Native = 'NATIVE',
+  | 'NATIVE'
   /** The romanization of the staff or character's native name */
-  Romaji = 'ROMAJI',
+  | 'ROMAJI'
   /** The romanization of the staff or character's native name, with western name ordering */
-  RomajiWestern = 'ROMAJI_WESTERN'
-}
-
-/** User statistics sort enum */
-export enum UserStatisticsSort {
-  Count = 'COUNT',
-  CountDesc = 'COUNT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  MeanScore = 'MEAN_SCORE',
-  MeanScoreDesc = 'MEAN_SCORE_DESC',
-  Progress = 'PROGRESS',
-  ProgressDesc = 'PROGRESS_DESC'
-}
+  | 'ROMAJI_WESTERN';
 
 /** The language the user wants to see media titles in */
-export enum UserTitleLanguage {
+export type UserTitleLanguage =
   /** The official english title */
-  English = 'ENGLISH',
+  | 'ENGLISH'
   /** The official english title, stylised by media creator */
-  EnglishStylised = 'ENGLISH_STYLISED',
+  | 'ENGLISH_STYLISED'
   /** Official title in it's native language */
-  Native = 'NATIVE',
+  | 'NATIVE'
   /** Official title in it's native language, stylised by media creator */
-  NativeStylised = 'NATIVE_STYLISED',
+  | 'NATIVE_STYLISED'
   /** The romanization of the native language title */
-  Romaji = 'ROMAJI',
+  | 'ROMAJI'
   /** The romanization of the native language title, stylised by media creator */
-  RomajiStylised = 'ROMAJI_STYLISED'
-}
+  | 'ROMAJI_STYLISED';
 
 export type AnimeFragment = { id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, nextAiringEpisode: { id: number, airingAt: number, timeUntilAiring: number, episode: number, mediaId: number } | null, streamingEpisodes: Array<{ title: string | null, thumbnail: string | null, url: string | null, site: string | null } | null> | null, studios: { edges: Array<{ isMain: boolean, favouriteOrder: number | null, node: { id: number, name: string, isAnimationStudio: boolean, favourites: number | null, isFavourite: boolean, siteUrl: string | null } | null } | null> | null } | null, relations: { edges: Array<{ id: number | null, relationType: MediaRelation | null, isMainStudio: boolean, characterRole: CharacterRole | null, characterName: string | null, roleNotes: string | null, dubGroup: string | null, staffRole: string | null, favouriteOrder: number | null, node: { id: number, type: MediaType | null, format: MediaFormat | null, status: MediaStatus | null, season: MediaSeason | null, seasonYear: number | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, averageScore: number | null, popularity: number | null, favourites: number | null, genres: Array<string | null> | null, isAdult: boolean | null, countryOfOrigin: unknown, siteUrl: string | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null } | null> | null } | null, characters: { edges: Array<{ id: number | null, role: CharacterRole | null, name: string | null, favouriteOrder: number | null, voiceActors: Array<{ id: number, languageV2: string | null, name: { full: string | null, native: string | null } | null, image: { large: string | null, medium: string | null } | null } | null> | null, voiceActorRoles: Array<{ roleNotes: string | null, dubGroup: string | null, voiceActor: { id: number, name: { full: string | null } | null } | null } | null> | null, node: { id: number, description: string | null, gender: string | null, age: string | null, bloodType: string | null, isFavourite: boolean, isFavouriteBlocked: boolean, favourites: number | null, siteUrl: string | null, name: { alternative: Array<string | null> | null, alternativeSpoiler: Array<string | null> | null, first: string | null, full: string | null, last: string | null, middle: string | null, native: string | null, userPreferred: string | null } | null, image: { large: string | null, medium: string | null } | null, dateOfBirth: { year: number | null, month: number | null, day: number | null } | null } | null } | null> | null, nodes: Array<{ id: number, description: string | null, gender: string | null, age: string | null, bloodType: string | null, isFavourite: boolean, isFavouriteBlocked: boolean, favourites: number | null, siteUrl: string | null, name: { alternative: Array<string | null> | null, alternativeSpoiler: Array<string | null> | null, first: string | null, full: string | null, last: string | null, middle: string | null, native: string | null, userPreferred: string | null } | null, image: { large: string | null, medium: string | null } | null, dateOfBirth: { year: number | null, month: number | null, day: number | null } | null } | null> | null } | null, staff: { edges: Array<{ id: number | null, role: string | null, favouriteOrder: number | null, node: { id: number, description: string | null, primaryOccupations: Array<string | null> | null, gender: string | null, bloodType: string | null, homeTown: string | null, languageV2: string | null, yearsActive: Array<number | null> | null, favourites: number | null, isFavourite: boolean, isFavouriteBlocked: boolean, age: number | null, siteUrl: string | null, name: { full: string | null, native: string | null, first: string | null, middle: string | null, last: string | null, userPreferred: string | null } | null, image: { large: string | null, medium: string | null } | null, dateOfBirth: { year: number | null, month: number | null, day: number | null } | null, dateOfDeath: { year: number | null, month: number | null, day: number | null } | null } | null } | null> | null, nodes: Array<{ id: number, description: string | null, primaryOccupations: Array<string | null> | null, gender: string | null, bloodType: string | null, homeTown: string | null, languageV2: string | null, yearsActive: Array<number | null> | null, favourites: number | null, isFavourite: boolean, isFavouriteBlocked: boolean, age: number | null, siteUrl: string | null, name: { full: string | null, native: string | null, first: string | null, middle: string | null, last: string | null, userPreferred: string | null } | null, image: { large: string | null, medium: string | null } | null, dateOfBirth: { year: number | null, month: number | null, day: number | null } | null, dateOfDeath: { year: number | null, month: number | null, day: number | null } | null } | null> | null } | null, tags: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null, isGeneralSpoiler: boolean | null, isMediaSpoiler: boolean | null, isAdult: boolean | null, userId: number | null } | null> | null, rankings: Array<{ id: number, rank: number, type: MediaRankType, format: MediaFormat, year: number | null, season: MediaSeason | null, allTime: boolean | null, context: string } | null> | null, externalLinks: Array<{ id: number, url: string | null, site: string, siteId: number | null, type: ExternalLinkType | null, language: string | null, color: string | null, icon: string | null, notes: string | null, isDisabled: boolean | null } | null> | null, stats: { scoreDistribution: Array<{ score: number | null, amount: number | null } | null> | null, statusDistribution: Array<{ status: MediaListStatus | null, amount: number | null } | null> | null, airingProgression: Array<{ episode: number | null, score: number | null, watching: number | null } | null> | null } | null, trailer: { id: string | null, site: string | null, thumbnail: string | null } | null, reviews: { pageInfo: { total: number | null } | null } | null, recommendations: { pageInfo: { total: number | null } | null } | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null };
 
@@ -1407,15 +1462,14 @@ export type GetStudioByIdQueryVariables = Exact<{
 
 export type GetStudioByIdQuery = { Studio: { id: number, name: string, isAnimationStudio: boolean, favourites: number | null, isFavourite: boolean, siteUrl: string | null, media: { pageInfo: { total: number | null, perPage: number | null, currentPage: number | null, lastPage: number | null, hasNextPage: boolean | null } | null } | null } | null };
 
-export type SearchStudiosQueryVariables = Exact<{
-  search: string | null | undefined;
-  sort: Array<StudioSort | null | undefined> | StudioSort | null | undefined;
-  page?: number | null | undefined;
-  perPage?: number | null | undefined;
+export type SearchStudioQueryVariables = Exact<{
+  query: string | null | undefined;
+  page: number | null | undefined;
+  perPage: number | null | undefined;
 }>;
 
 
-export type SearchStudiosQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, studios: Array<{ id: number, name: string, isAnimationStudio: boolean, favourites: number | null, isFavourite: boolean, siteUrl: string | null } | null> | null } | null };
+export type SearchStudioQuery = { Page: { pageInfo: { total: number | null, perPage: number | null, currentPage: number | null, lastPage: number | null, hasNextPage: boolean | null } | null, studios: Array<{ id: number, name: string, isAnimationStudio: boolean, favourites: number | null, isFavourite: boolean, siteUrl: string | null } | null> | null } | null };
 
 export type ToggleFavoriteStudioMutationVariables = Exact<{
   studioId: number;
@@ -1511,30 +1565,30 @@ export type GetViewerStatisticsQueryVariables = Exact<{ [key: string]: never; }>
 
 export type GetViewerStatisticsQuery = { Viewer: { statistics: { anime: { count: number, meanScore: number, standardDeviation: number, minutesWatched: number, episodesWatched: number, chaptersRead: number, volumesRead: number, scores: Array<{ score: number | null, count: number, meanScore: number, minutesWatched: number } | null> | null, lengths: Array<{ length: string | null, count: number, meanScore: number, minutesWatched: number } | null> | null, formats: Array<{ format: MediaFormat | null, count: number, meanScore: number, minutesWatched: number } | null> | null, statuses: Array<{ status: MediaListStatus | null, count: number, meanScore: number, minutesWatched: number } | null> | null, releaseYears: Array<{ releaseYear: number | null, count: number, meanScore: number, minutesWatched: number } | null> | null, startYears: Array<{ startYear: number | null, count: number, meanScore: number, minutesWatched: number } | null> | null, genres: Array<{ genre: string | null, count: number, meanScore: number, minutesWatched: number } | null> | null, tags: Array<{ count: number, meanScore: number, minutesWatched: number, tag: { name: string } | null } | null> | null, countries: Array<{ country: unknown, count: number, meanScore: number, minutesWatched: number } | null> | null, voiceActors: Array<{ count: number, meanScore: number, minutesWatched: number, characterIds: Array<number | null>, mediaIds: Array<number | null>, voiceActor: { id: number, name: { full: string | null } | null } | null } | null> | null, staff: Array<{ count: number, meanScore: number, minutesWatched: number, mediaIds: Array<number | null>, staff: { id: number, name: { full: string | null } | null } | null } | null> | null, studios: Array<{ count: number, meanScore: number, minutesWatched: number, mediaIds: Array<number | null>, studio: { id: number, name: string } | null } | null> | null } | null, manga: { count: number, meanScore: number, standardDeviation: number, chaptersRead: number, volumesRead: number, scores: Array<{ score: number | null, count: number, meanScore: number, chaptersRead: number } | null> | null, lengths: Array<{ length: string | null, count: number, meanScore: number, chaptersRead: number } | null> | null, formats: Array<{ format: MediaFormat | null, count: number, meanScore: number, chaptersRead: number } | null> | null, statuses: Array<{ status: MediaListStatus | null, count: number, meanScore: number, chaptersRead: number } | null> | null, releaseYears: Array<{ releaseYear: number | null, count: number, meanScore: number, chaptersRead: number } | null> | null, startYears: Array<{ startYear: number | null, count: number, meanScore: number, chaptersRead: number } | null> | null, genres: Array<{ genre: string | null, count: number, meanScore: number, chaptersRead: number } | null> | null, tags: Array<{ count: number, meanScore: number, chaptersRead: number, tag: { name: string } | null } | null> | null, countries: Array<{ country: unknown, count: number, meanScore: number, chaptersRead: number } | null> | null, staff: Array<{ count: number, meanScore: number, chaptersRead: number, mediaIds: Array<number | null>, staff: { id: number, name: { full: string | null } | null } | null } | null> | null, studios: Array<{ count: number, meanScore: number, chaptersRead: number, mediaIds: Array<number | null>, studio: { id: number, name: string } | null } | null> | null } | null } | null } | null };
 
-export const TitleFragmentDoc = gql`
+export const TitleFragmentDoc = new TypedDocumentString(`
     fragment TitleFragment on MediaTitle {
   romaji
   english
   native
   userPreferred
 }
-    `;
-export const CoverImageFragmentDoc = gql`
+    `, {"fragmentName":"TitleFragment"});
+export const CoverImageFragmentDoc = new TypedDocumentString(`
     fragment CoverImageFragment on MediaCoverImage {
   large
   medium
   extraLarge
   color
 }
-    `;
-export const DateFragmentDoc = gql`
+    `, {"fragmentName":"CoverImageFragment"});
+export const DateFragmentDoc = new TypedDocumentString(`
     fragment DateFragment on FuzzyDate {
   year
   month
   day
 }
-    `;
-export const MediaCoreFragmentDoc = gql`
+    `, {"fragmentName":"DateFragment"});
+export const MediaCoreFragmentDoc = new TypedDocumentString(`
     fragment MediaCoreFragment on Media {
   id
   idMal
@@ -1583,10 +1637,24 @@ export const MediaCoreFragmentDoc = gql`
   isReviewBlocked
   modNotes
 }
-    ${TitleFragmentDoc}
-${CoverImageFragmentDoc}
-${DateFragmentDoc}`;
-export const MediaTagFragmentDoc = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}`, {"fragmentName":"MediaCoreFragment"});
+export const MediaTagFragmentDoc = new TypedDocumentString(`
     fragment MediaTagFragment on MediaTag {
   id
   name
@@ -1598,8 +1666,8 @@ export const MediaTagFragmentDoc = gql`
   isAdult
   userId
 }
-    `;
-export const MediaRankFragmentDoc = gql`
+    `, {"fragmentName":"MediaTagFragment"});
+export const MediaRankFragmentDoc = new TypedDocumentString(`
     fragment MediaRankFragment on MediaRank {
   id
   rank
@@ -1610,8 +1678,8 @@ export const MediaRankFragmentDoc = gql`
   allTime
   context
 }
-    `;
-export const MediaExternalLinkFragmentDoc = gql`
+    `, {"fragmentName":"MediaRankFragment"});
+export const MediaExternalLinkFragmentDoc = new TypedDocumentString(`
     fragment MediaExternalLinkFragment on MediaExternalLink {
   id
   url
@@ -1624,20 +1692,20 @@ export const MediaExternalLinkFragmentDoc = gql`
   notes
   isDisabled
 }
-    `;
-export const ScoreDistributionFragmentDoc = gql`
+    `, {"fragmentName":"MediaExternalLinkFragment"});
+export const ScoreDistributionFragmentDoc = new TypedDocumentString(`
     fragment ScoreDistributionFragment on ScoreDistribution {
   score
   amount
 }
-    `;
-export const StatusDistributionFragmentDoc = gql`
+    `, {"fragmentName":"ScoreDistributionFragment"});
+export const StatusDistributionFragmentDoc = new TypedDocumentString(`
     fragment StatusDistributionFragment on StatusDistribution {
   status
   amount
 }
-    `;
-export const MediaStatsFragmentDoc = gql`
+    `, {"fragmentName":"StatusDistributionFragment"});
+export const MediaStatsFragmentDoc = new TypedDocumentString(`
     fragment MediaStatsFragment on MediaStats {
   scoreDistribution {
     ...ScoreDistributionFragment
@@ -1651,16 +1719,22 @@ export const MediaStatsFragmentDoc = gql`
     watching
   }
 }
-    ${ScoreDistributionFragmentDoc}
-${StatusDistributionFragmentDoc}`;
-export const MediaTrailerFragmentDoc = gql`
+    fragment ScoreDistributionFragment on ScoreDistribution {
+  score
+  amount
+}
+fragment StatusDistributionFragment on StatusDistribution {
+  status
+  amount
+}`, {"fragmentName":"MediaStatsFragment"});
+export const MediaTrailerFragmentDoc = new TypedDocumentString(`
     fragment MediaTrailerFragment on MediaTrailer {
   id
   site
   thumbnail
 }
-    `;
-export const MediaDetailedFragmentDoc = gql`
+    `, {"fragmentName":"MediaTrailerFragment"});
+export const MediaDetailedFragmentDoc = new TypedDocumentString(`
     fragment MediaDetailedFragment on Media {
   ...MediaCoreFragment
   tags {
@@ -1689,13 +1763,131 @@ export const MediaDetailedFragmentDoc = gql`
     }
   }
 }
-    ${MediaCoreFragmentDoc}
-${MediaTagFragmentDoc}
-${MediaRankFragmentDoc}
-${MediaExternalLinkFragmentDoc}
-${MediaStatsFragmentDoc}
-${MediaTrailerFragmentDoc}`;
-export const AiringScheduleFragmentDoc = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaExternalLinkFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+  language
+  color
+  icon
+  notes
+  isDisabled
+}
+fragment MediaRankFragment on MediaRank {
+  id
+  rank
+  type
+  format
+  year
+  season
+  allTime
+  context
+}
+fragment ScoreDistributionFragment on ScoreDistribution {
+  score
+  amount
+}
+fragment StatusDistributionFragment on StatusDistribution {
+  status
+  amount
+}
+fragment MediaStatsFragment on MediaStats {
+  scoreDistribution {
+    ...ScoreDistributionFragment
+  }
+  statusDistribution {
+    ...StatusDistributionFragment
+  }
+  airingProgression {
+    episode
+    score
+    watching
+  }
+}
+fragment MediaTagFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+  isGeneralSpoiler
+  isMediaSpoiler
+  isAdult
+  userId
+}
+fragment MediaTrailerFragment on MediaTrailer {
+  id
+  site
+  thumbnail
+}`, {"fragmentName":"MediaDetailedFragment"});
+export const AiringScheduleFragmentDoc = new TypedDocumentString(`
     fragment AiringScheduleFragment on AiringSchedule {
   id
   airingAt
@@ -1703,16 +1895,16 @@ export const AiringScheduleFragmentDoc = gql`
   episode
   mediaId
 }
-    `;
-export const MediaStreamingEpisodeFragmentDoc = gql`
+    `, {"fragmentName":"AiringScheduleFragment"});
+export const MediaStreamingEpisodeFragmentDoc = new TypedDocumentString(`
     fragment MediaStreamingEpisodeFragment on MediaStreamingEpisode {
   title
   thumbnail
   url
   site
 }
-    `;
-export const StudioNodeFragmentDoc = gql`
+    `, {"fragmentName":"MediaStreamingEpisodeFragment"});
+export const StudioNodeFragmentDoc = new TypedDocumentString(`
     fragment StudioNodeFragment on Studio {
   id
   name
@@ -1721,8 +1913,8 @@ export const StudioNodeFragmentDoc = gql`
   isFavourite
   siteUrl
 }
-    `;
-export const StudioEdgeFragmentDoc = gql`
+    `, {"fragmentName":"StudioNodeFragment"});
+export const StudioEdgeFragmentDoc = new TypedDocumentString(`
     fragment StudioEdgeFragment on StudioEdge {
   isMain
   favouriteOrder
@@ -1730,15 +1922,36 @@ export const StudioEdgeFragmentDoc = gql`
     ...StudioNodeFragment
   }
 }
-    ${StudioNodeFragmentDoc}`;
-export const StudioConnectionFragmentDoc = gql`
+    fragment StudioNodeFragment on Studio {
+  id
+  name
+  isAnimationStudio
+  favourites
+  isFavourite
+  siteUrl
+}`, {"fragmentName":"StudioEdgeFragment"});
+export const StudioConnectionFragmentDoc = new TypedDocumentString(`
     fragment StudioConnectionFragment on StudioConnection {
   edges {
     ...StudioEdgeFragment
   }
 }
-    ${StudioEdgeFragmentDoc}`;
-export const MediaRelationNodeFragmentDoc = gql`
+    fragment StudioNodeFragment on Studio {
+  id
+  name
+  isAnimationStudio
+  favourites
+  isFavourite
+  siteUrl
+}
+fragment StudioEdgeFragment on StudioEdge {
+  isMain
+  favouriteOrder
+  node {
+    ...StudioNodeFragment
+  }
+}`, {"fragmentName":"StudioConnectionFragment"});
+export const MediaRelationNodeFragmentDoc = new TypedDocumentString(`
     fragment MediaRelationNodeFragment on Media {
   id
   title {
@@ -1770,10 +1983,24 @@ export const MediaRelationNodeFragmentDoc = gql`
   countryOfOrigin
   siteUrl
 }
-    ${TitleFragmentDoc}
-${CoverImageFragmentDoc}
-${DateFragmentDoc}`;
-export const MediaRelationEdgeFragmentDoc = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}`, {"fragmentName":"MediaRelationNodeFragment"});
+export const MediaRelationEdgeFragmentDoc = new TypedDocumentString(`
     fragment MediaRelationEdgeFragment on MediaEdge {
   id
   relationType
@@ -1788,15 +2015,123 @@ export const MediaRelationEdgeFragmentDoc = gql`
     ...MediaRelationNodeFragment
   }
 }
-    ${MediaRelationNodeFragmentDoc}`;
-export const MediaRelationConnectionFragmentDoc = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaRelationNodeFragment on Media {
+  id
+  title {
+    ...TitleFragment
+  }
+  type
+  format
+  status
+  coverImage {
+    ...CoverImageFragment
+  }
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  episodes
+  chapters
+  volumes
+  duration
+  averageScore
+  popularity
+  favourites
+  genres
+  isAdult
+  countryOfOrigin
+  siteUrl
+}`, {"fragmentName":"MediaRelationEdgeFragment"});
+export const MediaRelationConnectionFragmentDoc = new TypedDocumentString(`
     fragment MediaRelationConnectionFragment on MediaConnection {
   edges {
     ...MediaRelationEdgeFragment
   }
 }
-    ${MediaRelationEdgeFragmentDoc}`;
-export const CharacterNameFragmentDoc = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaRelationNodeFragment on Media {
+  id
+  title {
+    ...TitleFragment
+  }
+  type
+  format
+  status
+  coverImage {
+    ...CoverImageFragment
+  }
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  episodes
+  chapters
+  volumes
+  duration
+  averageScore
+  popularity
+  favourites
+  genres
+  isAdult
+  countryOfOrigin
+  siteUrl
+}
+fragment MediaRelationEdgeFragment on MediaEdge {
+  id
+  relationType
+  isMainStudio
+  characterRole
+  characterName
+  roleNotes
+  dubGroup
+  staffRole
+  favouriteOrder
+  node {
+    ...MediaRelationNodeFragment
+  }
+}`, {"fragmentName":"MediaRelationConnectionFragment"});
+export const CharacterNameFragmentDoc = new TypedDocumentString(`
     fragment CharacterNameFragment on CharacterName {
   alternative
   alternativeSpoiler
@@ -1807,14 +2142,14 @@ export const CharacterNameFragmentDoc = gql`
   native
   userPreferred
 }
-    `;
-export const CharacterImageFragmentDoc = gql`
+    `, {"fragmentName":"CharacterNameFragment"});
+export const CharacterImageFragmentDoc = new TypedDocumentString(`
     fragment CharacterImageFragment on CharacterImage {
   large
   medium
 }
-    `;
-export const CharacterBasicFragmentDoc = gql`
+    `, {"fragmentName":"CharacterImageFragment"});
+export const CharacterBasicFragmentDoc = new TypedDocumentString(`
     fragment CharacterBasicFragment on Character {
   id
   name {
@@ -1835,10 +2170,26 @@ export const CharacterBasicFragmentDoc = gql`
   favourites
   siteUrl
 }
-    ${CharacterNameFragmentDoc}
-${CharacterImageFragmentDoc}
-${DateFragmentDoc}`;
-export const CharacterEdgeFragmentDoc = gql`
+    fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment CharacterImageFragment on CharacterImage {
+  large
+  medium
+}
+fragment CharacterNameFragment on CharacterName {
+  alternative
+  alternativeSpoiler
+  first
+  full
+  last
+  middle
+  native
+  userPreferred
+}`, {"fragmentName":"CharacterBasicFragment"});
+export const CharacterEdgeFragmentDoc = new TypedDocumentString(`
     fragment CharacterEdgeFragment on CharacterEdge {
   id
   role
@@ -1870,8 +2221,46 @@ export const CharacterEdgeFragmentDoc = gql`
     ...CharacterBasicFragment
   }
 }
-    ${CharacterBasicFragmentDoc}`;
-export const CharacterConnectionFragmentDoc = gql`
+    fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment CharacterImageFragment on CharacterImage {
+  large
+  medium
+}
+fragment CharacterNameFragment on CharacterName {
+  alternative
+  alternativeSpoiler
+  first
+  full
+  last
+  middle
+  native
+  userPreferred
+}
+fragment CharacterBasicFragment on Character {
+  id
+  name {
+    ...CharacterNameFragment
+  }
+  image {
+    ...CharacterImageFragment
+  }
+  description
+  gender
+  dateOfBirth {
+    ...DateFragment
+  }
+  age
+  bloodType
+  isFavourite
+  isFavouriteBlocked
+  favourites
+  siteUrl
+}`, {"fragmentName":"CharacterEdgeFragment"});
+export const CharacterConnectionFragmentDoc = new TypedDocumentString(`
     fragment CharacterConnectionFragment on CharacterConnection {
   edges {
     ...CharacterEdgeFragment
@@ -1880,9 +2269,77 @@ export const CharacterConnectionFragmentDoc = gql`
     ...CharacterBasicFragment
   }
 }
-    ${CharacterEdgeFragmentDoc}
-${CharacterBasicFragmentDoc}`;
-export const StaffNameFragmentDoc = gql`
+    fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment CharacterImageFragment on CharacterImage {
+  large
+  medium
+}
+fragment CharacterEdgeFragment on CharacterEdge {
+  id
+  role
+  name
+  voiceActors {
+    id
+    name {
+      full
+      native
+    }
+    image {
+      large
+      medium
+    }
+    languageV2
+  }
+  voiceActorRoles {
+    roleNotes
+    dubGroup
+    voiceActor {
+      id
+      name {
+        full
+      }
+    }
+  }
+  favouriteOrder
+  node {
+    ...CharacterBasicFragment
+  }
+}
+fragment CharacterNameFragment on CharacterName {
+  alternative
+  alternativeSpoiler
+  first
+  full
+  last
+  middle
+  native
+  userPreferred
+}
+fragment CharacterBasicFragment on Character {
+  id
+  name {
+    ...CharacterNameFragment
+  }
+  image {
+    ...CharacterImageFragment
+  }
+  description
+  gender
+  dateOfBirth {
+    ...DateFragment
+  }
+  age
+  bloodType
+  isFavourite
+  isFavouriteBlocked
+  favourites
+  siteUrl
+}`, {"fragmentName":"CharacterConnectionFragment"});
+export const StaffNameFragmentDoc = new TypedDocumentString(`
     fragment StaffNameFragment on StaffName {
   full
   native
@@ -1891,14 +2348,14 @@ export const StaffNameFragmentDoc = gql`
   last
   userPreferred
 }
-    `;
-export const StaffImageFragmentDoc = gql`
+    `, {"fragmentName":"StaffNameFragment"});
+export const StaffImageFragmentDoc = new TypedDocumentString(`
     fragment StaffImageFragment on StaffImage {
   large
   medium
 }
-    `;
-export const StaffBasicFragmentDoc = gql`
+    `, {"fragmentName":"StaffImageFragment"});
+export const StaffBasicFragmentDoc = new TypedDocumentString(`
     fragment StaffBasicFragment on Staff {
   id
   name {
@@ -1926,10 +2383,24 @@ export const StaffBasicFragmentDoc = gql`
   age
   siteUrl
 }
-    ${StaffNameFragmentDoc}
-${StaffImageFragmentDoc}
-${DateFragmentDoc}`;
-export const StaffEdgeFragmentDoc = gql`
+    fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment StaffImageFragment on StaffImage {
+  large
+  medium
+}
+fragment StaffNameFragment on StaffName {
+  full
+  native
+  first
+  middle
+  last
+  userPreferred
+}`, {"fragmentName":"StaffBasicFragment"});
+export const StaffEdgeFragmentDoc = new TypedDocumentString(`
     fragment StaffEdgeFragment on StaffEdge {
   id
   role
@@ -1938,8 +2409,51 @@ export const StaffEdgeFragmentDoc = gql`
     ...StaffBasicFragment
   }
 }
-    ${StaffBasicFragmentDoc}`;
-export const StaffConnectionFragmentDoc = gql`
+    fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment StaffImageFragment on StaffImage {
+  large
+  medium
+}
+fragment StaffNameFragment on StaffName {
+  full
+  native
+  first
+  middle
+  last
+  userPreferred
+}
+fragment StaffBasicFragment on Staff {
+  id
+  name {
+    ...StaffNameFragment
+  }
+  image {
+    ...StaffImageFragment
+  }
+  description
+  primaryOccupations
+  gender
+  bloodType
+  homeTown
+  languageV2
+  yearsActive
+  favourites
+  isFavourite
+  isFavouriteBlocked
+  dateOfBirth {
+    ...DateFragment
+  }
+  dateOfDeath {
+    ...DateFragment
+  }
+  age
+  siteUrl
+}`, {"fragmentName":"StaffEdgeFragment"});
+export const StaffConnectionFragmentDoc = new TypedDocumentString(`
     fragment StaffConnectionFragment on StaffConnection {
   edges {
     ...StaffEdgeFragment
@@ -1948,9 +2462,59 @@ export const StaffConnectionFragmentDoc = gql`
     ...StaffBasicFragment
   }
 }
-    ${StaffEdgeFragmentDoc}
-${StaffBasicFragmentDoc}`;
-export const AnimeFragmentDoc = gql`
+    fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment StaffImageFragment on StaffImage {
+  large
+  medium
+}
+fragment StaffEdgeFragment on StaffEdge {
+  id
+  role
+  favouriteOrder
+  node {
+    ...StaffBasicFragment
+  }
+}
+fragment StaffNameFragment on StaffName {
+  full
+  native
+  first
+  middle
+  last
+  userPreferred
+}
+fragment StaffBasicFragment on Staff {
+  id
+  name {
+    ...StaffNameFragment
+  }
+  image {
+    ...StaffImageFragment
+  }
+  description
+  primaryOccupations
+  gender
+  bloodType
+  homeTown
+  languageV2
+  yearsActive
+  favourites
+  isFavourite
+  isFavouriteBlocked
+  dateOfBirth {
+    ...DateFragment
+  }
+  dateOfDeath {
+    ...DateFragment
+  }
+  age
+  siteUrl
+}`, {"fragmentName":"StaffConnectionFragment"});
+export const AnimeFragmentDoc = new TypedDocumentString(`
     fragment AnimeFragment on Media {
   ...MediaDetailedFragment
   nextAiringEpisode {
@@ -1972,19 +2536,413 @@ export const AnimeFragmentDoc = gql`
     ...StaffConnectionFragment
   }
 }
-    ${MediaDetailedFragmentDoc}
-${AiringScheduleFragmentDoc}
-${MediaStreamingEpisodeFragmentDoc}
-${StudioConnectionFragmentDoc}
-${MediaRelationConnectionFragmentDoc}
-${CharacterConnectionFragmentDoc}
-${StaffConnectionFragmentDoc}`;
-export const CharacterFragmentDoc = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment CharacterImageFragment on CharacterImage {
+  large
+  medium
+}
+fragment StaffImageFragment on StaffImage {
+  large
+  medium
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment CharacterEdgeFragment on CharacterEdge {
+  id
+  role
+  name
+  voiceActors {
+    id
+    name {
+      full
+      native
+    }
+    image {
+      large
+      medium
+    }
+    languageV2
+  }
+  voiceActorRoles {
+    roleNotes
+    dubGroup
+    voiceActor {
+      id
+      name {
+        full
+      }
+    }
+  }
+  favouriteOrder
+  node {
+    ...CharacterBasicFragment
+  }
+}
+fragment CharacterConnectionFragment on CharacterConnection {
+  edges {
+    ...CharacterEdgeFragment
+  }
+  nodes {
+    ...CharacterBasicFragment
+  }
+}
+fragment MediaRelationNodeFragment on Media {
+  id
+  title {
+    ...TitleFragment
+  }
+  type
+  format
+  status
+  coverImage {
+    ...CoverImageFragment
+  }
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  episodes
+  chapters
+  volumes
+  duration
+  averageScore
+  popularity
+  favourites
+  genres
+  isAdult
+  countryOfOrigin
+  siteUrl
+}
+fragment MediaRelationEdgeFragment on MediaEdge {
+  id
+  relationType
+  isMainStudio
+  characterRole
+  characterName
+  roleNotes
+  dubGroup
+  staffRole
+  favouriteOrder
+  node {
+    ...MediaRelationNodeFragment
+  }
+}
+fragment MediaRelationConnectionFragment on MediaConnection {
+  edges {
+    ...MediaRelationEdgeFragment
+  }
+}
+fragment StaffEdgeFragment on StaffEdge {
+  id
+  role
+  favouriteOrder
+  node {
+    ...StaffBasicFragment
+  }
+}
+fragment StaffConnectionFragment on StaffConnection {
+  edges {
+    ...StaffEdgeFragment
+  }
+  nodes {
+    ...StaffBasicFragment
+  }
+}
+fragment StudioNodeFragment on Studio {
+  id
+  name
+  isAnimationStudio
+  favourites
+  isFavourite
+  siteUrl
+}
+fragment StudioEdgeFragment on StudioEdge {
+  isMain
+  favouriteOrder
+  node {
+    ...StudioNodeFragment
+  }
+}
+fragment StudioConnectionFragment on StudioConnection {
+  edges {
+    ...StudioEdgeFragment
+  }
+}
+fragment CharacterNameFragment on CharacterName {
+  alternative
+  alternativeSpoiler
+  first
+  full
+  last
+  middle
+  native
+  userPreferred
+}
+fragment CharacterBasicFragment on Character {
+  id
+  name {
+    ...CharacterNameFragment
+  }
+  image {
+    ...CharacterImageFragment
+  }
+  description
+  gender
+  dateOfBirth {
+    ...DateFragment
+  }
+  age
+  bloodType
+  isFavourite
+  isFavouriteBlocked
+  favourites
+  siteUrl
+}
+fragment StaffNameFragment on StaffName {
+  full
+  native
+  first
+  middle
+  last
+  userPreferred
+}
+fragment StaffBasicFragment on Staff {
+  id
+  name {
+    ...StaffNameFragment
+  }
+  image {
+    ...StaffImageFragment
+  }
+  description
+  primaryOccupations
+  gender
+  bloodType
+  homeTown
+  languageV2
+  yearsActive
+  favourites
+  isFavourite
+  isFavouriteBlocked
+  dateOfBirth {
+    ...DateFragment
+  }
+  dateOfDeath {
+    ...DateFragment
+  }
+  age
+  siteUrl
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaDetailedFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagFragment
+  }
+  rankings {
+    ...MediaRankFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkFragment
+  }
+  stats {
+    ...MediaStatsFragment
+  }
+  trailer {
+    ...MediaTrailerFragment
+  }
+  reviews(page: 1, perPage: 1) {
+    pageInfo {
+      total
+    }
+  }
+  recommendations(page: 1, perPage: 1) {
+    pageInfo {
+      total
+    }
+  }
+}
+fragment MediaExternalLinkFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+  language
+  color
+  icon
+  notes
+  isDisabled
+}
+fragment MediaRankFragment on MediaRank {
+  id
+  rank
+  type
+  format
+  year
+  season
+  allTime
+  context
+}
+fragment ScoreDistributionFragment on ScoreDistribution {
+  score
+  amount
+}
+fragment StatusDistributionFragment on StatusDistribution {
+  status
+  amount
+}
+fragment MediaStatsFragment on MediaStats {
+  scoreDistribution {
+    ...ScoreDistributionFragment
+  }
+  statusDistribution {
+    ...StatusDistributionFragment
+  }
+  airingProgression {
+    episode
+    score
+    watching
+  }
+}
+fragment MediaStreamingEpisodeFragment on MediaStreamingEpisode {
+  title
+  thumbnail
+  url
+  site
+}
+fragment AiringScheduleFragment on AiringSchedule {
+  id
+  airingAt
+  timeUntilAiring
+  episode
+  mediaId
+}
+fragment MediaTagFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+  isGeneralSpoiler
+  isMediaSpoiler
+  isAdult
+  userId
+}
+fragment MediaTrailerFragment on MediaTrailer {
+  id
+  site
+  thumbnail
+}`, {"fragmentName":"AnimeFragment"});
+export const CharacterFragmentDoc = new TypedDocumentString(`
     fragment CharacterFragment on Character {
   ...CharacterBasicFragment
 }
-    ${CharacterBasicFragmentDoc}`;
-export const MangaFragmentDoc = gql`
+    fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment CharacterImageFragment on CharacterImage {
+  large
+  medium
+}
+fragment CharacterNameFragment on CharacterName {
+  alternative
+  alternativeSpoiler
+  first
+  full
+  last
+  middle
+  native
+  userPreferred
+}
+fragment CharacterBasicFragment on Character {
+  id
+  name {
+    ...CharacterNameFragment
+  }
+  image {
+    ...CharacterImageFragment
+  }
+  description
+  gender
+  dateOfBirth {
+    ...DateFragment
+  }
+  age
+  bloodType
+  isFavourite
+  isFavouriteBlocked
+  favourites
+  siteUrl
+}`, {"fragmentName":"CharacterFragment"});
+export const MangaFragmentDoc = new TypedDocumentString(`
     fragment MangaFragment on Media {
   ...MediaDetailedFragment
   relations {
@@ -1997,11 +2955,337 @@ export const MangaFragmentDoc = gql`
     ...StaffConnectionFragment
   }
 }
-    ${MediaDetailedFragmentDoc}
-${MediaRelationConnectionFragmentDoc}
-${CharacterConnectionFragmentDoc}
-${StaffConnectionFragmentDoc}`;
-export const MediaTagBasicFragmentDoc = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment CharacterImageFragment on CharacterImage {
+  large
+  medium
+}
+fragment StaffImageFragment on StaffImage {
+  large
+  medium
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment CharacterEdgeFragment on CharacterEdge {
+  id
+  role
+  name
+  voiceActors {
+    id
+    name {
+      full
+      native
+    }
+    image {
+      large
+      medium
+    }
+    languageV2
+  }
+  voiceActorRoles {
+    roleNotes
+    dubGroup
+    voiceActor {
+      id
+      name {
+        full
+      }
+    }
+  }
+  favouriteOrder
+  node {
+    ...CharacterBasicFragment
+  }
+}
+fragment CharacterConnectionFragment on CharacterConnection {
+  edges {
+    ...CharacterEdgeFragment
+  }
+  nodes {
+    ...CharacterBasicFragment
+  }
+}
+fragment MediaRelationNodeFragment on Media {
+  id
+  title {
+    ...TitleFragment
+  }
+  type
+  format
+  status
+  coverImage {
+    ...CoverImageFragment
+  }
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  episodes
+  chapters
+  volumes
+  duration
+  averageScore
+  popularity
+  favourites
+  genres
+  isAdult
+  countryOfOrigin
+  siteUrl
+}
+fragment MediaRelationEdgeFragment on MediaEdge {
+  id
+  relationType
+  isMainStudio
+  characterRole
+  characterName
+  roleNotes
+  dubGroup
+  staffRole
+  favouriteOrder
+  node {
+    ...MediaRelationNodeFragment
+  }
+}
+fragment MediaRelationConnectionFragment on MediaConnection {
+  edges {
+    ...MediaRelationEdgeFragment
+  }
+}
+fragment StaffEdgeFragment on StaffEdge {
+  id
+  role
+  favouriteOrder
+  node {
+    ...StaffBasicFragment
+  }
+}
+fragment StaffConnectionFragment on StaffConnection {
+  edges {
+    ...StaffEdgeFragment
+  }
+  nodes {
+    ...StaffBasicFragment
+  }
+}
+fragment CharacterNameFragment on CharacterName {
+  alternative
+  alternativeSpoiler
+  first
+  full
+  last
+  middle
+  native
+  userPreferred
+}
+fragment CharacterBasicFragment on Character {
+  id
+  name {
+    ...CharacterNameFragment
+  }
+  image {
+    ...CharacterImageFragment
+  }
+  description
+  gender
+  dateOfBirth {
+    ...DateFragment
+  }
+  age
+  bloodType
+  isFavourite
+  isFavouriteBlocked
+  favourites
+  siteUrl
+}
+fragment StaffNameFragment on StaffName {
+  full
+  native
+  first
+  middle
+  last
+  userPreferred
+}
+fragment StaffBasicFragment on Staff {
+  id
+  name {
+    ...StaffNameFragment
+  }
+  image {
+    ...StaffImageFragment
+  }
+  description
+  primaryOccupations
+  gender
+  bloodType
+  homeTown
+  languageV2
+  yearsActive
+  favourites
+  isFavourite
+  isFavouriteBlocked
+  dateOfBirth {
+    ...DateFragment
+  }
+  dateOfDeath {
+    ...DateFragment
+  }
+  age
+  siteUrl
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaDetailedFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagFragment
+  }
+  rankings {
+    ...MediaRankFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkFragment
+  }
+  stats {
+    ...MediaStatsFragment
+  }
+  trailer {
+    ...MediaTrailerFragment
+  }
+  reviews(page: 1, perPage: 1) {
+    pageInfo {
+      total
+    }
+  }
+  recommendations(page: 1, perPage: 1) {
+    pageInfo {
+      total
+    }
+  }
+}
+fragment MediaExternalLinkFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+  language
+  color
+  icon
+  notes
+  isDisabled
+}
+fragment MediaRankFragment on MediaRank {
+  id
+  rank
+  type
+  format
+  year
+  season
+  allTime
+  context
+}
+fragment ScoreDistributionFragment on ScoreDistribution {
+  score
+  amount
+}
+fragment StatusDistributionFragment on StatusDistribution {
+  status
+  amount
+}
+fragment MediaStatsFragment on MediaStats {
+  scoreDistribution {
+    ...ScoreDistributionFragment
+  }
+  statusDistribution {
+    ...StatusDistributionFragment
+  }
+  airingProgression {
+    episode
+    score
+    watching
+  }
+}
+fragment MediaTagFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+  isGeneralSpoiler
+  isMediaSpoiler
+  isAdult
+  userId
+}
+fragment MediaTrailerFragment on MediaTrailer {
+  id
+  site
+  thumbnail
+}`, {"fragmentName":"MangaFragment"});
+export const MediaTagBasicFragmentDoc = new TypedDocumentString(`
     fragment MediaTagBasicFragment on MediaTag {
   id
   name
@@ -2009,8 +3293,8 @@ export const MediaTagBasicFragmentDoc = gql`
   category
   rank
 }
-    `;
-export const MediaExternalLinkBasicFragmentDoc = gql`
+    `, {"fragmentName":"MediaTagBasicFragment"});
+export const MediaExternalLinkBasicFragmentDoc = new TypedDocumentString(`
     fragment MediaExternalLinkBasicFragment on MediaExternalLink {
   id
   url
@@ -2018,8 +3302,8 @@ export const MediaExternalLinkBasicFragmentDoc = gql`
   siteId
   type
 }
-    `;
-export const MediaBasicFragmentDoc = gql`
+    `, {"fragmentName":"MediaExternalLinkBasicFragment"});
+export const MediaBasicFragmentDoc = new TypedDocumentString(`
     fragment MediaBasicFragment on Media {
   ...MediaCoreFragment
   tags {
@@ -2029,10 +3313,86 @@ export const MediaBasicFragmentDoc = gql`
     ...MediaExternalLinkBasicFragment
   }
 }
-    ${MediaCoreFragmentDoc}
-${MediaTagBasicFragmentDoc}
-${MediaExternalLinkBasicFragmentDoc}`;
-export const MediaFragmentDoc = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`, {"fragmentName":"MediaBasicFragment"});
+export const MediaFragmentDoc = new TypedDocumentString(`
     fragment MediaFragment on Media {
   ...MediaBasicFragment
   nextAiringEpisode {
@@ -2043,8 +3403,95 @@ export const MediaFragmentDoc = gql`
     mediaId
   }
 }
-    ${MediaBasicFragmentDoc}`;
-export const MediaListFragmentDoc = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`, {"fragmentName":"MediaFragment"});
+export const MediaListFragmentDoc = new TypedDocumentString(`
     fragment MediaListFragment on MediaList {
   id
   mediaId
@@ -2072,9 +3519,72 @@ export const MediaListFragmentDoc = gql`
     ...MediaCoreFragment
   }
 }
-    ${DateFragmentDoc}
-${MediaCoreFragmentDoc}`;
-export const RecommendationFragmentDoc = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}`, {"fragmentName":"MediaListFragment"});
+export const RecommendationFragmentDoc = new TypedDocumentString(`
     fragment RecommendationFragment on Recommendation {
   id
   rating
@@ -2096,8 +3606,8 @@ export const RecommendationFragmentDoc = gql`
     }
   }
 }
-    `;
-export const ReviewFragmentDoc = gql`
+    `, {"fragmentName":"RecommendationFragment"});
+export const ReviewFragmentDoc = new TypedDocumentString(`
     fragment ReviewFragment on Review {
   id
   userId
@@ -2124,13 +3634,56 @@ export const ReviewFragmentDoc = gql`
     }
   }
 }
-    `;
-export const StaffFragmentDoc = gql`
+    `, {"fragmentName":"ReviewFragment"});
+export const StaffFragmentDoc = new TypedDocumentString(`
     fragment StaffFragment on Staff {
   ...StaffBasicFragment
 }
-    ${StaffBasicFragmentDoc}`;
-export const StudioFragmentDoc = gql`
+    fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment StaffImageFragment on StaffImage {
+  large
+  medium
+}
+fragment StaffNameFragment on StaffName {
+  full
+  native
+  first
+  middle
+  last
+  userPreferred
+}
+fragment StaffBasicFragment on Staff {
+  id
+  name {
+    ...StaffNameFragment
+  }
+  image {
+    ...StaffImageFragment
+  }
+  description
+  primaryOccupations
+  gender
+  bloodType
+  homeTown
+  languageV2
+  yearsActive
+  favourites
+  isFavourite
+  isFavouriteBlocked
+  dateOfBirth {
+    ...DateFragment
+  }
+  dateOfDeath {
+    ...DateFragment
+  }
+  age
+  siteUrl
+}`, {"fragmentName":"StaffFragment"});
+export const StudioFragmentDoc = new TypedDocumentString(`
     fragment StudioFragment on Studio {
   ...StudioNodeFragment
   media {
@@ -2143,14 +3696,21 @@ export const StudioFragmentDoc = gql`
     }
   }
 }
-    ${StudioNodeFragmentDoc}`;
-export const UserAvatarFragmentDoc = gql`
+    fragment StudioNodeFragment on Studio {
+  id
+  name
+  isAnimationStudio
+  favourites
+  isFavourite
+  siteUrl
+}`, {"fragmentName":"StudioFragment"});
+export const UserAvatarFragmentDoc = new TypedDocumentString(`
     fragment UserAvatarFragment on UserAvatar {
   large
   medium
 }
-    `;
-export const UserOptionsFragmentDoc = gql`
+    `, {"fragmentName":"UserAvatarFragment"});
+export const UserOptionsFragmentDoc = new TypedDocumentString(`
     fragment UserOptionsFragment on UserOptions {
   titleLanguage
   displayAdultContent
@@ -2169,8 +3729,8 @@ export const UserOptionsFragmentDoc = gql`
     type
   }
 }
-    `;
-export const UserMediaListOptionsFragmentDoc = gql`
+    `, {"fragmentName":"UserOptionsFragment"});
+export const UserMediaListOptionsFragmentDoc = new TypedDocumentString(`
     fragment UserMediaListOptionsFragment on MediaListOptions {
   scoreFormat
   rowOrder
@@ -2192,8 +3752,8 @@ export const UserMediaListOptionsFragmentDoc = gql`
   sharedTheme
   sharedThemeEnabled
 }
-    `;
-export const UserFavouritesFragmentDoc = gql`
+    `, {"fragmentName":"UserMediaListOptionsFragment"});
+export const UserFavouritesFragmentDoc = new TypedDocumentString(`
     fragment UserFavouritesFragment on Favourites {
   anime {
     nodes {
@@ -2234,8 +3794,8 @@ export const UserFavouritesFragmentDoc = gql`
     }
   }
 }
-    `;
-export const UserStatisticsFragmentDoc = gql`
+    `, {"fragmentName":"UserFavouritesFragment"});
+export const UserStatisticsFragmentDoc = new TypedDocumentString(`
     fragment UserStatisticsFragment on UserStatisticTypes {
   anime {
     count
@@ -2423,8 +3983,8 @@ export const UserStatisticsFragmentDoc = gql`
     }
   }
 }
-    `;
-export const UserBasicFragmentDoc = gql`
+    `, {"fragmentName":"UserStatisticsFragment"});
+export const UserBasicFragmentDoc = new TypedDocumentString(`
     fragment UserBasicFragment on User {
   id
   name
@@ -2467,17 +4027,593 @@ export const UserBasicFragmentDoc = gql`
     updatedAt
   }
 }
-    ${UserAvatarFragmentDoc}
-${UserOptionsFragmentDoc}
-${UserMediaListOptionsFragmentDoc}
-${UserFavouritesFragmentDoc}
-${UserStatisticsFragmentDoc}`;
-export const UserFragmentDoc = gql`
+    fragment UserAvatarFragment on UserAvatar {
+  large
+  medium
+}
+fragment UserOptionsFragment on UserOptions {
+  titleLanguage
+  displayAdultContent
+  airingNotifications
+  profileColor
+  notificationOptions {
+    type
+    enabled
+  }
+  timezone
+  activityMergeTime
+  staffNameLanguage
+  restrictMessagesToFollowing
+  disabledListActivity {
+    disabled
+    type
+  }
+}
+fragment UserMediaListOptionsFragment on MediaListOptions {
+  scoreFormat
+  rowOrder
+  useLegacyLists
+  animeList {
+    sectionOrder
+    splitCompletedSectionByFormat
+    customLists
+    advancedScoring
+    advancedScoringEnabled
+  }
+  mangaList {
+    sectionOrder
+    splitCompletedSectionByFormat
+    customLists
+    advancedScoring
+    advancedScoringEnabled
+  }
+  sharedTheme
+  sharedThemeEnabled
+}
+fragment UserFavouritesFragment on Favourites {
+  anime {
+    nodes {
+      id
+      title {
+        romaji
+      }
+    }
+  }
+  manga {
+    nodes {
+      id
+      title {
+        romaji
+      }
+    }
+  }
+  characters {
+    nodes {
+      id
+      name {
+        full
+      }
+    }
+  }
+  staff {
+    nodes {
+      id
+      name {
+        full
+      }
+    }
+  }
+  studios {
+    nodes {
+      id
+      name
+    }
+  }
+}
+fragment UserStatisticsFragment on UserStatisticTypes {
+  anime {
+    count
+    meanScore
+    standardDeviation
+    minutesWatched
+    episodesWatched
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      minutesWatched
+    }
+    lengths {
+      length
+      count
+      meanScore
+      minutesWatched
+    }
+    formats {
+      format
+      count
+      meanScore
+      minutesWatched
+    }
+    statuses {
+      status
+      count
+      meanScore
+      minutesWatched
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      minutesWatched
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      minutesWatched
+    }
+    genres {
+      genre
+      count
+      meanScore
+      minutesWatched
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      minutesWatched
+    }
+    countries {
+      country
+      count
+      meanScore
+      minutesWatched
+    }
+    voiceActors {
+      count
+      meanScore
+      minutesWatched
+      voiceActor {
+        id
+        name {
+          full
+        }
+      }
+      characterIds
+      mediaIds
+    }
+    staff {
+      count
+      meanScore
+      minutesWatched
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      minutesWatched
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+  manga {
+    count
+    meanScore
+    standardDeviation
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      chaptersRead
+    }
+    lengths {
+      length
+      count
+      meanScore
+      chaptersRead
+    }
+    formats {
+      format
+      count
+      meanScore
+      chaptersRead
+    }
+    statuses {
+      status
+      count
+      meanScore
+      chaptersRead
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      chaptersRead
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      chaptersRead
+    }
+    genres {
+      genre
+      count
+      meanScore
+      chaptersRead
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      chaptersRead
+    }
+    countries {
+      country
+      count
+      meanScore
+      chaptersRead
+    }
+    staff {
+      count
+      meanScore
+      chaptersRead
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      chaptersRead
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+}`, {"fragmentName":"UserBasicFragment"});
+export const UserFragmentDoc = new TypedDocumentString(`
     fragment UserFragment on User {
   ...UserBasicFragment
 }
-    ${UserBasicFragmentDoc}`;
-export const GetAnimeBrowseDocument = gql`
+    fragment UserAvatarFragment on UserAvatar {
+  large
+  medium
+}
+fragment UserOptionsFragment on UserOptions {
+  titleLanguage
+  displayAdultContent
+  airingNotifications
+  profileColor
+  notificationOptions {
+    type
+    enabled
+  }
+  timezone
+  activityMergeTime
+  staffNameLanguage
+  restrictMessagesToFollowing
+  disabledListActivity {
+    disabled
+    type
+  }
+}
+fragment UserMediaListOptionsFragment on MediaListOptions {
+  scoreFormat
+  rowOrder
+  useLegacyLists
+  animeList {
+    sectionOrder
+    splitCompletedSectionByFormat
+    customLists
+    advancedScoring
+    advancedScoringEnabled
+  }
+  mangaList {
+    sectionOrder
+    splitCompletedSectionByFormat
+    customLists
+    advancedScoring
+    advancedScoringEnabled
+  }
+  sharedTheme
+  sharedThemeEnabled
+}
+fragment UserFavouritesFragment on Favourites {
+  anime {
+    nodes {
+      id
+      title {
+        romaji
+      }
+    }
+  }
+  manga {
+    nodes {
+      id
+      title {
+        romaji
+      }
+    }
+  }
+  characters {
+    nodes {
+      id
+      name {
+        full
+      }
+    }
+  }
+  staff {
+    nodes {
+      id
+      name {
+        full
+      }
+    }
+  }
+  studios {
+    nodes {
+      id
+      name
+    }
+  }
+}
+fragment UserStatisticsFragment on UserStatisticTypes {
+  anime {
+    count
+    meanScore
+    standardDeviation
+    minutesWatched
+    episodesWatched
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      minutesWatched
+    }
+    lengths {
+      length
+      count
+      meanScore
+      minutesWatched
+    }
+    formats {
+      format
+      count
+      meanScore
+      minutesWatched
+    }
+    statuses {
+      status
+      count
+      meanScore
+      minutesWatched
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      minutesWatched
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      minutesWatched
+    }
+    genres {
+      genre
+      count
+      meanScore
+      minutesWatched
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      minutesWatched
+    }
+    countries {
+      country
+      count
+      meanScore
+      minutesWatched
+    }
+    voiceActors {
+      count
+      meanScore
+      minutesWatched
+      voiceActor {
+        id
+        name {
+          full
+        }
+      }
+      characterIds
+      mediaIds
+    }
+    staff {
+      count
+      meanScore
+      minutesWatched
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      minutesWatched
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+  manga {
+    count
+    meanScore
+    standardDeviation
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      chaptersRead
+    }
+    lengths {
+      length
+      count
+      meanScore
+      chaptersRead
+    }
+    formats {
+      format
+      count
+      meanScore
+      chaptersRead
+    }
+    statuses {
+      status
+      count
+      meanScore
+      chaptersRead
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      chaptersRead
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      chaptersRead
+    }
+    genres {
+      genre
+      count
+      meanScore
+      chaptersRead
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      chaptersRead
+    }
+    countries {
+      country
+      count
+      meanScore
+      chaptersRead
+    }
+    staff {
+      count
+      meanScore
+      chaptersRead
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      chaptersRead
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+}
+fragment UserBasicFragment on User {
+  id
+  name
+  avatar {
+    ...UserAvatarFragment
+  }
+  about
+  bannerImage
+  donatorTier
+  donatorBadge
+  isFollowing
+  isFollower
+  isBlocked
+  createdAt
+  updatedAt
+  unreadNotificationCount
+  bans
+  moderatorRoles
+  moderatorStatus
+  options {
+    ...UserOptionsFragment
+  }
+  mediaListOptions {
+    ...UserMediaListOptionsFragment
+  }
+  favourites {
+    ...UserFavouritesFragment
+  }
+  statistics {
+    ...UserStatisticsFragment
+  }
+  siteUrl
+  stats {
+    watchedTime
+    chaptersRead
+  }
+  previousNames {
+    name
+    createdAt
+    updatedAt
+  }
+}`, {"fragmentName":"UserFragment"});
+export const GetAnimeBrowseDocument = new TypedDocumentString(`
     query GetAnimeBrowse($genre: String, $format: MediaFormat, $status: MediaStatus, $seasonYear: Int, $page: Int = 1, $perPage: Int = 10) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -2515,8 +4651,8 @@ export const GetAnimeBrowseDocument = gql`
     }
   }
 }
-    `;
-export const GetAnimeByIdDocument = gql`
+    `);
+export const GetAnimeByIdDocument = new TypedDocumentString(`
     query GetAnimeById($id: Int!) {
   Media(id: $id, type: ANIME) {
     ...MediaDetailedFragment
@@ -2548,12 +4684,265 @@ export const GetAnimeByIdDocument = gql`
     }
   }
 }
-    ${MediaDetailedFragmentDoc}
-${AiringScheduleFragmentDoc}
-${CharacterFragmentDoc}
-${StaffFragmentDoc}
-${StudioFragmentDoc}`;
-export const GetAnimeByTitleDocument = gql`
+    fragment CharacterFragment on Character {
+  ...CharacterBasicFragment
+}
+fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment CharacterImageFragment on CharacterImage {
+  large
+  medium
+}
+fragment StaffImageFragment on StaffImage {
+  large
+  medium
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment StudioNodeFragment on Studio {
+  id
+  name
+  isAnimationStudio
+  favourites
+  isFavourite
+  siteUrl
+}
+fragment CharacterNameFragment on CharacterName {
+  alternative
+  alternativeSpoiler
+  first
+  full
+  last
+  middle
+  native
+  userPreferred
+}
+fragment CharacterBasicFragment on Character {
+  id
+  name {
+    ...CharacterNameFragment
+  }
+  image {
+    ...CharacterImageFragment
+  }
+  description
+  gender
+  dateOfBirth {
+    ...DateFragment
+  }
+  age
+  bloodType
+  isFavourite
+  isFavouriteBlocked
+  favourites
+  siteUrl
+}
+fragment StaffNameFragment on StaffName {
+  full
+  native
+  first
+  middle
+  last
+  userPreferred
+}
+fragment StaffBasicFragment on Staff {
+  id
+  name {
+    ...StaffNameFragment
+  }
+  image {
+    ...StaffImageFragment
+  }
+  description
+  primaryOccupations
+  gender
+  bloodType
+  homeTown
+  languageV2
+  yearsActive
+  favourites
+  isFavourite
+  isFavouriteBlocked
+  dateOfBirth {
+    ...DateFragment
+  }
+  dateOfDeath {
+    ...DateFragment
+  }
+  age
+  siteUrl
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaDetailedFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagFragment
+  }
+  rankings {
+    ...MediaRankFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkFragment
+  }
+  stats {
+    ...MediaStatsFragment
+  }
+  trailer {
+    ...MediaTrailerFragment
+  }
+  reviews(page: 1, perPage: 1) {
+    pageInfo {
+      total
+    }
+  }
+  recommendations(page: 1, perPage: 1) {
+    pageInfo {
+      total
+    }
+  }
+}
+fragment MediaExternalLinkFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+  language
+  color
+  icon
+  notes
+  isDisabled
+}
+fragment MediaRankFragment on MediaRank {
+  id
+  rank
+  type
+  format
+  year
+  season
+  allTime
+  context
+}
+fragment ScoreDistributionFragment on ScoreDistribution {
+  score
+  amount
+}
+fragment StatusDistributionFragment on StatusDistribution {
+  status
+  amount
+}
+fragment MediaStatsFragment on MediaStats {
+  scoreDistribution {
+    ...ScoreDistributionFragment
+  }
+  statusDistribution {
+    ...StatusDistributionFragment
+  }
+  airingProgression {
+    episode
+    score
+    watching
+  }
+}
+fragment AiringScheduleFragment on AiringSchedule {
+  id
+  airingAt
+  timeUntilAiring
+  episode
+  mediaId
+}
+fragment MediaTagFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+  isGeneralSpoiler
+  isMediaSpoiler
+  isAdult
+  userId
+}
+fragment MediaTrailerFragment on MediaTrailer {
+  id
+  site
+  thumbnail
+}
+fragment StaffFragment on Staff {
+  ...StaffBasicFragment
+}
+fragment StudioFragment on Studio {
+  ...StudioNodeFragment
+  media {
+    pageInfo {
+      total
+      perPage
+      currentPage
+      lastPage
+      hasNextPage
+    }
+  }
+}`);
+export const GetAnimeByTitleDocument = new TypedDocumentString(`
     query GetAnimeByTitle($title: String!) {
   Page(page: 1, perPage: 1) {
     media(search: $title, type: ANIME) {
@@ -2561,8 +4950,105 @@ export const GetAnimeByTitleDocument = gql`
     }
   }
 }
-    ${MediaFragmentDoc}`;
-export const GetAnimeCharactersDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const GetAnimeCharactersDocument = new TypedDocumentString(`
     query GetAnimeCharacters($id: Int) {
   Media(id: $id, type: ANIME) {
     characters {
@@ -2575,8 +5061,49 @@ export const GetAnimeCharactersDocument = gql`
     }
   }
 }
-    ${CharacterFragmentDoc}`;
-export const GetAnimeListByGenreDocument = gql`
+    fragment CharacterFragment on Character {
+  ...CharacterBasicFragment
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment CharacterImageFragment on CharacterImage {
+  large
+  medium
+}
+fragment CharacterNameFragment on CharacterName {
+  alternative
+  alternativeSpoiler
+  first
+  full
+  last
+  middle
+  native
+  userPreferred
+}
+fragment CharacterBasicFragment on Character {
+  id
+  name {
+    ...CharacterNameFragment
+  }
+  image {
+    ...CharacterImageFragment
+  }
+  description
+  gender
+  dateOfBirth {
+    ...DateFragment
+  }
+  age
+  bloodType
+  isFavourite
+  isFavouriteBlocked
+  favourites
+  siteUrl
+}`);
+export const GetAnimeListByGenreDocument = new TypedDocumentString(`
     query GetAnimeListByGenre($genre: String!, $page: Int = 1, $perPage: Int = 10) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -2587,8 +5114,105 @@ export const GetAnimeListByGenreDocument = gql`
     }
   }
 }
-    ${MediaFragmentDoc}`;
-export const GetAnimePopularDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const GetAnimePopularDocument = new TypedDocumentString(`
     query GetAnimePopular($page: Int = 1, $perPage: Int = 20) {
   Page(page: $page, perPage: $perPage) {
     media(sort: POPULARITY_DESC, type: ANIME) {
@@ -2596,8 +5220,105 @@ export const GetAnimePopularDocument = gql`
     }
   }
 }
-    ${MediaFragmentDoc}`;
-export const GetAnimeRecommendationsDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const GetAnimeRecommendationsDocument = new TypedDocumentString(`
     query GetAnimeRecommendations($id: Int) {
   Media(id: $id, type: ANIME) {
     recommendations {
@@ -2611,8 +5332,105 @@ export const GetAnimeRecommendationsDocument = gql`
     }
   }
 }
-    ${MediaFragmentDoc}`;
-export const GetAnimeRelationsDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const GetAnimeRelationsDocument = new TypedDocumentString(`
     query GetAnimeRelations($id: Int) {
   Media(id: $id, type: ANIME) {
     relations {
@@ -2625,8 +5443,105 @@ export const GetAnimeRelationsDocument = gql`
     }
   }
 }
-    ${MediaFragmentDoc}`;
-export const GetAnimeStaffDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const GetAnimeStaffDocument = new TypedDocumentString(`
     query GetAnimeStaff($id: Int) {
   Media(id: $id, type: ANIME) {
     staff {
@@ -2639,8 +5554,54 @@ export const GetAnimeStaffDocument = gql`
     }
   }
 }
-    ${StaffFragmentDoc}`;
-export const GetAnimeTrendingDocument = gql`
+    fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment StaffImageFragment on StaffImage {
+  large
+  medium
+}
+fragment StaffNameFragment on StaffName {
+  full
+  native
+  first
+  middle
+  last
+  userPreferred
+}
+fragment StaffBasicFragment on Staff {
+  id
+  name {
+    ...StaffNameFragment
+  }
+  image {
+    ...StaffImageFragment
+  }
+  description
+  primaryOccupations
+  gender
+  bloodType
+  homeTown
+  languageV2
+  yearsActive
+  favourites
+  isFavourite
+  isFavouriteBlocked
+  dateOfBirth {
+    ...DateFragment
+  }
+  dateOfDeath {
+    ...DateFragment
+  }
+  age
+  siteUrl
+}
+fragment StaffFragment on Staff {
+  ...StaffBasicFragment
+}`);
+export const GetAnimeTrendingDocument = new TypedDocumentString(`
     query GetAnimeTrending($page: Int = 1, $perPage: Int = 20) {
   Page(page: $page, perPage: $perPage) {
     media(sort: TRENDING_DESC, type: ANIME) {
@@ -2648,8 +5609,105 @@ export const GetAnimeTrendingDocument = gql`
     }
   }
 }
-    ${MediaFragmentDoc}`;
-export const GetSeasonalAnimeDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const GetSeasonalAnimeDocument = new TypedDocumentString(`
     query GetSeasonalAnime($season: MediaSeason, $seasonYear: Int, $page: Int, $perPage: Int) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -2681,8 +5739,8 @@ export const GetSeasonalAnimeDocument = gql`
     }
   }
 }
-    `;
-export const SearchAnimeDocument = gql`
+    `);
+export const SearchAnimeDocument = new TypedDocumentString(`
     query SearchAnime($query: String, $page: Int, $perPage: Int) {
   Page(page: $page, perPage: $perPage) {
     media(search: $query, type: ANIME) {
@@ -2690,8 +5748,105 @@ export const SearchAnimeDocument = gql`
     }
   }
 }
-    ${MediaFragmentDoc}`;
-export const ToggleFavoriteAnimeDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const ToggleFavoriteAnimeDocument = new TypedDocumentString(`
     mutation ToggleFavoriteAnime($animeId: Int!) {
   ToggleFavourite(animeId: $animeId) {
     anime(page: 1, perPage: 25) {
@@ -2701,8 +5856,8 @@ export const ToggleFavoriteAnimeDocument = gql`
     }
   }
 }
-    `;
-export const CharactersBirthdayTodayDocument = gql`
+    `);
+export const CharactersBirthdayTodayDocument = new TypedDocumentString(`
     query CharactersBirthdayToday($page: Int, $perPage: Int) {
   Page(page: $page, perPage: $perPage) {
     characters(isBirthday: true) {
@@ -2710,8 +5865,49 @@ export const CharactersBirthdayTodayDocument = gql`
     }
   }
 }
-    ${CharacterFragmentDoc}`;
-export const GetCharacterByIdDocument = gql`
+    fragment CharacterFragment on Character {
+  ...CharacterBasicFragment
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment CharacterImageFragment on CharacterImage {
+  large
+  medium
+}
+fragment CharacterNameFragment on CharacterName {
+  alternative
+  alternativeSpoiler
+  first
+  full
+  last
+  middle
+  native
+  userPreferred
+}
+fragment CharacterBasicFragment on Character {
+  id
+  name {
+    ...CharacterNameFragment
+  }
+  image {
+    ...CharacterImageFragment
+  }
+  description
+  gender
+  dateOfBirth {
+    ...DateFragment
+  }
+  age
+  bloodType
+  isFavourite
+  isFavouriteBlocked
+  favourites
+  siteUrl
+}`);
+export const GetCharacterByIdDocument = new TypedDocumentString(`
     query GetCharacterById($id: Int!) {
   Character(id: $id) {
     ...CharacterFragment
@@ -2731,8 +5927,49 @@ export const GetCharacterByIdDocument = gql`
     }
   }
 }
-    ${CharacterFragmentDoc}`;
-export const ToggleFavoriteCharacterDocument = gql`
+    fragment CharacterFragment on Character {
+  ...CharacterBasicFragment
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment CharacterImageFragment on CharacterImage {
+  large
+  medium
+}
+fragment CharacterNameFragment on CharacterName {
+  alternative
+  alternativeSpoiler
+  first
+  full
+  last
+  middle
+  native
+  userPreferred
+}
+fragment CharacterBasicFragment on Character {
+  id
+  name {
+    ...CharacterNameFragment
+  }
+  image {
+    ...CharacterImageFragment
+  }
+  description
+  gender
+  dateOfBirth {
+    ...DateFragment
+  }
+  age
+  bloodType
+  isFavourite
+  isFavouriteBlocked
+  favourites
+  siteUrl
+}`);
+export const ToggleFavoriteCharacterDocument = new TypedDocumentString(`
     mutation ToggleFavoriteCharacter($charID: Int!) {
   ToggleFavourite(characterId: $charID) {
     characters(page: 1, perPage: 25) {
@@ -2742,15 +5979,112 @@ export const ToggleFavoriteCharacterDocument = gql`
     }
   }
 }
-    `;
-export const GetMangaByIdDocument = gql`
+    `);
+export const GetMangaByIdDocument = new TypedDocumentString(`
     query GetMangaById($id: Int!) {
   Media(id: $id, type: MANGA) {
     ...MediaFragment
   }
 }
-    ${MediaFragmentDoc}`;
-export const GetMangaByTitleDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const GetMangaByTitleDocument = new TypedDocumentString(`
     query GetMangaByTitle($title: String!) {
   Page(page: 1, perPage: 1) {
     media(search: $title, type: MANGA) {
@@ -2758,8 +6092,105 @@ export const GetMangaByTitleDocument = gql`
     }
   }
 }
-    ${MediaFragmentDoc}`;
-export const GetMangaCharactersDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const GetMangaCharactersDocument = new TypedDocumentString(`
     query GetMangaCharacters($id: Int) {
   Media(id: $id, type: MANGA) {
     characters {
@@ -2772,8 +6203,49 @@ export const GetMangaCharactersDocument = gql`
     }
   }
 }
-    ${CharacterFragmentDoc}`;
-export const GetMangaListByGenreDocument = gql`
+    fragment CharacterFragment on Character {
+  ...CharacterBasicFragment
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment CharacterImageFragment on CharacterImage {
+  large
+  medium
+}
+fragment CharacterNameFragment on CharacterName {
+  alternative
+  alternativeSpoiler
+  first
+  full
+  last
+  middle
+  native
+  userPreferred
+}
+fragment CharacterBasicFragment on Character {
+  id
+  name {
+    ...CharacterNameFragment
+  }
+  image {
+    ...CharacterImageFragment
+  }
+  description
+  gender
+  dateOfBirth {
+    ...DateFragment
+  }
+  age
+  bloodType
+  isFavourite
+  isFavouriteBlocked
+  favourites
+  siteUrl
+}`);
+export const GetMangaListByGenreDocument = new TypedDocumentString(`
     query GetMangaListByGenre($genre: String, $page: Int = 1, $perPage: Int = 10) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -2784,8 +6256,105 @@ export const GetMangaListByGenreDocument = gql`
     }
   }
 }
-    ${MediaFragmentDoc}`;
-export const GetMangaPopularDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const GetMangaPopularDocument = new TypedDocumentString(`
     query GetMangaPopular($page: Int = 1, $perPage: Int = 20) {
   Page(page: $page, perPage: $perPage) {
     media(sort: POPULARITY_DESC, type: MANGA) {
@@ -2793,8 +6362,105 @@ export const GetMangaPopularDocument = gql`
     }
   }
 }
-    ${MediaFragmentDoc}`;
-export const GetMangaRecommendationsDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const GetMangaRecommendationsDocument = new TypedDocumentString(`
     query GetMangaRecommendations($id: Int) {
   Media(id: $id, type: MANGA) {
     recommendations {
@@ -2808,8 +6474,105 @@ export const GetMangaRecommendationsDocument = gql`
     }
   }
 }
-    ${MediaFragmentDoc}`;
-export const GetMangaRelationsDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const GetMangaRelationsDocument = new TypedDocumentString(`
     query GetMangaRelations($id: Int) {
   Media(id: $id, type: MANGA) {
     relations {
@@ -2822,8 +6585,105 @@ export const GetMangaRelationsDocument = gql`
     }
   }
 }
-    ${MediaFragmentDoc}`;
-export const GetMangaStaffDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const GetMangaStaffDocument = new TypedDocumentString(`
     query GetMangaStaff($id: Int) {
   Media(id: $id, type: MANGA) {
     staff {
@@ -2836,8 +6696,54 @@ export const GetMangaStaffDocument = gql`
     }
   }
 }
-    ${StaffFragmentDoc}`;
-export const GetMangaTrendingDocument = gql`
+    fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment StaffImageFragment on StaffImage {
+  large
+  medium
+}
+fragment StaffNameFragment on StaffName {
+  full
+  native
+  first
+  middle
+  last
+  userPreferred
+}
+fragment StaffBasicFragment on Staff {
+  id
+  name {
+    ...StaffNameFragment
+  }
+  image {
+    ...StaffImageFragment
+  }
+  description
+  primaryOccupations
+  gender
+  bloodType
+  homeTown
+  languageV2
+  yearsActive
+  favourites
+  isFavourite
+  isFavouriteBlocked
+  dateOfBirth {
+    ...DateFragment
+  }
+  dateOfDeath {
+    ...DateFragment
+  }
+  age
+  siteUrl
+}
+fragment StaffFragment on Staff {
+  ...StaffBasicFragment
+}`);
+export const GetMangaTrendingDocument = new TypedDocumentString(`
     query GetMangaTrending($page: Int = 1, $perPage: Int = 20) {
   Page(page: $page, perPage: $perPage) {
     media(sort: TRENDING_DESC, type: MANGA) {
@@ -2845,8 +6751,105 @@ export const GetMangaTrendingDocument = gql`
     }
   }
 }
-    ${MediaFragmentDoc}`;
-export const SearchMangaDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const SearchMangaDocument = new TypedDocumentString(`
     query SearchManga($query: String, $page: Int, $perPage: Int) {
   Page(page: $page, perPage: $perPage) {
     media(search: $query, type: MANGA) {
@@ -2854,8 +6857,105 @@ export const SearchMangaDocument = gql`
     }
   }
 }
-    ${MediaFragmentDoc}`;
-export const ToggleFavoriteMangaDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const ToggleFavoriteMangaDocument = new TypedDocumentString(`
     mutation ToggleFavoriteManga($mangaId: Int!) {
   ToggleFavourite(mangaId: $mangaId) {
     manga(page: 1, perPage: 25) {
@@ -2865,22 +6965,28 @@ export const ToggleFavoriteMangaDocument = gql`
     }
   }
 }
-    `;
-export const DeleteReviewDocument = gql`
+    `);
+export const DeleteReviewDocument = new TypedDocumentString(`
     mutation DeleteReview($id: Int) {
   DeleteReview(id: $id) {
     deleted
   }
 }
-    `;
-export const GetAiringScheduleDocument = gql`
+    `);
+export const GetAiringScheduleDocument = new TypedDocumentString(`
     query GetAiringSchedule($id: Int!) {
   AiringSchedule(id: $id) {
     ...AiringScheduleFragment
   }
 }
-    ${AiringScheduleFragmentDoc}`;
-export const GetAiringSchedulesByMediaDocument = gql`
+    fragment AiringScheduleFragment on AiringSchedule {
+  id
+  airingAt
+  timeUntilAiring
+  episode
+  mediaId
+}`);
+export const GetAiringSchedulesByMediaDocument = new TypedDocumentString(`
     query GetAiringSchedulesByMedia($mediaId: Int, $page: Int = 1, $perPage: Int = 25) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -2893,20 +6999,123 @@ export const GetAiringSchedulesByMediaDocument = gql`
     }
   }
 }
-    ${AiringScheduleFragmentDoc}`;
-export const GetGenresDocument = gql`
+    fragment AiringScheduleFragment on AiringSchedule {
+  id
+  airingAt
+  timeUntilAiring
+  episode
+  mediaId
+}`);
+export const GetGenresDocument = new TypedDocumentString(`
     query GetGenres {
   GenreCollection
 }
-    `;
-export const GetMediaByIdDocument = gql`
+    `);
+export const GetMediaByIdDocument = new TypedDocumentString(`
     query GetMediaById($id: Int!) {
   Media(id: $id) {
     ...MediaFragment
   }
 }
-    ${MediaFragmentDoc}`;
-export const GetMediaReviewsDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaFragment on Media {
+  ...MediaBasicFragment
+  nextAiringEpisode {
+    id
+    airingAt
+    timeUntilAiring
+    episode
+    mediaId
+  }
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaBasicFragment on Media {
+  ...MediaCoreFragment
+  tags {
+    ...MediaTagBasicFragment
+  }
+  externalLinks {
+    ...MediaExternalLinkBasicFragment
+  }
+}
+fragment MediaExternalLinkBasicFragment on MediaExternalLink {
+  id
+  url
+  site
+  siteId
+  type
+}
+fragment MediaTagBasicFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+}`);
+export const GetMediaReviewsDocument = new TypedDocumentString(`
     query GetMediaReviews($mediaId: Int, $page: Int = 1, $perPage: Int = 10) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -2919,15 +7128,50 @@ export const GetMediaReviewsDocument = gql`
     }
   }
 }
-    ${ReviewFragmentDoc}`;
-export const GetMediaTagsDocument = gql`
+    fragment ReviewFragment on Review {
+  id
+  userId
+  mediaId
+  mediaType
+  summary
+  body
+  rating
+  ratingAmount
+  score
+  private
+  siteUrl
+  createdAt
+  updatedAt
+  userRating
+  user {
+    id
+    name
+  }
+  media {
+    id
+    title {
+      userPreferred
+    }
+  }
+}`);
+export const GetMediaTagsDocument = new TypedDocumentString(`
     query GetMediaTags($status: Int) {
   MediaTagCollection(status: $status) {
     ...MediaTagFragment
   }
 }
-    ${MediaTagFragmentDoc}`;
-export const GetRecommendationsPageDocument = gql`
+    fragment MediaTagFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+  isGeneralSpoiler
+  isMediaSpoiler
+  isAdult
+  userId
+}`);
+export const GetRecommendationsPageDocument = new TypedDocumentString(`
     query GetRecommendationsPage($mediaId: Int, $page: Int = 1, $perPage: Int = 10) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -2940,15 +7184,60 @@ export const GetRecommendationsPageDocument = gql`
     }
   }
 }
-    ${RecommendationFragmentDoc}`;
-export const RateReviewDocument = gql`
+    fragment RecommendationFragment on Recommendation {
+  id
+  rating
+  userRating
+  user {
+    id
+    name
+  }
+  media {
+    id
+    title {
+      userPreferred
+    }
+  }
+  mediaRecommendation {
+    id
+    title {
+      userPreferred
+    }
+  }
+}`);
+export const RateReviewDocument = new TypedDocumentString(`
     mutation RateReview($reviewId: Int, $rating: ReviewRating) {
   RateReview(reviewId: $reviewId, rating: $rating) {
     ...ReviewFragment
   }
 }
-    ${ReviewFragmentDoc}`;
-export const SaveRecommendationDocument = gql`
+    fragment ReviewFragment on Review {
+  id
+  userId
+  mediaId
+  mediaType
+  summary
+  body
+  rating
+  ratingAmount
+  score
+  private
+  siteUrl
+  createdAt
+  updatedAt
+  userRating
+  user {
+    id
+    name
+  }
+  media {
+    id
+    title {
+      userPreferred
+    }
+  }
+}`);
+export const SaveRecommendationDocument = new TypedDocumentString(`
     mutation SaveRecommendation($mediaId: Int, $mediaRecommendationId: Int, $rating: RecommendationRating) {
   SaveRecommendation(
     mediaId: $mediaId
@@ -2958,8 +7247,28 @@ export const SaveRecommendationDocument = gql`
     ...RecommendationFragment
   }
 }
-    ${RecommendationFragmentDoc}`;
-export const SaveReviewDocument = gql`
+    fragment RecommendationFragment on Recommendation {
+  id
+  rating
+  userRating
+  user {
+    id
+    name
+  }
+  media {
+    id
+    title {
+      userPreferred
+    }
+  }
+  mediaRecommendation {
+    id
+    title {
+      userPreferred
+    }
+  }
+}`);
+export const SaveReviewDocument = new TypedDocumentString(`
     mutation SaveReview($id: Int, $mediaId: Int, $body: String, $summary: String, $score: Int, $private: Boolean) {
   SaveReview(
     id: $id
@@ -2972,29 +7281,145 @@ export const SaveReviewDocument = gql`
     ...ReviewFragment
   }
 }
-    ${ReviewFragmentDoc}`;
-export const DeleteCustomListDocument = gql`
+    fragment ReviewFragment on Review {
+  id
+  userId
+  mediaId
+  mediaType
+  summary
+  body
+  rating
+  ratingAmount
+  score
+  private
+  siteUrl
+  createdAt
+  updatedAt
+  userRating
+  user {
+    id
+    name
+  }
+  media {
+    id
+    title {
+      userPreferred
+    }
+  }
+}`);
+export const DeleteCustomListDocument = new TypedDocumentString(`
     mutation DeleteCustomList($customList: String, $type: MediaType) {
   DeleteCustomList(customList: $customList, type: $type) {
     deleted
   }
 }
-    `;
-export const DeleteMediaListEntryDocument = gql`
+    `);
+export const DeleteMediaListEntryDocument = new TypedDocumentString(`
     mutation DeleteMediaListEntry($id: Int!) {
   DeleteMediaListEntry(id: $id) {
     deleted
   }
 }
-    `;
-export const GetMediaListDocument = gql`
+    `);
+export const GetMediaListDocument = new TypedDocumentString(`
     query GetMediaList($id: Int) {
   MediaList(id: $id) {
     ...MediaListFragment
   }
 }
-    ${MediaListFragmentDoc}`;
-export const GetMediaListByUserDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaListFragment on MediaList {
+  id
+  mediaId
+  userId
+  status
+  score
+  progress
+  progressVolumes
+  repeat
+  priority
+  private
+  notes
+  hiddenFromStatusLists
+  customLists
+  advancedScores
+  startedAt {
+    ...DateFragment
+  }
+  completedAt {
+    ...DateFragment
+  }
+  updatedAt
+  createdAt
+  media {
+    ...MediaCoreFragment
+  }
+}`);
+export const GetMediaListByUserDocument = new TypedDocumentString(`
     query GetMediaListByUser($userId: Int, $mediaType: MediaType) {
   MediaListCollection(userId: $userId, type: $mediaType) {
     lists {
@@ -3004,8 +7429,99 @@ export const GetMediaListByUserDocument = gql`
     }
   }
 }
-    ${MediaListFragmentDoc}`;
-export const GetMediaListByUserByUsernameDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaListFragment on MediaList {
+  id
+  mediaId
+  userId
+  status
+  score
+  progress
+  progressVolumes
+  repeat
+  priority
+  private
+  notes
+  hiddenFromStatusLists
+  customLists
+  advancedScores
+  startedAt {
+    ...DateFragment
+  }
+  completedAt {
+    ...DateFragment
+  }
+  updatedAt
+  createdAt
+  media {
+    ...MediaCoreFragment
+  }
+}`);
+export const GetMediaListByUserByUsernameDocument = new TypedDocumentString(`
     query GetMediaListByUserByUsername($userName: String, $mediaType: MediaType) {
   MediaListCollection(userName: $userName, type: $mediaType) {
     lists {
@@ -3015,8 +7531,99 @@ export const GetMediaListByUserByUsernameDocument = gql`
     }
   }
 }
-    ${MediaListFragmentDoc}`;
-export const SaveMediaListEntryDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaListFragment on MediaList {
+  id
+  mediaId
+  userId
+  status
+  score
+  progress
+  progressVolumes
+  repeat
+  priority
+  private
+  notes
+  hiddenFromStatusLists
+  customLists
+  advancedScores
+  startedAt {
+    ...DateFragment
+  }
+  completedAt {
+    ...DateFragment
+  }
+  updatedAt
+  createdAt
+  media {
+    ...MediaCoreFragment
+  }
+}`);
+export const SaveMediaListEntryDocument = new TypedDocumentString(`
     mutation SaveMediaListEntry($mediaId: Int, $id: Int, $status: MediaListStatus, $score: Float, $scoreRaw: Int, $progress: Int, $progressVolumes: Int, $repeat: Int, $private: Boolean, $notes: String, $startedAt: FuzzyDateInput, $completedAt: FuzzyDateInput, $advancedScores: [Float], $customLists: [String], $hiddenFromStatusLists: Boolean, $priority: Int) {
   SaveMediaListEntry(
     mediaId: $mediaId
@@ -3039,8 +7646,99 @@ export const SaveMediaListEntryDocument = gql`
     ...MediaListFragment
   }
 }
-    ${MediaListFragmentDoc}`;
-export const UpdateMediaListEntriesDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaListFragment on MediaList {
+  id
+  mediaId
+  userId
+  status
+  score
+  progress
+  progressVolumes
+  repeat
+  priority
+  private
+  notes
+  hiddenFromStatusLists
+  customLists
+  advancedScores
+  startedAt {
+    ...DateFragment
+  }
+  completedAt {
+    ...DateFragment
+  }
+  updatedAt
+  createdAt
+  media {
+    ...MediaCoreFragment
+  }
+}`);
+export const UpdateMediaListEntriesDocument = new TypedDocumentString(`
     mutation UpdateMediaListEntries($ids: [Int], $status: MediaListStatus, $score: Float, $scoreRaw: Int, $progress: Int, $progressVolumes: Int, $repeat: Int, $private: Boolean, $notes: String, $startedAt: FuzzyDateInput, $completedAt: FuzzyDateInput, $advancedScores: [Float], $hiddenFromStatusLists: Boolean, $priority: Int) {
   UpdateMediaListEntries(
     ids: $ids
@@ -3061,8 +7759,99 @@ export const UpdateMediaListEntriesDocument = gql`
     ...MediaListFragment
   }
 }
-    ${MediaListFragmentDoc}`;
-export const GetActivitiesDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaListFragment on MediaList {
+  id
+  mediaId
+  userId
+  status
+  score
+  progress
+  progressVolumes
+  repeat
+  priority
+  private
+  notes
+  hiddenFromStatusLists
+  customLists
+  advancedScores
+  startedAt {
+    ...DateFragment
+  }
+  completedAt {
+    ...DateFragment
+  }
+  updatedAt
+  createdAt
+  media {
+    ...MediaCoreFragment
+  }
+}`);
+export const GetActivitiesDocument = new TypedDocumentString(`
     query GetActivities($userId: Int, $page: Int = 1, $perPage: Int = 25) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -3096,8 +7885,8 @@ export const GetActivitiesDocument = gql`
     }
   }
 }
-    `;
-export const GetActivityDocument = gql`
+    `);
+export const GetActivityDocument = new TypedDocumentString(`
     query GetActivity($id: Int!) {
   Activity(id: $id) {
     ... on TextActivity {
@@ -3124,8 +7913,8 @@ export const GetActivityDocument = gql`
     }
   }
 }
-    `;
-export const GetActivityRepliesDocument = gql`
+    `);
+export const GetActivityRepliesDocument = new TypedDocumentString(`
     query GetActivityReplies($activityId: Int, $page: Int = 1, $perPage: Int = 25) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -3148,8 +7937,8 @@ export const GetActivityRepliesDocument = gql`
     }
   }
 }
-    `;
-export const GetActivityReplyDocument = gql`
+    `);
+export const GetActivityReplyDocument = new TypedDocumentString(`
     query GetActivityReply($id: Int!) {
   ActivityReply(id: $id) {
     id
@@ -3165,8 +7954,8 @@ export const GetActivityReplyDocument = gql`
     }
   }
 }
-    `;
-export const GetFollowersDocument = gql`
+    `);
+export const GetFollowersDocument = new TypedDocumentString(`
     query GetFollowers($userId: Int!, $page: Int = 1, $perPage: Int = 25) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -3181,8 +7970,8 @@ export const GetFollowersDocument = gql`
     }
   }
 }
-    `;
-export const GetFollowingDocument = gql`
+    `);
+export const GetFollowingDocument = new TypedDocumentString(`
     query GetFollowing($userId: Int!, $page: Int = 1, $perPage: Int = 25) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -3197,15 +7986,15 @@ export const GetFollowingDocument = gql`
     }
   }
 }
-    `;
-export const GetMarkdownDocument = gql`
+    `);
+export const GetMarkdownDocument = new TypedDocumentString(`
     query GetMarkdown($markdown: String!) {
   Markdown(markdown: $markdown) {
     html
   }
 }
-    `;
-export const GetNotificationsDocument = gql`
+    `);
+export const GetNotificationsDocument = new TypedDocumentString(`
     query GetNotifications($page: Int = 1, $perPage: Int = 25) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -3317,8 +8106,8 @@ export const GetNotificationsDocument = gql`
     }
   }
 }
-    `;
-export const GetSiteStatisticsDocument = gql`
+    `);
+export const GetSiteStatisticsDocument = new TypedDocumentString(`
     query GetSiteStatistics {
   SiteStatistics {
     users {
@@ -3372,8 +8161,8 @@ export const GetSiteStatisticsDocument = gql`
     }
   }
 }
-    `;
-export const GetThreadDocument = gql`
+    `);
+export const GetThreadDocument = new TypedDocumentString(`
     query GetThread($id: Int!) {
   Thread(id: $id) {
     id
@@ -3394,8 +8183,8 @@ export const GetThreadDocument = gql`
     }
   }
 }
-    `;
-export const GetThreadCommentDocument = gql`
+    `);
+export const GetThreadCommentDocument = new TypedDocumentString(`
     query GetThreadComment($id: Int!) {
   ThreadComment(id: $id) {
     id
@@ -3412,8 +8201,8 @@ export const GetThreadCommentDocument = gql`
     }
   }
 }
-    `;
-export const GetThreadCommentsDocument = gql`
+    `);
+export const GetThreadCommentsDocument = new TypedDocumentString(`
     query GetThreadComments($threadId: Int, $page: Int = 1, $perPage: Int = 25) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -3437,8 +8226,8 @@ export const GetThreadCommentsDocument = gql`
     }
   }
 }
-    `;
-export const GetThreadsDocument = gql`
+    `);
+export const GetThreadsDocument = new TypedDocumentString(`
     query GetThreads($search: String, $userId: Int, $page: Int = 1, $perPage: Int = 25) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -3466,8 +8255,8 @@ export const GetThreadsDocument = gql`
     }
   }
 }
-    `;
-export const ToggleFollowDocument = gql`
+    `);
+export const ToggleFollowDocument = new TypedDocumentString(`
     mutation ToggleFollow($userId: Int) {
   ToggleFollow(userId: $userId) {
     id
@@ -3476,8 +8265,8 @@ export const ToggleFollowDocument = gql`
     siteUrl
   }
 }
-    `;
-export const ToggleLikeDocument = gql`
+    `);
+export const ToggleLikeDocument = new TypedDocumentString(`
     mutation ToggleLike($id: Int, $type: LikeableType) {
   ToggleLikeV2(id: $id, type: $type) {
     ... on ActivityReply {
@@ -3500,8 +8289,8 @@ export const ToggleLikeDocument = gql`
     }
   }
 }
-    `;
-export const GetStaffByIdDocument = gql`
+    `);
+export const GetStaffByIdDocument = new TypedDocumentString(`
     query GetStaffById($id: Int!) {
   Staff(id: $id) {
     ...StaffFragment
@@ -3538,9 +8327,91 @@ export const GetStaffByIdDocument = gql`
     }
   }
 }
-    ${StaffFragmentDoc}
-${CharacterFragmentDoc}`;
-export const StaffBirthdayTodayDocument = gql`
+    fragment CharacterFragment on Character {
+  ...CharacterBasicFragment
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment CharacterImageFragment on CharacterImage {
+  large
+  medium
+}
+fragment StaffImageFragment on StaffImage {
+  large
+  medium
+}
+fragment CharacterNameFragment on CharacterName {
+  alternative
+  alternativeSpoiler
+  first
+  full
+  last
+  middle
+  native
+  userPreferred
+}
+fragment CharacterBasicFragment on Character {
+  id
+  name {
+    ...CharacterNameFragment
+  }
+  image {
+    ...CharacterImageFragment
+  }
+  description
+  gender
+  dateOfBirth {
+    ...DateFragment
+  }
+  age
+  bloodType
+  isFavourite
+  isFavouriteBlocked
+  favourites
+  siteUrl
+}
+fragment StaffNameFragment on StaffName {
+  full
+  native
+  first
+  middle
+  last
+  userPreferred
+}
+fragment StaffBasicFragment on Staff {
+  id
+  name {
+    ...StaffNameFragment
+  }
+  image {
+    ...StaffImageFragment
+  }
+  description
+  primaryOccupations
+  gender
+  bloodType
+  homeTown
+  languageV2
+  yearsActive
+  favourites
+  isFavourite
+  isFavouriteBlocked
+  dateOfBirth {
+    ...DateFragment
+  }
+  dateOfDeath {
+    ...DateFragment
+  }
+  age
+  siteUrl
+}
+fragment StaffFragment on Staff {
+  ...StaffBasicFragment
+}`);
+export const StaffBirthdayTodayDocument = new TypedDocumentString(`
     query StaffBirthdayToday($page: Int, $perPage: Int) {
   Page(page: $page, perPage: $perPage) {
     staff(isBirthday: true) {
@@ -3557,8 +8428,8 @@ export const StaffBirthdayTodayDocument = gql`
     }
   }
 }
-    `;
-export const ToggleFavoriteStaffDocument = gql`
+    `);
+export const ToggleFavoriteStaffDocument = new TypedDocumentString(`
     mutation ToggleFavoriteStaff($staffID: Int!) {
   ToggleFavourite(staffId: $staffID) {
     staff(page: 1, perPage: 25) {
@@ -3568,29 +8439,57 @@ export const ToggleFavoriteStaffDocument = gql`
     }
   }
 }
-    `;
-export const GetStudioByIdDocument = gql`
+    `);
+export const GetStudioByIdDocument = new TypedDocumentString(`
     query GetStudioById($id: Int!) {
   Studio(id: $id) {
     ...StudioFragment
   }
 }
-    ${StudioFragmentDoc}`;
-export const SearchStudiosDocument = gql`
-    query SearchStudios($search: String, $sort: [StudioSort], $page: Int = 1, $perPage: Int = 10) {
+    fragment StudioNodeFragment on Studio {
+  id
+  name
+  isAnimationStudio
+  favourites
+  isFavourite
+  siteUrl
+}
+fragment StudioFragment on Studio {
+  ...StudioNodeFragment
+  media {
+    pageInfo {
+      total
+      perPage
+      currentPage
+      lastPage
+      hasNextPage
+    }
+  }
+}`);
+export const SearchStudioDocument = new TypedDocumentString(`
+    query SearchStudio($query: String, $page: Int, $perPage: Int) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
-      hasNextPage
-      currentPage
       total
+      perPage
+      currentPage
+      lastPage
+      hasNextPage
     }
-    studios(search: $search, sort: $sort) {
+    studios(search: $query) {
       ...StudioNodeFragment
     }
   }
 }
-    ${StudioNodeFragmentDoc}`;
-export const ToggleFavoriteStudioDocument = gql`
+    fragment StudioNodeFragment on Studio {
+  id
+  name
+  isAnimationStudio
+  favourites
+  isFavourite
+  siteUrl
+}`);
+export const ToggleFavoriteStudioDocument = new TypedDocumentString(`
     mutation ToggleFavoriteStudio($studioId: Int!) {
   ToggleFavourite(studioId: $studioId) {
     studios(page: 1, perPage: 25) {
@@ -3600,8 +8499,8 @@ export const ToggleFavoriteStudioDocument = gql`
     }
   }
 }
-    `;
-export const GetUserAnimeListDocument = gql`
+    `);
+export const GetUserAnimeListDocument = new TypedDocumentString(`
     query GetUserAnimeList($userId: Int, $status: MediaListStatus) {
   MediaListCollection(userId: $userId, type: ANIME, status: $status) {
     lists {
@@ -3611,8 +8510,99 @@ export const GetUserAnimeListDocument = gql`
     }
   }
 }
-    ${MediaListFragmentDoc}`;
-export const GetUserAnimeListByUsernameDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaListFragment on MediaList {
+  id
+  mediaId
+  userId
+  status
+  score
+  progress
+  progressVolumes
+  repeat
+  priority
+  private
+  notes
+  hiddenFromStatusLists
+  customLists
+  advancedScores
+  startedAt {
+    ...DateFragment
+  }
+  completedAt {
+    ...DateFragment
+  }
+  updatedAt
+  createdAt
+  media {
+    ...MediaCoreFragment
+  }
+}`);
+export const GetUserAnimeListByUsernameDocument = new TypedDocumentString(`
     query GetUserAnimeListByUsername($userName: String, $status: MediaListStatus) {
   MediaListCollection(userName: $userName, type: ANIME, status: $status) {
     lists {
@@ -3622,22 +8612,741 @@ export const GetUserAnimeListByUsernameDocument = gql`
     }
   }
 }
-    ${MediaListFragmentDoc}`;
-export const GetUserInfoDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaListFragment on MediaList {
+  id
+  mediaId
+  userId
+  status
+  score
+  progress
+  progressVolumes
+  repeat
+  priority
+  private
+  notes
+  hiddenFromStatusLists
+  customLists
+  advancedScores
+  startedAt {
+    ...DateFragment
+  }
+  completedAt {
+    ...DateFragment
+  }
+  updatedAt
+  createdAt
+  media {
+    ...MediaCoreFragment
+  }
+}`);
+export const GetUserInfoDocument = new TypedDocumentString(`
     query GetUserInfo($id: Int) {
   User(id: $id) {
     ...UserFragment
   }
 }
-    ${UserFragmentDoc}`;
-export const GetUserInfoByUsernameDocument = gql`
+    fragment UserAvatarFragment on UserAvatar {
+  large
+  medium
+}
+fragment UserOptionsFragment on UserOptions {
+  titleLanguage
+  displayAdultContent
+  airingNotifications
+  profileColor
+  notificationOptions {
+    type
+    enabled
+  }
+  timezone
+  activityMergeTime
+  staffNameLanguage
+  restrictMessagesToFollowing
+  disabledListActivity {
+    disabled
+    type
+  }
+}
+fragment UserMediaListOptionsFragment on MediaListOptions {
+  scoreFormat
+  rowOrder
+  useLegacyLists
+  animeList {
+    sectionOrder
+    splitCompletedSectionByFormat
+    customLists
+    advancedScoring
+    advancedScoringEnabled
+  }
+  mangaList {
+    sectionOrder
+    splitCompletedSectionByFormat
+    customLists
+    advancedScoring
+    advancedScoringEnabled
+  }
+  sharedTheme
+  sharedThemeEnabled
+}
+fragment UserFavouritesFragment on Favourites {
+  anime {
+    nodes {
+      id
+      title {
+        romaji
+      }
+    }
+  }
+  manga {
+    nodes {
+      id
+      title {
+        romaji
+      }
+    }
+  }
+  characters {
+    nodes {
+      id
+      name {
+        full
+      }
+    }
+  }
+  staff {
+    nodes {
+      id
+      name {
+        full
+      }
+    }
+  }
+  studios {
+    nodes {
+      id
+      name
+    }
+  }
+}
+fragment UserStatisticsFragment on UserStatisticTypes {
+  anime {
+    count
+    meanScore
+    standardDeviation
+    minutesWatched
+    episodesWatched
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      minutesWatched
+    }
+    lengths {
+      length
+      count
+      meanScore
+      minutesWatched
+    }
+    formats {
+      format
+      count
+      meanScore
+      minutesWatched
+    }
+    statuses {
+      status
+      count
+      meanScore
+      minutesWatched
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      minutesWatched
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      minutesWatched
+    }
+    genres {
+      genre
+      count
+      meanScore
+      minutesWatched
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      minutesWatched
+    }
+    countries {
+      country
+      count
+      meanScore
+      minutesWatched
+    }
+    voiceActors {
+      count
+      meanScore
+      minutesWatched
+      voiceActor {
+        id
+        name {
+          full
+        }
+      }
+      characterIds
+      mediaIds
+    }
+    staff {
+      count
+      meanScore
+      minutesWatched
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      minutesWatched
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+  manga {
+    count
+    meanScore
+    standardDeviation
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      chaptersRead
+    }
+    lengths {
+      length
+      count
+      meanScore
+      chaptersRead
+    }
+    formats {
+      format
+      count
+      meanScore
+      chaptersRead
+    }
+    statuses {
+      status
+      count
+      meanScore
+      chaptersRead
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      chaptersRead
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      chaptersRead
+    }
+    genres {
+      genre
+      count
+      meanScore
+      chaptersRead
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      chaptersRead
+    }
+    countries {
+      country
+      count
+      meanScore
+      chaptersRead
+    }
+    staff {
+      count
+      meanScore
+      chaptersRead
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      chaptersRead
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+}
+fragment UserBasicFragment on User {
+  id
+  name
+  avatar {
+    ...UserAvatarFragment
+  }
+  about
+  bannerImage
+  donatorTier
+  donatorBadge
+  isFollowing
+  isFollower
+  isBlocked
+  createdAt
+  updatedAt
+  unreadNotificationCount
+  bans
+  moderatorRoles
+  moderatorStatus
+  options {
+    ...UserOptionsFragment
+  }
+  mediaListOptions {
+    ...UserMediaListOptionsFragment
+  }
+  favourites {
+    ...UserFavouritesFragment
+  }
+  statistics {
+    ...UserStatisticsFragment
+  }
+  siteUrl
+  stats {
+    watchedTime
+    chaptersRead
+  }
+  previousNames {
+    name
+    createdAt
+    updatedAt
+  }
+}
+fragment UserFragment on User {
+  ...UserBasicFragment
+}`);
+export const GetUserInfoByUsernameDocument = new TypedDocumentString(`
     query GetUserInfoByUsername($userName: String) {
   User(name: $userName) {
     ...UserFragment
   }
 }
-    ${UserFragmentDoc}`;
-export const GetUserListDocument = gql`
+    fragment UserAvatarFragment on UserAvatar {
+  large
+  medium
+}
+fragment UserOptionsFragment on UserOptions {
+  titleLanguage
+  displayAdultContent
+  airingNotifications
+  profileColor
+  notificationOptions {
+    type
+    enabled
+  }
+  timezone
+  activityMergeTime
+  staffNameLanguage
+  restrictMessagesToFollowing
+  disabledListActivity {
+    disabled
+    type
+  }
+}
+fragment UserMediaListOptionsFragment on MediaListOptions {
+  scoreFormat
+  rowOrder
+  useLegacyLists
+  animeList {
+    sectionOrder
+    splitCompletedSectionByFormat
+    customLists
+    advancedScoring
+    advancedScoringEnabled
+  }
+  mangaList {
+    sectionOrder
+    splitCompletedSectionByFormat
+    customLists
+    advancedScoring
+    advancedScoringEnabled
+  }
+  sharedTheme
+  sharedThemeEnabled
+}
+fragment UserFavouritesFragment on Favourites {
+  anime {
+    nodes {
+      id
+      title {
+        romaji
+      }
+    }
+  }
+  manga {
+    nodes {
+      id
+      title {
+        romaji
+      }
+    }
+  }
+  characters {
+    nodes {
+      id
+      name {
+        full
+      }
+    }
+  }
+  staff {
+    nodes {
+      id
+      name {
+        full
+      }
+    }
+  }
+  studios {
+    nodes {
+      id
+      name
+    }
+  }
+}
+fragment UserStatisticsFragment on UserStatisticTypes {
+  anime {
+    count
+    meanScore
+    standardDeviation
+    minutesWatched
+    episodesWatched
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      minutesWatched
+    }
+    lengths {
+      length
+      count
+      meanScore
+      minutesWatched
+    }
+    formats {
+      format
+      count
+      meanScore
+      minutesWatched
+    }
+    statuses {
+      status
+      count
+      meanScore
+      minutesWatched
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      minutesWatched
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      minutesWatched
+    }
+    genres {
+      genre
+      count
+      meanScore
+      minutesWatched
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      minutesWatched
+    }
+    countries {
+      country
+      count
+      meanScore
+      minutesWatched
+    }
+    voiceActors {
+      count
+      meanScore
+      minutesWatched
+      voiceActor {
+        id
+        name {
+          full
+        }
+      }
+      characterIds
+      mediaIds
+    }
+    staff {
+      count
+      meanScore
+      minutesWatched
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      minutesWatched
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+  manga {
+    count
+    meanScore
+    standardDeviation
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      chaptersRead
+    }
+    lengths {
+      length
+      count
+      meanScore
+      chaptersRead
+    }
+    formats {
+      format
+      count
+      meanScore
+      chaptersRead
+    }
+    statuses {
+      status
+      count
+      meanScore
+      chaptersRead
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      chaptersRead
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      chaptersRead
+    }
+    genres {
+      genre
+      count
+      meanScore
+      chaptersRead
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      chaptersRead
+    }
+    countries {
+      country
+      count
+      meanScore
+      chaptersRead
+    }
+    staff {
+      count
+      meanScore
+      chaptersRead
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      chaptersRead
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+}
+fragment UserBasicFragment on User {
+  id
+  name
+  avatar {
+    ...UserAvatarFragment
+  }
+  about
+  bannerImage
+  donatorTier
+  donatorBadge
+  isFollowing
+  isFollower
+  isBlocked
+  createdAt
+  updatedAt
+  unreadNotificationCount
+  bans
+  moderatorRoles
+  moderatorStatus
+  options {
+    ...UserOptionsFragment
+  }
+  mediaListOptions {
+    ...UserMediaListOptionsFragment
+  }
+  favourites {
+    ...UserFavouritesFragment
+  }
+  statistics {
+    ...UserStatisticsFragment
+  }
+  siteUrl
+  stats {
+    watchedTime
+    chaptersRead
+  }
+  previousNames {
+    name
+    createdAt
+    updatedAt
+  }
+}
+fragment UserFragment on User {
+  ...UserBasicFragment
+}`);
+export const GetUserListDocument = new TypedDocumentString(`
     query GetUserList($page: Int, $perPage: Int) {
   Page(page: $page, perPage: $perPage) {
     users {
@@ -3645,8 +9354,322 @@ export const GetUserListDocument = gql`
     }
   }
 }
-    ${UserFragmentDoc}`;
-export const GetUserMangaListDocument = gql`
+    fragment UserAvatarFragment on UserAvatar {
+  large
+  medium
+}
+fragment UserOptionsFragment on UserOptions {
+  titleLanguage
+  displayAdultContent
+  airingNotifications
+  profileColor
+  notificationOptions {
+    type
+    enabled
+  }
+  timezone
+  activityMergeTime
+  staffNameLanguage
+  restrictMessagesToFollowing
+  disabledListActivity {
+    disabled
+    type
+  }
+}
+fragment UserMediaListOptionsFragment on MediaListOptions {
+  scoreFormat
+  rowOrder
+  useLegacyLists
+  animeList {
+    sectionOrder
+    splitCompletedSectionByFormat
+    customLists
+    advancedScoring
+    advancedScoringEnabled
+  }
+  mangaList {
+    sectionOrder
+    splitCompletedSectionByFormat
+    customLists
+    advancedScoring
+    advancedScoringEnabled
+  }
+  sharedTheme
+  sharedThemeEnabled
+}
+fragment UserFavouritesFragment on Favourites {
+  anime {
+    nodes {
+      id
+      title {
+        romaji
+      }
+    }
+  }
+  manga {
+    nodes {
+      id
+      title {
+        romaji
+      }
+    }
+  }
+  characters {
+    nodes {
+      id
+      name {
+        full
+      }
+    }
+  }
+  staff {
+    nodes {
+      id
+      name {
+        full
+      }
+    }
+  }
+  studios {
+    nodes {
+      id
+      name
+    }
+  }
+}
+fragment UserStatisticsFragment on UserStatisticTypes {
+  anime {
+    count
+    meanScore
+    standardDeviation
+    minutesWatched
+    episodesWatched
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      minutesWatched
+    }
+    lengths {
+      length
+      count
+      meanScore
+      minutesWatched
+    }
+    formats {
+      format
+      count
+      meanScore
+      minutesWatched
+    }
+    statuses {
+      status
+      count
+      meanScore
+      minutesWatched
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      minutesWatched
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      minutesWatched
+    }
+    genres {
+      genre
+      count
+      meanScore
+      minutesWatched
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      minutesWatched
+    }
+    countries {
+      country
+      count
+      meanScore
+      minutesWatched
+    }
+    voiceActors {
+      count
+      meanScore
+      minutesWatched
+      voiceActor {
+        id
+        name {
+          full
+        }
+      }
+      characterIds
+      mediaIds
+    }
+    staff {
+      count
+      meanScore
+      minutesWatched
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      minutesWatched
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+  manga {
+    count
+    meanScore
+    standardDeviation
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      chaptersRead
+    }
+    lengths {
+      length
+      count
+      meanScore
+      chaptersRead
+    }
+    formats {
+      format
+      count
+      meanScore
+      chaptersRead
+    }
+    statuses {
+      status
+      count
+      meanScore
+      chaptersRead
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      chaptersRead
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      chaptersRead
+    }
+    genres {
+      genre
+      count
+      meanScore
+      chaptersRead
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      chaptersRead
+    }
+    countries {
+      country
+      count
+      meanScore
+      chaptersRead
+    }
+    staff {
+      count
+      meanScore
+      chaptersRead
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      chaptersRead
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+}
+fragment UserBasicFragment on User {
+  id
+  name
+  avatar {
+    ...UserAvatarFragment
+  }
+  about
+  bannerImage
+  donatorTier
+  donatorBadge
+  isFollowing
+  isFollower
+  isBlocked
+  createdAt
+  updatedAt
+  unreadNotificationCount
+  bans
+  moderatorRoles
+  moderatorStatus
+  options {
+    ...UserOptionsFragment
+  }
+  mediaListOptions {
+    ...UserMediaListOptionsFragment
+  }
+  favourites {
+    ...UserFavouritesFragment
+  }
+  statistics {
+    ...UserStatisticsFragment
+  }
+  siteUrl
+  stats {
+    watchedTime
+    chaptersRead
+  }
+  previousNames {
+    name
+    createdAt
+    updatedAt
+  }
+}
+fragment UserFragment on User {
+  ...UserBasicFragment
+}`);
+export const GetUserMangaListDocument = new TypedDocumentString(`
     query GetUserMangaList($userId: Int, $status: MediaListStatus) {
   MediaListCollection(userId: $userId, type: MANGA, status: $status) {
     lists {
@@ -3656,8 +9679,99 @@ export const GetUserMangaListDocument = gql`
     }
   }
 }
-    ${MediaListFragmentDoc}`;
-export const GetUserMangaListByUsernameDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaListFragment on MediaList {
+  id
+  mediaId
+  userId
+  status
+  score
+  progress
+  progressVolumes
+  repeat
+  priority
+  private
+  notes
+  hiddenFromStatusLists
+  customLists
+  advancedScores
+  startedAt {
+    ...DateFragment
+  }
+  completedAt {
+    ...DateFragment
+  }
+  updatedAt
+  createdAt
+  media {
+    ...MediaCoreFragment
+  }
+}`);
+export const GetUserMangaListByUsernameDocument = new TypedDocumentString(`
     query GetUserMangaListByUsername($userName: String, $status: MediaListStatus) {
   MediaListCollection(userName: $userName, type: MANGA, status: $status) {
     lists {
@@ -3667,8 +9781,99 @@ export const GetUserMangaListByUsernameDocument = gql`
     }
   }
 }
-    ${MediaListFragmentDoc}`;
-export const GetUserReviewsDocument = gql`
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaListFragment on MediaList {
+  id
+  mediaId
+  userId
+  status
+  score
+  progress
+  progressVolumes
+  repeat
+  priority
+  private
+  notes
+  hiddenFromStatusLists
+  customLists
+  advancedScores
+  startedAt {
+    ...DateFragment
+  }
+  completedAt {
+    ...DateFragment
+  }
+  updatedAt
+  createdAt
+  media {
+    ...MediaCoreFragment
+  }
+}`);
+export const GetUserReviewsDocument = new TypedDocumentString(`
     query GetUserReviews($userId: Int, $page: Int = 1, $perPage: Int = 10) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
@@ -3681,8 +9886,33 @@ export const GetUserReviewsDocument = gql`
     }
   }
 }
-    ${ReviewFragmentDoc}`;
-export const GetUserStatisticsDocument = gql`
+    fragment ReviewFragment on Review {
+  id
+  userId
+  mediaId
+  mediaType
+  summary
+  body
+  rating
+  ratingAmount
+  score
+  private
+  siteUrl
+  createdAt
+  updatedAt
+  userRating
+  user {
+    id
+    name
+  }
+  media {
+    id
+    title {
+      userPreferred
+    }
+  }
+}`);
+export const GetUserStatisticsDocument = new TypedDocumentString(`
     query GetUserStatistics($id: Int) {
   User(id: $id) {
     statistics {
@@ -3763,8 +9993,8 @@ export const GetUserStatisticsDocument = gql`
     }
   }
 }
-    `;
-export const GetUserStatisticsByUsernameDocument = gql`
+    `);
+export const GetUserStatisticsByUsernameDocument = new TypedDocumentString(`
     query GetUserStatisticsByUsername($userName: String) {
   User(name: $userName) {
     statistics {
@@ -3845,15 +10075,329 @@ export const GetUserStatisticsByUsernameDocument = gql`
     }
   }
 }
-    `;
-export const GetViewerDocument = gql`
+    `);
+export const GetViewerDocument = new TypedDocumentString(`
     query GetViewer {
   Viewer {
     ...UserFragment
   }
 }
-    ${UserFragmentDoc}`;
-export const GetViewerStatisticsDocument = gql`
+    fragment UserAvatarFragment on UserAvatar {
+  large
+  medium
+}
+fragment UserOptionsFragment on UserOptions {
+  titleLanguage
+  displayAdultContent
+  airingNotifications
+  profileColor
+  notificationOptions {
+    type
+    enabled
+  }
+  timezone
+  activityMergeTime
+  staffNameLanguage
+  restrictMessagesToFollowing
+  disabledListActivity {
+    disabled
+    type
+  }
+}
+fragment UserMediaListOptionsFragment on MediaListOptions {
+  scoreFormat
+  rowOrder
+  useLegacyLists
+  animeList {
+    sectionOrder
+    splitCompletedSectionByFormat
+    customLists
+    advancedScoring
+    advancedScoringEnabled
+  }
+  mangaList {
+    sectionOrder
+    splitCompletedSectionByFormat
+    customLists
+    advancedScoring
+    advancedScoringEnabled
+  }
+  sharedTheme
+  sharedThemeEnabled
+}
+fragment UserFavouritesFragment on Favourites {
+  anime {
+    nodes {
+      id
+      title {
+        romaji
+      }
+    }
+  }
+  manga {
+    nodes {
+      id
+      title {
+        romaji
+      }
+    }
+  }
+  characters {
+    nodes {
+      id
+      name {
+        full
+      }
+    }
+  }
+  staff {
+    nodes {
+      id
+      name {
+        full
+      }
+    }
+  }
+  studios {
+    nodes {
+      id
+      name
+    }
+  }
+}
+fragment UserStatisticsFragment on UserStatisticTypes {
+  anime {
+    count
+    meanScore
+    standardDeviation
+    minutesWatched
+    episodesWatched
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      minutesWatched
+    }
+    lengths {
+      length
+      count
+      meanScore
+      minutesWatched
+    }
+    formats {
+      format
+      count
+      meanScore
+      minutesWatched
+    }
+    statuses {
+      status
+      count
+      meanScore
+      minutesWatched
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      minutesWatched
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      minutesWatched
+    }
+    genres {
+      genre
+      count
+      meanScore
+      minutesWatched
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      minutesWatched
+    }
+    countries {
+      country
+      count
+      meanScore
+      minutesWatched
+    }
+    voiceActors {
+      count
+      meanScore
+      minutesWatched
+      voiceActor {
+        id
+        name {
+          full
+        }
+      }
+      characterIds
+      mediaIds
+    }
+    staff {
+      count
+      meanScore
+      minutesWatched
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      minutesWatched
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+  manga {
+    count
+    meanScore
+    standardDeviation
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      chaptersRead
+    }
+    lengths {
+      length
+      count
+      meanScore
+      chaptersRead
+    }
+    formats {
+      format
+      count
+      meanScore
+      chaptersRead
+    }
+    statuses {
+      status
+      count
+      meanScore
+      chaptersRead
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      chaptersRead
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      chaptersRead
+    }
+    genres {
+      genre
+      count
+      meanScore
+      chaptersRead
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      chaptersRead
+    }
+    countries {
+      country
+      count
+      meanScore
+      chaptersRead
+    }
+    staff {
+      count
+      meanScore
+      chaptersRead
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      chaptersRead
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+}
+fragment UserBasicFragment on User {
+  id
+  name
+  avatar {
+    ...UserAvatarFragment
+  }
+  about
+  bannerImage
+  donatorTier
+  donatorBadge
+  isFollowing
+  isFollower
+  isBlocked
+  createdAt
+  updatedAt
+  unreadNotificationCount
+  bans
+  moderatorRoles
+  moderatorStatus
+  options {
+    ...UserOptionsFragment
+  }
+  mediaListOptions {
+    ...UserMediaListOptionsFragment
+  }
+  favourites {
+    ...UserFavouritesFragment
+  }
+  statistics {
+    ...UserStatisticsFragment
+  }
+  siteUrl
+  stats {
+    watchedTime
+    chaptersRead
+  }
+  previousNames {
+    name
+    createdAt
+    updatedAt
+  }
+}
+fragment UserFragment on User {
+  ...UserBasicFragment
+}`);
+export const GetViewerStatisticsDocument = new TypedDocumentString(`
     query GetViewerStatistics {
   Viewer {
     statistics {
@@ -3861,248 +10405,429 @@ export const GetViewerStatisticsDocument = gql`
     }
   }
 }
-    ${UserStatisticsFragmentDoc}`;
-
-export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
-
-
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType, _variables) => action();
-
-export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
+    fragment UserStatisticsFragment on UserStatisticTypes {
+  anime {
+    count
+    meanScore
+    standardDeviation
+    minutesWatched
+    episodesWatched
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      minutesWatched
+    }
+    lengths {
+      length
+      count
+      meanScore
+      minutesWatched
+    }
+    formats {
+      format
+      count
+      meanScore
+      minutesWatched
+    }
+    statuses {
+      status
+      count
+      meanScore
+      minutesWatched
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      minutesWatched
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      minutesWatched
+    }
+    genres {
+      genre
+      count
+      meanScore
+      minutesWatched
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      minutesWatched
+    }
+    countries {
+      country
+      count
+      meanScore
+      minutesWatched
+    }
+    voiceActors {
+      count
+      meanScore
+      minutesWatched
+      voiceActor {
+        id
+        name {
+          full
+        }
+      }
+      characterIds
+      mediaIds
+    }
+    staff {
+      count
+      meanScore
+      minutesWatched
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      minutesWatched
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+  manga {
+    count
+    meanScore
+    standardDeviation
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      chaptersRead
+    }
+    lengths {
+      length
+      count
+      meanScore
+      chaptersRead
+    }
+    formats {
+      format
+      count
+      meanScore
+      chaptersRead
+    }
+    statuses {
+      status
+      count
+      meanScore
+      chaptersRead
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      chaptersRead
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      chaptersRead
+    }
+    genres {
+      genre
+      count
+      meanScore
+      chaptersRead
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      chaptersRead
+    }
+    countries {
+      country
+      count
+      meanScore
+      chaptersRead
+    }
+    staff {
+      count
+      meanScore
+      chaptersRead
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      chaptersRead
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+}`);
+export type Requester<C = {}> = <R, V>(doc: string, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
+export function getSdk<C>(requester: Requester<C>) {
   return {
-    GetAnimeBrowse(variables?: GetAnimeBrowseQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimeBrowseQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetAnimeBrowseQuery>({ document: GetAnimeBrowseDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimeBrowse', 'query', variables);
+    GetAnimeBrowse(variables?: GetAnimeBrowseQueryVariables, options?: C): Promise<GetAnimeBrowseQuery> {
+      return requester<GetAnimeBrowseQuery, GetAnimeBrowseQueryVariables>(GetAnimeBrowseDocument, variables, options) as Promise<GetAnimeBrowseQuery>;
     },
-    GetAnimeById(variables: GetAnimeByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimeByIdQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetAnimeByIdQuery>({ document: GetAnimeByIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimeById', 'query', variables);
+    GetAnimeById(variables: GetAnimeByIdQueryVariables, options?: C): Promise<GetAnimeByIdQuery> {
+      return requester<GetAnimeByIdQuery, GetAnimeByIdQueryVariables>(GetAnimeByIdDocument, variables, options) as Promise<GetAnimeByIdQuery>;
     },
-    GetAnimeByTitle(variables: GetAnimeByTitleQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimeByTitleQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetAnimeByTitleQuery>({ document: GetAnimeByTitleDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimeByTitle', 'query', variables);
+    GetAnimeByTitle(variables: GetAnimeByTitleQueryVariables, options?: C): Promise<GetAnimeByTitleQuery> {
+      return requester<GetAnimeByTitleQuery, GetAnimeByTitleQueryVariables>(GetAnimeByTitleDocument, variables, options) as Promise<GetAnimeByTitleQuery>;
     },
-    GetAnimeCharacters(variables?: GetAnimeCharactersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimeCharactersQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetAnimeCharactersQuery>({ document: GetAnimeCharactersDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimeCharacters', 'query', variables);
+    GetAnimeCharacters(variables?: GetAnimeCharactersQueryVariables, options?: C): Promise<GetAnimeCharactersQuery> {
+      return requester<GetAnimeCharactersQuery, GetAnimeCharactersQueryVariables>(GetAnimeCharactersDocument, variables, options) as Promise<GetAnimeCharactersQuery>;
     },
-    GetAnimeListByGenre(variables: GetAnimeListByGenreQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimeListByGenreQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetAnimeListByGenreQuery>({ document: GetAnimeListByGenreDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimeListByGenre', 'query', variables);
+    GetAnimeListByGenre(variables: GetAnimeListByGenreQueryVariables, options?: C): Promise<GetAnimeListByGenreQuery> {
+      return requester<GetAnimeListByGenreQuery, GetAnimeListByGenreQueryVariables>(GetAnimeListByGenreDocument, variables, options) as Promise<GetAnimeListByGenreQuery>;
     },
-    GetAnimePopular(variables?: GetAnimePopularQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimePopularQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetAnimePopularQuery>({ document: GetAnimePopularDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimePopular', 'query', variables);
+    GetAnimePopular(variables?: GetAnimePopularQueryVariables, options?: C): Promise<GetAnimePopularQuery> {
+      return requester<GetAnimePopularQuery, GetAnimePopularQueryVariables>(GetAnimePopularDocument, variables, options) as Promise<GetAnimePopularQuery>;
     },
-    GetAnimeRecommendations(variables?: GetAnimeRecommendationsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimeRecommendationsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetAnimeRecommendationsQuery>({ document: GetAnimeRecommendationsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimeRecommendations', 'query', variables);
+    GetAnimeRecommendations(variables?: GetAnimeRecommendationsQueryVariables, options?: C): Promise<GetAnimeRecommendationsQuery> {
+      return requester<GetAnimeRecommendationsQuery, GetAnimeRecommendationsQueryVariables>(GetAnimeRecommendationsDocument, variables, options) as Promise<GetAnimeRecommendationsQuery>;
     },
-    GetAnimeRelations(variables?: GetAnimeRelationsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimeRelationsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetAnimeRelationsQuery>({ document: GetAnimeRelationsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimeRelations', 'query', variables);
+    GetAnimeRelations(variables?: GetAnimeRelationsQueryVariables, options?: C): Promise<GetAnimeRelationsQuery> {
+      return requester<GetAnimeRelationsQuery, GetAnimeRelationsQueryVariables>(GetAnimeRelationsDocument, variables, options) as Promise<GetAnimeRelationsQuery>;
     },
-    GetAnimeStaff(variables?: GetAnimeStaffQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimeStaffQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetAnimeStaffQuery>({ document: GetAnimeStaffDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimeStaff', 'query', variables);
+    GetAnimeStaff(variables?: GetAnimeStaffQueryVariables, options?: C): Promise<GetAnimeStaffQuery> {
+      return requester<GetAnimeStaffQuery, GetAnimeStaffQueryVariables>(GetAnimeStaffDocument, variables, options) as Promise<GetAnimeStaffQuery>;
     },
-    GetAnimeTrending(variables?: GetAnimeTrendingQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAnimeTrendingQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetAnimeTrendingQuery>({ document: GetAnimeTrendingDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAnimeTrending', 'query', variables);
+    GetAnimeTrending(variables?: GetAnimeTrendingQueryVariables, options?: C): Promise<GetAnimeTrendingQuery> {
+      return requester<GetAnimeTrendingQuery, GetAnimeTrendingQueryVariables>(GetAnimeTrendingDocument, variables, options) as Promise<GetAnimeTrendingQuery>;
     },
-    GetSeasonalAnime(variables?: GetSeasonalAnimeQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetSeasonalAnimeQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetSeasonalAnimeQuery>({ document: GetSeasonalAnimeDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetSeasonalAnime', 'query', variables);
+    GetSeasonalAnime(variables?: GetSeasonalAnimeQueryVariables, options?: C): Promise<GetSeasonalAnimeQuery> {
+      return requester<GetSeasonalAnimeQuery, GetSeasonalAnimeQueryVariables>(GetSeasonalAnimeDocument, variables, options) as Promise<GetSeasonalAnimeQuery>;
     },
-    SearchAnime(variables?: SearchAnimeQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<SearchAnimeQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<SearchAnimeQuery>({ document: SearchAnimeDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'SearchAnime', 'query', variables);
+    SearchAnime(variables?: SearchAnimeQueryVariables, options?: C): Promise<SearchAnimeQuery> {
+      return requester<SearchAnimeQuery, SearchAnimeQueryVariables>(SearchAnimeDocument, variables, options) as Promise<SearchAnimeQuery>;
     },
-    ToggleFavoriteAnime(variables: ToggleFavoriteAnimeMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<ToggleFavoriteAnimeMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ToggleFavoriteAnimeMutation>({ document: ToggleFavoriteAnimeDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'ToggleFavoriteAnime', 'mutation', variables);
+    ToggleFavoriteAnime(variables: ToggleFavoriteAnimeMutationVariables, options?: C): Promise<ToggleFavoriteAnimeMutation> {
+      return requester<ToggleFavoriteAnimeMutation, ToggleFavoriteAnimeMutationVariables>(ToggleFavoriteAnimeDocument, variables, options) as Promise<ToggleFavoriteAnimeMutation>;
     },
-    CharactersBirthdayToday(variables?: CharactersBirthdayTodayQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<CharactersBirthdayTodayQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CharactersBirthdayTodayQuery>({ document: CharactersBirthdayTodayDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'CharactersBirthdayToday', 'query', variables);
+    CharactersBirthdayToday(variables?: CharactersBirthdayTodayQueryVariables, options?: C): Promise<CharactersBirthdayTodayQuery> {
+      return requester<CharactersBirthdayTodayQuery, CharactersBirthdayTodayQueryVariables>(CharactersBirthdayTodayDocument, variables, options) as Promise<CharactersBirthdayTodayQuery>;
     },
-    GetCharacterById(variables: GetCharacterByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetCharacterByIdQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetCharacterByIdQuery>({ document: GetCharacterByIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetCharacterById', 'query', variables);
+    GetCharacterById(variables: GetCharacterByIdQueryVariables, options?: C): Promise<GetCharacterByIdQuery> {
+      return requester<GetCharacterByIdQuery, GetCharacterByIdQueryVariables>(GetCharacterByIdDocument, variables, options) as Promise<GetCharacterByIdQuery>;
     },
-    ToggleFavoriteCharacter(variables: ToggleFavoriteCharacterMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<ToggleFavoriteCharacterMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ToggleFavoriteCharacterMutation>({ document: ToggleFavoriteCharacterDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'ToggleFavoriteCharacter', 'mutation', variables);
+    ToggleFavoriteCharacter(variables: ToggleFavoriteCharacterMutationVariables, options?: C): Promise<ToggleFavoriteCharacterMutation> {
+      return requester<ToggleFavoriteCharacterMutation, ToggleFavoriteCharacterMutationVariables>(ToggleFavoriteCharacterDocument, variables, options) as Promise<ToggleFavoriteCharacterMutation>;
     },
-    GetMangaById(variables: GetMangaByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMangaByIdQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMangaByIdQuery>({ document: GetMangaByIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMangaById', 'query', variables);
+    GetMangaById(variables: GetMangaByIdQueryVariables, options?: C): Promise<GetMangaByIdQuery> {
+      return requester<GetMangaByIdQuery, GetMangaByIdQueryVariables>(GetMangaByIdDocument, variables, options) as Promise<GetMangaByIdQuery>;
     },
-    GetMangaByTitle(variables: GetMangaByTitleQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMangaByTitleQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMangaByTitleQuery>({ document: GetMangaByTitleDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMangaByTitle', 'query', variables);
+    GetMangaByTitle(variables: GetMangaByTitleQueryVariables, options?: C): Promise<GetMangaByTitleQuery> {
+      return requester<GetMangaByTitleQuery, GetMangaByTitleQueryVariables>(GetMangaByTitleDocument, variables, options) as Promise<GetMangaByTitleQuery>;
     },
-    GetMangaCharacters(variables?: GetMangaCharactersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMangaCharactersQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMangaCharactersQuery>({ document: GetMangaCharactersDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMangaCharacters', 'query', variables);
+    GetMangaCharacters(variables?: GetMangaCharactersQueryVariables, options?: C): Promise<GetMangaCharactersQuery> {
+      return requester<GetMangaCharactersQuery, GetMangaCharactersQueryVariables>(GetMangaCharactersDocument, variables, options) as Promise<GetMangaCharactersQuery>;
     },
-    GetMangaListByGenre(variables?: GetMangaListByGenreQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMangaListByGenreQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMangaListByGenreQuery>({ document: GetMangaListByGenreDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMangaListByGenre', 'query', variables);
+    GetMangaListByGenre(variables?: GetMangaListByGenreQueryVariables, options?: C): Promise<GetMangaListByGenreQuery> {
+      return requester<GetMangaListByGenreQuery, GetMangaListByGenreQueryVariables>(GetMangaListByGenreDocument, variables, options) as Promise<GetMangaListByGenreQuery>;
     },
-    GetMangaPopular(variables?: GetMangaPopularQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMangaPopularQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMangaPopularQuery>({ document: GetMangaPopularDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMangaPopular', 'query', variables);
+    GetMangaPopular(variables?: GetMangaPopularQueryVariables, options?: C): Promise<GetMangaPopularQuery> {
+      return requester<GetMangaPopularQuery, GetMangaPopularQueryVariables>(GetMangaPopularDocument, variables, options) as Promise<GetMangaPopularQuery>;
     },
-    GetMangaRecommendations(variables?: GetMangaRecommendationsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMangaRecommendationsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMangaRecommendationsQuery>({ document: GetMangaRecommendationsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMangaRecommendations', 'query', variables);
+    GetMangaRecommendations(variables?: GetMangaRecommendationsQueryVariables, options?: C): Promise<GetMangaRecommendationsQuery> {
+      return requester<GetMangaRecommendationsQuery, GetMangaRecommendationsQueryVariables>(GetMangaRecommendationsDocument, variables, options) as Promise<GetMangaRecommendationsQuery>;
     },
-    GetMangaRelations(variables?: GetMangaRelationsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMangaRelationsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMangaRelationsQuery>({ document: GetMangaRelationsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMangaRelations', 'query', variables);
+    GetMangaRelations(variables?: GetMangaRelationsQueryVariables, options?: C): Promise<GetMangaRelationsQuery> {
+      return requester<GetMangaRelationsQuery, GetMangaRelationsQueryVariables>(GetMangaRelationsDocument, variables, options) as Promise<GetMangaRelationsQuery>;
     },
-    GetMangaStaff(variables?: GetMangaStaffQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMangaStaffQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMangaStaffQuery>({ document: GetMangaStaffDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMangaStaff', 'query', variables);
+    GetMangaStaff(variables?: GetMangaStaffQueryVariables, options?: C): Promise<GetMangaStaffQuery> {
+      return requester<GetMangaStaffQuery, GetMangaStaffQueryVariables>(GetMangaStaffDocument, variables, options) as Promise<GetMangaStaffQuery>;
     },
-    GetMangaTrending(variables?: GetMangaTrendingQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMangaTrendingQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMangaTrendingQuery>({ document: GetMangaTrendingDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMangaTrending', 'query', variables);
+    GetMangaTrending(variables?: GetMangaTrendingQueryVariables, options?: C): Promise<GetMangaTrendingQuery> {
+      return requester<GetMangaTrendingQuery, GetMangaTrendingQueryVariables>(GetMangaTrendingDocument, variables, options) as Promise<GetMangaTrendingQuery>;
     },
-    SearchManga(variables?: SearchMangaQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<SearchMangaQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<SearchMangaQuery>({ document: SearchMangaDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'SearchManga', 'query', variables);
+    SearchManga(variables?: SearchMangaQueryVariables, options?: C): Promise<SearchMangaQuery> {
+      return requester<SearchMangaQuery, SearchMangaQueryVariables>(SearchMangaDocument, variables, options) as Promise<SearchMangaQuery>;
     },
-    ToggleFavoriteManga(variables: ToggleFavoriteMangaMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<ToggleFavoriteMangaMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ToggleFavoriteMangaMutation>({ document: ToggleFavoriteMangaDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'ToggleFavoriteManga', 'mutation', variables);
+    ToggleFavoriteManga(variables: ToggleFavoriteMangaMutationVariables, options?: C): Promise<ToggleFavoriteMangaMutation> {
+      return requester<ToggleFavoriteMangaMutation, ToggleFavoriteMangaMutationVariables>(ToggleFavoriteMangaDocument, variables, options) as Promise<ToggleFavoriteMangaMutation>;
     },
-    DeleteReview(variables?: DeleteReviewMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<DeleteReviewMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<DeleteReviewMutation>({ document: DeleteReviewDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'DeleteReview', 'mutation', variables);
+    DeleteReview(variables?: DeleteReviewMutationVariables, options?: C): Promise<DeleteReviewMutation> {
+      return requester<DeleteReviewMutation, DeleteReviewMutationVariables>(DeleteReviewDocument, variables, options) as Promise<DeleteReviewMutation>;
     },
-    GetAiringSchedule(variables: GetAiringScheduleQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAiringScheduleQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetAiringScheduleQuery>({ document: GetAiringScheduleDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAiringSchedule', 'query', variables);
+    GetAiringSchedule(variables: GetAiringScheduleQueryVariables, options?: C): Promise<GetAiringScheduleQuery> {
+      return requester<GetAiringScheduleQuery, GetAiringScheduleQueryVariables>(GetAiringScheduleDocument, variables, options) as Promise<GetAiringScheduleQuery>;
     },
-    GetAiringSchedulesByMedia(variables?: GetAiringSchedulesByMediaQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetAiringSchedulesByMediaQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetAiringSchedulesByMediaQuery>({ document: GetAiringSchedulesByMediaDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetAiringSchedulesByMedia', 'query', variables);
+    GetAiringSchedulesByMedia(variables?: GetAiringSchedulesByMediaQueryVariables, options?: C): Promise<GetAiringSchedulesByMediaQuery> {
+      return requester<GetAiringSchedulesByMediaQuery, GetAiringSchedulesByMediaQueryVariables>(GetAiringSchedulesByMediaDocument, variables, options) as Promise<GetAiringSchedulesByMediaQuery>;
     },
-    GetGenres(variables?: GetGenresQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetGenresQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetGenresQuery>({ document: GetGenresDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetGenres', 'query', variables);
+    GetGenres(variables?: GetGenresQueryVariables, options?: C): Promise<GetGenresQuery> {
+      return requester<GetGenresQuery, GetGenresQueryVariables>(GetGenresDocument, variables, options) as Promise<GetGenresQuery>;
     },
-    GetMediaById(variables: GetMediaByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMediaByIdQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMediaByIdQuery>({ document: GetMediaByIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMediaById', 'query', variables);
+    GetMediaById(variables: GetMediaByIdQueryVariables, options?: C): Promise<GetMediaByIdQuery> {
+      return requester<GetMediaByIdQuery, GetMediaByIdQueryVariables>(GetMediaByIdDocument, variables, options) as Promise<GetMediaByIdQuery>;
     },
-    GetMediaReviews(variables?: GetMediaReviewsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMediaReviewsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMediaReviewsQuery>({ document: GetMediaReviewsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMediaReviews', 'query', variables);
+    GetMediaReviews(variables?: GetMediaReviewsQueryVariables, options?: C): Promise<GetMediaReviewsQuery> {
+      return requester<GetMediaReviewsQuery, GetMediaReviewsQueryVariables>(GetMediaReviewsDocument, variables, options) as Promise<GetMediaReviewsQuery>;
     },
-    GetMediaTags(variables?: GetMediaTagsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMediaTagsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMediaTagsQuery>({ document: GetMediaTagsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMediaTags', 'query', variables);
+    GetMediaTags(variables?: GetMediaTagsQueryVariables, options?: C): Promise<GetMediaTagsQuery> {
+      return requester<GetMediaTagsQuery, GetMediaTagsQueryVariables>(GetMediaTagsDocument, variables, options) as Promise<GetMediaTagsQuery>;
     },
-    GetRecommendationsPage(variables?: GetRecommendationsPageQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetRecommendationsPageQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetRecommendationsPageQuery>({ document: GetRecommendationsPageDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetRecommendationsPage', 'query', variables);
+    GetRecommendationsPage(variables?: GetRecommendationsPageQueryVariables, options?: C): Promise<GetRecommendationsPageQuery> {
+      return requester<GetRecommendationsPageQuery, GetRecommendationsPageQueryVariables>(GetRecommendationsPageDocument, variables, options) as Promise<GetRecommendationsPageQuery>;
     },
-    RateReview(variables?: RateReviewMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<RateReviewMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<RateReviewMutation>({ document: RateReviewDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'RateReview', 'mutation', variables);
+    RateReview(variables?: RateReviewMutationVariables, options?: C): Promise<RateReviewMutation> {
+      return requester<RateReviewMutation, RateReviewMutationVariables>(RateReviewDocument, variables, options) as Promise<RateReviewMutation>;
     },
-    SaveRecommendation(variables?: SaveRecommendationMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<SaveRecommendationMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<SaveRecommendationMutation>({ document: SaveRecommendationDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'SaveRecommendation', 'mutation', variables);
+    SaveRecommendation(variables?: SaveRecommendationMutationVariables, options?: C): Promise<SaveRecommendationMutation> {
+      return requester<SaveRecommendationMutation, SaveRecommendationMutationVariables>(SaveRecommendationDocument, variables, options) as Promise<SaveRecommendationMutation>;
     },
-    SaveReview(variables?: SaveReviewMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<SaveReviewMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<SaveReviewMutation>({ document: SaveReviewDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'SaveReview', 'mutation', variables);
+    SaveReview(variables?: SaveReviewMutationVariables, options?: C): Promise<SaveReviewMutation> {
+      return requester<SaveReviewMutation, SaveReviewMutationVariables>(SaveReviewDocument, variables, options) as Promise<SaveReviewMutation>;
     },
-    DeleteCustomList(variables?: DeleteCustomListMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<DeleteCustomListMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<DeleteCustomListMutation>({ document: DeleteCustomListDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'DeleteCustomList', 'mutation', variables);
+    DeleteCustomList(variables?: DeleteCustomListMutationVariables, options?: C): Promise<DeleteCustomListMutation> {
+      return requester<DeleteCustomListMutation, DeleteCustomListMutationVariables>(DeleteCustomListDocument, variables, options) as Promise<DeleteCustomListMutation>;
     },
-    DeleteMediaListEntry(variables: DeleteMediaListEntryMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<DeleteMediaListEntryMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<DeleteMediaListEntryMutation>({ document: DeleteMediaListEntryDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'DeleteMediaListEntry', 'mutation', variables);
+    DeleteMediaListEntry(variables: DeleteMediaListEntryMutationVariables, options?: C): Promise<DeleteMediaListEntryMutation> {
+      return requester<DeleteMediaListEntryMutation, DeleteMediaListEntryMutationVariables>(DeleteMediaListEntryDocument, variables, options) as Promise<DeleteMediaListEntryMutation>;
     },
-    GetMediaList(variables?: GetMediaListQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMediaListQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMediaListQuery>({ document: GetMediaListDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMediaList', 'query', variables);
+    GetMediaList(variables?: GetMediaListQueryVariables, options?: C): Promise<GetMediaListQuery> {
+      return requester<GetMediaListQuery, GetMediaListQueryVariables>(GetMediaListDocument, variables, options) as Promise<GetMediaListQuery>;
     },
-    GetMediaListByUser(variables?: GetMediaListByUserQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMediaListByUserQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMediaListByUserQuery>({ document: GetMediaListByUserDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMediaListByUser', 'query', variables);
+    GetMediaListByUser(variables?: GetMediaListByUserQueryVariables, options?: C): Promise<GetMediaListByUserQuery> {
+      return requester<GetMediaListByUserQuery, GetMediaListByUserQueryVariables>(GetMediaListByUserDocument, variables, options) as Promise<GetMediaListByUserQuery>;
     },
-    GetMediaListByUserByUsername(variables?: GetMediaListByUserByUsernameQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMediaListByUserByUsernameQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMediaListByUserByUsernameQuery>({ document: GetMediaListByUserByUsernameDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMediaListByUserByUsername', 'query', variables);
+    GetMediaListByUserByUsername(variables?: GetMediaListByUserByUsernameQueryVariables, options?: C): Promise<GetMediaListByUserByUsernameQuery> {
+      return requester<GetMediaListByUserByUsernameQuery, GetMediaListByUserByUsernameQueryVariables>(GetMediaListByUserByUsernameDocument, variables, options) as Promise<GetMediaListByUserByUsernameQuery>;
     },
-    SaveMediaListEntry(variables?: SaveMediaListEntryMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<SaveMediaListEntryMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<SaveMediaListEntryMutation>({ document: SaveMediaListEntryDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'SaveMediaListEntry', 'mutation', variables);
+    SaveMediaListEntry(variables?: SaveMediaListEntryMutationVariables, options?: C): Promise<SaveMediaListEntryMutation> {
+      return requester<SaveMediaListEntryMutation, SaveMediaListEntryMutationVariables>(SaveMediaListEntryDocument, variables, options) as Promise<SaveMediaListEntryMutation>;
     },
-    UpdateMediaListEntries(variables?: UpdateMediaListEntriesMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<UpdateMediaListEntriesMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<UpdateMediaListEntriesMutation>({ document: UpdateMediaListEntriesDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'UpdateMediaListEntries', 'mutation', variables);
+    UpdateMediaListEntries(variables?: UpdateMediaListEntriesMutationVariables, options?: C): Promise<UpdateMediaListEntriesMutation> {
+      return requester<UpdateMediaListEntriesMutation, UpdateMediaListEntriesMutationVariables>(UpdateMediaListEntriesDocument, variables, options) as Promise<UpdateMediaListEntriesMutation>;
     },
-    GetActivities(variables?: GetActivitiesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetActivitiesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetActivitiesQuery>({ document: GetActivitiesDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetActivities', 'query', variables);
+    GetActivities(variables?: GetActivitiesQueryVariables, options?: C): Promise<GetActivitiesQuery> {
+      return requester<GetActivitiesQuery, GetActivitiesQueryVariables>(GetActivitiesDocument, variables, options) as Promise<GetActivitiesQuery>;
     },
-    GetActivity(variables: GetActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetActivityQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetActivityQuery>({ document: GetActivityDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetActivity', 'query', variables);
+    GetActivity(variables: GetActivityQueryVariables, options?: C): Promise<GetActivityQuery> {
+      return requester<GetActivityQuery, GetActivityQueryVariables>(GetActivityDocument, variables, options) as Promise<GetActivityQuery>;
     },
-    GetActivityReplies(variables?: GetActivityRepliesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetActivityRepliesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetActivityRepliesQuery>({ document: GetActivityRepliesDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetActivityReplies', 'query', variables);
+    GetActivityReplies(variables?: GetActivityRepliesQueryVariables, options?: C): Promise<GetActivityRepliesQuery> {
+      return requester<GetActivityRepliesQuery, GetActivityRepliesQueryVariables>(GetActivityRepliesDocument, variables, options) as Promise<GetActivityRepliesQuery>;
     },
-    GetActivityReply(variables: GetActivityReplyQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetActivityReplyQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetActivityReplyQuery>({ document: GetActivityReplyDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetActivityReply', 'query', variables);
+    GetActivityReply(variables: GetActivityReplyQueryVariables, options?: C): Promise<GetActivityReplyQuery> {
+      return requester<GetActivityReplyQuery, GetActivityReplyQueryVariables>(GetActivityReplyDocument, variables, options) as Promise<GetActivityReplyQuery>;
     },
-    GetFollowers(variables: GetFollowersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetFollowersQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetFollowersQuery>({ document: GetFollowersDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetFollowers', 'query', variables);
+    GetFollowers(variables: GetFollowersQueryVariables, options?: C): Promise<GetFollowersQuery> {
+      return requester<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowersDocument, variables, options) as Promise<GetFollowersQuery>;
     },
-    GetFollowing(variables: GetFollowingQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetFollowingQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetFollowingQuery>({ document: GetFollowingDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetFollowing', 'query', variables);
+    GetFollowing(variables: GetFollowingQueryVariables, options?: C): Promise<GetFollowingQuery> {
+      return requester<GetFollowingQuery, GetFollowingQueryVariables>(GetFollowingDocument, variables, options) as Promise<GetFollowingQuery>;
     },
-    GetMarkdown(variables: GetMarkdownQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetMarkdownQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetMarkdownQuery>({ document: GetMarkdownDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetMarkdown', 'query', variables);
+    GetMarkdown(variables: GetMarkdownQueryVariables, options?: C): Promise<GetMarkdownQuery> {
+      return requester<GetMarkdownQuery, GetMarkdownQueryVariables>(GetMarkdownDocument, variables, options) as Promise<GetMarkdownQuery>;
     },
-    GetNotifications(variables?: GetNotificationsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetNotificationsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetNotificationsQuery>({ document: GetNotificationsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetNotifications', 'query', variables);
+    GetNotifications(variables?: GetNotificationsQueryVariables, options?: C): Promise<GetNotificationsQuery> {
+      return requester<GetNotificationsQuery, GetNotificationsQueryVariables>(GetNotificationsDocument, variables, options) as Promise<GetNotificationsQuery>;
     },
-    GetSiteStatistics(variables?: GetSiteStatisticsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetSiteStatisticsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetSiteStatisticsQuery>({ document: GetSiteStatisticsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetSiteStatistics', 'query', variables);
+    GetSiteStatistics(variables?: GetSiteStatisticsQueryVariables, options?: C): Promise<GetSiteStatisticsQuery> {
+      return requester<GetSiteStatisticsQuery, GetSiteStatisticsQueryVariables>(GetSiteStatisticsDocument, variables, options) as Promise<GetSiteStatisticsQuery>;
     },
-    GetThread(variables: GetThreadQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetThreadQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetThreadQuery>({ document: GetThreadDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetThread', 'query', variables);
+    GetThread(variables: GetThreadQueryVariables, options?: C): Promise<GetThreadQuery> {
+      return requester<GetThreadQuery, GetThreadQueryVariables>(GetThreadDocument, variables, options) as Promise<GetThreadQuery>;
     },
-    GetThreadComment(variables: GetThreadCommentQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetThreadCommentQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetThreadCommentQuery>({ document: GetThreadCommentDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetThreadComment', 'query', variables);
+    GetThreadComment(variables: GetThreadCommentQueryVariables, options?: C): Promise<GetThreadCommentQuery> {
+      return requester<GetThreadCommentQuery, GetThreadCommentQueryVariables>(GetThreadCommentDocument, variables, options) as Promise<GetThreadCommentQuery>;
     },
-    GetThreadComments(variables?: GetThreadCommentsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetThreadCommentsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetThreadCommentsQuery>({ document: GetThreadCommentsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetThreadComments', 'query', variables);
+    GetThreadComments(variables?: GetThreadCommentsQueryVariables, options?: C): Promise<GetThreadCommentsQuery> {
+      return requester<GetThreadCommentsQuery, GetThreadCommentsQueryVariables>(GetThreadCommentsDocument, variables, options) as Promise<GetThreadCommentsQuery>;
     },
-    GetThreads(variables?: GetThreadsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetThreadsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetThreadsQuery>({ document: GetThreadsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetThreads', 'query', variables);
+    GetThreads(variables?: GetThreadsQueryVariables, options?: C): Promise<GetThreadsQuery> {
+      return requester<GetThreadsQuery, GetThreadsQueryVariables>(GetThreadsDocument, variables, options) as Promise<GetThreadsQuery>;
     },
-    ToggleFollow(variables?: ToggleFollowMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<ToggleFollowMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ToggleFollowMutation>({ document: ToggleFollowDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'ToggleFollow', 'mutation', variables);
+    ToggleFollow(variables?: ToggleFollowMutationVariables, options?: C): Promise<ToggleFollowMutation> {
+      return requester<ToggleFollowMutation, ToggleFollowMutationVariables>(ToggleFollowDocument, variables, options) as Promise<ToggleFollowMutation>;
     },
-    ToggleLike(variables?: ToggleLikeMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<ToggleLikeMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ToggleLikeMutation>({ document: ToggleLikeDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'ToggleLike', 'mutation', variables);
+    ToggleLike(variables?: ToggleLikeMutationVariables, options?: C): Promise<ToggleLikeMutation> {
+      return requester<ToggleLikeMutation, ToggleLikeMutationVariables>(ToggleLikeDocument, variables, options) as Promise<ToggleLikeMutation>;
     },
-    GetStaffById(variables: GetStaffByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetStaffByIdQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetStaffByIdQuery>({ document: GetStaffByIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetStaffById', 'query', variables);
+    GetStaffById(variables: GetStaffByIdQueryVariables, options?: C): Promise<GetStaffByIdQuery> {
+      return requester<GetStaffByIdQuery, GetStaffByIdQueryVariables>(GetStaffByIdDocument, variables, options) as Promise<GetStaffByIdQuery>;
     },
-    StaffBirthdayToday(variables?: StaffBirthdayTodayQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<StaffBirthdayTodayQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<StaffBirthdayTodayQuery>({ document: StaffBirthdayTodayDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'StaffBirthdayToday', 'query', variables);
+    StaffBirthdayToday(variables?: StaffBirthdayTodayQueryVariables, options?: C): Promise<StaffBirthdayTodayQuery> {
+      return requester<StaffBirthdayTodayQuery, StaffBirthdayTodayQueryVariables>(StaffBirthdayTodayDocument, variables, options) as Promise<StaffBirthdayTodayQuery>;
     },
-    ToggleFavoriteStaff(variables: ToggleFavoriteStaffMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<ToggleFavoriteStaffMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ToggleFavoriteStaffMutation>({ document: ToggleFavoriteStaffDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'ToggleFavoriteStaff', 'mutation', variables);
+    ToggleFavoriteStaff(variables: ToggleFavoriteStaffMutationVariables, options?: C): Promise<ToggleFavoriteStaffMutation> {
+      return requester<ToggleFavoriteStaffMutation, ToggleFavoriteStaffMutationVariables>(ToggleFavoriteStaffDocument, variables, options) as Promise<ToggleFavoriteStaffMutation>;
     },
-    GetStudioById(variables: GetStudioByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetStudioByIdQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetStudioByIdQuery>({ document: GetStudioByIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetStudioById', 'query', variables);
+    GetStudioById(variables: GetStudioByIdQueryVariables, options?: C): Promise<GetStudioByIdQuery> {
+      return requester<GetStudioByIdQuery, GetStudioByIdQueryVariables>(GetStudioByIdDocument, variables, options) as Promise<GetStudioByIdQuery>;
     },
-    SearchStudios(variables?: SearchStudiosQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<SearchStudiosQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<SearchStudiosQuery>({ document: SearchStudiosDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'SearchStudios', 'query', variables);
+    SearchStudio(variables?: SearchStudioQueryVariables, options?: C): Promise<SearchStudioQuery> {
+      return requester<SearchStudioQuery, SearchStudioQueryVariables>(SearchStudioDocument, variables, options) as Promise<SearchStudioQuery>;
     },
-    ToggleFavoriteStudio(variables: ToggleFavoriteStudioMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<ToggleFavoriteStudioMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ToggleFavoriteStudioMutation>({ document: ToggleFavoriteStudioDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'ToggleFavoriteStudio', 'mutation', variables);
+    ToggleFavoriteStudio(variables: ToggleFavoriteStudioMutationVariables, options?: C): Promise<ToggleFavoriteStudioMutation> {
+      return requester<ToggleFavoriteStudioMutation, ToggleFavoriteStudioMutationVariables>(ToggleFavoriteStudioDocument, variables, options) as Promise<ToggleFavoriteStudioMutation>;
     },
-    GetUserAnimeList(variables?: GetUserAnimeListQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserAnimeListQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserAnimeListQuery>({ document: GetUserAnimeListDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserAnimeList', 'query', variables);
+    GetUserAnimeList(variables?: GetUserAnimeListQueryVariables, options?: C): Promise<GetUserAnimeListQuery> {
+      return requester<GetUserAnimeListQuery, GetUserAnimeListQueryVariables>(GetUserAnimeListDocument, variables, options) as Promise<GetUserAnimeListQuery>;
     },
-    GetUserAnimeListByUsername(variables?: GetUserAnimeListByUsernameQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserAnimeListByUsernameQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserAnimeListByUsernameQuery>({ document: GetUserAnimeListByUsernameDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserAnimeListByUsername', 'query', variables);
+    GetUserAnimeListByUsername(variables?: GetUserAnimeListByUsernameQueryVariables, options?: C): Promise<GetUserAnimeListByUsernameQuery> {
+      return requester<GetUserAnimeListByUsernameQuery, GetUserAnimeListByUsernameQueryVariables>(GetUserAnimeListByUsernameDocument, variables, options) as Promise<GetUserAnimeListByUsernameQuery>;
     },
-    GetUserInfo(variables?: GetUserInfoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserInfoQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserInfoQuery>({ document: GetUserInfoDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserInfo', 'query', variables);
+    GetUserInfo(variables?: GetUserInfoQueryVariables, options?: C): Promise<GetUserInfoQuery> {
+      return requester<GetUserInfoQuery, GetUserInfoQueryVariables>(GetUserInfoDocument, variables, options) as Promise<GetUserInfoQuery>;
     },
-    GetUserInfoByUsername(variables?: GetUserInfoByUsernameQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserInfoByUsernameQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserInfoByUsernameQuery>({ document: GetUserInfoByUsernameDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserInfoByUsername', 'query', variables);
+    GetUserInfoByUsername(variables?: GetUserInfoByUsernameQueryVariables, options?: C): Promise<GetUserInfoByUsernameQuery> {
+      return requester<GetUserInfoByUsernameQuery, GetUserInfoByUsernameQueryVariables>(GetUserInfoByUsernameDocument, variables, options) as Promise<GetUserInfoByUsernameQuery>;
     },
-    GetUserList(variables?: GetUserListQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserListQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserListQuery>({ document: GetUserListDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserList', 'query', variables);
+    GetUserList(variables?: GetUserListQueryVariables, options?: C): Promise<GetUserListQuery> {
+      return requester<GetUserListQuery, GetUserListQueryVariables>(GetUserListDocument, variables, options) as Promise<GetUserListQuery>;
     },
-    GetUserMangaList(variables?: GetUserMangaListQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserMangaListQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserMangaListQuery>({ document: GetUserMangaListDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserMangaList', 'query', variables);
+    GetUserMangaList(variables?: GetUserMangaListQueryVariables, options?: C): Promise<GetUserMangaListQuery> {
+      return requester<GetUserMangaListQuery, GetUserMangaListQueryVariables>(GetUserMangaListDocument, variables, options) as Promise<GetUserMangaListQuery>;
     },
-    GetUserMangaListByUsername(variables?: GetUserMangaListByUsernameQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserMangaListByUsernameQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserMangaListByUsernameQuery>({ document: GetUserMangaListByUsernameDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserMangaListByUsername', 'query', variables);
+    GetUserMangaListByUsername(variables?: GetUserMangaListByUsernameQueryVariables, options?: C): Promise<GetUserMangaListByUsernameQuery> {
+      return requester<GetUserMangaListByUsernameQuery, GetUserMangaListByUsernameQueryVariables>(GetUserMangaListByUsernameDocument, variables, options) as Promise<GetUserMangaListByUsernameQuery>;
     },
-    GetUserReviews(variables?: GetUserReviewsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserReviewsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserReviewsQuery>({ document: GetUserReviewsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserReviews', 'query', variables);
+    GetUserReviews(variables?: GetUserReviewsQueryVariables, options?: C): Promise<GetUserReviewsQuery> {
+      return requester<GetUserReviewsQuery, GetUserReviewsQueryVariables>(GetUserReviewsDocument, variables, options) as Promise<GetUserReviewsQuery>;
     },
-    GetUserStatistics(variables?: GetUserStatisticsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserStatisticsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserStatisticsQuery>({ document: GetUserStatisticsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserStatistics', 'query', variables);
+    GetUserStatistics(variables?: GetUserStatisticsQueryVariables, options?: C): Promise<GetUserStatisticsQuery> {
+      return requester<GetUserStatisticsQuery, GetUserStatisticsQueryVariables>(GetUserStatisticsDocument, variables, options) as Promise<GetUserStatisticsQuery>;
     },
-    GetUserStatisticsByUsername(variables?: GetUserStatisticsByUsernameQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserStatisticsByUsernameQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserStatisticsByUsernameQuery>({ document: GetUserStatisticsByUsernameDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserStatisticsByUsername', 'query', variables);
+    GetUserStatisticsByUsername(variables?: GetUserStatisticsByUsernameQueryVariables, options?: C): Promise<GetUserStatisticsByUsernameQuery> {
+      return requester<GetUserStatisticsByUsernameQuery, GetUserStatisticsByUsernameQueryVariables>(GetUserStatisticsByUsernameDocument, variables, options) as Promise<GetUserStatisticsByUsernameQuery>;
     },
-    GetViewer(variables?: GetViewerQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetViewerQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetViewerQuery>({ document: GetViewerDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetViewer', 'query', variables);
+    GetViewer(variables?: GetViewerQueryVariables, options?: C): Promise<GetViewerQuery> {
+      return requester<GetViewerQuery, GetViewerQueryVariables>(GetViewerDocument, variables, options) as Promise<GetViewerQuery>;
     },
-    GetViewerStatistics(variables?: GetViewerStatisticsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetViewerStatisticsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetViewerStatisticsQuery>({ document: GetViewerStatisticsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetViewerStatistics', 'query', variables);
+    GetViewerStatistics(variables?: GetViewerStatisticsQueryVariables, options?: C): Promise<GetViewerStatisticsQuery> {
+      return requester<GetViewerStatisticsQuery, GetViewerStatisticsQueryVariables>(GetViewerStatisticsDocument, variables, options) as Promise<GetViewerStatisticsQuery>;
     }
   };
 }
