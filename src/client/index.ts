@@ -1,84 +1,129 @@
 import {
-	type ApiPlugin,
-	createClient as createCoreClient,
-	type RetryConfig,
-	type Transport,
+	type BaseHttpClient,
+	type ClientConfig,
+	createClient as createApiCoreClient,
+	createAuthPlugin,
+	createGraphQLRequester,
+	dedupeGraphQLFragmentDefinitions,
+	type HeaderInput,
+	type MaybePromise,
+	mergeHeaders,
 } from "@api-wrappers/api-core";
 import { type GraphQLClient, getSdk } from "../__generated__/anilist-sdk";
 
 const ANILIST_API_URL = "https://graphql.anilist.co";
-const DEFAULT_RETRY: RetryConfig = {
-	maxAttempts: 4,
-	delayMs: 1000,
-	retriableStatusCodes: [429],
-};
+const MAX_ATTEMPTS = 4;
 
-/**
- * Options accepted by {@link createGraphQLClient}, {@link createClient}, and
- * the `Anilist` constructor. A plain string is shorthand for `{ token }`.
- */
-export type AnilistClientOptions = {
-	/** OAuth token sent as a `Bearer` authorization header. */
-	token?: string;
-	/** GraphQL endpoint. Defaults to `https://graphql.anilist.co`. */
-	url?: string;
-	/** Extra headers merged into every request. */
-	headers?: Record<string, string>;
-	/** Default request timeout in milliseconds. Unset by default; 30000 is recommended. */
+export type AnilistToken =
+	| string
+	| (() => MaybePromise<string | null | undefined>);
+
+export interface AnilistOptions {
+	/** Static token or a token provider evaluated before every request. */
+	token?: AnilistToken;
+	/** Optional api-core overrides. AniList defaults are applied when omitted. */
+	core?: Omit<ClientConfig, "baseUrl" | "defaultHeaders"> & {
+		baseUrl?: string;
+		defaultHeaders?: HeaderInput;
+	};
+	/** Existing api-core client to use instead of constructing one. */
+	httpClient?: BaseHttpClient;
+}
+
+export interface AnilistRequestOptions {
+	requestHeaders?: Record<string, string>;
+	signal?: RequestInit["signal"];
 	timeoutMs?: number;
-	/** Retry policy. Defaults to 4 attempts with backoff on HTTP 429. */
-	retry?: RetryConfig;
-	/** api-core plugins, for example `createRateLimitPlugin()`. */
-	plugins?: ApiPlugin[];
-	/** Custom transport, useful for tests or non-fetch runtimes. */
-	transport?: Transport;
-};
+	cacheKey?: string;
+	tags?: string[];
+	operationName?: string;
+}
 
-const normalizeOptions = (
-	input?: string | AnilistClientOptions,
-): AnilistClientOptions =>
-	typeof input === "string" ? { token: input } : (input ?? {});
+export type AnilistClientInput = string | AnilistOptions | undefined;
+
+export interface AnilistClientBundle {
+	httpClient: BaseHttpClient;
+	graphQLClient: GraphQLClient;
+	sdkClient: ReturnType<typeof createSdkClient>;
+}
+
+export const createHttpClient = (
+	input?: AnilistClientInput,
+): BaseHttpClient => {
+	const options = normalizeOptions(input);
+	if (options.httpClient) return options.httpClient;
+
+	const core = options.core ?? {};
+	const plugins = [...(core.plugins ?? [])];
+	if (options.token) plugins.push(createAuthPlugin(options.token));
+
+	return createApiCoreClient({
+		...core,
+		baseUrl: core.baseUrl ?? ANILIST_API_URL,
+		defaultHeaders: mergeHeaders(
+			{ "content-type": "application/json" },
+			core.defaultHeaders,
+		),
+		plugins,
+		retry: core.retry ?? {
+			maxAttempts: MAX_ATTEMPTS,
+			delayMs: 1000,
+			retriableStatusCodes: [429],
+		},
+	});
+};
 
 export const createGraphQLClient = (
-	input?: string | AnilistClientOptions,
+	input?: AnilistClientInput,
 ): GraphQLClient => {
-	const options = normalizeOptions(input);
-	const headers: Record<string, string> = {
-		"Content-Type": "application/json",
-		...options.headers,
-	};
-
-	if (options.token) headers.Authorization = `Bearer ${options.token}`;
-
-	const httpClient = createCoreClient({
-		baseUrl: options.url ?? ANILIST_API_URL,
-		defaultHeaders: headers,
-		retry: options.retry ?? DEFAULT_RETRY,
-		...(options.plugins ? { plugins: options.plugins } : {}),
-		...(options.transport ? { transport: options.transport } : {}),
-		...(options.timeoutMs !== undefined
-			? { timeoutMs: options.timeoutMs }
-			: {}),
-	});
-
-	const client: GraphQLClient = {
-		request({ document, variables, requestHeaders, signal }) {
-			return httpClient.graphql("", {
-				query: document.toString(),
-				variables,
-				headers: requestHeaders,
-				signal: signal ?? undefined,
-			});
-		},
-	};
-
-	return client;
+	return createGraphQLClientFromHttpClient(createHttpClient(input));
 };
 
-export const createClient = (input?: string | AnilistClientOptions) => {
+export const createClientBundle = (
+	input?: AnilistClientInput,
+): AnilistClientBundle => {
+	const httpClient = createHttpClient(input);
+	const graphQLClient = createGraphQLClientFromHttpClient(httpClient);
+
+	return {
+		httpClient,
+		graphQLClient,
+		sdkClient: createSdkClient(graphQLClient),
+	};
+};
+
+export const createClient = (input?: AnilistClientInput) => {
 	return createSdkClient(createGraphQLClient(input));
 };
 
 export const createSdkClient = (client: GraphQLClient) => {
-	return getSdk(client);
+	return getSdk<AnilistRequestOptions>((document, variables, options) =>
+		client.request({
+			document: String(document),
+			variables: variables as Record<string, unknown> | undefined,
+			...options,
+		}),
+	);
+};
+
+const createGraphQLClientFromHttpClient = (
+	httpClient: Pick<BaseHttpClient, "graphql">,
+): GraphQLClient => {
+	const requester = createGraphQLRequester(httpClient, {
+		transformDocument: dedupeGraphQLFragmentDefinitions,
+	});
+
+	return {
+		request({ signal, document, ...options }) {
+			return requester.request({
+				...options,
+				document: String(document),
+				signal: signal ?? undefined,
+			});
+		},
+	};
+};
+
+const normalizeOptions = (input?: AnilistClientInput): AnilistOptions => {
+	return typeof input === "string" ? { token: input } : (input ?? {});
 };
