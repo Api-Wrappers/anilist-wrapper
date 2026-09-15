@@ -88,7 +88,9 @@
 		"check": "biome check .",
 		"check:unsafe": "biome check --write --unsafe .",
 		"check:write": "biome check --write .",
-		"verify": "bun run check && bun run typecheck && bun run build && bun pm pack --dry-run"
+		"verify": "bun run check && bun run typecheck && bun run build && bun pm pack --dry-run",
+		"test:dist": "bun run build && node test/dist/node-smoke.mjs && node test/dist/node-smoke.cjs",
+		"test:coverage": "bun test --coverage --coverage-reporter=lcov test/*.test.ts && bun scripts/check-coverage.ts"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.3",
