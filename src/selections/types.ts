@@ -8,6 +8,7 @@ import type {
 	Page,
 	PageInfo,
 	Staff,
+	Studio,
 	User,
 } from "../__generated__/anilist-schema";
 
@@ -85,6 +86,7 @@ export type MediaSelect = ToSelect<Media>;
 export type PageInfoSelect = ToSelect<PageInfo>;
 export type CharacterSelect = ToSelect<Character>;
 export type StaffSelect = ToSelect<Staff>;
+export type StudioSelect = ToSelect<Studio>;
 export type UserSelect = ToSelect<User>;
 export type MediaListSelect = ToSelect<MediaList>;
 export type MediaListCollectionSelect = ToSelect<MediaListCollection>;
@@ -108,6 +110,11 @@ export type StaffPageSelect = {
 	staff?: StaffSelect;
 };
 
+export type StudioPageSelect = {
+	pageInfo?: PageInfoSelect;
+	studios?: StudioSelect;
+};
+
 export type UserPageSelect = {
 	pageInfo?: PageInfoSelect;
 	users?: UserSelect;
@@ -127,6 +134,11 @@ export type SelectedCharacter<TSelect extends CharacterSelect> = SelectedFields<
 
 export type SelectedStaff<TSelect extends StaffSelect> = SelectedFields<
 	Staff,
+	TSelect
+>;
+
+export type SelectedStudio<TSelect extends StudioSelect> = SelectedFields<
+	Studio,
 	TSelect
 >;
 
@@ -164,6 +176,9 @@ export type SelectedStaffPage<TSelect extends StaffPageSelect> = SelectedFields<
 	Page,
 	TSelect
 >;
+
+export type SelectedStudioPage<TSelect extends StudioPageSelect> =
+	SelectedFields<Page, TSelect>;
 
 export type SelectedUserPage<TSelect extends UserPageSelect> = SelectedFields<
 	Page,

@@ -1,7 +1,5 @@
-import type {
-	GraphQLClient,
-	GraphQLClientRequestOptions,
-} from "../__generated__/anilist-sdk";
+import type { GraphQLClient } from "../__generated__/anilist-sdk";
+import type { AnilistRequestOptions } from "../client";
 
 /**
  * A GraphQL document accepted by the low-level client: a raw document string
@@ -25,16 +23,13 @@ export class GraphQLService {
 	 * Executes an arbitrary AniList GraphQL operation.
 	 * @param document - GraphQL query or mutation document, or a typed document.
 	 * @param variables - Optional operation variables.
-	 * @param options - Optional request headers and abort signal.
+	 * @param options - Optional api-core request controls.
 	 * @returns A promise resolving to the typed GraphQL response data.
 	 */
 	request<TData = unknown, TVariables extends object = Record<string, never>>(
 		document: GraphQLDocument,
 		variables?: TVariables,
-		options?: Pick<
-			GraphQLClientRequestOptions<TVariables>,
-			"requestHeaders" | "signal"
-		>,
+		options?: AnilistRequestOptions,
 	) {
 		return this.client.request<TData, TVariables>({
 			document,
