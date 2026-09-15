@@ -9,12 +9,15 @@ Use this service when you need to read a specific list entry, read a user's list
 | Method | Auth | Returns |
 | --- | --- | --- |
 | `getMediaList(id)` | Depends on entry privacy | `MediaList` |
-| `getMediaListByUser(userId, mediaType)` | Depends on list privacy | `MediaListCollection` |
-| `getMediaListByUsername(userName, mediaType)` | Depends on list privacy | `MediaListCollection` |
+| `getMediaListByUser(userId, mediaType, status?)` | Depends on list privacy | `MediaListCollection` |
+| `getMediaListByUsername(userName, mediaType, status?)` | Depends on list privacy | `MediaListCollection` |
 | `saveEntry(variables)` | Yes | `SaveMediaListEntry` |
+| `updateEntries(entries)` | Yes | `UpdateMediaListEntries` |
 | `deleteEntry(id)` | Yes | `DeleteMediaListEntry` |
+| `deleteCustomList(customList, type)` | Yes | `DeleteCustomList` |
 
-`mediaType` is `"ANIME"` or `"MANGA"`.
+`mediaType` and `type` are `"ANIME"` or `"MANGA"`. `status` is an optional
+`MediaListStatus` filter.
 
 Selected calls use normalized roots: `mediaList` for list entries and saves,
 `mediaListCollection` for list collections, and `deleteMediaListEntry` for

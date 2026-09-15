@@ -67,7 +67,6 @@
 All notable changes to `@api-wrappers/anilist-wrapper` should be documented in
 this file.
 
-
 ## [2.5.6] - 2026-06-21
 
 ### Added

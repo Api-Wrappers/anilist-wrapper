@@ -1240,6 +1240,7 @@ export type GetMediaListQuery = { MediaList: { id: number, mediaId: number, user
 export type GetMediaListByUserQueryVariables = Exact<{
   userId: number | null | undefined;
   mediaType: MediaType | null | undefined;
+  status: MediaListStatus | null | undefined;
 }>;
 
 
@@ -1248,6 +1249,7 @@ export type GetMediaListByUserQuery = { MediaListCollection: { lists: Array<{ en
 export type GetMediaListByUserByUsernameQueryVariables = Exact<{
   userName: string | null | undefined;
   mediaType: MediaType | null | undefined;
+  status: MediaListStatus | null | undefined;
 }>;
 
 
@@ -1391,6 +1393,7 @@ export type GetMarkdownQuery = { Markdown: { html: string | null } | null };
 export type GetNotificationsQueryVariables = Exact<{
   page?: number | null | undefined;
   perPage?: number | null | undefined;
+  resetNotificationCount?: boolean | null | undefined;
 }>;
 
 
@@ -7593,8 +7596,8 @@ fragment MediaListFragment on MediaList {
   }
 }`);
 export const GetMediaListByUserDocument = new TypedDocumentString(`
-    query GetMediaListByUser($userId: Int, $mediaType: MediaType) {
-  MediaListCollection(userId: $userId, type: $mediaType) {
+    query GetMediaListByUser($userId: Int, $mediaType: MediaType, $status: MediaListStatus) {
+  MediaListCollection(userId: $userId, type: $mediaType, status: $status) {
     lists {
       entries {
         ...MediaListFragment
@@ -7695,8 +7698,8 @@ fragment MediaListFragment on MediaList {
   }
 }`);
 export const GetMediaListByUserByUsernameDocument = new TypedDocumentString(`
-    query GetMediaListByUserByUsername($userName: String, $mediaType: MediaType) {
-  MediaListCollection(userName: $userName, type: $mediaType) {
+    query GetMediaListByUserByUsername($userName: String, $mediaType: MediaType, $status: MediaListStatus) {
+  MediaListCollection(userName: $userName, type: $mediaType, status: $status) {
     lists {
       entries {
         ...MediaListFragment
@@ -8196,14 +8199,14 @@ export const GetMarkdownDocument = new TypedDocumentString(`
 }
     `);
 export const GetNotificationsDocument = new TypedDocumentString(`
-    query GetNotifications($page: Int = 1, $perPage: Int = 25) {
+    query GetNotifications($page: Int = 1, $perPage: Int = 25, $resetNotificationCount: Boolean = false) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       hasNextPage
       currentPage
       total
     }
-    notifications(resetNotificationCount: true) {
+    notifications(resetNotificationCount: $resetNotificationCount) {
       ... on ActivityLikeNotification {
         id
         type

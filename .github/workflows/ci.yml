@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - main
+  # Every pull request, including stacked PRs that target another branch.
   pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
