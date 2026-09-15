@@ -13,6 +13,7 @@ import { GraphQLService } from "../src/services/graphqlService";
 import { MangaService } from "../src/services/mangaService";
 import { MediaListService } from "../src/services/mediaListService";
 import { MediaService } from "../src/services/mediaService";
+import { SocialService } from "../src/services/socialService";
 import { StudioService } from "../src/services/studioService";
 import { UserService } from "../src/services/userService";
 import type { GraphQLClientRequestOptions } from "../src/__generated__/anilist-sdk";
@@ -430,6 +431,109 @@ describe("service contracts", () => {
 			userId: 1,
 			page: 1,
 			perPage: 10,
+		});
+	});
+
+	it("maps social and forum write endpoints to generated SDK operations", async () => {
+		const fake = new FakeSdk()
+			.respond(
+				"SaveTextActivity",
+				sdkResult("SaveTextActivity", { SaveTextActivity: null }),
+			)
+			.respond(
+				"SaveMessageActivity",
+				sdkResult("SaveMessageActivity", { SaveMessageActivity: null }),
+			)
+			.respond(
+				"SaveActivityReply",
+				sdkResult("SaveActivityReply", { SaveActivityReply: null }),
+			)
+			.respond(
+				"DeleteActivity",
+				sdkResult("DeleteActivity", { DeleteActivity: null }),
+			)
+			.respond(
+				"DeleteActivityReply",
+				sdkResult("DeleteActivityReply", { DeleteActivityReply: null }),
+			)
+			.respond(
+				"ToggleActivitySubscription",
+				sdkResult("ToggleActivitySubscription", {
+					ToggleActivitySubscription: null,
+				}),
+			)
+			.respond(
+				"ToggleActivityPin",
+				sdkResult("ToggleActivityPin", { ToggleActivityPin: null }),
+			)
+			.respond("SaveThread", sdkResult("SaveThread", { SaveThread: null }))
+			.respond(
+				"SaveThreadComment",
+				sdkResult("SaveThreadComment", { SaveThreadComment: null }),
+			)
+			.respond(
+				"DeleteThread",
+				sdkResult("DeleteThread", { DeleteThread: null }),
+			)
+			.respond(
+				"DeleteThreadComment",
+				sdkResult("DeleteThreadComment", { DeleteThreadComment: null }),
+			)
+			.respond(
+				"ToggleThreadSubscription",
+				sdkResult("ToggleThreadSubscription", {
+					ToggleThreadSubscription: null,
+				}),
+			);
+		const social = new SocialService(fake.client());
+
+		await social.saveTextActivity({ text: "Hello" });
+		await social.saveMessageActivity({ message: "Hi", recipientId: 2 });
+		await social.saveActivityReply({ activityId: 3, text: "Reply" });
+		await social.deleteActivity(3);
+		await social.deleteActivityReply(4);
+		await social.toggleActivitySubscription(3, true);
+		await social.toggleActivityPin(3, true);
+		await social.saveThread({ title: "News", body: "Body" });
+		await social.saveThreadComment({ threadId: 5, comment: "Nice" });
+		await social.deleteThread(5);
+		await social.deleteThreadComment(6);
+		await social.toggleThreadSubscription(5, true);
+
+		expect(fake.lastCall("SaveTextActivity").variables).toMatchObject({
+			text: "Hello",
+		});
+		expect(fake.lastCall("SaveMessageActivity").variables).toMatchObject({
+			message: "Hi",
+			recipientId: 2,
+		});
+		expect(fake.lastCall("SaveActivityReply").variables).toMatchObject({
+			activityId: 3,
+			text: "Reply",
+		});
+		expect(fake.lastCall("DeleteActivity").variables).toEqual({ id: 3 });
+		expect(fake.lastCall("DeleteActivityReply").variables).toEqual({ id: 4 });
+		expect(fake.lastCall("ToggleActivitySubscription").variables).toEqual({
+			activityId: 3,
+			subscribe: true,
+		});
+		expect(fake.lastCall("ToggleActivityPin").variables).toEqual({
+			id: 3,
+			pinned: true,
+		});
+		expect(fake.lastCall("SaveThread").variables).toMatchObject({
+			title: "News",
+			body: "Body",
+		});
+		expect(fake.lastCall("SaveThreadComment").variables).toMatchObject({
+			threadId: 5,
+			comment: "Nice",
+		});
+		expect(fake.lastCall("DeleteThread").variables).toEqual({ id: 5 });
+		expect(fake.lastCall("DeleteThreadComment").variables).toEqual({ id: 6 });
+		expect(fake.lastCall("ToggleThreadSubscription").variables).toEqual({
+			threadId: 5,
+			subscribe: true,
 		});
 	});
 });

@@ -1,6 +1,14 @@
 import type { ANILISTSDK } from "../@types";
 import type { Page } from "../__generated__/anilist-schema";
-import type { GraphQLClient, LikeableType } from "../__generated__/anilist-sdk";
+import type {
+	GraphQLClient,
+	LikeableType,
+	SaveActivityReplyMutationVariables,
+	SaveMessageActivityMutationVariables,
+	SaveTextActivityMutationVariables,
+	SaveThreadCommentMutationVariables,
+	SaveThreadMutationVariables,
+} from "../__generated__/anilist-sdk";
 import {
 	buildActivityReplyByIdDocument,
 	buildActivityReplyPageDocument,
@@ -57,6 +65,61 @@ export type ThreadSearchFilters = {
 	search?: string;
 	/** Restrict results to a specific user ID. */
 	userId?: number;
+};
+
+/**
+ * Fields accepted by {@link SocialService.saveTextActivity}.
+ */
+export type SaveTextActivityInput = {
+	id?: number | null;
+	text?: string | null;
+	locked?: boolean | null;
+};
+
+/**
+ * Fields accepted by {@link SocialService.saveMessageActivity}.
+ */
+export type SaveMessageActivityInput = {
+	id?: number | null;
+	message?: string | null;
+	recipientId?: number | null;
+	private?: boolean | null;
+	locked?: boolean | null;
+	asMod?: boolean | null;
+};
+
+/**
+ * Fields accepted by {@link SocialService.saveActivityReply}.
+ */
+export type SaveActivityReplyInput = {
+	id?: number | null;
+	activityId?: number | null;
+	text?: string | null;
+	asMod?: boolean | null;
+};
+
+/**
+ * Fields accepted by {@link SocialService.saveThread}.
+ */
+export type SaveThreadInput = {
+	id?: number | null;
+	title?: string | null;
+	body?: string | null;
+	categories?: number[] | null;
+	mediaCategories?: number[] | null;
+	sticky?: boolean | null;
+	locked?: boolean | null;
+};
+
+/**
+ * Fields accepted by {@link SocialService.saveThreadComment}.
+ */
+export type SaveThreadCommentInput = {
+	id?: number | null;
+	threadId?: number | null;
+	parentCommentId?: number | null;
+	comment?: string | null;
+	locked?: boolean | null;
 };
 
 /**
@@ -539,5 +602,162 @@ export class SocialService {
 		type?: LikeableType,
 	): ReturnType<ANILISTSDK["ToggleLike"]> {
 		return this.client.ToggleLike({ id, type });
+	}
+
+	/**
+	 * Creates or updates a text activity. Requires authentication.
+	 * @param input - The activity fields to save (`text` is required by AniList).
+	 */
+	saveTextActivity(
+		input: SaveTextActivityInput,
+	): ReturnType<ANILISTSDK["SaveTextActivity"]> {
+		const variables: SaveTextActivityMutationVariables = {
+			id: input.id,
+			locked: input.locked,
+			text: input.text,
+		};
+		return this.client.SaveTextActivity(variables);
+	}
+
+	/**
+	 * Creates or updates a message activity. Requires authentication.
+	 * @param input - The message fields to save.
+	 */
+	saveMessageActivity(
+		input: SaveMessageActivityInput,
+	): ReturnType<ANILISTSDK["SaveMessageActivity"]> {
+		const variables: SaveMessageActivityMutationVariables = {
+			asMod: input.asMod,
+			id: input.id,
+			locked: input.locked,
+			message: input.message,
+			private: input.private,
+			recipientId: input.recipientId,
+		};
+		return this.client.SaveMessageActivity(variables);
+	}
+
+	/**
+	 * Creates or updates an activity reply. Requires authentication.
+	 * @param input - The reply fields to save.
+	 */
+	saveActivityReply(
+		input: SaveActivityReplyInput,
+	): ReturnType<ANILISTSDK["SaveActivityReply"]> {
+		const variables: SaveActivityReplyMutationVariables = {
+			activityId: input.activityId,
+			asMod: input.asMod,
+			id: input.id,
+			text: input.text,
+		};
+		return this.client.SaveActivityReply(variables);
+	}
+
+	/**
+	 * Deletes an activity. Requires authentication.
+	 * @param id - The ID of the activity to delete.
+	 */
+	deleteActivity(id: number): ReturnType<ANILISTSDK["DeleteActivity"]> {
+		return this.client.DeleteActivity({ id });
+	}
+
+	/**
+	 * Deletes an activity reply. Requires authentication.
+	 * @param id - The ID of the activity reply to delete.
+	 */
+	deleteActivityReply(
+		id: number,
+	): ReturnType<ANILISTSDK["DeleteActivityReply"]> {
+		return this.client.DeleteActivityReply({ id });
+	}
+
+	/**
+	 * Subscribes to or unsubscribes from an activity. Requires authentication.
+	 * The `ActivityUnion` result does not support `select`.
+	 * @param activityId - The ID of the activity.
+	 * @param subscribe - `true` to subscribe, `false` to unsubscribe.
+	 */
+	toggleActivitySubscription(
+		activityId: number,
+		subscribe?: boolean,
+	): ReturnType<ANILISTSDK["ToggleActivitySubscription"]> {
+		return this.client.ToggleActivitySubscription({ activityId, subscribe });
+	}
+
+	/**
+	 * Pins or unpins an activity. Requires authentication.
+	 * The `ActivityUnion` result does not support `select`.
+	 * @param id - The ID of the activity.
+	 * @param pinned - `true` to pin, `false` to unpin.
+	 */
+	toggleActivityPin(
+		id: number,
+		pinned?: boolean,
+	): ReturnType<ANILISTSDK["ToggleActivityPin"]> {
+		return this.client.ToggleActivityPin({ id, pinned });
+	}
+
+	/**
+	 * Creates or updates a forum thread. Requires authentication.
+	 * @param input - The thread fields to save.
+	 */
+	saveThread(input: SaveThreadInput): ReturnType<ANILISTSDK["SaveThread"]> {
+		const variables: SaveThreadMutationVariables = {
+			body: input.body,
+			categories: input.categories,
+			id: input.id,
+			locked: input.locked,
+			mediaCategories: input.mediaCategories,
+			sticky: input.sticky,
+			title: input.title,
+		};
+		return this.client.SaveThread(variables);
+	}
+
+	/**
+	 * Creates or updates a thread comment. Requires authentication.
+	 * @param input - The comment fields to save.
+	 */
+	saveThreadComment(
+		input: SaveThreadCommentInput,
+	): ReturnType<ANILISTSDK["SaveThreadComment"]> {
+		const variables: SaveThreadCommentMutationVariables = {
+			comment: input.comment,
+			id: input.id,
+			locked: input.locked,
+			parentCommentId: input.parentCommentId,
+			threadId: input.threadId,
+		};
+		return this.client.SaveThreadComment(variables);
+	}
+
+	/**
+	 * Deletes a forum thread. Requires authentication.
+	 * @param id - The ID of the thread to delete.
+	 */
+	deleteThread(id: number): ReturnType<ANILISTSDK["DeleteThread"]> {
+		return this.client.DeleteThread({ id });
+	}
+
+	/**
+	 * Deletes a thread comment. Requires authentication.
+	 * @param id - The ID of the thread comment to delete.
+	 */
+	deleteThreadComment(
+		id: number,
+	): ReturnType<ANILISTSDK["DeleteThreadComment"]> {
+		return this.client.DeleteThreadComment({ id });
+	}
+
+	/**
+	 * Subscribes to or unsubscribes from a thread. Requires authentication.
+	 * @param threadId - The ID of the thread.
+	 * @param subscribe - `true` to subscribe, `false` to unsubscribe.
+	 */
+	toggleThreadSubscription(
+		threadId: number,
+		subscribe?: boolean,
+	): ReturnType<ANILISTSDK["ToggleThreadSubscription"]> {
+		return this.client.ToggleThreadSubscription({ threadId, subscribe });
 	}
 }

@@ -1279,6 +1279,34 @@ export type UpdateMediaListEntriesMutationVariables = Exact<{
 
 export type UpdateMediaListEntriesMutation = { UpdateMediaListEntries: Array<{ id: number, mediaId: number, userId: number, status: MediaListStatus | null, score: number | null, progress: number | null, progressVolumes: number | null, repeat: number | null, priority: number | null, private: boolean | null, notes: string | null, hiddenFromStatusLists: boolean | null, customLists: unknown, advancedScores: unknown, updatedAt: number | null, createdAt: number | null, startedAt: { year: number | null, month: number | null, day: number | null } | null, completedAt: { year: number | null, month: number | null, day: number | null } | null, media: { id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null } | null> | null };
 
+export type DeleteActivityMutationVariables = Exact<{
+  id: number | null | undefined;
+}>;
+
+
+export type DeleteActivityMutation = { DeleteActivity: { deleted: boolean | null } | null };
+
+export type DeleteActivityReplyMutationVariables = Exact<{
+  id: number | null | undefined;
+}>;
+
+
+export type DeleteActivityReplyMutation = { DeleteActivityReply: { deleted: boolean | null } | null };
+
+export type DeleteThreadMutationVariables = Exact<{
+  id: number | null | undefined;
+}>;
+
+
+export type DeleteThreadMutation = { DeleteThread: { deleted: boolean | null } | null };
+
+export type DeleteThreadCommentMutationVariables = Exact<{
+  id: number | null | undefined;
+}>;
+
+
+export type DeleteThreadCommentMutation = { DeleteThreadComment: { deleted: boolean | null } | null };
+
 export type GetActivitiesQueryVariables = Exact<{
   userId: number | null | undefined;
   page?: number | null | undefined;
@@ -1411,6 +1439,85 @@ export type GetThreadsQueryVariables = Exact<{
 
 export type GetThreadsQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, threads: Array<{ id: number, title: string | null, body: string | null, userId: number, createdAt: number, updatedAt: number, replyCount: number | null, viewCount: number | null, likeCount: number, isLocked: boolean | null, isSticky: boolean | null, isSubscribed: boolean | null, user: { id: number, name: string } | null } | null> | null } | null };
 
+export type SaveActivityReplyMutationVariables = Exact<{
+  id: number | null | undefined;
+  activityId: number | null | undefined;
+  text: string | null | undefined;
+  asMod: boolean | null | undefined;
+}>;
+
+
+export type SaveActivityReplyMutation = { SaveActivityReply: { id: number, activityId: number | null, userId: number | null, text: string | null, createdAt: number, likeCount: number, isLiked: boolean | null, user: { id: number, name: string } | null } | null };
+
+export type SaveMessageActivityMutationVariables = Exact<{
+  id: number | null | undefined;
+  message: string | null | undefined;
+  recipientId: number | null | undefined;
+  private: boolean | null | undefined;
+  locked: boolean | null | undefined;
+  asMod: boolean | null | undefined;
+}>;
+
+
+export type SaveMessageActivityMutation = { SaveMessageActivity: { id: number, type: ActivityType | null, messengerId: number | null, createdAt: number, message: string | null, isLiked: boolean | null, isLocked: boolean | null, likeCount: number, siteUrl: string | null } | null };
+
+export type SaveTextActivityMutationVariables = Exact<{
+  id: number | null | undefined;
+  text: string | null | undefined;
+  locked: boolean | null | undefined;
+}>;
+
+
+export type SaveTextActivityMutation = { SaveTextActivity: { id: number, type: ActivityType | null, userId: number | null, createdAt: number, text: string | null, isLiked: boolean | null, isLocked: boolean | null, likeCount: number, siteUrl: string | null } | null };
+
+export type SaveThreadMutationVariables = Exact<{
+  id: number | null | undefined;
+  title: string | null | undefined;
+  body: string | null | undefined;
+  categories: Array<number | null | undefined> | number | null | undefined;
+  mediaCategories: Array<number | null | undefined> | number | null | undefined;
+  sticky: boolean | null | undefined;
+  locked: boolean | null | undefined;
+}>;
+
+
+export type SaveThreadMutation = { SaveThread: { id: number, title: string | null, body: string | null, userId: number, createdAt: number, updatedAt: number, replyCount: number | null, viewCount: number | null, likeCount: number, isLocked: boolean | null, isSticky: boolean | null, isSubscribed: boolean | null, user: { id: number, name: string } | null } | null };
+
+export type SaveThreadCommentMutationVariables = Exact<{
+  id: number | null | undefined;
+  threadId: number | null | undefined;
+  parentCommentId: number | null | undefined;
+  comment: string | null | undefined;
+  locked: boolean | null | undefined;
+}>;
+
+
+export type SaveThreadCommentMutation = { SaveThreadComment: { id: number, threadId: number | null, userId: number | null, comment: string | null, createdAt: number, updatedAt: number, likeCount: number, isLiked: boolean | null, user: { id: number, name: string } | null } | null };
+
+export type ToggleActivityPinMutationVariables = Exact<{
+  id: number | null | undefined;
+  pinned: boolean | null | undefined;
+}>;
+
+
+export type ToggleActivityPinMutation = { ToggleActivityPin:
+    | { id: number, isPinned: boolean | null }
+    | { id: number, isPinned: boolean | null }
+    | { id: number, isPinned: boolean | null }
+   | null };
+
+export type ToggleActivitySubscriptionMutationVariables = Exact<{
+  activityId: number | null | undefined;
+  subscribe: boolean | null | undefined;
+}>;
+
+
+export type ToggleActivitySubscriptionMutation = { ToggleActivitySubscription:
+    | { id: number, isSubscribed: boolean | null }
+    | { id: number, isSubscribed: boolean | null }
+    | { id: number, isSubscribed: boolean | null }
+   | null };
+
 export type ToggleFollowMutationVariables = Exact<{
   userId: number | null | undefined;
 }>;
@@ -1432,6 +1539,14 @@ export type ToggleLikeMutation = { ToggleLikeV2:
     | { id: number }
     | { id: number }
    | null };
+
+export type ToggleThreadSubscriptionMutationVariables = Exact<{
+  threadId: number | null | undefined;
+  subscribe: boolean | null | undefined;
+}>;
+
+
+export type ToggleThreadSubscriptionMutation = { ToggleThreadSubscription: { id: number, isSubscribed: boolean | null } | null };
 
 export type GetStaffByIdQueryVariables = Exact<{
   id: number;
@@ -7851,6 +7966,34 @@ fragment MediaListFragment on MediaList {
     ...MediaCoreFragment
   }
 }`);
+export const DeleteActivityDocument = new TypedDocumentString(`
+    mutation DeleteActivity($id: Int) {
+  DeleteActivity(id: $id) {
+    deleted
+  }
+}
+    `);
+export const DeleteActivityReplyDocument = new TypedDocumentString(`
+    mutation DeleteActivityReply($id: Int) {
+  DeleteActivityReply(id: $id) {
+    deleted
+  }
+}
+    `);
+export const DeleteThreadDocument = new TypedDocumentString(`
+    mutation DeleteThread($id: Int) {
+  DeleteThread(id: $id) {
+    deleted
+  }
+}
+    `);
+export const DeleteThreadCommentDocument = new TypedDocumentString(`
+    mutation DeleteThreadComment($id: Int) {
+  DeleteThreadComment(id: $id) {
+    deleted
+  }
+}
+    `);
 export const GetActivitiesDocument = new TypedDocumentString(`
     query GetActivities($userId: Int, $page: Int = 1, $perPage: Int = 25) {
   Page(page: $page, perPage: $perPage) {
@@ -8256,6 +8399,150 @@ export const GetThreadsDocument = new TypedDocumentString(`
   }
 }
     `);
+export const SaveActivityReplyDocument = new TypedDocumentString(`
+    mutation SaveActivityReply($id: Int, $activityId: Int, $text: String, $asMod: Boolean) {
+  SaveActivityReply(id: $id, activityId: $activityId, text: $text, asMod: $asMod) {
+    id
+    activityId
+    userId
+    text
+    createdAt
+    likeCount
+    isLiked
+    user {
+      id
+      name
+    }
+  }
+}
+    `);
+export const SaveMessageActivityDocument = new TypedDocumentString(`
+    mutation SaveMessageActivity($id: Int, $message: String, $recipientId: Int, $private: Boolean, $locked: Boolean, $asMod: Boolean) {
+  SaveMessageActivity(
+    id: $id
+    message: $message
+    recipientId: $recipientId
+    private: $private
+    locked: $locked
+    asMod: $asMod
+  ) {
+    id
+    type
+    messengerId
+    createdAt
+    message
+    isLiked
+    isLocked
+    likeCount
+    siteUrl
+  }
+}
+    `);
+export const SaveTextActivityDocument = new TypedDocumentString(`
+    mutation SaveTextActivity($id: Int, $text: String, $locked: Boolean) {
+  SaveTextActivity(id: $id, text: $text, locked: $locked) {
+    id
+    type
+    userId
+    createdAt
+    text
+    isLiked
+    isLocked
+    likeCount
+    siteUrl
+  }
+}
+    `);
+export const SaveThreadDocument = new TypedDocumentString(`
+    mutation SaveThread($id: Int, $title: String, $body: String, $categories: [Int], $mediaCategories: [Int], $sticky: Boolean, $locked: Boolean) {
+  SaveThread(
+    id: $id
+    title: $title
+    body: $body
+    categories: $categories
+    mediaCategories: $mediaCategories
+    sticky: $sticky
+    locked: $locked
+  ) {
+    id
+    title
+    body
+    userId
+    createdAt
+    updatedAt
+    replyCount
+    viewCount
+    likeCount
+    isLocked
+    isSticky
+    isSubscribed
+    user {
+      id
+      name
+    }
+  }
+}
+    `);
+export const SaveThreadCommentDocument = new TypedDocumentString(`
+    mutation SaveThreadComment($id: Int, $threadId: Int, $parentCommentId: Int, $comment: String, $locked: Boolean) {
+  SaveThreadComment(
+    id: $id
+    threadId: $threadId
+    parentCommentId: $parentCommentId
+    comment: $comment
+    locked: $locked
+  ) {
+    id
+    threadId
+    userId
+    comment
+    createdAt
+    updatedAt
+    likeCount
+    isLiked
+    user {
+      id
+      name
+    }
+  }
+}
+    `);
+export const ToggleActivityPinDocument = new TypedDocumentString(`
+    mutation ToggleActivityPin($id: Int, $pinned: Boolean) {
+  ToggleActivityPin(id: $id, pinned: $pinned) {
+    ... on TextActivity {
+      id
+      isPinned
+    }
+    ... on ListActivity {
+      id
+      isPinned
+    }
+    ... on MessageActivity {
+      id
+      isPinned
+    }
+  }
+}
+    `);
+export const ToggleActivitySubscriptionDocument = new TypedDocumentString(`
+    mutation ToggleActivitySubscription($activityId: Int, $subscribe: Boolean) {
+  ToggleActivitySubscription(activityId: $activityId, subscribe: $subscribe) {
+    ... on TextActivity {
+      id
+      isSubscribed
+    }
+    ... on ListActivity {
+      id
+      isSubscribed
+    }
+    ... on MessageActivity {
+      id
+      isSubscribed
+    }
+  }
+}
+    `);
 export const ToggleFollowDocument = new TypedDocumentString(`
     mutation ToggleFollow($userId: Int) {
   ToggleFollow(userId: $userId) {
@@ -8287,6 +8574,14 @@ export const ToggleLikeDocument = new TypedDocumentString(`
     ... on ThreadComment {
       id
     }
+  }
+}
+    `);
+export const ToggleThreadSubscriptionDocument = new TypedDocumentString(`
+    mutation ToggleThreadSubscription($threadId: Int, $subscribe: Boolean) {
+  ToggleThreadSubscription(threadId: $threadId, subscribe: $subscribe) {
+    id
+    isSubscribed
   }
 }
     `);
@@ -10730,6 +11025,18 @@ export function getSdk<C>(requester: Requester<C>) {
     UpdateMediaListEntries(variables?: UpdateMediaListEntriesMutationVariables, options?: C): Promise<UpdateMediaListEntriesMutation> {
       return requester<UpdateMediaListEntriesMutation, UpdateMediaListEntriesMutationVariables>(UpdateMediaListEntriesDocument, variables, options) as Promise<UpdateMediaListEntriesMutation>;
     },
+    DeleteActivity(variables?: DeleteActivityMutationVariables, options?: C): Promise<DeleteActivityMutation> {
+      return requester<DeleteActivityMutation, DeleteActivityMutationVariables>(DeleteActivityDocument, variables, options) as Promise<DeleteActivityMutation>;
+    },
+    DeleteActivityReply(variables?: DeleteActivityReplyMutationVariables, options?: C): Promise<DeleteActivityReplyMutation> {
+      return requester<DeleteActivityReplyMutation, DeleteActivityReplyMutationVariables>(DeleteActivityReplyDocument, variables, options) as Promise<DeleteActivityReplyMutation>;
+    },
+    DeleteThread(variables?: DeleteThreadMutationVariables, options?: C): Promise<DeleteThreadMutation> {
+      return requester<DeleteThreadMutation, DeleteThreadMutationVariables>(DeleteThreadDocument, variables, options) as Promise<DeleteThreadMutation>;
+    },
+    DeleteThreadComment(variables?: DeleteThreadCommentMutationVariables, options?: C): Promise<DeleteThreadCommentMutation> {
+      return requester<DeleteThreadCommentMutation, DeleteThreadCommentMutationVariables>(DeleteThreadCommentDocument, variables, options) as Promise<DeleteThreadCommentMutation>;
+    },
     GetActivities(variables?: GetActivitiesQueryVariables, options?: C): Promise<GetActivitiesQuery> {
       return requester<GetActivitiesQuery, GetActivitiesQueryVariables>(GetActivitiesDocument, variables, options) as Promise<GetActivitiesQuery>;
     },
@@ -10769,11 +11076,35 @@ export function getSdk<C>(requester: Requester<C>) {
     GetThreads(variables?: GetThreadsQueryVariables, options?: C): Promise<GetThreadsQuery> {
       return requester<GetThreadsQuery, GetThreadsQueryVariables>(GetThreadsDocument, variables, options) as Promise<GetThreadsQuery>;
     },
+    SaveActivityReply(variables?: SaveActivityReplyMutationVariables, options?: C): Promise<SaveActivityReplyMutation> {
+      return requester<SaveActivityReplyMutation, SaveActivityReplyMutationVariables>(SaveActivityReplyDocument, variables, options) as Promise<SaveActivityReplyMutation>;
+    },
+    SaveMessageActivity(variables?: SaveMessageActivityMutationVariables, options?: C): Promise<SaveMessageActivityMutation> {
+      return requester<SaveMessageActivityMutation, SaveMessageActivityMutationVariables>(SaveMessageActivityDocument, variables, options) as Promise<SaveMessageActivityMutation>;
+    },
+    SaveTextActivity(variables?: SaveTextActivityMutationVariables, options?: C): Promise<SaveTextActivityMutation> {
+      return requester<SaveTextActivityMutation, SaveTextActivityMutationVariables>(SaveTextActivityDocument, variables, options) as Promise<SaveTextActivityMutation>;
+    },
+    SaveThread(variables?: SaveThreadMutationVariables, options?: C): Promise<SaveThreadMutation> {
+      return requester<SaveThreadMutation, SaveThreadMutationVariables>(SaveThreadDocument, variables, options) as Promise<SaveThreadMutation>;
+    },
+    SaveThreadComment(variables?: SaveThreadCommentMutationVariables, options?: C): Promise<SaveThreadCommentMutation> {
+      return requester<SaveThreadCommentMutation, SaveThreadCommentMutationVariables>(SaveThreadCommentDocument, variables, options) as Promise<SaveThreadCommentMutation>;
+    },
+    ToggleActivityPin(variables?: ToggleActivityPinMutationVariables, options?: C): Promise<ToggleActivityPinMutation> {
+      return requester<ToggleActivityPinMutation, ToggleActivityPinMutationVariables>(ToggleActivityPinDocument, variables, options) as Promise<ToggleActivityPinMutation>;
+    },
+    ToggleActivitySubscription(variables?: ToggleActivitySubscriptionMutationVariables, options?: C): Promise<ToggleActivitySubscriptionMutation> {
+      return requester<ToggleActivitySubscriptionMutation, ToggleActivitySubscriptionMutationVariables>(ToggleActivitySubscriptionDocument, variables, options) as Promise<ToggleActivitySubscriptionMutation>;
+    },
     ToggleFollow(variables?: ToggleFollowMutationVariables, options?: C): Promise<ToggleFollowMutation> {
       return requester<ToggleFollowMutation, ToggleFollowMutationVariables>(ToggleFollowDocument, variables, options) as Promise<ToggleFollowMutation>;
     },
     ToggleLike(variables?: ToggleLikeMutationVariables, options?: C): Promise<ToggleLikeMutation> {
       return requester<ToggleLikeMutation, ToggleLikeMutationVariables>(ToggleLikeDocument, variables, options) as Promise<ToggleLikeMutation>;
+    },
+    ToggleThreadSubscription(variables?: ToggleThreadSubscriptionMutationVariables, options?: C): Promise<ToggleThreadSubscriptionMutation> {
+      return requester<ToggleThreadSubscriptionMutation, ToggleThreadSubscriptionMutationVariables>(ToggleThreadSubscriptionDocument, variables, options) as Promise<ToggleThreadSubscriptionMutation>;
     },
     GetStaffById(variables: GetStaffByIdQueryVariables, options?: C): Promise<GetStaffByIdQuery> {
       return requester<GetStaffByIdQuery, GetStaffByIdQueryVariables>(GetStaffByIdDocument, variables, options) as Promise<GetStaffByIdQuery>;
