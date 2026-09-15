@@ -6,12 +6,15 @@ import type {
 	MediaListStatus,
 	SaveMediaListEntryMutation,
 	SaveMediaListEntryMutationVariables,
+	UpdateMediaListEntriesMutationVariables,
 } from "../__generated__/anilist-sdk";
 import {
+	buildDeleteCustomListDocument,
 	buildDeleteMediaListEntryDocument,
 	buildMediaListByIdDocument,
 	buildMediaListCollectionByUserDocument,
 	buildSaveMediaListEntryDocument,
+	buildUpdateMediaListEntriesDocument,
 } from "../selections/builder";
 import type {
 	RootSelectionOption,
@@ -50,6 +53,13 @@ export type SaveMediaListEntryInput = SaveMediaListEntryFields &
 		| { mediaId: number; id?: number | null }
 		| { id: number; mediaId?: number | null }
 	);
+
+export type UpdateMediaListEntriesInput = Omit<
+	SaveMediaListEntryFields,
+	"customLists"
+> & {
+	ids: number[];
+};
 
 /**
  * Service class for retrieving and managing media lists from AniList.
@@ -341,5 +351,120 @@ export class MediaListService {
 				);
 		}
 		return this.client.DeleteMediaListEntry({ id });
+	}
+
+	/**
+	 * Updates the same fields on many media list entries at once. Requires authentication.
+	 * @param entries - The entry ids plus the fields to apply to every entry.
+	 * @returns A promise resolving to the updated media list entries.
+	 */
+	updateEntries(
+		entries: UpdateMediaListEntriesInput,
+	): ReturnType<ANILISTSDK["UpdateMediaListEntries"]>;
+	updateEntries<TSelect extends MediaListSelect>(
+		entries: UpdateMediaListEntriesInput,
+		options: { select: TSelect },
+	): Promise<{
+		UpdateMediaListEntries: Array<SelectedMediaList<TSelect> | null> | null;
+	}>;
+	updateEntries<TSelect extends MediaListSelect>(
+		entries: UpdateMediaListEntriesInput,
+		options: RootSelectionOption<"updateMediaListEntries", TSelect>,
+	): Promise<{
+		updateMediaListEntries: Array<SelectedMediaList<TSelect> | null> | null;
+	}>;
+	updateEntries<TSelect extends MediaListSelect>(
+		entries: UpdateMediaListEntriesInput,
+		options?: SelectionOption<"updateMediaListEntries", TSelect>,
+	): unknown {
+		const { ids, ...fields } = entries;
+		const mutationVariables: UpdateMediaListEntriesMutationVariables = {
+			advancedScores: fields.advancedScores,
+			completedAt: fields.completedAt,
+			hiddenFromStatusLists: fields.hiddenFromStatusLists,
+			ids,
+			notes: fields.notes,
+			priority: fields.priority,
+			private: fields.private,
+			progress: fields.progress,
+			progressVolumes: fields.progressVolumes,
+			repeat: fields.repeat,
+			score: fields.score,
+			scoreRaw: fields.scoreRaw,
+			startedAt: fields.startedAt,
+			status: fields.status,
+		};
+
+		if (hasSelection(options)) {
+			if (!this.graphQLClient) {
+				throw new Error("graphQLClient is required for selected queries.");
+			}
+			const { select, wrapped } = resolveSelection(
+				options,
+				"updateMediaListEntries",
+			);
+			const document = buildUpdateMediaListEntriesDocument(select);
+			return this.graphQLClient
+				.request<
+					{
+						UpdateMediaListEntries: Array<SelectedMediaList<TSelect> | null> | null;
+					},
+					UpdateMediaListEntriesMutationVariables
+				>({ document, variables: mutationVariables })
+				.then((raw) =>
+					wrapped
+						? { updateMediaListEntries: raw.UpdateMediaListEntries }
+						: raw,
+				);
+		}
+
+		return this.client.UpdateMediaListEntries(mutationVariables);
+	}
+
+	/**
+	 * Deletes a custom list. Requires authentication.
+	 * @param customList - The name of the custom list to delete.
+	 * @param type - The media type the list belongs to ("ANIME" or "MANGA").
+	 * @returns A promise resolving to the deletion result.
+	 */
+	deleteCustomList(
+		customList: string,
+		type: MediaTypeNonEnum,
+	): ReturnType<ANILISTSDK["DeleteCustomList"]>;
+	deleteCustomList<TSelect extends DeletedSelect>(
+		customList: string,
+		type: MediaTypeNonEnum,
+		options: { select: TSelect },
+	): Promise<{ DeleteCustomList: SelectedDeleted<TSelect> | null }>;
+	deleteCustomList<TSelect extends DeletedSelect>(
+		customList: string,
+		type: MediaTypeNonEnum,
+		options: RootSelectionOption<"deleteCustomList", TSelect>,
+	): Promise<{ deleteCustomList: SelectedDeleted<TSelect> | null }>;
+	deleteCustomList<TSelect extends DeletedSelect>(
+		customList: string,
+		type: MediaTypeNonEnum,
+		options?: SelectionOption<"deleteCustomList", TSelect>,
+	): unknown {
+		const normalizedType = toMediaType(type);
+		if (hasSelection(options)) {
+			if (!this.graphQLClient) {
+				throw new Error("graphQLClient is required for selected queries.");
+			}
+			const { select, wrapped } = resolveSelection(options, "deleteCustomList");
+			const document = buildDeleteCustomListDocument(select);
+			return this.graphQLClient
+				.request<
+					{ DeleteCustomList: SelectedDeleted<TSelect> | null },
+					{ customList: string; type: ReturnType<typeof toMediaType> }
+				>({ document, variables: { customList, type: normalizedType } })
+				.then((raw) =>
+					wrapped ? { deleteCustomList: raw.DeleteCustomList } : raw,
+				);
+		}
+		return this.client.DeleteCustomList({
+			customList,
+			type: normalizedType,
+		});
 	}
 }
