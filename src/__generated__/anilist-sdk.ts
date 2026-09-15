@@ -733,6 +733,18 @@ export type NotificationType =
   /** A user has commented in one of your subscribed forum threads */
   | 'THREAD_SUBSCRIBED';
 
+/** Recommendation rating enums */
+export type RecommendationRating =
+  | 'NO_RATING'
+  | 'RATE_DOWN'
+  | 'RATE_UP';
+
+/** Review rating enums */
+export type ReviewRating =
+  | 'DOWN_VOTE'
+  | 'NO_VOTE'
+  | 'UP_VOTE';
+
 /** Media list scoring type */
 export type ScoreFormat =
   /** An integer from 0-3. Should be represented in Smileys. 0 => No Score, 1 => :(, 2 => :|, 3 => :) */
@@ -857,6 +869,10 @@ export type MediaTagBasicFragment = { id: number, name: string, description: str
 export type MediaTrailerFragment = { id: string | null, site: string | null, thumbnail: string | null };
 
 export type MediaListFragment = { id: number, mediaId: number, userId: number, status: MediaListStatus | null, score: number | null, progress: number | null, progressVolumes: number | null, repeat: number | null, priority: number | null, private: boolean | null, notes: string | null, hiddenFromStatusLists: boolean | null, customLists: unknown, advancedScores: unknown, updatedAt: number | null, createdAt: number | null, startedAt: { year: number | null, month: number | null, day: number | null } | null, completedAt: { year: number | null, month: number | null, day: number | null } | null, media: { id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null };
+
+export type RecommendationFragment = { id: number, rating: number | null, userRating: RecommendationRating | null, user: { id: number, name: string } | null, media: { id: number, title: { userPreferred: string | null } | null } | null, mediaRecommendation: { id: number, title: { userPreferred: string | null } | null } | null };
+
+export type ReviewFragment = { id: number, userId: number, mediaId: number, mediaType: MediaType | null, summary: string | null, body: string | null, rating: number | null, ratingAmount: number | null, score: number | null, private: boolean | null, siteUrl: string | null, createdAt: number, updatedAt: number, userRating: ReviewRating | null, user: { id: number, name: string } | null, media: { id: number, title: { userPreferred: string | null } | null } | null };
 
 export type StaffFragment = { id: number, description: string | null, primaryOccupations: Array<string | null> | null, gender: string | null, bloodType: string | null, homeTown: string | null, languageV2: string | null, yearsActive: Array<number | null> | null, favourites: number | null, isFavourite: boolean, isFavouriteBlocked: boolean, age: number | null, siteUrl: string | null, name: { full: string | null, native: string | null, first: string | null, middle: string | null, last: string | null, userPreferred: string | null } | null, image: { large: string | null, medium: string | null } | null, dateOfBirth: { year: number | null, month: number | null, day: number | null } | null, dateOfDeath: { year: number | null, month: number | null, day: number | null } | null };
 
@@ -1074,6 +1090,13 @@ export type ToggleFavoriteMangaMutationVariables = Exact<{
 
 export type ToggleFavoriteMangaMutation = { ToggleFavourite: { manga: { nodes: Array<{ id: number } | null> | null } | null } | null };
 
+export type DeleteReviewMutationVariables = Exact<{
+  id: number | null | undefined;
+}>;
+
+
+export type DeleteReviewMutation = { DeleteReview: { deleted: boolean | null } | null };
+
 export type GetAiringScheduleQueryVariables = Exact<{
   id: number;
 }>;
@@ -1102,12 +1125,59 @@ export type GetMediaByIdQueryVariables = Exact<{
 
 export type GetMediaByIdQuery = { Media: { id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, nextAiringEpisode: { id: number, airingAt: number, timeUntilAiring: number, episode: number, mediaId: number } | null, tags: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null } | null> | null, externalLinks: Array<{ id: number, url: string | null, site: string, siteId: number | null, type: ExternalLinkType | null } | null> | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null };
 
+export type GetMediaReviewsQueryVariables = Exact<{
+  mediaId: number | null | undefined;
+  page?: number | null | undefined;
+  perPage?: number | null | undefined;
+}>;
+
+
+export type GetMediaReviewsQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, reviews: Array<{ id: number, userId: number, mediaId: number, mediaType: MediaType | null, summary: string | null, body: string | null, rating: number | null, ratingAmount: number | null, score: number | null, private: boolean | null, siteUrl: string | null, createdAt: number, updatedAt: number, userRating: ReviewRating | null, user: { id: number, name: string } | null, media: { id: number, title: { userPreferred: string | null } | null } | null } | null> | null } | null };
+
 export type GetMediaTagsQueryVariables = Exact<{
   status: number | null | undefined;
 }>;
 
 
 export type GetMediaTagsQuery = { MediaTagCollection: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null, isGeneralSpoiler: boolean | null, isMediaSpoiler: boolean | null, isAdult: boolean | null, userId: number | null } | null> | null };
+
+export type GetRecommendationsPageQueryVariables = Exact<{
+  mediaId: number | null | undefined;
+  page?: number | null | undefined;
+  perPage?: number | null | undefined;
+}>;
+
+
+export type GetRecommendationsPageQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, recommendations: Array<{ id: number, rating: number | null, userRating: RecommendationRating | null, user: { id: number, name: string } | null, media: { id: number, title: { userPreferred: string | null } | null } | null, mediaRecommendation: { id: number, title: { userPreferred: string | null } | null } | null } | null> | null } | null };
+
+export type RateReviewMutationVariables = Exact<{
+  reviewId: number | null | undefined;
+  rating: ReviewRating | null | undefined;
+}>;
+
+
+export type RateReviewMutation = { RateReview: { id: number, userId: number, mediaId: number, mediaType: MediaType | null, summary: string | null, body: string | null, rating: number | null, ratingAmount: number | null, score: number | null, private: boolean | null, siteUrl: string | null, createdAt: number, updatedAt: number, userRating: ReviewRating | null, user: { id: number, name: string } | null, media: { id: number, title: { userPreferred: string | null } | null } | null } | null };
+
+export type SaveRecommendationMutationVariables = Exact<{
+  mediaId: number | null | undefined;
+  mediaRecommendationId: number | null | undefined;
+  rating: RecommendationRating | null | undefined;
+}>;
+
+
+export type SaveRecommendationMutation = { SaveRecommendation: { id: number, rating: number | null, userRating: RecommendationRating | null, user: { id: number, name: string } | null, media: { id: number, title: { userPreferred: string | null } | null } | null, mediaRecommendation: { id: number, title: { userPreferred: string | null } | null } | null } | null };
+
+export type SaveReviewMutationVariables = Exact<{
+  id: number | null | undefined;
+  mediaId: number | null | undefined;
+  body: string | null | undefined;
+  summary: string | null | undefined;
+  score: number | null | undefined;
+  private: boolean | null | undefined;
+}>;
+
+
+export type SaveReviewMutation = { SaveReview: { id: number, userId: number, mediaId: number, mediaType: MediaType | null, summary: string | null, body: string | null, rating: number | null, ratingAmount: number | null, score: number | null, private: boolean | null, siteUrl: string | null, createdAt: number, updatedAt: number, userRating: ReviewRating | null, user: { id: number, name: string } | null, media: { id: number, title: { userPreferred: string | null } | null } | null } | null };
 
 export type DeleteCustomListMutationVariables = Exact<{
   customList: string | null | undefined;
@@ -1287,6 +1357,15 @@ export type GetUserMangaListByUsernameQueryVariables = Exact<{
 
 
 export type GetUserMangaListByUsernameQuery = { MediaListCollection: { lists: Array<{ entries: Array<{ id: number, mediaId: number, userId: number, status: MediaListStatus | null, score: number | null, progress: number | null, progressVolumes: number | null, repeat: number | null, priority: number | null, private: boolean | null, notes: string | null, hiddenFromStatusLists: boolean | null, customLists: unknown, advancedScores: unknown, updatedAt: number | null, createdAt: number | null, startedAt: { year: number | null, month: number | null, day: number | null } | null, completedAt: { year: number | null, month: number | null, day: number | null } | null, media: { id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null } | null> | null } | null> | null } | null };
+
+export type GetUserReviewsQueryVariables = Exact<{
+  userId: number | null | undefined;
+  page?: number | null | undefined;
+  perPage?: number | null | undefined;
+}>;
+
+
+export type GetUserReviewsQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, reviews: Array<{ id: number, userId: number, mediaId: number, mediaType: MediaType | null, summary: string | null, body: string | null, rating: number | null, ratingAmount: number | null, score: number | null, private: boolean | null, siteUrl: string | null, createdAt: number, updatedAt: number, userRating: ReviewRating | null, user: { id: number, name: string } | null, media: { id: number, title: { userPreferred: string | null } | null } | null } | null> | null } | null };
 
 export type GetUserStatisticsQueryVariables = Exact<{
   id: number | null | undefined;
@@ -3331,6 +3410,57 @@ fragment MediaCoreFragment on Media {
   isReviewBlocked
   modNotes
 }`, {"fragmentName":"MediaListFragment"});
+export const RecommendationFragmentDoc = new TypedDocumentString(`
+    fragment RecommendationFragment on Recommendation {
+  id
+  rating
+  userRating
+  user {
+    id
+    name
+  }
+  media {
+    id
+    title {
+      userPreferred
+    }
+  }
+  mediaRecommendation {
+    id
+    title {
+      userPreferred
+    }
+  }
+}
+    `, {"fragmentName":"RecommendationFragment"});
+export const ReviewFragmentDoc = new TypedDocumentString(`
+    fragment ReviewFragment on Review {
+  id
+  userId
+  mediaId
+  mediaType
+  summary
+  body
+  rating
+  ratingAmount
+  score
+  private
+  siteUrl
+  createdAt
+  updatedAt
+  userRating
+  user {
+    id
+    name
+  }
+  media {
+    id
+    title {
+      userPreferred
+    }
+  }
+}
+    `, {"fragmentName":"ReviewFragment"});
 export const StaffFragmentDoc = new TypedDocumentString(`
     fragment StaffFragment on Staff {
   ...StaffBasicFragment
@@ -6662,6 +6792,13 @@ export const ToggleFavoriteMangaDocument = new TypedDocumentString(`
   }
 }
     `);
+export const DeleteReviewDocument = new TypedDocumentString(`
+    mutation DeleteReview($id: Int) {
+  DeleteReview(id: $id) {
+    deleted
+  }
+}
+    `);
 export const GetAiringScheduleDocument = new TypedDocumentString(`
     query GetAiringSchedule($id: Int!) {
   AiringSchedule(id: $id) {
@@ -6804,6 +6941,45 @@ fragment MediaTagBasicFragment on MediaTag {
   category
   rank
 }`);
+export const GetMediaReviewsDocument = new TypedDocumentString(`
+    query GetMediaReviews($mediaId: Int, $page: Int = 1, $perPage: Int = 10) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
+      total
+    }
+    reviews(mediaId: $mediaId) {
+      ...ReviewFragment
+    }
+  }
+}
+    fragment ReviewFragment on Review {
+  id
+  userId
+  mediaId
+  mediaType
+  summary
+  body
+  rating
+  ratingAmount
+  score
+  private
+  siteUrl
+  createdAt
+  updatedAt
+  userRating
+  user {
+    id
+    name
+  }
+  media {
+    id
+    title {
+      userPreferred
+    }
+  }
+}`);
 export const GetMediaTagsDocument = new TypedDocumentString(`
     query GetMediaTags($status: Int) {
   MediaTagCollection(status: $status) {
@@ -6820,6 +6996,142 @@ export const GetMediaTagsDocument = new TypedDocumentString(`
   isMediaSpoiler
   isAdult
   userId
+}`);
+export const GetRecommendationsPageDocument = new TypedDocumentString(`
+    query GetRecommendationsPage($mediaId: Int, $page: Int = 1, $perPage: Int = 10) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
+      total
+    }
+    recommendations(mediaId: $mediaId) {
+      ...RecommendationFragment
+    }
+  }
+}
+    fragment RecommendationFragment on Recommendation {
+  id
+  rating
+  userRating
+  user {
+    id
+    name
+  }
+  media {
+    id
+    title {
+      userPreferred
+    }
+  }
+  mediaRecommendation {
+    id
+    title {
+      userPreferred
+    }
+  }
+}`);
+export const RateReviewDocument = new TypedDocumentString(`
+    mutation RateReview($reviewId: Int, $rating: ReviewRating) {
+  RateReview(reviewId: $reviewId, rating: $rating) {
+    ...ReviewFragment
+  }
+}
+    fragment ReviewFragment on Review {
+  id
+  userId
+  mediaId
+  mediaType
+  summary
+  body
+  rating
+  ratingAmount
+  score
+  private
+  siteUrl
+  createdAt
+  updatedAt
+  userRating
+  user {
+    id
+    name
+  }
+  media {
+    id
+    title {
+      userPreferred
+    }
+  }
+}`);
+export const SaveRecommendationDocument = new TypedDocumentString(`
+    mutation SaveRecommendation($mediaId: Int, $mediaRecommendationId: Int, $rating: RecommendationRating) {
+  SaveRecommendation(
+    mediaId: $mediaId
+    mediaRecommendationId: $mediaRecommendationId
+    rating: $rating
+  ) {
+    ...RecommendationFragment
+  }
+}
+    fragment RecommendationFragment on Recommendation {
+  id
+  rating
+  userRating
+  user {
+    id
+    name
+  }
+  media {
+    id
+    title {
+      userPreferred
+    }
+  }
+  mediaRecommendation {
+    id
+    title {
+      userPreferred
+    }
+  }
+}`);
+export const SaveReviewDocument = new TypedDocumentString(`
+    mutation SaveReview($id: Int, $mediaId: Int, $body: String, $summary: String, $score: Int, $private: Boolean) {
+  SaveReview(
+    id: $id
+    mediaId: $mediaId
+    body: $body
+    summary: $summary
+    score: $score
+    private: $private
+  ) {
+    ...ReviewFragment
+  }
+}
+    fragment ReviewFragment on Review {
+  id
+  userId
+  mediaId
+  mediaType
+  summary
+  body
+  rating
+  ratingAmount
+  score
+  private
+  siteUrl
+  createdAt
+  updatedAt
+  userRating
+  user {
+    id
+    name
+  }
+  media {
+    id
+    title {
+      userPreferred
+    }
+  }
 }`);
 export const DeleteCustomListDocument = new TypedDocumentString(`
     mutation DeleteCustomList($customList: String, $type: MediaType) {
@@ -8948,6 +9260,45 @@ fragment MediaListFragment on MediaList {
     ...MediaCoreFragment
   }
 }`);
+export const GetUserReviewsDocument = new TypedDocumentString(`
+    query GetUserReviews($userId: Int, $page: Int = 1, $perPage: Int = 10) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
+      total
+    }
+    reviews(userId: $userId) {
+      ...ReviewFragment
+    }
+  }
+}
+    fragment ReviewFragment on Review {
+  id
+  userId
+  mediaId
+  mediaType
+  summary
+  body
+  rating
+  ratingAmount
+  score
+  private
+  siteUrl
+  createdAt
+  updatedAt
+  userRating
+  user {
+    id
+    name
+  }
+  media {
+    id
+    title {
+      userPreferred
+    }
+  }
+}`);
 export const GetUserStatisticsDocument = new TypedDocumentString(`
     query GetUserStatistics($id: Int) {
   User(id: $id) {
@@ -9712,6 +10063,9 @@ export function getSdk<C>(requester: Requester<C>) {
     ToggleFavoriteManga(variables: ToggleFavoriteMangaMutationVariables, options?: C): Promise<ToggleFavoriteMangaMutation> {
       return requester<ToggleFavoriteMangaMutation, ToggleFavoriteMangaMutationVariables>(ToggleFavoriteMangaDocument, variables, options) as Promise<ToggleFavoriteMangaMutation>;
     },
+    DeleteReview(variables?: DeleteReviewMutationVariables, options?: C): Promise<DeleteReviewMutation> {
+      return requester<DeleteReviewMutation, DeleteReviewMutationVariables>(DeleteReviewDocument, variables, options) as Promise<DeleteReviewMutation>;
+    },
     GetAiringSchedule(variables: GetAiringScheduleQueryVariables, options?: C): Promise<GetAiringScheduleQuery> {
       return requester<GetAiringScheduleQuery, GetAiringScheduleQueryVariables>(GetAiringScheduleDocument, variables, options) as Promise<GetAiringScheduleQuery>;
     },
@@ -9724,8 +10078,23 @@ export function getSdk<C>(requester: Requester<C>) {
     GetMediaById(variables: GetMediaByIdQueryVariables, options?: C): Promise<GetMediaByIdQuery> {
       return requester<GetMediaByIdQuery, GetMediaByIdQueryVariables>(GetMediaByIdDocument, variables, options) as Promise<GetMediaByIdQuery>;
     },
+    GetMediaReviews(variables?: GetMediaReviewsQueryVariables, options?: C): Promise<GetMediaReviewsQuery> {
+      return requester<GetMediaReviewsQuery, GetMediaReviewsQueryVariables>(GetMediaReviewsDocument, variables, options) as Promise<GetMediaReviewsQuery>;
+    },
     GetMediaTags(variables?: GetMediaTagsQueryVariables, options?: C): Promise<GetMediaTagsQuery> {
       return requester<GetMediaTagsQuery, GetMediaTagsQueryVariables>(GetMediaTagsDocument, variables, options) as Promise<GetMediaTagsQuery>;
+    },
+    GetRecommendationsPage(variables?: GetRecommendationsPageQueryVariables, options?: C): Promise<GetRecommendationsPageQuery> {
+      return requester<GetRecommendationsPageQuery, GetRecommendationsPageQueryVariables>(GetRecommendationsPageDocument, variables, options) as Promise<GetRecommendationsPageQuery>;
+    },
+    RateReview(variables?: RateReviewMutationVariables, options?: C): Promise<RateReviewMutation> {
+      return requester<RateReviewMutation, RateReviewMutationVariables>(RateReviewDocument, variables, options) as Promise<RateReviewMutation>;
+    },
+    SaveRecommendation(variables?: SaveRecommendationMutationVariables, options?: C): Promise<SaveRecommendationMutation> {
+      return requester<SaveRecommendationMutation, SaveRecommendationMutationVariables>(SaveRecommendationDocument, variables, options) as Promise<SaveRecommendationMutation>;
+    },
+    SaveReview(variables?: SaveReviewMutationVariables, options?: C): Promise<SaveReviewMutation> {
+      return requester<SaveReviewMutation, SaveReviewMutationVariables>(SaveReviewDocument, variables, options) as Promise<SaveReviewMutation>;
     },
     DeleteCustomList(variables?: DeleteCustomListMutationVariables, options?: C): Promise<DeleteCustomListMutation> {
       return requester<DeleteCustomListMutation, DeleteCustomListMutationVariables>(DeleteCustomListDocument, variables, options) as Promise<DeleteCustomListMutation>;
@@ -9786,6 +10155,9 @@ export function getSdk<C>(requester: Requester<C>) {
     },
     GetUserMangaListByUsername(variables?: GetUserMangaListByUsernameQueryVariables, options?: C): Promise<GetUserMangaListByUsernameQuery> {
       return requester<GetUserMangaListByUsernameQuery, GetUserMangaListByUsernameQueryVariables>(GetUserMangaListByUsernameDocument, variables, options) as Promise<GetUserMangaListByUsernameQuery>;
+    },
+    GetUserReviews(variables?: GetUserReviewsQueryVariables, options?: C): Promise<GetUserReviewsQuery> {
+      return requester<GetUserReviewsQuery, GetUserReviewsQueryVariables>(GetUserReviewsDocument, variables, options) as Promise<GetUserReviewsQuery>;
     },
     GetUserStatistics(variables?: GetUserStatisticsQueryVariables, options?: C): Promise<GetUserStatisticsQuery> {
       return requester<GetUserStatisticsQuery, GetUserStatisticsQueryVariables>(GetUserStatisticsDocument, variables, options) as Promise<GetUserStatisticsQuery>;
