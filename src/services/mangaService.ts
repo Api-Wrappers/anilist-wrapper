@@ -1,5 +1,7 @@
 import type { ANILISTSDK } from "../@types";
+import type { MediaFormat, MediaStatus } from "../__generated__/anilist-schema";
 import type {
+	GetMangaBrowseQuery,
 	GetMangaByTitleQuery,
 	GetMangaCharactersQuery,
 	GetMangaListByGenreQuery,
@@ -345,6 +347,86 @@ export class MangaService {
 			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
 		}
 		return this.client.GetMangaStaff({ id: mediaId });
+	}
+
+	/**
+	 * Browses manga with optional filters for genre, format, status, and start
+	 * date. AniList has no seasonal manga, so browse is the manga counterpart to
+	 * `anime.browseAnime`.
+	 * When `options.select` is provided, only the selected fields are returned.
+	 * @param filters - Optional filters to narrow the results.
+	 * @param page - Optional page number. Defaults to 1.
+	 * @param perPage - Optional number of results per page. Defaults to 10.
+	 * @returns A promise resolving to the filtered, paginated manga list.
+	 */
+	browseManga(
+		filters?: {
+			genre?: string;
+			format?: MediaFormat;
+			status?: MediaStatus;
+			startDate?: number;
+		},
+		page?: number,
+		perPage?: number,
+	): Promise<GetMangaBrowseQuery>;
+	browseManga<TSelect extends MediaPageSelect>(
+		filters: {
+			genre?: string;
+			format?: MediaFormat;
+			status?: MediaStatus;
+			startDate?: number;
+		},
+		page: number,
+		perPage: number,
+		options: { select: { page: TSelect } },
+	): Promise<{ page: SelectedMediaPage<TSelect> | null }>;
+	browseManga<TSelect extends MediaPageSelect>(
+		filters: {
+			genre?: string;
+			format?: MediaFormat;
+			status?: MediaStatus;
+			startDate?: number;
+		} = {},
+		page = 1,
+		perPage = 10,
+		options?: { select: { page: TSelect } },
+	):
+		| Promise<GetMangaBrowseQuery>
+		| Promise<{ page: SelectedMediaPage<TSelect> | null }> {
+		const { genre, format, status, startDate } = filters;
+		const limit = normalizePerPage(perPage, 10);
+		if (options?.select !== undefined) {
+			const document = buildMediaPageDocument(
+				"SelectedMangaBrowse",
+				"($genre: String, $format: MediaFormat, $status: MediaStatus, $startDate: FuzzyDateInt, $page: Int, $perPage: Int)",
+				[
+					"genre: $genre",
+					"format: $format",
+					"status: $status",
+					"startDate: $startDate",
+					"type: MANGA",
+					"sort: POPULARITY_DESC",
+					"isAdult: false",
+				],
+				resolvePageSelection<TSelect>(options.select, "media"),
+			);
+			return this.selectedMediaPage<TSelect>(document, {
+				genre,
+				format,
+				status,
+				startDate,
+				page,
+				perPage: limit,
+			});
+		}
+		return this.client.GetMangaBrowse({
+			genre,
+			format,
+			status,
+			startDate,
+			page,
+			perPage: limit,
+		});
 	}
 
 	/**
