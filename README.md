@@ -309,7 +309,9 @@ floor.
 
 Use `bun run codegen` only when GraphQL operations, fragments, or generated
 types need to be refreshed. Codegen requires network access to fetch AniList's
-schema.
+schema, and the `graphql` dev dependency is pinned to `^16` because the
+GraphQL Code Generator plugins do not support the `graphql@17` AST yet. The
+published package does not depend on `graphql` at runtime.
 
 ## Release Process
 
