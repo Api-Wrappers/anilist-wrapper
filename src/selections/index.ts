@@ -1,4 +1,6 @@
 export {
+	buildAiringScheduleByIdDocument,
+	buildAiringSchedulePageDocument,
 	buildAnimeByIdDocument,
 	buildAnimeSearchDocument,
 	buildCharacterByIdDocument,
@@ -10,6 +12,7 @@ export {
 	buildMediaListByIdDocument,
 	buildMediaListCollectionByUserDocument,
 	buildMediaPageDocument,
+	buildMediaTagCollectionDocument,
 	buildMutationDocument,
 	buildRootDocument,
 	buildSaveMediaListEntryDocument,
@@ -21,6 +24,8 @@ export {
 	buildUserByIdDocument,
 	buildUserByUsernameDocument,
 	buildUserPageDocument,
+	buildViewerDocument,
+	buildViewerStatisticsDocument,
 } from "./builder";
 export type {
 	LegacySelectionOption,
@@ -28,6 +33,8 @@ export type {
 	SelectionOption,
 } from "./options";
 export type {
+	AiringSchedulePageSelect,
+	AiringScheduleSelect,
 	CharacterPageSelect,
 	CharacterSelect,
 	DeletedSelect,
@@ -36,7 +43,10 @@ export type {
 	MediaListSelect,
 	MediaPageSelect,
 	MediaSelect,
+	MediaTagSelect,
 	PageInfoSelect,
+	SelectedAiringSchedule,
+	SelectedAiringSchedulePage,
 	SelectedCharacter,
 	SelectedCharacterPage,
 	SelectedDeleted,
@@ -46,12 +56,14 @@ export type {
 	SelectedMediaList,
 	SelectedMediaListCollection,
 	SelectedMediaPage,
+	SelectedMediaTag,
 	SelectedStaff,
 	SelectedStaffPage,
 	SelectedStudio,
 	SelectedStudioPage,
 	SelectedUser,
 	SelectedUserPage,
+	SelectedUserStatisticTypes,
 	StaffPageSelect,
 	StaffSelect,
 	StudioPageSelect,
@@ -59,4 +71,5 @@ export type {
 	ToSelect,
 	UserPageSelect,
 	UserSelect,
+	UserStatisticTypesSelect,
 } from "./types";

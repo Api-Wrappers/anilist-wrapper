@@ -1074,12 +1074,40 @@ export type ToggleFavoriteMangaMutationVariables = Exact<{
 
 export type ToggleFavoriteMangaMutation = { ToggleFavourite: { manga: { nodes: Array<{ id: number } | null> | null } | null } | null };
 
+export type GetAiringScheduleQueryVariables = Exact<{
+  id: number;
+}>;
+
+
+export type GetAiringScheduleQuery = { AiringSchedule: { id: number, airingAt: number, timeUntilAiring: number, episode: number, mediaId: number } | null };
+
+export type GetAiringSchedulesByMediaQueryVariables = Exact<{
+  mediaId: number | null | undefined;
+  page?: number | null | undefined;
+  perPage?: number | null | undefined;
+}>;
+
+
+export type GetAiringSchedulesByMediaQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, airingSchedules: Array<{ id: number, airingAt: number, timeUntilAiring: number, episode: number, mediaId: number } | null> | null } | null };
+
+export type GetGenresQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetGenresQuery = { GenreCollection: Array<string | null> | null };
+
 export type GetMediaByIdQueryVariables = Exact<{
   id: number;
 }>;
 
 
 export type GetMediaByIdQuery = { Media: { id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, nextAiringEpisode: { id: number, airingAt: number, timeUntilAiring: number, episode: number, mediaId: number } | null, tags: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null } | null> | null, externalLinks: Array<{ id: number, url: string | null, site: string, siteId: number | null, type: ExternalLinkType | null } | null> | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null };
+
+export type GetMediaTagsQueryVariables = Exact<{
+  status: number | null | undefined;
+}>;
+
+
+export type GetMediaTagsQuery = { MediaTagCollection: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null, isGeneralSpoiler: boolean | null, isMediaSpoiler: boolean | null, isAdult: boolean | null, userId: number | null } | null> | null };
 
 export type DeleteMediaListEntryMutationVariables = Exact<{
   id: number;
@@ -1238,6 +1266,16 @@ export type GetUserStatisticsByUsernameQueryVariables = Exact<{
 
 
 export type GetUserStatisticsByUsernameQuery = { User: { statistics: { anime: { count: number, meanScore: number, minutesWatched: number, episodesWatched: number, standardDeviation: number, genres: Array<{ genre: string | null, count: number, meanScore: number, minutesWatched: number } | null> | null, tags: Array<{ count: number, meanScore: number, minutesWatched: number, tag: { id: number, name: string } | null } | null> | null, statuses: Array<{ status: MediaListStatus | null, count: number, meanScore: number, minutesWatched: number } | null> | null, formats: Array<{ format: MediaFormat | null, count: number, meanScore: number, minutesWatched: number } | null> | null, releaseYears: Array<{ releaseYear: number | null, count: number, meanScore: number, minutesWatched: number } | null> | null } | null, manga: { count: number, meanScore: number, chaptersRead: number, volumesRead: number, standardDeviation: number, genres: Array<{ genre: string | null, count: number, meanScore: number, chaptersRead: number } | null> | null, tags: Array<{ count: number, meanScore: number, chaptersRead: number, tag: { id: number, name: string } | null } | null> | null, statuses: Array<{ status: MediaListStatus | null, count: number, meanScore: number, chaptersRead: number } | null> | null, formats: Array<{ format: MediaFormat | null, count: number, meanScore: number, chaptersRead: number } | null> | null } | null } | null } | null };
+
+export type GetViewerQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetViewerQuery = { Viewer: { id: number, name: string, about: string | null, bannerImage: string | null, donatorTier: number | null, donatorBadge: string | null, isFollowing: boolean | null, isFollower: boolean | null, isBlocked: boolean | null, createdAt: number | null, updatedAt: number | null, unreadNotificationCount: number | null, bans: unknown, moderatorRoles: Array<ModRole | null> | null, moderatorStatus: string | null, siteUrl: string | null, avatar: { large: string | null, medium: string | null } | null, options: { titleLanguage: UserTitleLanguage | null, displayAdultContent: boolean | null, airingNotifications: boolean | null, profileColor: string | null, timezone: string | null, activityMergeTime: number | null, staffNameLanguage: UserStaffNameLanguage | null, restrictMessagesToFollowing: boolean | null, notificationOptions: Array<{ type: NotificationType | null, enabled: boolean | null } | null> | null, disabledListActivity: Array<{ disabled: boolean | null, type: MediaListStatus | null } | null> | null } | null, mediaListOptions: { scoreFormat: ScoreFormat | null, rowOrder: string | null, useLegacyLists: boolean | null, sharedTheme: unknown, sharedThemeEnabled: boolean | null, animeList: { sectionOrder: Array<string | null> | null, splitCompletedSectionByFormat: boolean | null, customLists: Array<string | null> | null, advancedScoring: Array<string | null> | null, advancedScoringEnabled: boolean | null } | null, mangaList: { sectionOrder: Array<string | null> | null, splitCompletedSectionByFormat: boolean | null, customLists: Array<string | null> | null, advancedScoring: Array<string | null> | null, advancedScoringEnabled: boolean | null } | null } | null, favourites: { anime: { nodes: Array<{ id: number, title: { romaji: string | null } | null } | null> | null } | null, manga: { nodes: Array<{ id: number, title: { romaji: string | null } | null } | null> | null } | null, characters: { nodes: Array<{ id: number, name: { full: string | null } | null } | null> | null } | null, staff: { nodes: Array<{ id: number, name: { full: string | null } | null } | null> | null } | null, studios: { nodes: Array<{ id: number, name: string } | null> | null } | null } | null, statistics: { anime: { count: number, meanScore: number, standardDeviation: number, minutesWatched: number, episodesWatched: number, chaptersRead: number, volumesRead: number, scores: Array<{ score: number | null, count: number, meanScore: number, minutesWatched: number } | null> | null, lengths: Array<{ length: string | null, count: number, meanScore: number, minutesWatched: number } | null> | null, formats: Array<{ format: MediaFormat | null, count: number, meanScore: number, minutesWatched: number } | null> | null, statuses: Array<{ status: MediaListStatus | null, count: number, meanScore: number, minutesWatched: number } | null> | null, releaseYears: Array<{ releaseYear: number | null, count: number, meanScore: number, minutesWatched: number } | null> | null, startYears: Array<{ startYear: number | null, count: number, meanScore: number, minutesWatched: number } | null> | null, genres: Array<{ genre: string | null, count: number, meanScore: number, minutesWatched: number } | null> | null, tags: Array<{ count: number, meanScore: number, minutesWatched: number, tag: { name: string } | null } | null> | null, countries: Array<{ country: unknown, count: number, meanScore: number, minutesWatched: number } | null> | null, voiceActors: Array<{ count: number, meanScore: number, minutesWatched: number, characterIds: Array<number | null>, mediaIds: Array<number | null>, voiceActor: { id: number, name: { full: string | null } | null } | null } | null> | null, staff: Array<{ count: number, meanScore: number, minutesWatched: number, mediaIds: Array<number | null>, staff: { id: number, name: { full: string | null } | null } | null } | null> | null, studios: Array<{ count: number, meanScore: number, minutesWatched: number, mediaIds: Array<number | null>, studio: { id: number, name: string } | null } | null> | null } | null, manga: { count: number, meanScore: number, standardDeviation: number, chaptersRead: number, volumesRead: number, scores: Array<{ score: number | null, count: number, meanScore: number, chaptersRead: number } | null> | null, lengths: Array<{ length: string | null, count: number, meanScore: number, chaptersRead: number } | null> | null, formats: Array<{ format: MediaFormat | null, count: number, meanScore: number, chaptersRead: number } | null> | null, statuses: Array<{ status: MediaListStatus | null, count: number, meanScore: number, chaptersRead: number } | null> | null, releaseYears: Array<{ releaseYear: number | null, count: number, meanScore: number, chaptersRead: number } | null> | null, startYears: Array<{ startYear: number | null, count: number, meanScore: number, chaptersRead: number } | null> | null, genres: Array<{ genre: string | null, count: number, meanScore: number, chaptersRead: number } | null> | null, tags: Array<{ count: number, meanScore: number, chaptersRead: number, tag: { name: string } | null } | null> | null, countries: Array<{ country: unknown, count: number, meanScore: number, chaptersRead: number } | null> | null, staff: Array<{ count: number, meanScore: number, chaptersRead: number, mediaIds: Array<number | null>, staff: { id: number, name: { full: string | null } | null } | null } | null> | null, studios: Array<{ count: number, meanScore: number, chaptersRead: number, mediaIds: Array<number | null>, studio: { id: number, name: string } | null } | null> | null } | null } | null, stats: { watchedTime: number | null, chaptersRead: number | null } | null, previousNames: Array<{ name: string | null, createdAt: number | null, updatedAt: number | null } | null> | null } | null };
+
+export type GetViewerStatisticsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetViewerStatisticsQuery = { Viewer: { statistics: { anime: { count: number, meanScore: number, standardDeviation: number, minutesWatched: number, episodesWatched: number, chaptersRead: number, volumesRead: number, scores: Array<{ score: number | null, count: number, meanScore: number, minutesWatched: number } | null> | null, lengths: Array<{ length: string | null, count: number, meanScore: number, minutesWatched: number } | null> | null, formats: Array<{ format: MediaFormat | null, count: number, meanScore: number, minutesWatched: number } | null> | null, statuses: Array<{ status: MediaListStatus | null, count: number, meanScore: number, minutesWatched: number } | null> | null, releaseYears: Array<{ releaseYear: number | null, count: number, meanScore: number, minutesWatched: number } | null> | null, startYears: Array<{ startYear: number | null, count: number, meanScore: number, minutesWatched: number } | null> | null, genres: Array<{ genre: string | null, count: number, meanScore: number, minutesWatched: number } | null> | null, tags: Array<{ count: number, meanScore: number, minutesWatched: number, tag: { name: string } | null } | null> | null, countries: Array<{ country: unknown, count: number, meanScore: number, minutesWatched: number } | null> | null, voiceActors: Array<{ count: number, meanScore: number, minutesWatched: number, characterIds: Array<number | null>, mediaIds: Array<number | null>, voiceActor: { id: number, name: { full: string | null } | null } | null } | null> | null, staff: Array<{ count: number, meanScore: number, minutesWatched: number, mediaIds: Array<number | null>, staff: { id: number, name: { full: string | null } | null } | null } | null> | null, studios: Array<{ count: number, meanScore: number, minutesWatched: number, mediaIds: Array<number | null>, studio: { id: number, name: string } | null } | null> | null } | null, manga: { count: number, meanScore: number, standardDeviation: number, chaptersRead: number, volumesRead: number, scores: Array<{ score: number | null, count: number, meanScore: number, chaptersRead: number } | null> | null, lengths: Array<{ length: string | null, count: number, meanScore: number, chaptersRead: number } | null> | null, formats: Array<{ format: MediaFormat | null, count: number, meanScore: number, chaptersRead: number } | null> | null, statuses: Array<{ status: MediaListStatus | null, count: number, meanScore: number, chaptersRead: number } | null> | null, releaseYears: Array<{ releaseYear: number | null, count: number, meanScore: number, chaptersRead: number } | null> | null, startYears: Array<{ startYear: number | null, count: number, meanScore: number, chaptersRead: number } | null> | null, genres: Array<{ genre: string | null, count: number, meanScore: number, chaptersRead: number } | null> | null, tags: Array<{ count: number, meanScore: number, chaptersRead: number, tag: { name: string } | null } | null> | null, countries: Array<{ country: unknown, count: number, meanScore: number, chaptersRead: number } | null> | null, staff: Array<{ count: number, meanScore: number, chaptersRead: number, mediaIds: Array<number | null>, staff: { id: number, name: { full: string | null } | null } | null } | null> | null, studios: Array<{ count: number, meanScore: number, chaptersRead: number, mediaIds: Array<number | null>, studio: { id: number, name: string } | null } | null> | null } | null } | null } | null };
 
 export const TitleFragmentDoc = new TypedDocumentString(`
     fragment TitleFragment on MediaTitle {
@@ -6589,6 +6627,44 @@ export const ToggleFavoriteMangaDocument = new TypedDocumentString(`
   }
 }
     `);
+export const GetAiringScheduleDocument = new TypedDocumentString(`
+    query GetAiringSchedule($id: Int!) {
+  AiringSchedule(id: $id) {
+    ...AiringScheduleFragment
+  }
+}
+    fragment AiringScheduleFragment on AiringSchedule {
+  id
+  airingAt
+  timeUntilAiring
+  episode
+  mediaId
+}`);
+export const GetAiringSchedulesByMediaDocument = new TypedDocumentString(`
+    query GetAiringSchedulesByMedia($mediaId: Int, $page: Int = 1, $perPage: Int = 25) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
+      total
+    }
+    airingSchedules(mediaId: $mediaId) {
+      ...AiringScheduleFragment
+    }
+  }
+}
+    fragment AiringScheduleFragment on AiringSchedule {
+  id
+  airingAt
+  timeUntilAiring
+  episode
+  mediaId
+}`);
+export const GetGenresDocument = new TypedDocumentString(`
+    query GetGenres {
+  GenreCollection
+}
+    `);
 export const GetMediaByIdDocument = new TypedDocumentString(`
     query GetMediaById($id: Int!) {
   Media(id: $id) {
@@ -6692,6 +6768,23 @@ fragment MediaTagBasicFragment on MediaTag {
   description
   category
   rank
+}`);
+export const GetMediaTagsDocument = new TypedDocumentString(`
+    query GetMediaTags($status: Int) {
+  MediaTagCollection(status: $status) {
+    ...MediaTagFragment
+  }
+}
+    fragment MediaTagFragment on MediaTag {
+  id
+  name
+  description
+  category
+  rank
+  isGeneralSpoiler
+  isMediaSpoiler
+  isAdult
+  userId
 }`);
 export const DeleteMediaListEntryDocument = new TypedDocumentString(`
     mutation DeleteMediaListEntry($id: Int!) {
@@ -8853,6 +8946,522 @@ export const GetUserStatisticsByUsernameDocument = new TypedDocumentString(`
   }
 }
     `);
+export const GetViewerDocument = new TypedDocumentString(`
+    query GetViewer {
+  Viewer {
+    ...UserFragment
+  }
+}
+    fragment UserAvatarFragment on UserAvatar {
+  large
+  medium
+}
+fragment UserOptionsFragment on UserOptions {
+  titleLanguage
+  displayAdultContent
+  airingNotifications
+  profileColor
+  notificationOptions {
+    type
+    enabled
+  }
+  timezone
+  activityMergeTime
+  staffNameLanguage
+  restrictMessagesToFollowing
+  disabledListActivity {
+    disabled
+    type
+  }
+}
+fragment UserMediaListOptionsFragment on MediaListOptions {
+  scoreFormat
+  rowOrder
+  useLegacyLists
+  animeList {
+    sectionOrder
+    splitCompletedSectionByFormat
+    customLists
+    advancedScoring
+    advancedScoringEnabled
+  }
+  mangaList {
+    sectionOrder
+    splitCompletedSectionByFormat
+    customLists
+    advancedScoring
+    advancedScoringEnabled
+  }
+  sharedTheme
+  sharedThemeEnabled
+}
+fragment UserFavouritesFragment on Favourites {
+  anime {
+    nodes {
+      id
+      title {
+        romaji
+      }
+    }
+  }
+  manga {
+    nodes {
+      id
+      title {
+        romaji
+      }
+    }
+  }
+  characters {
+    nodes {
+      id
+      name {
+        full
+      }
+    }
+  }
+  staff {
+    nodes {
+      id
+      name {
+        full
+      }
+    }
+  }
+  studios {
+    nodes {
+      id
+      name
+    }
+  }
+}
+fragment UserStatisticsFragment on UserStatisticTypes {
+  anime {
+    count
+    meanScore
+    standardDeviation
+    minutesWatched
+    episodesWatched
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      minutesWatched
+    }
+    lengths {
+      length
+      count
+      meanScore
+      minutesWatched
+    }
+    formats {
+      format
+      count
+      meanScore
+      minutesWatched
+    }
+    statuses {
+      status
+      count
+      meanScore
+      minutesWatched
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      minutesWatched
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      minutesWatched
+    }
+    genres {
+      genre
+      count
+      meanScore
+      minutesWatched
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      minutesWatched
+    }
+    countries {
+      country
+      count
+      meanScore
+      minutesWatched
+    }
+    voiceActors {
+      count
+      meanScore
+      minutesWatched
+      voiceActor {
+        id
+        name {
+          full
+        }
+      }
+      characterIds
+      mediaIds
+    }
+    staff {
+      count
+      meanScore
+      minutesWatched
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      minutesWatched
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+  manga {
+    count
+    meanScore
+    standardDeviation
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      chaptersRead
+    }
+    lengths {
+      length
+      count
+      meanScore
+      chaptersRead
+    }
+    formats {
+      format
+      count
+      meanScore
+      chaptersRead
+    }
+    statuses {
+      status
+      count
+      meanScore
+      chaptersRead
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      chaptersRead
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      chaptersRead
+    }
+    genres {
+      genre
+      count
+      meanScore
+      chaptersRead
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      chaptersRead
+    }
+    countries {
+      country
+      count
+      meanScore
+      chaptersRead
+    }
+    staff {
+      count
+      meanScore
+      chaptersRead
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      chaptersRead
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+}
+fragment UserBasicFragment on User {
+  id
+  name
+  avatar {
+    ...UserAvatarFragment
+  }
+  about
+  bannerImage
+  donatorTier
+  donatorBadge
+  isFollowing
+  isFollower
+  isBlocked
+  createdAt
+  updatedAt
+  unreadNotificationCount
+  bans
+  moderatorRoles
+  moderatorStatus
+  options {
+    ...UserOptionsFragment
+  }
+  mediaListOptions {
+    ...UserMediaListOptionsFragment
+  }
+  favourites {
+    ...UserFavouritesFragment
+  }
+  statistics {
+    ...UserStatisticsFragment
+  }
+  siteUrl
+  stats {
+    watchedTime
+    chaptersRead
+  }
+  previousNames {
+    name
+    createdAt
+    updatedAt
+  }
+}
+fragment UserFragment on User {
+  ...UserBasicFragment
+}`);
+export const GetViewerStatisticsDocument = new TypedDocumentString(`
+    query GetViewerStatistics {
+  Viewer {
+    statistics {
+      ...UserStatisticsFragment
+    }
+  }
+}
+    fragment UserStatisticsFragment on UserStatisticTypes {
+  anime {
+    count
+    meanScore
+    standardDeviation
+    minutesWatched
+    episodesWatched
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      minutesWatched
+    }
+    lengths {
+      length
+      count
+      meanScore
+      minutesWatched
+    }
+    formats {
+      format
+      count
+      meanScore
+      minutesWatched
+    }
+    statuses {
+      status
+      count
+      meanScore
+      minutesWatched
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      minutesWatched
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      minutesWatched
+    }
+    genres {
+      genre
+      count
+      meanScore
+      minutesWatched
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      minutesWatched
+    }
+    countries {
+      country
+      count
+      meanScore
+      minutesWatched
+    }
+    voiceActors {
+      count
+      meanScore
+      minutesWatched
+      voiceActor {
+        id
+        name {
+          full
+        }
+      }
+      characterIds
+      mediaIds
+    }
+    staff {
+      count
+      meanScore
+      minutesWatched
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      minutesWatched
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+  manga {
+    count
+    meanScore
+    standardDeviation
+    chaptersRead
+    volumesRead
+    scores {
+      score
+      count
+      meanScore
+      chaptersRead
+    }
+    lengths {
+      length
+      count
+      meanScore
+      chaptersRead
+    }
+    formats {
+      format
+      count
+      meanScore
+      chaptersRead
+    }
+    statuses {
+      status
+      count
+      meanScore
+      chaptersRead
+    }
+    releaseYears {
+      releaseYear
+      count
+      meanScore
+      chaptersRead
+    }
+    startYears {
+      startYear
+      count
+      meanScore
+      chaptersRead
+    }
+    genres {
+      genre
+      count
+      meanScore
+      chaptersRead
+    }
+    tags {
+      tag {
+        name
+      }
+      count
+      meanScore
+      chaptersRead
+    }
+    countries {
+      country
+      count
+      meanScore
+      chaptersRead
+    }
+    staff {
+      count
+      meanScore
+      chaptersRead
+      staff {
+        id
+        name {
+          full
+        }
+      }
+      mediaIds
+    }
+    studios {
+      count
+      meanScore
+      chaptersRead
+      studio {
+        id
+        name
+      }
+      mediaIds
+    }
+  }
+}`);
 export type Requester<C = {}> = <R, V>(doc: string, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
 export function getSdk<C>(requester: Requester<C>) {
   return {
@@ -8937,8 +9546,20 @@ export function getSdk<C>(requester: Requester<C>) {
     ToggleFavoriteManga(variables: ToggleFavoriteMangaMutationVariables, options?: C): Promise<ToggleFavoriteMangaMutation> {
       return requester<ToggleFavoriteMangaMutation, ToggleFavoriteMangaMutationVariables>(ToggleFavoriteMangaDocument, variables, options) as Promise<ToggleFavoriteMangaMutation>;
     },
+    GetAiringSchedule(variables: GetAiringScheduleQueryVariables, options?: C): Promise<GetAiringScheduleQuery> {
+      return requester<GetAiringScheduleQuery, GetAiringScheduleQueryVariables>(GetAiringScheduleDocument, variables, options) as Promise<GetAiringScheduleQuery>;
+    },
+    GetAiringSchedulesByMedia(variables?: GetAiringSchedulesByMediaQueryVariables, options?: C): Promise<GetAiringSchedulesByMediaQuery> {
+      return requester<GetAiringSchedulesByMediaQuery, GetAiringSchedulesByMediaQueryVariables>(GetAiringSchedulesByMediaDocument, variables, options) as Promise<GetAiringSchedulesByMediaQuery>;
+    },
+    GetGenres(variables?: GetGenresQueryVariables, options?: C): Promise<GetGenresQuery> {
+      return requester<GetGenresQuery, GetGenresQueryVariables>(GetGenresDocument, variables, options) as Promise<GetGenresQuery>;
+    },
     GetMediaById(variables: GetMediaByIdQueryVariables, options?: C): Promise<GetMediaByIdQuery> {
       return requester<GetMediaByIdQuery, GetMediaByIdQueryVariables>(GetMediaByIdDocument, variables, options) as Promise<GetMediaByIdQuery>;
+    },
+    GetMediaTags(variables?: GetMediaTagsQueryVariables, options?: C): Promise<GetMediaTagsQuery> {
+      return requester<GetMediaTagsQuery, GetMediaTagsQueryVariables>(GetMediaTagsDocument, variables, options) as Promise<GetMediaTagsQuery>;
     },
     DeleteMediaListEntry(variables: DeleteMediaListEntryMutationVariables, options?: C): Promise<DeleteMediaListEntryMutation> {
       return requester<DeleteMediaListEntryMutation, DeleteMediaListEntryMutationVariables>(DeleteMediaListEntryDocument, variables, options) as Promise<DeleteMediaListEntryMutation>;
@@ -8996,6 +9617,12 @@ export function getSdk<C>(requester: Requester<C>) {
     },
     GetUserStatisticsByUsername(variables?: GetUserStatisticsByUsernameQueryVariables, options?: C): Promise<GetUserStatisticsByUsernameQuery> {
       return requester<GetUserStatisticsByUsernameQuery, GetUserStatisticsByUsernameQueryVariables>(GetUserStatisticsByUsernameDocument, variables, options) as Promise<GetUserStatisticsByUsernameQuery>;
+    },
+    GetViewer(variables?: GetViewerQueryVariables, options?: C): Promise<GetViewerQuery> {
+      return requester<GetViewerQuery, GetViewerQueryVariables>(GetViewerDocument, variables, options) as Promise<GetViewerQuery>;
+    },
+    GetViewerStatistics(variables?: GetViewerStatisticsQueryVariables, options?: C): Promise<GetViewerStatisticsQuery> {
+      return requester<GetViewerStatisticsQuery, GetViewerStatisticsQueryVariables>(GetViewerStatisticsDocument, variables, options) as Promise<GetViewerStatisticsQuery>;
     }
   };
 }

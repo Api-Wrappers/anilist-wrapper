@@ -91,6 +91,8 @@ export {
 	createSdkClient,
 } from "./client";
 export type {
+	AiringSchedulePageSelect,
+	AiringScheduleSelect,
 	CharacterPageSelect,
 	CharacterSelect,
 	DeletedSelect,
@@ -99,7 +101,10 @@ export type {
 	MediaListSelect,
 	MediaPageSelect,
 	MediaSelect,
+	MediaTagSelect,
 	PageInfoSelect,
+	SelectedAiringSchedule,
+	SelectedAiringSchedulePage,
 	SelectedCharacter,
 	SelectedCharacterPage,
 	SelectedDeleted,
@@ -109,12 +114,14 @@ export type {
 	SelectedMediaList,
 	SelectedMediaListCollection,
 	SelectedMediaPage,
+	SelectedMediaTag,
 	SelectedStaff,
 	SelectedStaffPage,
 	SelectedStudio,
 	SelectedStudioPage,
 	SelectedUser,
 	SelectedUserPage,
+	SelectedUserStatisticTypes,
 	StaffPageSelect,
 	StaffSelect,
 	StudioPageSelect,
@@ -122,6 +129,7 @@ export type {
 	ToSelect,
 	UserPageSelect,
 	UserSelect,
+	UserStatisticTypesSelect,
 } from "./selections";
 export type { GraphQLDocument } from "./services/graphqlService";
 export type { SaveMediaListEntryInput } from "./services/mediaListService";
