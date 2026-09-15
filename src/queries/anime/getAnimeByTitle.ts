@@ -4,8 +4,12 @@ import { MEDIA_FRAGMENT } from "../../fragments/media";
 export const GET_ANIME_BY_TITLE = gql`
   ${MEDIA_FRAGMENT}
 
-  query GetAnimeByTitle($title: String!){
-    Page(page: 1, perPage: 1) {
+  query GetAnimeByTitle(
+    $title: String!
+    $page: Int = 1
+    $perPage: Int = 1
+  ) {
+    Page(page: $page, perPage: $perPage) {
       media(search: $title, type: ANIME) {
         ...MediaFragment
       }

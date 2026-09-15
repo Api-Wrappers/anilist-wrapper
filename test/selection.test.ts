@@ -439,7 +439,7 @@ describe("selected read endpoints across services", () => {
 		});
 		expect(gql.lastRequest().document).toContain("type: MANGA");
 
-		await service.getMangaByTitle("Berserk", {
+		await service.getMangaByTitle("Berserk", 1, 1, {
 			select: { page: { media: { title: { romaji: true } } } },
 		});
 		expect(gql.lastRequest().variables).toEqual({
@@ -913,7 +913,7 @@ describe("selected title lookups request a single result", () => {
 	it("getAnimeByTitle and getMangaByTitle send perPage: 1", async () => {
 		const anime = makeAnimeService();
 		anime.gql.setResponse({ Page: { media: [] } });
-		await anime.service.getAnimeByTitle("Frieren", {
+		await anime.service.getAnimeByTitle("Frieren", 1, 1, {
 			select: { page: { media: { id: true } } },
 		});
 		expect(anime.gql.lastRequest().variables).toEqual({
@@ -924,7 +924,7 @@ describe("selected title lookups request a single result", () => {
 
 		const manga = makeMangaService();
 		manga.gql.setResponse({ Page: { media: [] } });
-		await manga.service.getMangaByTitle("Berserk", {
+		await manga.service.getMangaByTitle("Berserk", 1, 1, {
 			select: { page: { media: { id: true } } },
 		});
 		expect(manga.gql.lastRequest().variables).toEqual({
@@ -1448,5 +1448,27 @@ describe("social and forum endpoint selections", () => {
 			id: 3,
 			type: LikeableType.Thread,
 		});
+	});
+});
+
+// ── Service boundary validation ───────────────────────────────────────────────
+
+describe("service boundary validation", () => {
+	it("rejects invalid ids and oversized page sizes before any request", () => {
+		const media = makeMediaService();
+		expect(() => media.service.getMediaById(0)).toThrow(TypeError);
+		expect(media.gql.requests).toHaveLength(0);
+
+		const anime = makeAnimeService();
+		expect(() =>
+			anime.service.getAnimeByTitle("Frieren", 1, 51, {
+				select: { page: { media: { id: true } } },
+			}),
+		).toThrow(TypeError);
+		expect(anime.gql.requests).toHaveLength(0);
+
+		const mediaList = makeMediaListService();
+		expect(() => mediaList.service.deleteEntry(0)).toThrow(TypeError);
+		expect(mediaList.gql.requests).toHaveLength(0);
 	});
 });

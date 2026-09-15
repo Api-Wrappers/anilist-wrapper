@@ -33,6 +33,7 @@ import type {
 	SelectedMedia,
 	SelectedMediaPage,
 } from "../selections/types";
+import { normalizePerPage } from "./validation";
 
 /**
  * Service class for interacting with AniList anime-related queries.
@@ -335,17 +336,26 @@ export class AnimeService {
 	 * @param title - The title of the anime.
 	 * @returns A promise resolving to the matching anime.
 	 */
-	getAnimeByTitle(title: string): ReturnType<ANILISTSDK["GetAnimeByTitle"]>;
+	getAnimeByTitle(
+		title: string,
+		page?: number,
+		perPage?: number,
+	): ReturnType<ANILISTSDK["GetAnimeByTitle"]>;
 	getAnimeByTitle<TSelect extends MediaPageSelect>(
 		title: string,
+		page: number,
+		perPage: number,
 		options: { select: { page: TSelect } },
 	): Promise<{ page: SelectedMediaPage<TSelect> | null }>;
 	getAnimeByTitle<TSelect extends MediaPageSelect>(
 		title: string,
+		page = 1,
+		perPage = 1,
 		options?: { select: { page: TSelect } },
 	):
 		| ReturnType<ANILISTSDK["GetAnimeByTitle"]>
 		| Promise<{ page: SelectedMediaPage<TSelect> | null }> {
+		const limit = normalizePerPage(perPage, 1);
 		if (options?.select !== undefined) {
 			const document = buildMediaPageDocument(
 				"SelectedAnimeByTitle",
@@ -355,11 +365,11 @@ export class AnimeService {
 			);
 			return this.selectedMediaPage<TSelect>(document, {
 				title,
-				page: 1,
-				perPage: 1,
+				page,
+				perPage: limit,
 			});
 		}
-		return this.client.GetAnimeByTitle({ title });
+		return this.client.GetAnimeByTitle({ title, page, perPage: limit });
 	}
 
 	/**

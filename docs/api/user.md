@@ -8,7 +8,7 @@ Username methods read public profile data and usually work without a token. Nume
 
 | Method | Auth | Returns |
 | --- | --- | --- |
-| `getUserInfo(userId)` | Yes | `User` |
+| `getUserInfo(userId)` | No | `User` |
 | `getUserInfoByUsername(userName)` | No | `User` |
 | `getUserAnimeList(userId, status?)` | Yes | `MediaListCollection` |
 | `getUserAnimeListByUsername(userName, status?)` | No | `MediaListCollection` |
