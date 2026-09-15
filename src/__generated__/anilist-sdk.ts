@@ -921,6 +921,8 @@ export type GetAnimeByIdQuery = { Media: { id: number, idMal: number | null, ban
 
 export type GetAnimeByTitleQueryVariables = Exact<{
   title: string;
+  page?: number | null | undefined;
+  perPage?: number | null | undefined;
 }>;
 
 
@@ -1036,6 +1038,8 @@ export type GetMangaByIdQuery = { Media: { id: number, idMal: number | null, ban
 
 export type GetMangaByTitleQueryVariables = Exact<{
   title: string;
+  page?: number | null | undefined;
+  perPage?: number | null | undefined;
 }>;
 
 
@@ -5058,8 +5062,8 @@ fragment StudioFragment on Studio {
   }
 }`);
 export const GetAnimeByTitleDocument = new TypedDocumentString(`
-    query GetAnimeByTitle($title: String!) {
-  Page(page: 1, perPage: 1) {
+    query GetAnimeByTitle($title: String!, $page: Int = 1, $perPage: Int = 1) {
+  Page(page: $page, perPage: $perPage) {
     media(search: $title, type: ANIME) {
       ...MediaFragment
     }
@@ -6200,8 +6204,8 @@ fragment MediaTagBasicFragment on MediaTag {
   rank
 }`);
 export const GetMangaByTitleDocument = new TypedDocumentString(`
-    query GetMangaByTitle($title: String!) {
-  Page(page: 1, perPage: 1) {
+    query GetMangaByTitle($title: String!, $page: Int = 1, $perPage: Int = 1) {
+  Page(page: $page, perPage: $perPage) {
     media(search: $title, type: MANGA) {
       ...MediaFragment
     }
