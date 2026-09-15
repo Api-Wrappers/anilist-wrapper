@@ -33,7 +33,7 @@ import type {
 	SelectedMedia,
 	SelectedMediaPage,
 } from "../selections/types";
-import { normalizePerPage } from "./validation";
+import { assertPositiveInt, normalizePerPage } from "./validation";
 
 /**
  * Service class for interacting with AniList anime-related queries.
@@ -99,6 +99,7 @@ export class AnimeService {
 		id: number,
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
+		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			const { select, wrapped } = resolveSelection(options, "media");
 			return this.selectedMedia(select, { id }).then((raw) =>
@@ -134,6 +135,7 @@ export class AnimeService {
 	):
 		| ReturnType<ANILISTSDK["SearchAnime"]>
 		| Promise<{ page: SelectedMediaPage<TSelect> | null }> {
+		normalizePerPage(perPage, 10);
 		if (options?.select !== undefined) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -175,6 +177,7 @@ export class AnimeService {
 	):
 		| ReturnType<ANILISTSDK["GetAnimeTrending"]>
 		| Promise<{ page: SelectedMediaPage<TSelect> | null }> {
+		normalizePerPage(perPage, 10);
 		if (options?.select !== undefined) {
 			const document = buildMediaPageDocument(
 				"SelectedAnimeTrending",
@@ -209,6 +212,7 @@ export class AnimeService {
 	):
 		| ReturnType<ANILISTSDK["GetAnimePopular"]>
 		| Promise<{ page: SelectedMediaPage<TSelect> | null }> {
+		normalizePerPage(perPage, 10);
 		if (options?.select !== undefined) {
 			const document = buildMediaPageDocument(
 				"SelectedAnimePopular",
@@ -241,6 +245,7 @@ export class AnimeService {
 		mediaId: number,
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
+		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
 			const { select, wrapped } = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
@@ -268,6 +273,7 @@ export class AnimeService {
 		mediaId: number,
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
+		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
 			const { select, wrapped } = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
@@ -295,6 +301,7 @@ export class AnimeService {
 		mediaId: number,
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
+		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
 			const { select, wrapped } = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
@@ -322,6 +329,7 @@ export class AnimeService {
 		mediaId: number,
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
+		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
 			const { select, wrapped } = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
@@ -398,6 +406,7 @@ export class AnimeService {
 	):
 		| ReturnType<ANILISTSDK["GetAnimeListByGenre"]>
 		| Promise<{ page: SelectedMediaPage<TSelect> | null }> {
+		normalizePerPage(perPage, 10);
 		if (options?.select !== undefined) {
 			const document = buildMediaPageDocument(
 				"SelectedAnimeListByGenre",
@@ -456,6 +465,7 @@ export class AnimeService {
 		| Promise<GetAnimeBrowseQuery>
 		| Promise<{ page: SelectedMediaPage<TSelect> | null }> {
 		const { genre, format, status, seasonYear } = filters;
+		normalizePerPage(perPage, 10);
 		if (options?.select !== undefined) {
 			const document = buildMediaPageDocument(
 				"SelectedAnimeBrowse",
@@ -520,6 +530,7 @@ export class AnimeService {
 	):
 		| Promise<GetSeasonalAnimeQuery>
 		| Promise<{ page: SelectedMediaPage<TSelect> | null }> {
+		normalizePerPage(perPage, 10);
 		if (options?.select !== undefined) {
 			const document = buildMediaPageDocument(
 				"SelectedSeasonalAnime",
@@ -589,6 +600,7 @@ export class AnimeService {
 		animeId: number,
 		options?: SelectionOption<"favorites", TSelect>,
 	): unknown {
+		assertPositiveInt(animeId, "animeId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");

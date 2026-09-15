@@ -48,7 +48,9 @@ import type {
 	SelectedMediaListCollection,
 	SelectedMediaTag,
 	SelectedRecommendation,
+	SelectedRecommendationPage,
 	SelectedReview,
+	SelectedReviewPage,
 } from "../selections/types";
 import { toMediaType } from "./mediaType";
 import { assertPositiveInt, normalizePerPage } from "./validation";
@@ -122,7 +124,7 @@ export class MediaService {
 	 * Retrieves a user's media list based on the media type (Anime or Manga).
 	 * @param userId - The unique ID of the user whose media list is being requested.
 	 * @param mediaType - The type of media list to fetch: either "ANIME" or "MANGA".
-	 * @param status - Optional media list status filter for selected queries.
+	 * @param status - Optional media list status filter.
 	 * @returns A promise that resolves with the user's media list.
 	 */
 	getMediaList(
@@ -185,6 +187,7 @@ export class MediaService {
 		}
 		return this.client.GetMediaListByUser({
 			mediaType: normalizedType,
+			status,
 			userId,
 		});
 	}
@@ -193,7 +196,7 @@ export class MediaService {
 	 * Retrieves a user's media list by their username, filtered by media type (Anime or Manga).
 	 * @param userName - The username of the user whose media list is being requested.
 	 * @param mediaType - The type of media list to fetch: either "ANIME" or "MANGA".
-	 * @param status - Optional media list status filter for selected queries.
+	 * @param status - Optional media list status filter.
 	 * @returns A promise that resolves with the user's media list.
 	 */
 	getMediaListByUsername(
@@ -258,6 +261,7 @@ export class MediaService {
 		}
 		return this.client.GetMediaListByUserByUsername({
 			mediaType: normalizedType,
+			status,
 			userName,
 		});
 	}
@@ -432,7 +436,7 @@ export class MediaService {
 		page: number,
 		perPage: number,
 		options: { select: { page: TSelect } },
-	): Promise<{ page: SelectedFields<Page, TSelect> | null }>;
+	): Promise<{ page: SelectedReviewPage<TSelect> | null }>;
 	getReviews<TSelect extends ReviewPageSelect>(
 		mediaId: number,
 		page = 1,
@@ -476,7 +480,7 @@ export class MediaService {
 		page: number,
 		perPage: number,
 		options: { select: { page: TSelect } },
-	): Promise<{ page: SelectedFields<Page, TSelect> | null }>;
+	): Promise<{ page: SelectedRecommendationPage<TSelect> | null }>;
 	getRecommendationsPage<TSelect extends RecommendationPageSelect>(
 		mediaId: number,
 		page = 1,

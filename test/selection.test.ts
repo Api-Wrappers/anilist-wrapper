@@ -1449,14 +1449,22 @@ describe("social and forum endpoint selections", () => {
 		const service = new SocialService(sdk.client());
 
 		await service.getNotifications(1, 10);
+		expect(sdk.lastCall("GetNotifications").variables).toEqual({
+			page: 1,
+			perPage: 10,
+			resetNotificationCount: false,
+		});
+		await service.getNotifications(1, 10, { resetNotificationCount: true });
+		expect(sdk.lastCall("GetNotifications").variables).toEqual({
+			page: 1,
+			perPage: 10,
+			resetNotificationCount: true,
+		});
+
 		await service.getActivities(5, 1, 10);
 		await service.getActivity(3);
 		await service.toggleLike(3, LikeableType.Thread);
 
-		expect(sdk.lastCall("GetNotifications").variables).toEqual({
-			page: 1,
-			perPage: 10,
-		});
 		expect(sdk.lastCall("GetActivities").variables).toEqual({
 			userId: 5,
 			page: 1,
@@ -1489,6 +1497,64 @@ describe("service boundary validation", () => {
 		const mediaList = makeMediaListService();
 		expect(() => mediaList.service.deleteEntry(0)).toThrow(TypeError);
 		expect(mediaList.gql.requests).toHaveLength(0);
+	});
+
+	it("validates ids and page sizes on every service before any request", () => {
+		const sdk = new FakeSdk();
+		const anime = new AnimeService(sdk.client());
+		const manga = new MangaService(sdk.client());
+		const character = new CharacterService(sdk.client());
+		const staff = new StaffService(sdk.client());
+		const studio = new StudioService(sdk.client());
+		const social = new SocialService(sdk.client());
+
+		expect(() => anime.getAnimeById(0)).toThrow("id must be a positive integer.");
+		expect(() => anime.getAnimeBySearch("Frieren", 1, 100)).toThrow(TypeError);
+		expect(() =>
+			anime.getSeasonalAnime(MediaSeason.Fall, 2023, 1, 51),
+		).toThrow(TypeError);
+		expect(() => anime.toggleFavorite(-1)).toThrow(
+			"animeId must be a positive integer.",
+		);
+		expect(() => manga.getMangaStaff(1.5)).toThrow(
+			"mediaId must be a positive integer.",
+		);
+		expect(() => manga.getMangaTrending(1, 0)).toThrow(TypeError);
+		expect(() => character.getCharactersBirthdayToday(1, 51)).toThrow(
+			TypeError,
+		);
+		expect(() => staff.toggleFavoriteStaff(0)).toThrow(
+			"staffId must be a positive integer.",
+		);
+		expect(() => studio.getStudioBySearch("Trigger", 1, 51)).toThrow(TypeError);
+		expect(() => social.getFollowers(0)).toThrow(
+			"userId must be a positive integer.",
+		);
+		expect(() => social.getThreads({}, 1, 51)).toThrow(TypeError);
+		expect(() => social.deleteThread(0)).toThrow(TypeError);
+		expect(sdk.calls).toHaveLength(0);
+	});
+
+	it("rejects media list writes without usable ids", () => {
+		const { gql, service } = makeMediaListService();
+
+		expect(() => service.updateEntries({ ids: [] })).toThrow(
+			"updateEntries requires at least one id.",
+		);
+		expect(() => service.saveEntry({ mediaId: 0 })).toThrow(
+			"mediaId must be a positive integer.",
+		);
+		expect(gql.requests).toHaveLength(0);
+	});
+
+	it("StudioService.getStudioBySearch rejects malformed page selections", () => {
+		const gql = new FakeGraphQLClient();
+		const service = new StudioService(new FakeSdk().client(), gql.client());
+
+		expect(() =>
+			service.getStudioBySearch("MAPPA", 1, 10, { select: {} } as never),
+		).toThrow(/"pageInfo" and "studios"/);
+		expect(gql.requests).toHaveLength(0);
 	});
 });
 

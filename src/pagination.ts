@@ -1,3 +1,5 @@
+import { assertPositiveInt } from "./services/validation";
+
 /**
  * Minimal shape shared by AniList page responses (`Page.pageInfo` and the
  * selected `page.pageInfo`).
@@ -61,8 +63,14 @@ export async function* paginate<TResponse, TItem>(
 	extract: PageExtractor<TResponse, TItem>,
 	options: PaginateOptions = {},
 ): AsyncGenerator<TItem, void, undefined> {
-	const startPage = options.startPage ?? 1;
+	const startPage = assertPositiveInt(options.startPage ?? 1, "startPage");
 	const maxPages = options.maxPages ?? Number.POSITIVE_INFINITY;
+	if (
+		maxPages !== Number.POSITIVE_INFINITY &&
+		(!Number.isInteger(maxPages) || maxPages < 0)
+	) {
+		throw new TypeError("maxPages must be a non-negative integer or Infinity.");
+	}
 
 	for (
 		let page = startPage, fetched = 0;

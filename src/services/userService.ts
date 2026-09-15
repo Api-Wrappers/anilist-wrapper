@@ -28,6 +28,7 @@ import type {
 	ReviewPageSelect,
 	SelectedFields,
 	SelectedMediaListCollection,
+	SelectedReviewPage,
 	SelectedUser,
 	SelectedUserPage,
 	SelectedUserStatisticTypes,
@@ -589,7 +590,7 @@ export class UserService {
 		page: number,
 		perPage: number,
 		options: { select: { page: TSelect } },
-	): Promise<{ page: SelectedFields<Page, TSelect> | null }>;
+	): Promise<{ page: SelectedReviewPage<TSelect> | null }>;
 	getReviews<TSelect extends ReviewPageSelect>(
 		userId: number,
 		page = 1,

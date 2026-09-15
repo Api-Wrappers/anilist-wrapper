@@ -22,6 +22,7 @@ import type {
 	StaffPageSelect,
 	StaffSelect,
 } from "../selections/types";
+import { assertPositiveInt, normalizePerPage } from "./validation";
 
 /**
  * Service class for interacting with AniList staff-related queries.
@@ -58,6 +59,7 @@ export class StaffService {
 		id: number,
 		options?: SelectionOption<"staff", TSelect>,
 	): unknown {
+		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -96,6 +98,7 @@ export class StaffService {
 	):
 		| ReturnType<ANILISTSDK["StaffBirthdayToday"]>
 		| Promise<{ page: SelectedStaffPage<TSelect> | null }> {
+		normalizePerPage(perPage, 25);
 		if (options?.select !== undefined) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -138,6 +141,7 @@ export class StaffService {
 		staffId: number,
 		options?: SelectionOption<"favorites", TSelect>,
 	): unknown {
+		assertPositiveInt(staffId, "staffId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
