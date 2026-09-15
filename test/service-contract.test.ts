@@ -5,7 +5,6 @@ import {
 	MediaSeason,
 	MediaStatus,
 	MediaType,
-	StudioSort,
 } from "../src";
 import { AnimeService } from "../src/services/animeService";
 import { GraphQLService } from "../src/services/graphqlService";
@@ -124,6 +123,23 @@ describe("service contracts", () => {
 				.filter((call) => call.operation === "ToggleFavoriteManga")
 				.map((call) => call.variables),
 		).toEqual([{ mangaId: 30013 }, { mangaId: 30014 }]);
+	});
+
+	it("maps StudioService lookup and search defaults", async () => {
+		const fake = new FakeSdk()
+			.respond("GetStudioById", sdkResult("GetStudioById", { Studio: null }))
+			.respond("SearchStudio", sdkResult("SearchStudio", { Page: null }));
+		const service = new StudioService(fake.client());
+
+		await service.getStudioById(21);
+		await service.getStudioBySearch("Trigger");
+
+		expect(fake.lastCall("GetStudioById").variables).toEqual({ id: 21 });
+		expect(fake.lastCall("SearchStudio").variables).toEqual({
+			query: "Trigger",
+			page: 1,
+			perPage: 10,
+		});
 	});
 
 	it("maps UserService IDs, usernames, pagination, and status defaults", async () => {
@@ -281,7 +297,7 @@ describe("service contracts", () => {
 				sdkResult("GetAiringSchedulesByMedia", { Page: null }),
 			)
 			.respond("GetStudioById", sdkResult("GetStudioById", { Studio: null }))
-			.respond("SearchStudios", sdkResult("SearchStudios", { Page: null }))
+			.respond("SearchStudio", sdkResult("SearchStudio", { Page: null }))
 			.respond("GetViewer", sdkResult("GetViewer", { Viewer: null }))
 			.respond(
 				"GetViewerStatistics",
@@ -296,7 +312,7 @@ describe("service contracts", () => {
 		await media.getAiringSchedule(5);
 		await media.getAiringSchedulesByMedia(3, 2, 50);
 		await studio.getStudioById(7);
-		await studio.searchStudios({ search: "MAPPA", sort: [StudioSort.Name] }, 2, 5);
+		await studio.getStudioBySearch("MAPPA", 2, 5);
 		await user.getViewer();
 		await user.getViewerStatistics();
 
@@ -309,9 +325,8 @@ describe("service contracts", () => {
 			perPage: 50,
 		});
 		expect(fake.lastCall("GetStudioById").variables).toEqual({ id: 7 });
-		expect(fake.lastCall("SearchStudios").variables).toEqual({
-			search: "MAPPA",
-			sort: [StudioSort.Name],
+		expect(fake.lastCall("SearchStudio").variables).toEqual({
+			query: "MAPPA",
 			page: 2,
 			perPage: 5,
 		});
