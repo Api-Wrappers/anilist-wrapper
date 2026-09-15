@@ -54,7 +54,26 @@ class Anilist {
 	user: UserService;
 }
 
-export { gql } from "@api-wrappers/api-core";
+export type {
+	ApiCoreError,
+	ApiPlugin,
+	GraphQLErrorDetail,
+	RateLimitPluginOptions,
+	RetryConfig,
+	Transport,
+} from "@api-wrappers/api-core";
+export {
+	ApiError,
+	createRateLimitPlugin,
+	GraphQLRequestError,
+	gql,
+	isApiError,
+	isGraphQLRequestError,
+	isRateLimitError,
+	isTimeoutError,
+	RateLimitError,
+	TimeoutError,
+} from "@api-wrappers/api-core";
 export * from "./__generated__/anilist-schema";
 export * as AniListOperations from "./__generated__/anilist-sdk";
 export type {
@@ -104,5 +123,6 @@ export type {
 	UserPageSelect,
 	UserSelect,
 } from "./selections";
+export type { GraphQLDocument } from "./services/graphqlService";
 export type { SaveMediaListEntryInput } from "./services/mediaListService";
-export { Anilist };
+export { Anilist, Anilist as AniList };

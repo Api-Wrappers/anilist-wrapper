@@ -114,9 +114,10 @@ const createGraphQLClientFromHttpClient = (
 	});
 
 	return {
-		request({ signal, ...options }) {
+		request({ signal, document, ...options }) {
 			return requester.request({
 				...options,
+				document: String(document),
 				signal: signal ?? undefined,
 			});
 		},

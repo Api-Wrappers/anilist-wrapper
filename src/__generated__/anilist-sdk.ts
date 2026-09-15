@@ -6,7 +6,7 @@ export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' |
 export interface GraphQLClientRequestOptions<
   TVariables extends object = Record<string, unknown>,
 > {
-  document: string;
+  document: string | { toString(): string };
   variables?: TVariables;
   requestHeaders?: Record<string, string>;
   signal?: RequestInit["signal"];

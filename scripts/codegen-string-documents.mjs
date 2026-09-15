@@ -21,7 +21,7 @@ export const plugin = (schema) => {
 export interface GraphQLClientRequestOptions<
   TVariables extends object = Record<string, unknown>,
 > {
-  document: string;
+  document: string | { toString(): string };
   variables?: TVariables;
   requestHeaders?: Record<string, string>;
   signal?: RequestInit["signal"];
