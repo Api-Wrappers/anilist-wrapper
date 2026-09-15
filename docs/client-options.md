@@ -14,40 +14,47 @@ const publicClient = new Anilist();
 // Token shorthand.
 const authenticated = new Anilist(process.env.ANILIST_TOKEN);
 
-// Full options.
+// Token provider (evaluated before every request).
+const refreshing = new Anilist({
+	token: async () => refreshAccessToken(),
+});
+
+// api-core overrides.
 const configured = new Anilist({
 	token: process.env.ANILIST_TOKEN,
-	url: "https://graphql.anilist.co",
-	headers: { "x-app-name": "my-anilist-app" },
-	timeoutMs: 30_000,
-	retry: { maxAttempts: 4, delayMs: 1000, retriableStatusCodes: [429] },
-	plugins: [createRateLimitPlugin()],
+	core: {
+		baseUrl: "https://graphql.anilist.co",
+		defaultHeaders: { "x-app-name": "my-anilist-app" },
+		timeoutMs: 30_000,
+		retry: { maxAttempts: 4, delayMs: 1000, retriableStatusCodes: [429] },
+		plugins: [createRateLimitPlugin({ maxRequestsPerInterval: 90, intervalMs: 60_000 })],
+	},
 });
 ```
 
-`createGraphQLClient` accepts the same input:
+`createGraphQLClient`, `createHttpClient`, and `createClientBundle` accept the
+same input. Use `createClientBundle` when you need the SDK client, the GraphQL
+client, and the underlying HTTP client together:
 
 ```typescript
-import { createGraphQLClient } from "@api-wrappers/anilist-wrapper";
+import { createClientBundle } from "@api-wrappers/anilist-wrapper";
 
-const graphQLClient = createGraphQLClient({ token: "..." });
+const { sdkClient, graphQLClient, httpClient } = createClientBundle({
+	token: "…",
+});
 ```
 
 ## Options
 
 | Option | Type | Default | Purpose |
 | --- | --- | --- | --- |
-| `token` | `string` | unset | Sent as `Authorization: Bearer <token>`. |
-| `url` | `string` | `https://graphql.anilist.co` | GraphQL endpoint. |
-| `headers` | `Record<string, string>` | unset | Extra headers merged into every request. |
-| `timeoutMs` | `number` | unset | Default request timeout. A value around `30000` is recommended. |
-| `retry` | `RetryConfig` | 4 attempts, `delayMs: 1000`, retries `429` | Retry policy. |
-| `plugins` | `ApiPlugin[]` | `[]` | api-core plugins, for example `createRateLimitPlugin()`. |
-| `transport` | `Transport` | `fetch` transport | Custom transport for tests or non-fetch runtimes. |
+| `token` | `string \| () => MaybePromise<string \| null \| undefined>` | unset | Static token or provider, sent as `Authorization: Bearer <token>`. |
+| `core` | `ClientConfig` subset | package defaults | api-core overrides: `baseUrl`, `defaultHeaders`, `plugins`, `transport`, `fetch`, `timeoutMs`, `retry`, `logger`. |
+| `httpClient` | `BaseHttpClient` | unset | Reuse an existing api-core client instead of constructing one. |
 
-The default request headers always include `Content-Type: application/json`.
-When no timeout is provided, requests wait for the transport; setting
-`timeoutMs` makes slow or stalled requests throw `TimeoutError`.
+The default request headers include `Content-Type: application/json`, and the
+default endpoint is `https://graphql.anilist.co`. When `httpClient` is provided
+the other options are ignored.
 
 ## Retry behavior
 
@@ -62,12 +69,13 @@ const DEFAULT_RETRY = {
 ```
 
 Retries use exponential backoff, and HTTP 429 responses respect AniList's
-`Retry-After` header. Pass `retry` to change the attempt count or add status
-codes:
+`Retry-After` header. Override it through `core.retry`:
 
 ```typescript
 const anilist = new Anilist({
-	retry: { maxAttempts: 6, delayMs: 2000, retriableStatusCodes: [429, 500] },
+	core: {
+		retry: { maxAttempts: 6, delayMs: 2000, retriableStatusCodes: [429, 500] },
+	},
 });
 ```
 
@@ -83,7 +91,11 @@ import { Anilist, createRateLimitPlugin } from "@api-wrappers/anilist-wrapper";
 
 const anilist = new Anilist({
 	token: process.env.ANILIST_TOKEN,
-	plugins: [createRateLimitPlugin({ maxRequestsPerInterval: 90, intervalMs: 60_000 })],
+	core: {
+		plugins: [
+			createRateLimitPlugin({ maxRequestsPerInterval: 90, intervalMs: 60_000 }),
+		],
+	},
 });
 ```
 
@@ -92,8 +104,8 @@ fail.
 
 ## Custom transport
 
-Pass `transport` to run requests through a non-default transport, which is
-useful for tests, proxies, or runtimes without a global `fetch`:
+Pass `core.transport` to run requests through a non-default transport, which
+is useful for tests, proxies, or runtimes without a global `fetch`:
 
 ```typescript
 import { Anilist, type Transport } from "@api-wrappers/anilist-wrapper";
@@ -108,5 +120,5 @@ const transport: Transport = {
 	},
 };
 
-const anilist = new Anilist({ transport });
+const anilist = new Anilist({ core: { transport } });
 ```

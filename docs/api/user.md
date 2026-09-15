@@ -36,12 +36,37 @@ console.log(profile.User?.avatar?.large);
 ```typescript
 import { MediaListStatus } from "@api-wrappers/anilist-wrapper";
 
-const completed = await anilist.user.getUserAnimeListByUsername(
+const completedAnime = await anilist.user.getUserAnimeListByUsername(
 	"example_user",
 	MediaListStatus.Completed,
 );
 
-for (const group of completed.MediaListCollection?.lists ?? []) {
+for (const group of completedAnime.MediaListCollection?.lists ?? []) {
+	for (const entry of group?.entries ?? []) {
+		console.log(entry?.media?.title?.userPreferred, entry?.score);
+	}
+}
+```
+
+Manga lists support the same status filters:
+
+```typescript
+const currentManga = await anilist.user.getUserMangaListByUsername(
+	"example_user",
+	MediaListStatus.Current,
+);
+const completedManga = await anilist.user.getUserMangaListByUsername(
+	"example_user",
+	MediaListStatus.Completed,
+);
+
+for (const group of currentManga.MediaListCollection?.lists ?? []) {
+	for (const entry of group?.entries ?? []) {
+		console.log(entry?.media?.title?.userPreferred, entry?.progress);
+	}
+}
+
+for (const group of completedManga.MediaListCollection?.lists ?? []) {
 	for (const entry of group?.entries ?? []) {
 		console.log(entry?.media?.title?.userPreferred, entry?.score);
 	}
