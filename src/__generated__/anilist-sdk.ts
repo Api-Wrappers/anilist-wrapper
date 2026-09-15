@@ -1029,6 +1029,18 @@ export type ToggleFavoriteCharacterMutationVariables = Exact<{
 
 export type ToggleFavoriteCharacterMutation = { ToggleFavourite: { characters: { nodes: Array<{ id: number } | null> | null } | null } | null };
 
+export type GetMangaBrowseQueryVariables = Exact<{
+  genre: string | null | undefined;
+  format: MediaFormat | null | undefined;
+  status: MediaStatus | null | undefined;
+  startDate: unknown;
+  page?: number | null | undefined;
+  perPage?: number | null | undefined;
+}>;
+
+
+export type GetMangaBrowseQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, media: Array<{ id: number, bannerImage: string | null, genres: Array<string | null> | null, format: MediaFormat | null, status: MediaStatus | null, averageScore: number | null, chapters: number | null, volumes: number | null, title: { english: string | null, romaji: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { extraLarge: string | null, large: string | null } | null, startDate: { year: number | null } | null } | null> | null } | null };
+
 export type GetMangaByIdQueryVariables = Exact<{
   id: number;
 }>;
@@ -6099,6 +6111,48 @@ export const ToggleFavoriteCharacterDocument = new TypedDocumentString(`
   }
 }
     `);
+export const GetMangaBrowseDocument = new TypedDocumentString(`
+    query GetMangaBrowse($genre: String, $format: MediaFormat, $status: MediaStatus, $startDate: FuzzyDateInt, $page: Int = 1, $perPage: Int = 10) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
+      total
+    }
+    media(
+      genre: $genre
+      format: $format
+      status: $status
+      startDate: $startDate
+      type: MANGA
+      sort: POPULARITY_DESC
+      isAdult: false
+    ) {
+      id
+      title {
+        english
+        romaji
+        native
+        userPreferred
+      }
+      coverImage {
+        extraLarge
+        large
+      }
+      bannerImage
+      genres
+      format
+      status
+      startDate {
+        year
+      }
+      averageScore
+      chapters
+      volumes
+    }
+  }
+}
+    `);
 export const GetMangaByIdDocument = new TypedDocumentString(`
     query GetMangaById($id: Int!) {
   Media(id: $id, type: MANGA) {
@@ -10941,6 +10995,9 @@ export function getSdk<C>(requester: Requester<C>) {
     },
     ToggleFavoriteCharacter(variables: ToggleFavoriteCharacterMutationVariables, options?: C): Promise<ToggleFavoriteCharacterMutation> {
       return requester<ToggleFavoriteCharacterMutation, ToggleFavoriteCharacterMutationVariables>(ToggleFavoriteCharacterDocument, variables, options) as Promise<ToggleFavoriteCharacterMutation>;
+    },
+    GetMangaBrowse(variables?: GetMangaBrowseQueryVariables, options?: C): Promise<GetMangaBrowseQuery> {
+      return requester<GetMangaBrowseQuery, GetMangaBrowseQueryVariables>(GetMangaBrowseDocument, variables, options) as Promise<GetMangaBrowseQuery>;
     },
     GetMangaById(variables: GetMangaByIdQueryVariables, options?: C): Promise<GetMangaByIdQuery> {
       return requester<GetMangaByIdQuery, GetMangaByIdQueryVariables>(GetMangaByIdDocument, variables, options) as Promise<GetMangaByIdQuery>;

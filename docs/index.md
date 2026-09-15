@@ -146,6 +146,7 @@ not.
 | `getAnimeBySearch` | `getMangaBySearch` |
 | `getTrendingAnime` | `getMangaTrending` |
 | `getPopularAnime` | `getMangaPopular` |
+| `browseAnime` | `browseManga` |
 | `getAnimeListByGenre` | `getMangaListByGenre` |
 | `getRecommendations` | `getMangaRecommendations` |
 | `getRelations` | `getMangaRelations` |
