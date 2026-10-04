@@ -3,6 +3,10 @@ import { gql } from "@api-wrappers/api-core";
 export const STAFF_BIRTHDAY_TODAY = gql`
   query StaffBirthdayToday($page: Int, $perPage: Int) {
     Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        hasNextPage
+        currentPage
+      }
       staff(isBirthday: true) {
         id
         name {

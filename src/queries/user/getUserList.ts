@@ -5,6 +5,10 @@ export const GET_USER_LIST = gql`
   ${USER_FRAGMENT}
   query GetUserList($page: Int, $perPage: Int) {
     Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        hasNextPage
+        currentPage
+      }
       users {
         ...UserFragment
       }

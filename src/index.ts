@@ -20,7 +20,7 @@ class Anilist {
 	readonly http: BaseHttpClient;
 
 	constructor();
-	constructor(token: string);
+	constructor(token: string | undefined);
 	constructor(options: Exclude<AnilistClientInput, string | undefined>);
 	constructor(input?: AnilistClientInput) {
 		const { graphQLClient, httpClient, sdkClient } = createClientBundle(input);

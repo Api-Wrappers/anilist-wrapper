@@ -6,6 +6,10 @@ export const CHARACTERS_BIRTHDAY_TODAY = gql`
 
   query CharactersBirthdayToday($page: Int, $perPage: Int) {
     Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        hasNextPage
+        currentPage
+      }
       characters(isBirthday: true) {
         ...CharacterFragment
       }

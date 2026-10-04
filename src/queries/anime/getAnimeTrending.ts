@@ -6,6 +6,10 @@ export const GET_ANIME_TRENDING = gql`
 
   query GetAnimeTrending($page: Int = 1, $perPage: Int = 20) {
     Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        hasNextPage
+        currentPage
+      }
       media(sort: TRENDING_DESC, type: ANIME) {
         ...MediaFragment
       }
