@@ -132,5 +132,8 @@ export type {
 	UserStatisticTypesSelect,
 } from "./selections";
 export type { GraphQLDocument } from "./services/graphqlService";
-export type { SaveMediaListEntryInput } from "./services/mediaListService";
+export type {
+	SaveMediaListEntryInput,
+	UpdateMediaListEntriesInput,
+} from "./services/mediaListService";
 export { Anilist, Anilist as AniList };

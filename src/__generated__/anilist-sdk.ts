@@ -1109,6 +1109,14 @@ export type GetMediaTagsQueryVariables = Exact<{
 
 export type GetMediaTagsQuery = { MediaTagCollection: Array<{ id: number, name: string, description: string | null, category: string | null, rank: number | null, isGeneralSpoiler: boolean | null, isMediaSpoiler: boolean | null, isAdult: boolean | null, userId: number | null } | null> | null };
 
+export type DeleteCustomListMutationVariables = Exact<{
+  customList: string | null | undefined;
+  type: MediaType | null | undefined;
+}>;
+
+
+export type DeleteCustomListMutation = { DeleteCustomList: { deleted: boolean | null } | null };
+
 export type DeleteMediaListEntryMutationVariables = Exact<{
   id: number;
 }>;
@@ -1161,6 +1169,26 @@ export type SaveMediaListEntryMutationVariables = Exact<{
 
 export type SaveMediaListEntryMutation = { SaveMediaListEntry: { id: number, mediaId: number, userId: number, status: MediaListStatus | null, score: number | null, progress: number | null, progressVolumes: number | null, repeat: number | null, priority: number | null, private: boolean | null, notes: string | null, hiddenFromStatusLists: boolean | null, customLists: unknown, advancedScores: unknown, updatedAt: number | null, createdAt: number | null, startedAt: { year: number | null, month: number | null, day: number | null } | null, completedAt: { year: number | null, month: number | null, day: number | null } | null, media: { id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null } | null };
 
+export type UpdateMediaListEntriesMutationVariables = Exact<{
+  ids: Array<number | null | undefined> | number | null | undefined;
+  status: MediaListStatus | null | undefined;
+  score: number | null | undefined;
+  scoreRaw: number | null | undefined;
+  progress: number | null | undefined;
+  progressVolumes: number | null | undefined;
+  repeat: number | null | undefined;
+  private: boolean | null | undefined;
+  notes: string | null | undefined;
+  startedAt: FuzzyDateInput | null | undefined;
+  completedAt: FuzzyDateInput | null | undefined;
+  advancedScores: Array<number | null | undefined> | number | null | undefined;
+  hiddenFromStatusLists: boolean | null | undefined;
+  priority: number | null | undefined;
+}>;
+
+
+export type UpdateMediaListEntriesMutation = { UpdateMediaListEntries: Array<{ id: number, mediaId: number, userId: number, status: MediaListStatus | null, score: number | null, progress: number | null, progressVolumes: number | null, repeat: number | null, priority: number | null, private: boolean | null, notes: string | null, hiddenFromStatusLists: boolean | null, customLists: unknown, advancedScores: unknown, updatedAt: number | null, createdAt: number | null, startedAt: { year: number | null, month: number | null, day: number | null } | null, completedAt: { year: number | null, month: number | null, day: number | null } | null, media: { id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null } | null> | null };
+
 export type GetStaffByIdQueryVariables = Exact<{
   id: number;
 }>;
@@ -1198,6 +1226,13 @@ export type SearchStudioQueryVariables = Exact<{
 
 
 export type SearchStudioQuery = { Page: { pageInfo: { total: number | null, perPage: number | null, currentPage: number | null, lastPage: number | null, hasNextPage: boolean | null } | null, studios: Array<{ id: number, name: string, isAnimationStudio: boolean, favourites: number | null, isFavourite: boolean, siteUrl: string | null } | null> | null } | null };
+
+export type ToggleFavoriteStudioMutationVariables = Exact<{
+  studioId: number;
+}>;
+
+
+export type ToggleFavoriteStudioMutation = { ToggleFavourite: { studios: { nodes: Array<{ id: number } | null> | null } | null } | null };
 
 export type GetUserAnimeListQueryVariables = Exact<{
   userId: number | null | undefined;
@@ -6786,6 +6821,13 @@ export const GetMediaTagsDocument = new TypedDocumentString(`
   isAdult
   userId
 }`);
+export const DeleteCustomListDocument = new TypedDocumentString(`
+    mutation DeleteCustomList($customList: String, $type: MediaType) {
+  DeleteCustomList(customList: $customList, type: $type) {
+    deleted
+  }
+}
+    `);
 export const DeleteMediaListEntryDocument = new TypedDocumentString(`
     mutation DeleteMediaListEntry($id: Int!) {
   DeleteMediaListEntry(id: $id) {
@@ -7210,6 +7252,119 @@ fragment MediaListFragment on MediaList {
     ...MediaCoreFragment
   }
 }`);
+export const UpdateMediaListEntriesDocument = new TypedDocumentString(`
+    mutation UpdateMediaListEntries($ids: [Int], $status: MediaListStatus, $score: Float, $scoreRaw: Int, $progress: Int, $progressVolumes: Int, $repeat: Int, $private: Boolean, $notes: String, $startedAt: FuzzyDateInput, $completedAt: FuzzyDateInput, $advancedScores: [Float], $hiddenFromStatusLists: Boolean, $priority: Int) {
+  UpdateMediaListEntries(
+    ids: $ids
+    status: $status
+    score: $score
+    scoreRaw: $scoreRaw
+    progress: $progress
+    progressVolumes: $progressVolumes
+    repeat: $repeat
+    private: $private
+    notes: $notes
+    startedAt: $startedAt
+    completedAt: $completedAt
+    advancedScores: $advancedScores
+    hiddenFromStatusLists: $hiddenFromStatusLists
+    priority: $priority
+  ) {
+    ...MediaListFragment
+  }
+}
+    fragment CoverImageFragment on MediaCoverImage {
+  large
+  medium
+  extraLarge
+  color
+}
+fragment DateFragment on FuzzyDate {
+  year
+  month
+  day
+}
+fragment TitleFragment on MediaTitle {
+  romaji
+  english
+  native
+  userPreferred
+}
+fragment MediaCoreFragment on Media {
+  id
+  idMal
+  title {
+    ...TitleFragment
+  }
+  coverImage {
+    ...CoverImageFragment
+  }
+  bannerImage
+  description
+  format
+  status
+  type
+  episodes
+  chapters
+  volumes
+  duration
+  genres
+  averageScore
+  meanScore
+  popularity
+  favourites
+  trending
+  source
+  countryOfOrigin
+  isAdult
+  isLicensed
+  isLocked
+  isFavourite
+  isFavouriteBlocked
+  hashtag
+  synonyms
+  startDate {
+    ...DateFragment
+  }
+  endDate {
+    ...DateFragment
+  }
+  season
+  seasonYear
+  siteUrl
+  updatedAt
+  autoCreateForumThread
+  isRecommendationBlocked
+  isReviewBlocked
+  modNotes
+}
+fragment MediaListFragment on MediaList {
+  id
+  mediaId
+  userId
+  status
+  score
+  progress
+  progressVolumes
+  repeat
+  priority
+  private
+  notes
+  hiddenFromStatusLists
+  customLists
+  advancedScores
+  startedAt {
+    ...DateFragment
+  }
+  completedAt {
+    ...DateFragment
+  }
+  updatedAt
+  createdAt
+  media {
+    ...MediaCoreFragment
+  }
+}`);
 export const GetStaffByIdDocument = new TypedDocumentString(`
     query GetStaffById($id: Int!) {
   Staff(id: $id) {
@@ -7409,6 +7564,17 @@ export const SearchStudioDocument = new TypedDocumentString(`
   isFavourite
   siteUrl
 }`);
+export const ToggleFavoriteStudioDocument = new TypedDocumentString(`
+    mutation ToggleFavoriteStudio($studioId: Int!) {
+  ToggleFavourite(studioId: $studioId) {
+    studios(page: 1, perPage: 25) {
+      nodes {
+        id
+      }
+    }
+  }
+}
+    `);
 export const GetUserAnimeListDocument = new TypedDocumentString(`
     query GetUserAnimeList($userId: Int, $status: MediaListStatus) {
   MediaListCollection(userId: $userId, type: ANIME, status: $status) {
@@ -9561,6 +9727,9 @@ export function getSdk<C>(requester: Requester<C>) {
     GetMediaTags(variables?: GetMediaTagsQueryVariables, options?: C): Promise<GetMediaTagsQuery> {
       return requester<GetMediaTagsQuery, GetMediaTagsQueryVariables>(GetMediaTagsDocument, variables, options) as Promise<GetMediaTagsQuery>;
     },
+    DeleteCustomList(variables?: DeleteCustomListMutationVariables, options?: C): Promise<DeleteCustomListMutation> {
+      return requester<DeleteCustomListMutation, DeleteCustomListMutationVariables>(DeleteCustomListDocument, variables, options) as Promise<DeleteCustomListMutation>;
+    },
     DeleteMediaListEntry(variables: DeleteMediaListEntryMutationVariables, options?: C): Promise<DeleteMediaListEntryMutation> {
       return requester<DeleteMediaListEntryMutation, DeleteMediaListEntryMutationVariables>(DeleteMediaListEntryDocument, variables, options) as Promise<DeleteMediaListEntryMutation>;
     },
@@ -9576,6 +9745,9 @@ export function getSdk<C>(requester: Requester<C>) {
     SaveMediaListEntry(variables?: SaveMediaListEntryMutationVariables, options?: C): Promise<SaveMediaListEntryMutation> {
       return requester<SaveMediaListEntryMutation, SaveMediaListEntryMutationVariables>(SaveMediaListEntryDocument, variables, options) as Promise<SaveMediaListEntryMutation>;
     },
+    UpdateMediaListEntries(variables?: UpdateMediaListEntriesMutationVariables, options?: C): Promise<UpdateMediaListEntriesMutation> {
+      return requester<UpdateMediaListEntriesMutation, UpdateMediaListEntriesMutationVariables>(UpdateMediaListEntriesDocument, variables, options) as Promise<UpdateMediaListEntriesMutation>;
+    },
     GetStaffById(variables: GetStaffByIdQueryVariables, options?: C): Promise<GetStaffByIdQuery> {
       return requester<GetStaffByIdQuery, GetStaffByIdQueryVariables>(GetStaffByIdDocument, variables, options) as Promise<GetStaffByIdQuery>;
     },
@@ -9590,6 +9762,9 @@ export function getSdk<C>(requester: Requester<C>) {
     },
     SearchStudio(variables?: SearchStudioQueryVariables, options?: C): Promise<SearchStudioQuery> {
       return requester<SearchStudioQuery, SearchStudioQueryVariables>(SearchStudioDocument, variables, options) as Promise<SearchStudioQuery>;
+    },
+    ToggleFavoriteStudio(variables: ToggleFavoriteStudioMutationVariables, options?: C): Promise<ToggleFavoriteStudioMutation> {
+      return requester<ToggleFavoriteStudioMutation, ToggleFavoriteStudioMutationVariables>(ToggleFavoriteStudioDocument, variables, options) as Promise<ToggleFavoriteStudioMutation>;
     },
     GetUserAnimeList(variables?: GetUserAnimeListQueryVariables, options?: C): Promise<GetUserAnimeListQuery> {
       return requester<GetUserAnimeListQuery, GetUserAnimeListQueryVariables>(GetUserAnimeListDocument, variables, options) as Promise<GetUserAnimeListQuery>;
