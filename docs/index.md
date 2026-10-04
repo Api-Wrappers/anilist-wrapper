@@ -8,8 +8,10 @@ This documentation is written for building with the wrapper quickly, then reachi
 2. [Create a client](#create-a-client)
 3. [Choose a service](#choose-a-service)
 4. [Run an example](#examples)
-5. [Migrate selected queries](./selection-migration.md)
-6. [Find contribution ideas](./contributing-ideas.md)
+5. [Configure the client](./client-options.md)
+6. [Handle errors](./errors.md)
+7. [Migrate selected queries](./selection-migration.md)
+8. [Find contribution ideas](./contributing-ideas.md)
 
 ## Install
 
@@ -38,6 +40,12 @@ Authenticated reads and mutations use the same client with an access token:
 ```typescript
 const anilist = new Anilist(process.env.ANILIST_TOKEN);
 ```
+
+The constructor also accepts options for a custom endpoint, headers, timeout,
+retry policy, plugins, and transport. See the
+[client options guide](./client-options.md) for the full list, and the
+[error handling guide](./errors.md) for the typed errors and rate-limit
+behavior.
 
 Read the [authentication guide](./authentication.md) before using private user data, favorites, or list mutations.
 
@@ -155,6 +163,8 @@ const data = await anilist.graphql.request<{
 - [Media](./api/media.md)
 - [Media Lists](./api/media-list.md)
 - [Raw GraphQL](./api/graphql.md)
+- [Client Options](./client-options.md)
+- [Error Handling](./errors.md)
 - [Selection Migration](./selection-migration.md)
 
 ## Examples

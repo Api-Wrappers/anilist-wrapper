@@ -19,8 +19,6 @@
         "graphql": "^17.0.2",
         "graphql-tag": "^2.12.6",
         "tsdown": "^0.22.4",
-      },
-      "peerDependencies": {
         "typescript": "^6.0.3",
       },
     },

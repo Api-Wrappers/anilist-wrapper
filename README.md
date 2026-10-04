@@ -270,6 +270,8 @@ the package's `@api-wrappers/api-core` GraphQL client shape.
 - [Documentation home](docs/index.md)
 - [Practical examples](docs/examples.md)
 - [Authentication guide](docs/authentication.md)
+- [Client options](docs/client-options.md)
+- [Error handling](docs/errors.md)
 - [API reference](docs/api/anime.md)
 - [Runnable examples](examples/README.md)
 - [Contribution ideas](docs/contributing-ideas.md)
