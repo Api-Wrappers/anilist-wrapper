@@ -1,3 +1,4 @@
+export * from "./browseManga";
 export * from "./getMangaById";
 export * from "./getMangaByTitle";
 export * from "./getMangaCharacters";

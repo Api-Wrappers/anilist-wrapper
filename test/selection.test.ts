@@ -905,6 +905,25 @@ describe("selected anime filters match the static queries", () => {
 		expect(document).toContain("sort: POPULARITY_DESC");
 		expect(document).toContain("isAdult: false");
 	});
+
+	it("browseManga mirrors the anime browse filters", async () => {
+		const { gql, service } = makeMangaService();
+		gql.setResponse({ Page: { media: [] } });
+
+		await service.browseManga({ genre: "Action" }, 2, 20, {
+			select: { page: { media: { id: true } } },
+		});
+
+		const request = gql.lastRequest();
+		expect(request.variables).toMatchObject({
+			genre: "Action",
+			page: 2,
+			perPage: 20,
+		});
+		expect(request.document).toContain("type: MANGA");
+		expect(request.document).toContain("sort: POPULARITY_DESC");
+		expect(request.document).toContain("isAdult: false");
+	});
 });
 
 // ── Selected title lookups request a single result ───────────────────────────

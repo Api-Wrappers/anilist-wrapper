@@ -91,6 +91,29 @@ describe("service contracts", () => {
 		]);
 	});
 
+	it("maps MangaService browse filters to the generated SDK operation", async () => {
+		const fake = new FakeSdk().respond(
+			"GetMangaBrowse",
+			sdkResult("GetMangaBrowse", { Page: null }),
+		);
+		const service = new MangaService(fake.client());
+
+		await service.browseManga(
+			{ genre: "Action", format: MediaFormat.Manga, status: MediaStatus.Releasing },
+			2,
+			15,
+		);
+
+		expect(fake.lastCall("GetMangaBrowse").variables).toEqual({
+			genre: "Action",
+			format: MediaFormat.Manga,
+			status: MediaStatus.Releasing,
+			startDate: undefined,
+			page: 2,
+			perPage: 15,
+		});
+	});
+
 	it("maps MangaService lookups, defaults, and favorite aliases", async () => {
 		const fake = new FakeSdk()
 			.respond("GetMangaById", sdkResult("GetMangaById", { Media: null }))

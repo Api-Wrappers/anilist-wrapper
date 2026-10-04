@@ -18,6 +18,7 @@ const anilist = new Anilist();
 | `getMangaTrending(page?, perPage?)` | No | `Page.media` |
 | `getMangaPopular(page?, perPage?)` | No | `Page.media` |
 | `getMangaListByGenre(genre, page?, perPage?)` | No | `Page.media` |
+| `browseManga(filters?, page?, perPage?)` | No | `Page.media` |
 | `getMangaRecommendations(mediaId)` | No | `Media.recommendations` |
 | `getMangaRelations(mediaId)` | No | `Media.relations` |
 | `getMangaCharacters(mediaId)` | No | `Media.characters` |
@@ -46,6 +47,26 @@ for (const media of search.Page?.media ?? []) {
 	console.log(media?.title?.userPreferred, media?.chapters);
 }
 ```
+
+## Browse
+
+`browseManga` mirrors `anime.browseAnime` with genre, format, status, and start
+date filters, sorted by popularity and excluding adult entries.
+
+```typescript
+const ongoing = await anilist.manga.browseManga(
+	{ status: MediaStatus.Releasing, format: MediaFormat.Manga },
+	1,
+	10,
+);
+
+for (const media of ongoing.Page?.media ?? []) {
+	console.log(media?.title?.userPreferred, media?.chapters);
+}
+```
+
+AniList has no seasonal manga, so there is no `getSeasonalManga`; use
+`browseManga` with `startDate` instead.
 
 ## Pagination
 
