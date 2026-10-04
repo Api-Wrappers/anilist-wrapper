@@ -118,7 +118,7 @@ export class MediaListService {
 	 * Retrieves a media list using the user ID.
 	 * @param userId - The ID of the user whose media list to retrieve.
 	 * @param mediaType - The media type ("ANIME" or "MANGA").
-	 * @param status - Optional media list status filter for selected queries.
+	 * @param status - Optional media list status filter.
 	 * @returns A promise resolving to the user's media list.
 	 */
 	getMediaListByUser(
@@ -182,6 +182,7 @@ export class MediaListService {
 		return this.client.GetMediaListByUser({
 			userId,
 			mediaType: normalizedType,
+			status,
 		});
 	}
 
@@ -189,7 +190,7 @@ export class MediaListService {
 	 * Retrieves a media list using the username.
 	 * @param userName - The username of the user whose media list to retrieve.
 	 * @param mediaType - The media type ("ANIME" or "MANGA").
-	 * @param status - Optional media list status filter for selected queries.
+	 * @param status - Optional media list status filter.
 	 * @returns A promise resolving to the user's media list.
 	 */
 	getMediaListByUsername(
@@ -255,6 +256,7 @@ export class MediaListService {
 		return this.client.GetMediaListByUserByUsername({
 			userName,
 			mediaType: normalizedType,
+			status,
 		});
 	}
 
@@ -280,6 +282,10 @@ export class MediaListService {
 	): unknown {
 		if (variables.mediaId == null && variables.id == null) {
 			throw new TypeError("saveEntry requires either mediaId or id.");
+		}
+		if (variables.id != null) assertPositiveInt(variables.id);
+		if (variables.mediaId != null) {
+			assertPositiveInt(variables.mediaId, "mediaId");
 		}
 		const mutationVariables: SaveMediaListEntryMutationVariables = {
 			advancedScores: variables.advancedScores,
@@ -381,6 +387,9 @@ export class MediaListService {
 		entries: UpdateMediaListEntriesInput,
 		options?: SelectionOption<"updateMediaListEntries", TSelect>,
 	): unknown {
+		if (entries.ids.length === 0) {
+			throw new TypeError("updateEntries requires at least one id.");
+		}
 		for (const entryId of entries.ids) assertPositiveInt(entryId, "ids");
 		const { ids, ...fields } = entries;
 		const mutationVariables: UpdateMediaListEntriesMutationVariables = {

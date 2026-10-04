@@ -228,17 +228,19 @@ describe("service contracts", () => {
 		const service = new MediaService(fake.client());
 
 		await service.getMediaById(16498);
-		await service.getMediaList(1, "ANIME");
+		await service.getMediaList(1, "ANIME", MediaListStatus.Planning);
 		await service.getMediaListByUsername("example", "MANGA");
 
 		expect(fake.lastCall("GetMediaById").variables).toEqual({ id: 16498 });
 		expect(fake.lastCall("GetMediaListByUser").variables).toEqual({
 			userId: 1,
 			mediaType: MediaType.Anime,
+			status: MediaListStatus.Planning,
 		});
 		expect(fake.lastCall("GetMediaListByUserByUsername").variables).toEqual({
 			userName: "example",
 			mediaType: MediaType.Manga,
+			status: undefined,
 		});
 	});
 
@@ -267,7 +269,11 @@ describe("service contracts", () => {
 
 		await service.getMediaList(10);
 		await service.getMediaListByUser(1, "ANIME");
-		await service.getMediaListByUsername("example", "MANGA");
+		await service.getMediaListByUsername(
+			"example",
+			"MANGA",
+			MediaListStatus.Completed,
+		);
 		await service.saveEntry({
 			mediaId: 16498,
 			status: MediaListStatus.Current,
@@ -281,10 +287,12 @@ describe("service contracts", () => {
 		expect(fake.lastCall("GetMediaListByUser").variables).toEqual({
 			userId: 1,
 			mediaType: MediaType.Anime,
+			status: undefined,
 		});
 		expect(fake.lastCall("GetMediaListByUserByUsername").variables).toEqual({
 			userName: "example",
 			mediaType: MediaType.Manga,
+			status: MediaListStatus.Completed,
 		});
 		expect(fake.lastCall("SaveMediaListEntry").variables).toEqual({
 			advancedScores: undefined,

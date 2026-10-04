@@ -129,4 +129,27 @@ describe("paginate", () => {
 			expect(error).toBe(rateLimitError);
 		}
 	});
+
+	it("rejects invalid startPage and maxPages before fetching", async () => {
+		let fetched = 0;
+		const fetchPage = async (): Promise<SdkPage> => {
+			fetched++;
+			return { Page: null };
+		};
+		const extract = (response: SdkPage) => ({
+			pageInfo: response.Page?.pageInfo,
+			items: response.Page?.media,
+		});
+
+		await expect(
+			collectPages(fetchPage, extract, { startPage: 0 }),
+		).rejects.toThrow("startPage must be a positive integer.");
+		await expect(
+			collectPages(fetchPage, extract, { maxPages: -1 }),
+		).rejects.toThrow("maxPages must be a non-negative integer or Infinity.");
+		await expect(
+			collectPages(fetchPage, extract, { maxPages: Number.NaN }),
+		).rejects.toThrow(TypeError);
+		expect(fetched).toBe(0);
+	});
 });

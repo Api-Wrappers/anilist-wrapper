@@ -9,7 +9,11 @@ import type {
 	RootSelectionOption,
 	SelectionOption,
 } from "../selections/options";
-import { hasSelection, resolveSelection } from "../selections/options";
+import {
+	hasSelection,
+	resolvePageSelection,
+	resolveSelection,
+} from "../selections/options";
 import type {
 	FavouritesSelect,
 	SelectedFavourites,
@@ -18,6 +22,7 @@ import type {
 	StudioPageSelect,
 	StudioSelect,
 } from "../selections/types";
+import { assertPositiveInt, normalizePerPage } from "./validation";
 
 /**
  * Service class for interacting with AniList studio-related queries.
@@ -54,6 +59,7 @@ export class StudioService {
 		id: number,
 		options?: SelectionOption<"studio", TSelect>,
 	): unknown {
+		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -98,6 +104,7 @@ export class StudioService {
 	):
 		| ReturnType<ANILISTSDK["SearchStudio"]>
 		| Promise<{ page: SelectedStudioPage<TSelect> | null }> {
+		normalizePerPage(perPage, 10);
 		if (options?.select !== undefined) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -106,7 +113,7 @@ export class StudioService {
 				"SelectedStudioSearch",
 				"($query: String, $page: Int, $perPage: Int)",
 				["search: $query"],
-				options.select.page,
+				resolvePageSelection<TSelect>(options.select, "studios"),
 			);
 			const selected: Promise<{ page: SelectedStudioPage<TSelect> | null }> =
 				this.graphQLClient
@@ -140,6 +147,7 @@ export class StudioService {
 		studioId: number,
 		options?: SelectionOption<"favorites", TSelect>,
 	): unknown {
+		assertPositiveInt(studioId, "studioId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");

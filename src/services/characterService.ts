@@ -22,6 +22,7 @@ import type {
 	SelectedCharacterPage,
 	SelectedFavourites,
 } from "../selections/types";
+import { assertPositiveInt, normalizePerPage } from "./validation";
 
 /**
  * Service class for interacting with AniList character-related queries.
@@ -58,6 +59,7 @@ export class CharacterService {
 		id: number,
 		options?: SelectionOption<"character", TSelect>,
 	): unknown {
+		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -96,6 +98,7 @@ export class CharacterService {
 	):
 		| ReturnType<ANILISTSDK["CharactersBirthdayToday"]>
 		| Promise<{ page: SelectedCharacterPage<TSelect> | null }> {
+		normalizePerPage(perPage, 25);
 		if (options?.select !== undefined) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -138,6 +141,7 @@ export class CharacterService {
 		characterId: number,
 		options?: SelectionOption<"favorites", TSelect>,
 	): unknown {
+		assertPositiveInt(characterId, "characterId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");

@@ -1,14 +1,18 @@
 import { gql } from "@api-wrappers/api-core";
 
 export const GET_NOTIFICATIONS = gql`
-  query GetNotifications($page: Int = 1, $perPage: Int = 25) {
+  query GetNotifications(
+    $page: Int = 1
+    $perPage: Int = 25
+    $resetNotificationCount: Boolean = false
+  ) {
     Page(page: $page, perPage: $perPage) {
       pageInfo {
         hasNextPage
         currentPage
         total
       }
-      notifications(resetNotificationCount: true) {
+      notifications(resetNotificationCount: $resetNotificationCount) {
         ... on ActivityLikeNotification {
           id
           type

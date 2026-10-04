@@ -9,10 +9,11 @@ Use this service when code should work with either media type. Use `anilist.anim
 | Method | Auth | Returns |
 | --- | --- | --- |
 | `getMediaById(id)` | No | `Media` |
-| `getMediaList(userId, mediaType)` | Depends on list privacy | `MediaListCollection` |
-| `getMediaListByUsername(userName, mediaType)` | Depends on list privacy | `MediaListCollection` |
+| `getMediaList(userId, mediaType, status?)` | Depends on list privacy | `MediaListCollection` |
+| `getMediaListByUsername(userName, mediaType, status?)` | Depends on list privacy | `MediaListCollection` |
 
-`mediaType` is `"ANIME"` or `"MANGA"`.
+`mediaType` is `"ANIME"` or `"MANGA"`. `status` is an optional
+`MediaListStatus` filter.
 
 Selected calls use normalized roots: `media` for `getMediaById` and
 `mediaListCollection` for list methods. See the

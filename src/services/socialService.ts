@@ -56,6 +56,7 @@ import type {
 	ThreadSelect,
 	UserSelect,
 } from "../selections/types";
+import { assertPositiveInt, normalizePerPage } from "./validation";
 
 /**
  * Optional filters for {@link SocialService.getThreads}.
@@ -185,6 +186,8 @@ export class SocialService {
 	):
 		| ReturnType<ANILISTSDK["GetFollowing"]>
 		| Promise<{ page: SelectedFields<Page, TSelect> | null }> {
+		assertPositiveInt(userId, "userId");
+		normalizePerPage(perPage, 25);
 		if (options?.select !== undefined) {
 			const document = buildFollowingPageDocument(
 				resolvePageSelection<TSelect>(options.select, "following"),
@@ -220,6 +223,8 @@ export class SocialService {
 	):
 		| ReturnType<ANILISTSDK["GetFollowers"]>
 		| Promise<{ page: SelectedFields<Page, TSelect> | null }> {
+		assertPositiveInt(userId, "userId");
+		normalizePerPage(perPage, 25);
 		if (options?.select !== undefined) {
 			const document = buildFollowersPageDocument(
 				resolvePageSelection<TSelect>(options.select, "followers"),
@@ -234,12 +239,21 @@ export class SocialService {
 	 * Union-typed notifications do not support `select`.
 	 * @param page - Optional page number. Defaults to 1.
 	 * @param perPage - Optional number of notifications per page. Defaults to 25.
+	 * @param options - Set `resetNotificationCount` to `true` to mark the
+	 * notifications as read. Defaults to `false`, so reading them leaves the
+	 * unread count untouched.
 	 */
 	getNotifications(
 		page?: number,
 		perPage?: number,
+		options: { resetNotificationCount?: boolean } = {},
 	): ReturnType<ANILISTSDK["GetNotifications"]> {
-		return this.client.GetNotifications({ page, perPage });
+		normalizePerPage(perPage, 25);
+		return this.client.GetNotifications({
+			page,
+			perPage,
+			resetNotificationCount: options.resetNotificationCount ?? false,
+		});
 	}
 
 	/**
@@ -254,6 +268,7 @@ export class SocialService {
 		page?: number,
 		perPage?: number,
 	): ReturnType<ANILISTSDK["GetActivities"]> {
+		normalizePerPage(perPage, 25);
 		return this.client.GetActivities({ userId, page, perPage });
 	}
 
@@ -262,6 +277,7 @@ export class SocialService {
 	 * @param id - The unique ID of the activity.
 	 */
 	getActivity(id: number): ReturnType<ANILISTSDK["GetActivity"]> {
+		assertPositiveInt(id);
 		return this.client.GetActivity({ id });
 	}
 
@@ -291,6 +307,7 @@ export class SocialService {
 	):
 		| ReturnType<ANILISTSDK["GetActivityReplies"]>
 		| Promise<{ page: SelectedFields<Page, TSelect> | null }> {
+		normalizePerPage(perPage, 25);
 		if (options?.select !== undefined) {
 			const document = buildActivityReplyPageDocument(
 				resolvePageSelection<TSelect>(options.select, "activityReplies"),
@@ -322,6 +339,7 @@ export class SocialService {
 		id: number,
 		options?: SelectionOption<"activityReply", TSelect>,
 	): unknown {
+		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -364,6 +382,7 @@ export class SocialService {
 	):
 		| ReturnType<ANILISTSDK["GetThreads"]>
 		| Promise<{ page: SelectedFields<Page, TSelect> | null }> {
+		normalizePerPage(perPage, 25);
 		const { search, userId } = filters;
 		if (options?.select !== undefined) {
 			const document = buildThreadPageDocument(
@@ -397,6 +416,7 @@ export class SocialService {
 		id: number,
 		options?: SelectionOption<"thread", TSelect>,
 	): unknown {
+		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -439,6 +459,7 @@ export class SocialService {
 	):
 		| ReturnType<ANILISTSDK["GetThreadComments"]>
 		| Promise<{ page: SelectedFields<Page, TSelect> | null }> {
+		normalizePerPage(perPage, 25);
 		if (options?.select !== undefined) {
 			const document = buildThreadCommentPageDocument(
 				resolvePageSelection<TSelect>(options.select, "threadComments"),
@@ -474,6 +495,7 @@ export class SocialService {
 		id: number,
 		options?: SelectionOption<"threadComments", TSelect>,
 	): unknown {
+		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -575,6 +597,7 @@ export class SocialService {
 		userId: number,
 		options?: SelectionOption<"user", TSelect>,
 	): unknown {
+		assertPositiveInt(userId, "userId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -595,12 +618,14 @@ export class SocialService {
 	 * Toggles a like on a likeable entity. Requires authentication.
 	 * The `LikeableUnion` result does not support `select`.
 	 * @param id - The ID of the likeable entity.
-	 * @param type - Optional `LikeableType` (defaults to AniList's behaviour).
+	 * @param type - The `LikeableType` of the entity. IDs are only unique per
+	 * type, so AniList needs it to resolve `id`.
 	 */
 	toggleLike(
 		id: number,
-		type?: LikeableType,
+		type: LikeableType,
 	): ReturnType<ANILISTSDK["ToggleLike"]> {
+		assertPositiveInt(id);
 		return this.client.ToggleLike({ id, type });
 	}
 
@@ -658,6 +683,7 @@ export class SocialService {
 	 * @param id - The ID of the activity to delete.
 	 */
 	deleteActivity(id: number): ReturnType<ANILISTSDK["DeleteActivity"]> {
+		assertPositiveInt(id);
 		return this.client.DeleteActivity({ id });
 	}
 
@@ -668,6 +694,7 @@ export class SocialService {
 	deleteActivityReply(
 		id: number,
 	): ReturnType<ANILISTSDK["DeleteActivityReply"]> {
+		assertPositiveInt(id);
 		return this.client.DeleteActivityReply({ id });
 	}
 
@@ -681,6 +708,7 @@ export class SocialService {
 		activityId: number,
 		subscribe?: boolean,
 	): ReturnType<ANILISTSDK["ToggleActivitySubscription"]> {
+		assertPositiveInt(activityId, "activityId");
 		return this.client.ToggleActivitySubscription({ activityId, subscribe });
 	}
 
@@ -694,6 +722,7 @@ export class SocialService {
 		id: number,
 		pinned?: boolean,
 	): ReturnType<ANILISTSDK["ToggleActivityPin"]> {
+		assertPositiveInt(id);
 		return this.client.ToggleActivityPin({ id, pinned });
 	}
 
@@ -736,6 +765,7 @@ export class SocialService {
 	 * @param id - The ID of the thread to delete.
 	 */
 	deleteThread(id: number): ReturnType<ANILISTSDK["DeleteThread"]> {
+		assertPositiveInt(id);
 		return this.client.DeleteThread({ id });
 	}
 
@@ -746,6 +776,7 @@ export class SocialService {
 	deleteThreadComment(
 		id: number,
 	): ReturnType<ANILISTSDK["DeleteThreadComment"]> {
+		assertPositiveInt(id);
 		return this.client.DeleteThreadComment({ id });
 	}
 
@@ -758,6 +789,7 @@ export class SocialService {
 		threadId: number,
 		subscribe?: boolean,
 	): ReturnType<ANILISTSDK["ToggleThreadSubscription"]> {
+		assertPositiveInt(threadId, "threadId");
 		return this.client.ToggleThreadSubscription({ threadId, subscribe });
 	}
 }

@@ -36,7 +36,7 @@ import type {
 	SelectedMedia,
 	SelectedMediaPage,
 } from "../selections/types";
-import { normalizePerPage } from "./validation";
+import { assertPositiveInt, normalizePerPage } from "./validation";
 
 /**
  * Service class for interacting with AniList manga-related queries.
@@ -102,6 +102,7 @@ export class MangaService {
 		id: number,
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
+		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			const { select, wrapped } = resolveSelection(options, "media");
 			return this.selectedMedia(select, { id }).then((raw) =>
@@ -178,6 +179,7 @@ export class MangaService {
 	):
 		| ReturnType<ANILISTSDK["SearchManga"]>
 		| Promise<{ page: SelectedMediaPage<TSelect> | null }> {
+		normalizePerPage(perPage, 10);
 		if (options?.select !== undefined) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -215,6 +217,7 @@ export class MangaService {
 		mediaId: number,
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
+		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
 			const { select, wrapped } = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
@@ -250,6 +253,7 @@ export class MangaService {
 	):
 		| Promise<GetMangaListByGenreQuery>
 		| Promise<{ page: SelectedMediaPage<TSelect> | null }> {
+		normalizePerPage(perPage, 10);
 		if (options?.select !== undefined) {
 			const document = buildMediaPageDocument(
 				"SelectedMangaListByGenre",
@@ -286,6 +290,7 @@ export class MangaService {
 		mediaId: number,
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
+		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
 			const { select, wrapped } = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
@@ -313,6 +318,7 @@ export class MangaService {
 		mediaId: number,
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
+		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
 			const { select, wrapped } = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
@@ -340,6 +346,7 @@ export class MangaService {
 		mediaId: number,
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
+		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
 			const { select, wrapped } = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
@@ -451,6 +458,7 @@ export class MangaService {
 	):
 		| Promise<GetMangaTrendingQuery>
 		| Promise<{ page: SelectedMediaPage<TSelect> | null }> {
+		normalizePerPage(perPage, 20);
 		if (options?.select !== undefined) {
 			const document = buildMediaPageDocument(
 				"SelectedMangaTrending",
@@ -485,6 +493,7 @@ export class MangaService {
 	):
 		| Promise<GetMangaPopularQuery>
 		| Promise<{ page: SelectedMediaPage<TSelect> | null }> {
+		normalizePerPage(perPage, 20);
 		if (options?.select !== undefined) {
 			const document = buildMediaPageDocument(
 				"SelectedMangaPopular",
@@ -538,6 +547,7 @@ export class MangaService {
 		mangaId: number,
 		options?: SelectionOption<"favorites", TSelect>,
 	): unknown {
+		assertPositiveInt(mangaId, "mangaId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
