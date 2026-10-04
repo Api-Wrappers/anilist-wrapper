@@ -1,23 +1,33 @@
 import type {
+	ActivityReplyPageSelect,
+	ActivityReplySelect,
 	AiringSchedulePageSelect,
 	AiringScheduleSelect,
 	CharacterPageSelect,
 	CharacterSelect,
 	DeletedSelect,
 	FavouritesSelect,
+	FollowersPageSelect,
+	FollowingPageSelect,
 	MediaListCollectionSelect,
 	MediaListSelect,
 	MediaPageSelect,
 	MediaSelect,
 	MediaTagSelect,
+	ParsedMarkdownSelect,
 	RecommendationPageSelect,
 	RecommendationSelect,
 	ReviewPageSelect,
 	ReviewSelect,
+	SiteStatisticsSelect,
 	StaffPageSelect,
 	StaffSelect,
 	StudioPageSelect,
 	StudioSelect,
+	ThreadCommentPageSelect,
+	ThreadCommentSelect,
+	ThreadPageSelect,
+	ThreadSelect,
 	UserPageSelect,
 	UserSelect,
 	UserStatisticTypesSelect,
@@ -649,5 +659,142 @@ export function buildDeleteReviewDocument(select: DeletedSelect): string {
 		rootArgs: ["id: $id"],
 		select: select as Record<string, unknown>,
 		context: "DeletedSelect",
+	});
+}
+
+export function buildFollowingPageDocument(
+	select: FollowingPageSelect,
+): string {
+	return buildPageDocument({
+		operationName: "SelectedFollowing",
+		variableDefinitions: "($userId: Int, $page: Int, $perPage: Int)",
+		fieldName: "following",
+		fieldArgs: ["userId: $userId"],
+		select: select as Record<string, unknown>,
+		context: "page select",
+	});
+}
+
+export function buildFollowersPageDocument(
+	select: FollowersPageSelect,
+): string {
+	return buildPageDocument({
+		operationName: "SelectedFollowers",
+		variableDefinitions: "($userId: Int, $page: Int, $perPage: Int)",
+		fieldName: "followers",
+		fieldArgs: ["userId: $userId"],
+		select: select as Record<string, unknown>,
+		context: "page select",
+	});
+}
+
+export function buildActivityReplyPageDocument(
+	select: ActivityReplyPageSelect,
+): string {
+	return buildPageDocument({
+		operationName: "SelectedActivityReplies",
+		variableDefinitions: "($activityId: Int, $page: Int, $perPage: Int)",
+		fieldName: "activityReplies",
+		fieldArgs: ["activityId: $activityId"],
+		select: select as Record<string, unknown>,
+		context: "page select",
+	});
+}
+
+export function buildActivityReplyByIdDocument(
+	select: ActivityReplySelect,
+): string {
+	return buildRootDocument({
+		operationName: "SelectedActivityReplyById",
+		variableDefinitions: "($id: Int)",
+		rootField: "ActivityReply",
+		rootArgs: ["id: $id"],
+		select: select as Record<string, unknown>,
+		context: "ActivityReplySelect",
+	});
+}
+
+export function buildThreadPageDocument(select: ThreadPageSelect): string {
+	return buildPageDocument({
+		operationName: "SelectedThreads",
+		variableDefinitions:
+			"($search: String, $userId: Int, $page: Int, $perPage: Int)",
+		fieldName: "threads",
+		fieldArgs: ["search: $search", "userId: $userId"],
+		select: select as Record<string, unknown>,
+		context: "page select",
+	});
+}
+
+export function buildThreadByIdDocument(select: ThreadSelect): string {
+	return buildRootDocument({
+		operationName: "SelectedThreadById",
+		variableDefinitions: "($id: Int)",
+		rootField: "Thread",
+		rootArgs: ["id: $id"],
+		select: select as Record<string, unknown>,
+		context: "ThreadSelect",
+	});
+}
+
+export function buildThreadCommentPageDocument(
+	select: ThreadCommentPageSelect,
+): string {
+	return buildPageDocument({
+		operationName: "SelectedThreadComments",
+		variableDefinitions: "($threadId: Int, $page: Int, $perPage: Int)",
+		fieldName: "threadComments",
+		fieldArgs: ["threadId: $threadId"],
+		select: select as Record<string, unknown>,
+		context: "page select",
+	});
+}
+
+export function buildThreadCommentByIdDocument(
+	select: ThreadCommentSelect,
+): string {
+	return buildRootDocument({
+		operationName: "SelectedThreadCommentById",
+		variableDefinitions: "($id: Int)",
+		rootField: "ThreadComment",
+		rootArgs: ["id: $id"],
+		select: select as Record<string, unknown>,
+		context: "ThreadCommentSelect",
+	});
+}
+
+export function buildSiteStatisticsDocument(
+	select: SiteStatisticsSelect,
+): string {
+	return buildRootDocument({
+		operationName: "SelectedSiteStatistics",
+		variableDefinitions: "",
+		rootField: "SiteStatistics",
+		select: select as Record<string, unknown>,
+		context: "SiteStatisticsSelect",
+	});
+}
+
+export function buildParsedMarkdownDocument(
+	select: ParsedMarkdownSelect,
+): string {
+	return buildRootDocument({
+		operationName: "SelectedMarkdown",
+		variableDefinitions: "($markdown: String!)",
+		rootField: "Markdown",
+		rootArgs: ["markdown: $markdown"],
+		select: select as Record<string, unknown>,
+		context: "ParsedMarkdownSelect",
+	});
+}
+
+export function buildToggleFollowDocument(select: UserSelect): string {
+	return buildMutationDocument({
+		operationName: "SelectedToggleFollow",
+		variableDefinitions: "($userId: Int)",
+		rootField: "ToggleFollow",
+		rootArgs: ["userId: $userId"],
+		select: select as Record<string, unknown>,
+		context: "UserSelect",
 	});
 }

@@ -8,6 +8,7 @@ import { GraphQLService } from "./services/graphqlService";
 import { MangaService } from "./services/mangaService";
 import { MediaListService } from "./services/mediaListService";
 import { MediaService } from "./services/mediaService";
+import { SocialService } from "./services/socialService";
 import { StaffService } from "./services/staffService";
 import { StudioService } from "./services/studioService";
 import { UserService } from "./services/userService";
@@ -33,6 +34,7 @@ class Anilist {
 		this.manga = new MangaService(this.client, this.graphQLClient);
 		this.media = new MediaService(this.client, this.graphQLClient);
 		this.mediaList = new MediaListService(this.client, this.graphQLClient);
+		this.social = new SocialService(this.client, this.graphQLClient);
 		this.staff = new StaffService(this.client, this.graphQLClient);
 		this.studio = new StudioService(this.client, this.graphQLClient);
 		this.user = new UserService(this.client, this.graphQLClient);
@@ -49,6 +51,7 @@ class Anilist {
 	manga: MangaService;
 	media: MediaService;
 	mediaList: MediaListService;
+	social: SocialService;
 	staff: StaffService;
 	studio: StudioService;
 	user: UserService;
@@ -91,22 +94,29 @@ export {
 	createSdkClient,
 } from "./client";
 export type {
+	ActivityReplyPageSelect,
+	ActivityReplySelect,
 	AiringSchedulePageSelect,
 	AiringScheduleSelect,
 	CharacterPageSelect,
 	CharacterSelect,
 	DeletedSelect,
 	FavouritesSelect,
+	FollowersPageSelect,
+	FollowingPageSelect,
 	MediaListCollectionSelect,
 	MediaListSelect,
 	MediaPageSelect,
 	MediaSelect,
 	MediaTagSelect,
 	PageInfoSelect,
+	ParsedMarkdownSelect,
 	RecommendationPageSelect,
 	RecommendationSelect,
 	ReviewPageSelect,
 	ReviewSelect,
+	SelectedActivityReply,
+	SelectedActivityReplyPage,
 	SelectedAiringSchedule,
 	SelectedAiringSchedulePage,
 	SelectedCharacter,
@@ -114,26 +124,39 @@ export type {
 	SelectedDeleted,
 	SelectedFavourites,
 	SelectedFields,
+	SelectedFollowersPage,
+	SelectedFollowingPage,
 	SelectedMedia,
 	SelectedMediaList,
 	SelectedMediaListCollection,
 	SelectedMediaPage,
 	SelectedMediaTag,
+	SelectedParsedMarkdown,
 	SelectedRecommendation,
 	SelectedRecommendationPage,
 	SelectedReview,
 	SelectedReviewPage,
+	SelectedSiteStatistics,
 	SelectedStaff,
 	SelectedStaffPage,
 	SelectedStudio,
 	SelectedStudioPage,
+	SelectedThread,
+	SelectedThreadComment,
+	SelectedThreadCommentPage,
+	SelectedThreadPage,
 	SelectedUser,
 	SelectedUserPage,
 	SelectedUserStatisticTypes,
+	SiteStatisticsSelect,
 	StaffPageSelect,
 	StaffSelect,
 	StudioPageSelect,
 	StudioSelect,
+	ThreadCommentPageSelect,
+	ThreadCommentSelect,
+	ThreadPageSelect,
+	ThreadSelect,
 	ToSelect,
 	UserPageSelect,
 	UserSelect,
@@ -145,4 +168,5 @@ export type {
 	UpdateMediaListEntriesInput,
 } from "./services/mediaListService";
 export type { SaveReviewInput } from "./services/mediaService";
+export type { ThreadSearchFilters } from "./services/socialService";
 export { Anilist, Anilist as AniList };

@@ -70,13 +70,36 @@ const { deleteMediaListEntry } = await anilist.mediaList.deleteEntry(123456, {
 | `page` | Search, title lookup, trending/popular/browse, birthday, and user-list pagination methods |
 | `character` | `character.getCharacterById` |
 | `staff` | `staff.getStaffById` |
-| `user` | User profile and user statistics methods |
+| `studio` | `studio.getStudioById` |
+| `user` | User profile, viewer, and user statistics methods |
 | `mediaListCollection` | User/media list collection methods |
 | `mediaList` | `mediaList.getMediaList` and `mediaList.saveEntry` |
-| `favorites` | Anime, manga, character, and staff favorite mutations |
-| `deleteMediaListEntry` | `mediaList.deleteEntry` |
+| `mediaTagCollection` | `media.getMediaTags` |
+| `airingSchedule` | `media.getAiringSchedule` |
+| `review` | Review save/rate methods |
+| `recommendation` | `media.saveRecommendation` |
+| `favorites` | Anime, manga, character, staff, and studio favorite mutations |
+| `viewer` / `viewerStatistics` | `user.getViewer` and `user.getViewerStatistics` |
+| `thread` / `threadComments` | `social.getThread` and `social.getThreadComment` |
+| `siteStatistics` | `social.getSiteStatistics` |
+| `markdown` | `social.getMarkdown` |
+| `deleteMediaListEntry` / `deleteCustomList` / `deleteReview` | Matching delete mutations |
+| `updateMediaListEntries` | `mediaList.updateEntries` |
+
+## Resolution Rules
+
+A selection is treated as the normalized root-object shape only when every
+top-level key equals the root key (for example `{ media: { id: true } }`).
+Any other shape is treated as a legacy direct selection of the root object.
+Paginated methods accept `{ page: { ... } }` or the legacy page body where
+every key is `pageInfo` or the result field (for example
+`{ pageInfo: { ... }, media: { ... } }`).
 
 ## Old Shape Compatibility
+
+> **Deprecated:** legacy direct selections are supported for backwards
+> compatibility and will be removed in the next major release. New code should
+> use the normalized root-object shape shown above.
 
 The previous direct selection shape is still accepted for compatibility:
 

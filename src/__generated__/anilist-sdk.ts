@@ -494,6 +494,19 @@ const TypedDocumentString = class extends String {
   }
 } as unknown as TypedDocumentStringConstructor;
 
+/** Activity type enum. */
+export type ActivityType =
+  /** A anime list update activity */
+  | 'ANIME_LIST'
+  /** A manga list update activity */
+  | 'MANGA_LIST'
+  /** Anime & Manga list update, only used in query arguments */
+  | 'MEDIA_LIST'
+  /** A text message activity sent to another user */
+  | 'MESSAGE'
+  /** A text activity */
+  | 'TEXT';
+
 /** The role the character plays in the media */
 export type CharacterRole =
   /** A background character in the media */
@@ -517,6 +530,13 @@ export type FuzzyDateInput = {
   /** Numeric Year (2017) */
   year: number | null | undefined;
 };
+
+/** Types that can be liked */
+export type LikeableType =
+  | 'ACTIVITY'
+  | 'ACTIVITY_REPLY'
+  | 'THREAD'
+  | 'THREAD_COMMENT';
 
 /** The format the media was released in */
 export type MediaFormat =
@@ -1258,6 +1278,160 @@ export type UpdateMediaListEntriesMutationVariables = Exact<{
 
 
 export type UpdateMediaListEntriesMutation = { UpdateMediaListEntries: Array<{ id: number, mediaId: number, userId: number, status: MediaListStatus | null, score: number | null, progress: number | null, progressVolumes: number | null, repeat: number | null, priority: number | null, private: boolean | null, notes: string | null, hiddenFromStatusLists: boolean | null, customLists: unknown, advancedScores: unknown, updatedAt: number | null, createdAt: number | null, startedAt: { year: number | null, month: number | null, day: number | null } | null, completedAt: { year: number | null, month: number | null, day: number | null } | null, media: { id: number, idMal: number | null, bannerImage: string | null, description: string | null, format: MediaFormat | null, status: MediaStatus | null, type: MediaType | null, episodes: number | null, chapters: number | null, volumes: number | null, duration: number | null, genres: Array<string | null> | null, averageScore: number | null, meanScore: number | null, popularity: number | null, favourites: number | null, trending: number | null, source: MediaSource | null, countryOfOrigin: unknown, isAdult: boolean | null, isLicensed: boolean | null, isLocked: boolean | null, isFavourite: boolean, isFavouriteBlocked: boolean, hashtag: string | null, synonyms: Array<string | null> | null, season: MediaSeason | null, seasonYear: number | null, siteUrl: string | null, updatedAt: number | null, autoCreateForumThread: boolean | null, isRecommendationBlocked: boolean | null, isReviewBlocked: boolean | null, modNotes: string | null, title: { romaji: string | null, english: string | null, native: string | null, userPreferred: string | null } | null, coverImage: { large: string | null, medium: string | null, extraLarge: string | null, color: string | null } | null, startDate: { year: number | null, month: number | null, day: number | null } | null, endDate: { year: number | null, month: number | null, day: number | null } | null } | null } | null> | null };
+
+export type GetActivitiesQueryVariables = Exact<{
+  userId: number | null | undefined;
+  page?: number | null | undefined;
+  perPage?: number | null | undefined;
+}>;
+
+
+export type GetActivitiesQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, activities: Array<
+      | { id: number, type: ActivityType | null, userId: number | null, createdAt: number, status: string | null, progress: string | null }
+      | { id: number, type: ActivityType | null, messengerId: number | null, createdAt: number, message: string | null }
+      | { id: number, type: ActivityType | null, userId: number | null, createdAt: number, text: string | null }
+     | null> | null } | null };
+
+export type GetActivityQueryVariables = Exact<{
+  id: number;
+}>;
+
+
+export type GetActivityQuery = { Activity:
+    | { id: number, type: ActivityType | null, userId: number | null, createdAt: number, status: string | null, progress: string | null }
+    | { id: number, type: ActivityType | null, messengerId: number | null, createdAt: number, message: string | null }
+    | { id: number, type: ActivityType | null, userId: number | null, createdAt: number, text: string | null }
+   | null };
+
+export type GetActivityRepliesQueryVariables = Exact<{
+  activityId: number | null | undefined;
+  page?: number | null | undefined;
+  perPage?: number | null | undefined;
+}>;
+
+
+export type GetActivityRepliesQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, activityReplies: Array<{ id: number, activityId: number | null, userId: number | null, text: string | null, createdAt: number, likeCount: number, isLiked: boolean | null, user: { id: number, name: string } | null } | null> | null } | null };
+
+export type GetActivityReplyQueryVariables = Exact<{
+  id: number;
+}>;
+
+
+export type GetActivityReplyQuery = { ActivityReply: { id: number, activityId: number | null, userId: number | null, text: string | null, createdAt: number, likeCount: number, isLiked: boolean | null, user: { id: number, name: string } | null } | null };
+
+export type GetFollowersQueryVariables = Exact<{
+  userId: number;
+  page?: number | null | undefined;
+  perPage?: number | null | undefined;
+}>;
+
+
+export type GetFollowersQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, followers: Array<{ id: number, name: string, siteUrl: string | null } | null> | null } | null };
+
+export type GetFollowingQueryVariables = Exact<{
+  userId: number;
+  page?: number | null | undefined;
+  perPage?: number | null | undefined;
+}>;
+
+
+export type GetFollowingQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, following: Array<{ id: number, name: string, siteUrl: string | null } | null> | null } | null };
+
+export type GetMarkdownQueryVariables = Exact<{
+  markdown: string;
+}>;
+
+
+export type GetMarkdownQuery = { Markdown: { html: string | null } | null };
+
+export type GetNotificationsQueryVariables = Exact<{
+  page?: number | null | undefined;
+  perPage?: number | null | undefined;
+}>;
+
+
+export type GetNotificationsQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, notifications: Array<
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+      | { id: number, type: NotificationType | null, createdAt: number | null }
+     | null> | null } | null };
+
+export type GetSiteStatisticsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetSiteStatisticsQuery = { SiteStatistics: { users: { nodes: Array<{ count: number, date: number, change: number } | null> | null } | null, anime: { nodes: Array<{ count: number, date: number, change: number } | null> | null } | null, manga: { nodes: Array<{ count: number, date: number, change: number } | null> | null } | null, characters: { nodes: Array<{ count: number, date: number, change: number } | null> | null } | null, staff: { nodes: Array<{ count: number, date: number, change: number } | null> | null } | null, studios: { nodes: Array<{ count: number, date: number, change: number } | null> | null } | null, reviews: { nodes: Array<{ count: number, date: number, change: number } | null> | null } | null } | null };
+
+export type GetThreadQueryVariables = Exact<{
+  id: number;
+}>;
+
+
+export type GetThreadQuery = { Thread: { id: number, title: string | null, body: string | null, userId: number, createdAt: number, updatedAt: number, replyCount: number | null, viewCount: number | null, likeCount: number, isLocked: boolean | null, isSticky: boolean | null, isSubscribed: boolean | null, user: { id: number, name: string } | null } | null };
+
+export type GetThreadCommentQueryVariables = Exact<{
+  id: number;
+}>;
+
+
+export type GetThreadCommentQuery = { ThreadComment: Array<{ id: number, threadId: number | null, userId: number | null, comment: string | null, createdAt: number, updatedAt: number, likeCount: number, isLiked: boolean | null, user: { id: number, name: string } | null } | null> | null };
+
+export type GetThreadCommentsQueryVariables = Exact<{
+  threadId: number | null | undefined;
+  page?: number | null | undefined;
+  perPage?: number | null | undefined;
+}>;
+
+
+export type GetThreadCommentsQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, threadComments: Array<{ id: number, threadId: number | null, userId: number | null, comment: string | null, createdAt: number, updatedAt: number, likeCount: number, isLiked: boolean | null, user: { id: number, name: string } | null } | null> | null } | null };
+
+export type GetThreadsQueryVariables = Exact<{
+  search: string | null | undefined;
+  userId: number | null | undefined;
+  page?: number | null | undefined;
+  perPage?: number | null | undefined;
+}>;
+
+
+export type GetThreadsQuery = { Page: { pageInfo: { hasNextPage: boolean | null, currentPage: number | null, total: number | null } | null, threads: Array<{ id: number, title: string | null, body: string | null, userId: number, createdAt: number, updatedAt: number, replyCount: number | null, viewCount: number | null, likeCount: number, isLocked: boolean | null, isSticky: boolean | null, isSubscribed: boolean | null, user: { id: number, name: string } | null } | null> | null } | null };
+
+export type ToggleFollowMutationVariables = Exact<{
+  userId: number | null | undefined;
+}>;
+
+
+export type ToggleFollowMutation = { ToggleFollow: { id: number, name: string, isFollowing: boolean | null, siteUrl: string | null } | null };
+
+export type ToggleLikeMutationVariables = Exact<{
+  id: number | null | undefined;
+  type: LikeableType | null | undefined;
+}>;
+
+
+export type ToggleLikeMutation = { ToggleLikeV2:
+    | { id: number }
+    | { id: number }
+    | { id: number }
+    | { id: number }
+    | { id: number }
+    | { id: number }
+   | null };
 
 export type GetStaffByIdQueryVariables = Exact<{
   id: number;
@@ -7677,6 +7851,445 @@ fragment MediaListFragment on MediaList {
     ...MediaCoreFragment
   }
 }`);
+export const GetActivitiesDocument = new TypedDocumentString(`
+    query GetActivities($userId: Int, $page: Int = 1, $perPage: Int = 25) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
+      total
+    }
+    activities(userId: $userId, sort: ID_DESC) {
+      ... on TextActivity {
+        id
+        type
+        userId
+        createdAt
+        text
+      }
+      ... on ListActivity {
+        id
+        type
+        userId
+        createdAt
+        status
+        progress
+      }
+      ... on MessageActivity {
+        id
+        type
+        messengerId
+        createdAt
+        message
+      }
+    }
+  }
+}
+    `);
+export const GetActivityDocument = new TypedDocumentString(`
+    query GetActivity($id: Int!) {
+  Activity(id: $id) {
+    ... on TextActivity {
+      id
+      type
+      userId
+      createdAt
+      text
+    }
+    ... on ListActivity {
+      id
+      type
+      userId
+      createdAt
+      status
+      progress
+    }
+    ... on MessageActivity {
+      id
+      type
+      messengerId
+      createdAt
+      message
+    }
+  }
+}
+    `);
+export const GetActivityRepliesDocument = new TypedDocumentString(`
+    query GetActivityReplies($activityId: Int, $page: Int = 1, $perPage: Int = 25) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
+      total
+    }
+    activityReplies(activityId: $activityId) {
+      id
+      activityId
+      userId
+      text
+      createdAt
+      likeCount
+      isLiked
+      user {
+        id
+        name
+      }
+    }
+  }
+}
+    `);
+export const GetActivityReplyDocument = new TypedDocumentString(`
+    query GetActivityReply($id: Int!) {
+  ActivityReply(id: $id) {
+    id
+    activityId
+    userId
+    text
+    createdAt
+    likeCount
+    isLiked
+    user {
+      id
+      name
+    }
+  }
+}
+    `);
+export const GetFollowersDocument = new TypedDocumentString(`
+    query GetFollowers($userId: Int!, $page: Int = 1, $perPage: Int = 25) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
+      total
+    }
+    followers(userId: $userId) {
+      id
+      name
+      siteUrl
+    }
+  }
+}
+    `);
+export const GetFollowingDocument = new TypedDocumentString(`
+    query GetFollowing($userId: Int!, $page: Int = 1, $perPage: Int = 25) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
+      total
+    }
+    following(userId: $userId) {
+      id
+      name
+      siteUrl
+    }
+  }
+}
+    `);
+export const GetMarkdownDocument = new TypedDocumentString(`
+    query GetMarkdown($markdown: String!) {
+  Markdown(markdown: $markdown) {
+    html
+  }
+}
+    `);
+export const GetNotificationsDocument = new TypedDocumentString(`
+    query GetNotifications($page: Int = 1, $perPage: Int = 25) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
+      total
+    }
+    notifications(resetNotificationCount: true) {
+      ... on ActivityLikeNotification {
+        id
+        type
+        createdAt
+      }
+      ... on ActivityMentionNotification {
+        id
+        type
+        createdAt
+      }
+      ... on ActivityMessageNotification {
+        id
+        type
+        createdAt
+      }
+      ... on ActivityReplyLikeNotification {
+        id
+        type
+        createdAt
+      }
+      ... on ActivityReplyNotification {
+        id
+        type
+        createdAt
+      }
+      ... on ActivityReplySubscribedNotification {
+        id
+        type
+        createdAt
+      }
+      ... on AiringNotification {
+        id
+        type
+        createdAt
+      }
+      ... on CharacterSubmissionUpdateNotification {
+        id
+        type
+        createdAt
+      }
+      ... on FollowingNotification {
+        id
+        type
+        createdAt
+      }
+      ... on MediaDataChangeNotification {
+        id
+        type
+        createdAt
+      }
+      ... on MediaDeletionNotification {
+        id
+        type
+        createdAt
+      }
+      ... on MediaMergeNotification {
+        id
+        type
+        createdAt
+      }
+      ... on MediaSubmissionUpdateNotification {
+        id
+        type
+        createdAt
+      }
+      ... on RelatedMediaAdditionNotification {
+        id
+        type
+        createdAt
+      }
+      ... on StaffSubmissionUpdateNotification {
+        id
+        type
+        createdAt
+      }
+      ... on ThreadCommentLikeNotification {
+        id
+        type
+        createdAt
+      }
+      ... on ThreadCommentMentionNotification {
+        id
+        type
+        createdAt
+      }
+      ... on ThreadCommentReplyNotification {
+        id
+        type
+        createdAt
+      }
+      ... on ThreadCommentSubscribedNotification {
+        id
+        type
+        createdAt
+      }
+      ... on ThreadLikeNotification {
+        id
+        type
+        createdAt
+      }
+    }
+  }
+}
+    `);
+export const GetSiteStatisticsDocument = new TypedDocumentString(`
+    query GetSiteStatistics {
+  SiteStatistics {
+    users {
+      nodes {
+        count
+        date
+        change
+      }
+    }
+    anime {
+      nodes {
+        count
+        date
+        change
+      }
+    }
+    manga {
+      nodes {
+        count
+        date
+        change
+      }
+    }
+    characters {
+      nodes {
+        count
+        date
+        change
+      }
+    }
+    staff {
+      nodes {
+        count
+        date
+        change
+      }
+    }
+    studios {
+      nodes {
+        count
+        date
+        change
+      }
+    }
+    reviews {
+      nodes {
+        count
+        date
+        change
+      }
+    }
+  }
+}
+    `);
+export const GetThreadDocument = new TypedDocumentString(`
+    query GetThread($id: Int!) {
+  Thread(id: $id) {
+    id
+    title
+    body
+    userId
+    createdAt
+    updatedAt
+    replyCount
+    viewCount
+    likeCount
+    isLocked
+    isSticky
+    isSubscribed
+    user {
+      id
+      name
+    }
+  }
+}
+    `);
+export const GetThreadCommentDocument = new TypedDocumentString(`
+    query GetThreadComment($id: Int!) {
+  ThreadComment(id: $id) {
+    id
+    threadId
+    userId
+    comment
+    createdAt
+    updatedAt
+    likeCount
+    isLiked
+    user {
+      id
+      name
+    }
+  }
+}
+    `);
+export const GetThreadCommentsDocument = new TypedDocumentString(`
+    query GetThreadComments($threadId: Int, $page: Int = 1, $perPage: Int = 25) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
+      total
+    }
+    threadComments(threadId: $threadId) {
+      id
+      threadId
+      userId
+      comment
+      createdAt
+      updatedAt
+      likeCount
+      isLiked
+      user {
+        id
+        name
+      }
+    }
+  }
+}
+    `);
+export const GetThreadsDocument = new TypedDocumentString(`
+    query GetThreads($search: String, $userId: Int, $page: Int = 1, $perPage: Int = 25) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
+      total
+    }
+    threads(search: $search, userId: $userId, sort: ID_DESC) {
+      id
+      title
+      body
+      userId
+      createdAt
+      updatedAt
+      replyCount
+      viewCount
+      likeCount
+      isLocked
+      isSticky
+      isSubscribed
+      user {
+        id
+        name
+      }
+    }
+  }
+}
+    `);
+export const ToggleFollowDocument = new TypedDocumentString(`
+    mutation ToggleFollow($userId: Int) {
+  ToggleFollow(userId: $userId) {
+    id
+    name
+    isFollowing
+    siteUrl
+  }
+}
+    `);
+export const ToggleLikeDocument = new TypedDocumentString(`
+    mutation ToggleLike($id: Int, $type: LikeableType) {
+  ToggleLikeV2(id: $id, type: $type) {
+    ... on ActivityReply {
+      id
+    }
+    ... on ListActivity {
+      id
+    }
+    ... on MessageActivity {
+      id
+    }
+    ... on TextActivity {
+      id
+    }
+    ... on Thread {
+      id
+    }
+    ... on ThreadComment {
+      id
+    }
+  }
+}
+    `);
 export const GetStaffByIdDocument = new TypedDocumentString(`
     query GetStaffById($id: Int!) {
   Staff(id: $id) {
@@ -10116,6 +10729,51 @@ export function getSdk<C>(requester: Requester<C>) {
     },
     UpdateMediaListEntries(variables?: UpdateMediaListEntriesMutationVariables, options?: C): Promise<UpdateMediaListEntriesMutation> {
       return requester<UpdateMediaListEntriesMutation, UpdateMediaListEntriesMutationVariables>(UpdateMediaListEntriesDocument, variables, options) as Promise<UpdateMediaListEntriesMutation>;
+    },
+    GetActivities(variables?: GetActivitiesQueryVariables, options?: C): Promise<GetActivitiesQuery> {
+      return requester<GetActivitiesQuery, GetActivitiesQueryVariables>(GetActivitiesDocument, variables, options) as Promise<GetActivitiesQuery>;
+    },
+    GetActivity(variables: GetActivityQueryVariables, options?: C): Promise<GetActivityQuery> {
+      return requester<GetActivityQuery, GetActivityQueryVariables>(GetActivityDocument, variables, options) as Promise<GetActivityQuery>;
+    },
+    GetActivityReplies(variables?: GetActivityRepliesQueryVariables, options?: C): Promise<GetActivityRepliesQuery> {
+      return requester<GetActivityRepliesQuery, GetActivityRepliesQueryVariables>(GetActivityRepliesDocument, variables, options) as Promise<GetActivityRepliesQuery>;
+    },
+    GetActivityReply(variables: GetActivityReplyQueryVariables, options?: C): Promise<GetActivityReplyQuery> {
+      return requester<GetActivityReplyQuery, GetActivityReplyQueryVariables>(GetActivityReplyDocument, variables, options) as Promise<GetActivityReplyQuery>;
+    },
+    GetFollowers(variables: GetFollowersQueryVariables, options?: C): Promise<GetFollowersQuery> {
+      return requester<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowersDocument, variables, options) as Promise<GetFollowersQuery>;
+    },
+    GetFollowing(variables: GetFollowingQueryVariables, options?: C): Promise<GetFollowingQuery> {
+      return requester<GetFollowingQuery, GetFollowingQueryVariables>(GetFollowingDocument, variables, options) as Promise<GetFollowingQuery>;
+    },
+    GetMarkdown(variables: GetMarkdownQueryVariables, options?: C): Promise<GetMarkdownQuery> {
+      return requester<GetMarkdownQuery, GetMarkdownQueryVariables>(GetMarkdownDocument, variables, options) as Promise<GetMarkdownQuery>;
+    },
+    GetNotifications(variables?: GetNotificationsQueryVariables, options?: C): Promise<GetNotificationsQuery> {
+      return requester<GetNotificationsQuery, GetNotificationsQueryVariables>(GetNotificationsDocument, variables, options) as Promise<GetNotificationsQuery>;
+    },
+    GetSiteStatistics(variables?: GetSiteStatisticsQueryVariables, options?: C): Promise<GetSiteStatisticsQuery> {
+      return requester<GetSiteStatisticsQuery, GetSiteStatisticsQueryVariables>(GetSiteStatisticsDocument, variables, options) as Promise<GetSiteStatisticsQuery>;
+    },
+    GetThread(variables: GetThreadQueryVariables, options?: C): Promise<GetThreadQuery> {
+      return requester<GetThreadQuery, GetThreadQueryVariables>(GetThreadDocument, variables, options) as Promise<GetThreadQuery>;
+    },
+    GetThreadComment(variables: GetThreadCommentQueryVariables, options?: C): Promise<GetThreadCommentQuery> {
+      return requester<GetThreadCommentQuery, GetThreadCommentQueryVariables>(GetThreadCommentDocument, variables, options) as Promise<GetThreadCommentQuery>;
+    },
+    GetThreadComments(variables?: GetThreadCommentsQueryVariables, options?: C): Promise<GetThreadCommentsQuery> {
+      return requester<GetThreadCommentsQuery, GetThreadCommentsQueryVariables>(GetThreadCommentsDocument, variables, options) as Promise<GetThreadCommentsQuery>;
+    },
+    GetThreads(variables?: GetThreadsQueryVariables, options?: C): Promise<GetThreadsQuery> {
+      return requester<GetThreadsQuery, GetThreadsQueryVariables>(GetThreadsDocument, variables, options) as Promise<GetThreadsQuery>;
+    },
+    ToggleFollow(variables?: ToggleFollowMutationVariables, options?: C): Promise<ToggleFollowMutation> {
+      return requester<ToggleFollowMutation, ToggleFollowMutationVariables>(ToggleFollowDocument, variables, options) as Promise<ToggleFollowMutation>;
+    },
+    ToggleLike(variables?: ToggleLikeMutationVariables, options?: C): Promise<ToggleLikeMutation> {
+      return requester<ToggleLikeMutation, ToggleLikeMutationVariables>(ToggleLikeDocument, variables, options) as Promise<ToggleLikeMutation>;
     },
     GetStaffById(variables: GetStaffByIdQueryVariables, options?: C): Promise<GetStaffByIdQuery> {
       return requester<GetStaffByIdQuery, GetStaffByIdQueryVariables>(GetStaffByIdDocument, variables, options) as Promise<GetStaffByIdQuery>;

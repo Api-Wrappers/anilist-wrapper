@@ -2,6 +2,11 @@ export type RootSelectionOption<TKey extends string, TSelect> = {
 	select: { [K in TKey]: TSelect };
 };
 
+/**
+ * @deprecated Legacy direct selections are supported for backwards
+ * compatibility and will be removed in the next major release. Prefer the
+ * normalized root-object form, for example `{ select: { media: { id: true } } }`.
+ */
 export type LegacySelectionOption<TSelect> = {
 	select: TSelect;
 };

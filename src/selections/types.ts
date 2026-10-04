@@ -1,4 +1,5 @@
 import type {
+	ActivityReply,
 	AiringSchedule,
 	Character,
 	Deleted,
@@ -9,10 +10,14 @@ import type {
 	MediaTag,
 	Page,
 	PageInfo,
+	ParsedMarkdown,
 	Recommendation,
 	Review,
+	SiteStatistics,
 	Staff,
 	Studio,
+	Thread,
+	ThreadComment,
 	User,
 	UserStatisticTypes,
 } from "../__generated__/anilist-schema";
@@ -97,6 +102,11 @@ export type AiringScheduleSelect = ToSelect<AiringSchedule>;
 export type ReviewSelect = ToSelect<Review>;
 export type RecommendationSelect = ToSelect<Recommendation>;
 export type UserStatisticTypesSelect = ToSelect<UserStatisticTypes>;
+export type ThreadSelect = ToSelect<Thread>;
+export type ThreadCommentSelect = ToSelect<ThreadComment>;
+export type ActivityReplySelect = ToSelect<ActivityReply>;
+export type SiteStatisticsSelect = ToSelect<SiteStatistics>;
+export type ParsedMarkdownSelect = ToSelect<ParsedMarkdown>;
 export type UserSelect = ToSelect<User>;
 export type MediaListSelect = ToSelect<MediaList>;
 export type MediaListCollectionSelect = ToSelect<MediaListCollection>;
@@ -142,6 +152,31 @@ export type ReviewPageSelect = {
 export type RecommendationPageSelect = {
 	pageInfo?: PageInfoSelect;
 	recommendations?: RecommendationSelect;
+};
+
+export type FollowingPageSelect = {
+	pageInfo?: PageInfoSelect;
+	following?: UserSelect;
+};
+
+export type FollowersPageSelect = {
+	pageInfo?: PageInfoSelect;
+	followers?: UserSelect;
+};
+
+export type ActivityReplyPageSelect = {
+	pageInfo?: PageInfoSelect;
+	activityReplies?: ActivityReplySelect;
+};
+
+export type ThreadPageSelect = {
+	pageInfo?: PageInfoSelect;
+	threads?: ThreadSelect;
+};
+
+export type ThreadCommentPageSelect = {
+	pageInfo?: PageInfoSelect;
+	threadComments?: ThreadCommentSelect;
 };
 
 // ── Public result mapped types ────────────────────────────────────────────────
@@ -239,3 +274,35 @@ export type SelectedRecommendation<TSelect extends RecommendationSelect> =
 export type SelectedRecommendationPage<
 	TSelect extends RecommendationPageSelect,
 > = SelectedFields<Page, TSelect>;
+
+export type SelectedThread<TSelect extends ThreadSelect> = SelectedFields<
+	Thread,
+	TSelect
+>;
+
+export type SelectedThreadPage<TSelect extends ThreadPageSelect> =
+	SelectedFields<Page, TSelect>;
+
+export type SelectedThreadComment<TSelect extends ThreadCommentSelect> =
+	SelectedFields<ThreadComment, TSelect>;
+
+export type SelectedThreadCommentPage<TSelect extends ThreadCommentPageSelect> =
+	SelectedFields<Page, TSelect>;
+
+export type SelectedActivityReply<TSelect extends ActivityReplySelect> =
+	SelectedFields<ActivityReply, TSelect>;
+
+export type SelectedActivityReplyPage<TSelect extends ActivityReplyPageSelect> =
+	SelectedFields<Page, TSelect>;
+
+export type SelectedSiteStatistics<TSelect extends SiteStatisticsSelect> =
+	SelectedFields<SiteStatistics, TSelect>;
+
+export type SelectedParsedMarkdown<TSelect extends ParsedMarkdownSelect> =
+	SelectedFields<ParsedMarkdown, TSelect>;
+
+export type SelectedFollowingPage<TSelect extends FollowingPageSelect> =
+	SelectedFields<Page, TSelect>;
+
+export type SelectedFollowersPage<TSelect extends FollowersPageSelect> =
+	SelectedFields<Page, TSelect>;
