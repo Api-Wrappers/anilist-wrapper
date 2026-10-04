@@ -1,13 +1,16 @@
 import { describe, expect, it } from "bun:test";
 import { MediaListStatus, MediaSeason } from "../src";
+import type { MediaTypeNonEnum } from "../src/@types";
+import type { GraphQLClientRequestOptions } from "../src/__generated__/anilist-sdk";
+import { buildPageDocument, buildRootDocument } from "../src/selections/builder";
 import { AnimeService } from "../src/services/animeService";
 import { CharacterService } from "../src/services/characterService";
 import { MangaService } from "../src/services/mangaService";
 import { MediaListService } from "../src/services/mediaListService";
 import { MediaService } from "../src/services/mediaService";
+import { toMediaType } from "../src/services/mediaType";
 import { StaffService } from "../src/services/staffService";
 import { UserService } from "../src/services/userService";
-import type { GraphQLClientRequestOptions } from "../src/__generated__/anilist-sdk";
 import { FakeSdk, sdkResult } from "./fakeSdk";
 
 // ── Fake low-level GraphQL client ─────────────────────────────────────────────
@@ -420,7 +423,7 @@ describe("selected read endpoints across services", () => {
 		expect(gql.lastRequest().variables).toEqual({
 			title: "Berserk",
 			page: 1,
-			perPage: 10,
+			perPage: 1,
 		});
 
 		gql.setResponse({ Media: { recommendations: { edges: [] } } });
@@ -452,7 +455,7 @@ describe("selected read endpoints across services", () => {
 		});
 		expect(staff.gql.lastRequest().document).toContain("Staff(id: $id)");
 
-		await staff.service.getStaffBirthdayToday(1, {
+		await staff.service.getStaffBirthdayToday(1, 25, {
 			select: { page: { staff: { id: true }, pageInfo: { total: true } } },
 		});
 		expect(staff.gql.lastRequest().document).toContain("staff(isBirthday: true)");
@@ -476,7 +479,7 @@ describe("selected read endpoints across services", () => {
 
 		const media = makeMediaService();
 		media.gql.setResponse({ MediaListCollection: { lists: [] } });
-		await media.service.getMediaList(1, "ANIME", {
+		await media.service.getMediaList(1, "ANIME", undefined, {
 			select: { lists: { entries: { id: true } } },
 		});
 		expect(media.gql.lastRequest().variables).toMatchObject({ userId: 1 });
@@ -486,7 +489,7 @@ describe("selected read endpoints across services", () => {
 		await mediaList.service.getMediaList(10, { select: { id: true } });
 		expect(mediaList.gql.lastRequest().document).toContain("MediaList(id: $id)");
 
-		await mediaList.service.getMediaListByUsername("example", "MANGA", {
+		await mediaList.service.getMediaListByUsername("example", "MANGA", undefined, {
 			select: { lists: { entries: { progress: true } } },
 		});
 		expect(mediaList.gql.lastRequest().variables).toMatchObject({
@@ -773,6 +776,21 @@ describe("empty selections throw TypeError before any request", () => {
 		).toThrow(TypeError);
 		expect(gql.requests).toHaveLength(0);
 	});
+
+	it("non-object select values throw before any request", () => {
+		const { gql, service } = makeAnimeService();
+		const unsafeService = service as unknown as {
+			getAnimeById(id: number, options: unknown): unknown;
+		};
+
+		expect(() => unsafeService.getAnimeById(1, { select: null })).toThrow(
+			"select must be an object.",
+		);
+		expect(() => unsafeService.getAnimeById(1, { select: [1, 2] })).toThrow(
+			"select must be an object.",
+		);
+		expect(gql.requests).toHaveLength(0);
+	});
 });
 
 // ── Type narrowing: selected result exposes only selected fields ──────────────
@@ -808,5 +826,285 @@ describe("selected return type narrowing", () => {
 		// @ts-expect-error — uppercase "Page" must not exist on the result
 		const _upperPage = result.Page;
 		expect(result).toHaveProperty("page");
+	});
+});
+
+// ── Selection root routing ────────────────────────────────────────────────────
+
+describe("selection root routing", () => {
+	it("treats a mixed legacy staff selection as a direct Staff selection", async () => {
+		const staff = makeStaffService();
+		staff.gql.setResponse({ Staff: { id: 1, staff: { id: 2 } } });
+
+		const result = await staff.service.getStaffById(1, {
+			select: { id: true, staff: { id: true } },
+		});
+
+		const document = staff.gql.lastRequest().document.replace(/\s+/g, " ");
+		expect(document).toContain("id staff { id }");
+		expect(result).toEqual({ Staff: { id: 1, staff: { id: 2 } } });
+	});
+
+	it("still returns the normalized staff root for wrapped selections", async () => {
+		const staff = makeStaffService();
+		staff.gql.setResponse({ Staff: { id: 1 } });
+
+		await expect(
+			staff.service.getStaffById(1, { select: { staff: { id: true } } }),
+		).resolves.toEqual({ staff: { id: 1 } });
+	});
+});
+
+// ── Selected anime filters match the static queries ──────────────────────────
+
+describe("selected anime filters match the static queries", () => {
+	it("browseAnime selection includes the popularity sort and adult filter", async () => {
+		const { gql, service } = makeAnimeService();
+		gql.setResponse({ Page: { media: [] } });
+
+		await service.browseAnime({}, 1, 10, {
+			select: { page: { media: { id: true } } },
+		});
+
+		const document = gql.lastRequest().document;
+		expect(document).toContain("sort: POPULARITY_DESC");
+		expect(document).toContain("isAdult: false");
+	});
+
+	it("getSeasonalAnime selection includes the popularity sort and adult filter", async () => {
+		const { gql, service } = makeAnimeService();
+		gql.setResponse({ Page: { media: [] } });
+
+		await service.getSeasonalAnime(MediaSeason.Fall, 2023, 1, 10, {
+			select: { page: { media: { id: true } } },
+		});
+
+		const document = gql.lastRequest().document;
+		expect(document).toContain("sort: POPULARITY_DESC");
+		expect(document).toContain("isAdult: false");
+	});
+});
+
+// ── Selected title lookups request a single result ───────────────────────────
+
+describe("selected title lookups request a single result", () => {
+	it("getAnimeByTitle and getMangaByTitle send perPage: 1", async () => {
+		const anime = makeAnimeService();
+		anime.gql.setResponse({ Page: { media: [] } });
+		await anime.service.getAnimeByTitle("Frieren", {
+			select: { page: { media: { id: true } } },
+		});
+		expect(anime.gql.lastRequest().variables).toEqual({
+			title: "Frieren",
+			page: 1,
+			perPage: 1,
+		});
+
+		const manga = makeMangaService();
+		manga.gql.setResponse({ Page: { media: [] } });
+		await manga.service.getMangaByTitle("Berserk", {
+			select: { page: { media: { id: true } } },
+		});
+		expect(manga.gql.lastRequest().variables).toEqual({
+			title: "Berserk",
+			page: 1,
+			perPage: 1,
+		});
+	});
+});
+
+// ── Staff birthday pagination ─────────────────────────────────────────────────
+
+describe("staff birthday pagination", () => {
+	it("forwards perPage through the selected path", async () => {
+		const { gql, service } = makeStaffService();
+		gql.setResponse({ Page: { staff: [] } });
+
+		await service.getStaffBirthdayToday(2, 50, {
+			select: { page: { staff: { id: true } } },
+		});
+
+		expect(gql.lastRequest().variables).toEqual({ page: 2, perPage: 50 });
+	});
+
+	it("forwards perPage through the SDK path and defaults it to 25", async () => {
+		const fake = new FakeSdk().respond(
+			"StaffBirthdayToday",
+			sdkResult("StaffBirthdayToday", { Page: null }),
+		);
+		const service = new StaffService(fake.client());
+
+		await service.getStaffBirthdayToday(3, 40);
+		await service.getStaffBirthdayToday();
+
+		expect(fake.calls.map((call) => call.variables)).toEqual([
+			{ page: 3, perPage: 40 },
+			{ page: 1, perPage: 25 },
+		]);
+	});
+});
+
+// ── Media list collection status forwarding ──────────────────────────────────
+
+describe("media list collection status forwarding", () => {
+	it("forwards status in selected calls and omits it when absent", async () => {
+		const select = { lists: { entries: { id: true } } } as const;
+		const media = makeMediaService();
+
+		media.gql.setResponse({ MediaListCollection: { lists: [] } });
+		await media.service.getMediaList(1, "ANIME", MediaListStatus.Completed, {
+			select,
+		});
+		expect(media.gql.lastRequest().variables).toEqual({
+			userId: 1,
+			mediaType: "ANIME",
+			status: MediaListStatus.Completed,
+		});
+
+		media.gql.setResponse({ MediaListCollection: { lists: [] } });
+		await media.service.getMediaList(1, "ANIME", undefined, { select });
+		expect(media.gql.lastRequest().variables).toEqual({
+			userId: 1,
+			mediaType: "ANIME",
+		});
+
+		media.gql.setResponse({ MediaListCollection: { lists: [] } });
+		await media.service.getMediaListByUsername(
+			"example",
+			"MANGA",
+			MediaListStatus.Current,
+			{ select },
+		);
+		expect(media.gql.lastRequest().variables).toEqual({
+			userName: "example",
+			mediaType: "MANGA",
+			status: MediaListStatus.Current,
+		});
+
+		const mediaList = makeMediaListService();
+
+		mediaList.gql.setResponse({ MediaListCollection: { lists: [] } });
+		await mediaList.service.getMediaListByUser(
+			1,
+			"ANIME",
+			MediaListStatus.Paused,
+			{ select },
+		);
+		expect(mediaList.gql.lastRequest().variables).toEqual({
+			userId: 1,
+			mediaType: "ANIME",
+			status: MediaListStatus.Paused,
+		});
+
+		mediaList.gql.setResponse({ MediaListCollection: { lists: [] } });
+		await mediaList.service.getMediaListByUsername(
+			"example",
+			"MANGA",
+			undefined,
+			{ select },
+		);
+		expect(mediaList.gql.lastRequest().variables).toEqual({
+			userName: "example",
+			mediaType: "MANGA",
+		});
+	});
+});
+
+// ── Page selection shapes ─────────────────────────────────────────────────────
+
+describe("page selection shapes", () => {
+	it("builds documents from a legacy page body", async () => {
+		const { gql, service } = makeAnimeService();
+		gql.setResponse({ Page: { media: [{ id: 1 }], pageInfo: { total: 1 } } });
+		const legacy = service as unknown as {
+			getAnimeBySearch(
+				search: string,
+				page: number,
+				perPage: number,
+				options: unknown,
+			): Promise<unknown>;
+		};
+
+		await legacy.getAnimeBySearch("test", 1, 10, {
+			select: { pageInfo: { total: true }, media: { id: true } },
+		});
+
+		const document = gql.lastRequest().document;
+		expect(document).toContain("pageInfo");
+		expect(document).toContain("total");
+		expect(document).toContain("media(search: $query, type: ANIME)");
+	});
+
+	it("throws descriptive TypeErrors for empty and undefined page selections", () => {
+		const { gql, service } = makeAnimeService();
+		const unsafe = service as unknown as {
+			getAnimeBySearch(
+				search: string,
+				page: number,
+				perPage: number,
+				options: unknown,
+			): unknown;
+		};
+
+		expect(() =>
+			unsafe.getAnimeBySearch("test", 1, 10, { select: {} }),
+		).toThrow(TypeError);
+		expect(() =>
+			unsafe.getAnimeBySearch("test", 1, 10, { select: {} }),
+		).toThrow(/"pageInfo" and "media"/);
+		expect(() =>
+			unsafe.getAnimeBySearch("test", 1, 10, {
+				select: { page: undefined },
+			}),
+		).toThrow(TypeError);
+		expect(() =>
+			unsafe.getAnimeBySearch("test", 1, 10, {
+				select: { page: undefined },
+			}),
+		).toThrow(/"pageInfo" and "media"/);
+		expect(gql.requests).toHaveLength(0);
+	});
+});
+
+// ── Selection builder hardening ───────────────────────────────────────────────
+
+describe("selection builder hardening", () => {
+	it("skips null and undefined entries", () => {
+		const document = buildRootDocument({
+			operationName: "SelectedAnimeById",
+			variableDefinitions: "($id: Int)",
+			rootField: "Media",
+			rootArgs: ["id: $id"],
+			select: { id: true, title: null, coverImage: undefined, genres: true },
+			context: "MediaSelect",
+		});
+
+		expect(document).toContain("id");
+		expect(document).toContain("genres");
+		expect(document).not.toContain("title");
+		expect(document).not.toContain("coverImage");
+	});
+
+	it("throws a descriptive TypeError for unknown page keys", () => {
+		expect(() =>
+			buildPageDocument({
+				operationName: "SelectedAnimeSearch",
+				variableDefinitions: "($page: Int, $perPage: Int)",
+				fieldName: "media",
+				select: { media: { id: true }, bogus: true },
+				context: "page select",
+			}),
+		).toThrow(/Allowed keys: pageInfo, media/);
+	});
+});
+
+// ── Media type conversion ─────────────────────────────────────────────────────
+
+describe("media type conversion", () => {
+	it("throws a TypeError for unsupported media type strings", () => {
+		expect(() => toMediaType("anime" as MediaTypeNonEnum)).toThrow(TypeError);
+		expect(() => toMediaType("anime" as MediaTypeNonEnum)).toThrow(
+			'mediaType must be "ANIME" or "MANGA".',
+		);
 	});
 });

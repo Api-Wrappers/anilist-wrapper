@@ -14,7 +14,11 @@ import type {
 	RootSelectionOption,
 	SelectionOption,
 } from "../selections/options";
-import { getSelection, hasSelection } from "../selections/options";
+import {
+	hasSelection,
+	resolvePageSelection,
+	resolveSelection,
+} from "../selections/options";
 import type {
 	MediaListCollectionSelect,
 	SelectedMediaListCollection,
@@ -63,9 +67,7 @@ export class UserService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "user");
-			const wrapped =
-				(options.select as Record<string, unknown>).user !== undefined;
+			const { select, wrapped } = resolveSelection(options, "user");
 			const document = buildUserByIdDocument(select);
 			return this.graphQLClient
 				.request<{ User: SelectedUser<TSelect> | null }, { id: number }>({
@@ -101,9 +103,7 @@ export class UserService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "user");
-			const wrapped =
-				(options.select as Record<string, unknown>).user !== undefined;
+			const { select, wrapped } = resolveSelection(options, "user");
 			const document = buildUserByUsernameDocument(select);
 			return this.graphQLClient
 				.request<{ User: SelectedUser<TSelect> | null }, { userName: string }>({
@@ -149,10 +149,10 @@ export class UserService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "mediaListCollection");
-			const wrapped =
-				(options.select as Record<string, unknown>).mediaListCollection !==
-				undefined;
+			const { select, wrapped } = resolveSelection(
+				options,
+				"mediaListCollection",
+			);
 			const document = buildMediaListCollectionByUserDocument(select, "id");
 			return this.graphQLClient
 				.request<
@@ -214,10 +214,10 @@ export class UserService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "mediaListCollection");
-			const wrapped =
-				(options.select as Record<string, unknown>).mediaListCollection !==
-				undefined;
+			const { select, wrapped } = resolveSelection(
+				options,
+				"mediaListCollection",
+			);
 			const document = buildMediaListCollectionByUserDocument(
 				select,
 				"username",
@@ -282,10 +282,10 @@ export class UserService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "mediaListCollection");
-			const wrapped =
-				(options.select as Record<string, unknown>).mediaListCollection !==
-				undefined;
+			const { select, wrapped } = resolveSelection(
+				options,
+				"mediaListCollection",
+			);
 			const document = buildMediaListCollectionByUserDocument(select, "id");
 			return this.graphQLClient
 				.request<
@@ -347,10 +347,10 @@ export class UserService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "mediaListCollection");
-			const wrapped =
-				(options.select as Record<string, unknown>).mediaListCollection !==
-				undefined;
+			const { select, wrapped } = resolveSelection(
+				options,
+				"mediaListCollection",
+			);
 			const document = buildMediaListCollectionByUserDocument(
 				select,
 				"username",
@@ -409,7 +409,7 @@ export class UserService {
 				"SelectedUserList",
 				"($page: Int, $perPage: Int)",
 				[],
-				options.select.page,
+				resolvePageSelection<TSelect>(options.select, "users"),
 			);
 			return this.graphQLClient
 				.request<
@@ -448,9 +448,7 @@ export class UserService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "user");
-			const wrapped =
-				(options.select as Record<string, unknown>).user !== undefined;
+			const { select, wrapped } = resolveSelection(options, "user");
 			const document = buildUserByIdDocument(select);
 			return this.graphQLClient
 				.request<{ User: SelectedUser<TSelect> | null }, { id: number }>({
@@ -486,9 +484,7 @@ export class UserService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "user");
-			const wrapped =
-				(options.select as Record<string, unknown>).user !== undefined;
+			const { select, wrapped } = resolveSelection(options, "user");
 			const document = buildUserByUsernameDocument(select);
 			return this.graphQLClient
 				.request<{ User: SelectedUser<TSelect> | null }, { userName: string }>({

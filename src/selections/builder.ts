@@ -31,14 +31,12 @@ function buildSelectionSet(
 		if (!/^[_A-Za-z][_0-9A-Za-z]*$/.test(key)) {
 			throw new TypeError(`Invalid GraphQL field name "${key}" in selection.`);
 		}
+		if (value === undefined || value === null) {
+			continue;
+		}
 		if (value === true) {
 			lines.push(`${indent}${key}`);
-		} else if (
-			value !== null &&
-			typeof value === "object" &&
-			!Array.isArray(value) &&
-			Object.getPrototypeOf(value) === Object.prototype
-		) {
+		} else if (typeof value === "object" && !Array.isArray(value)) {
 			const inner = buildSelectionSet(
 				value as Record<string, unknown>,
 				`${indent}  `,
@@ -117,11 +115,19 @@ export function buildMutationDocument(
 }
 
 export function buildPageDocument(options: PageDocumentOptions): string {
+	for (const key of Object.keys(options.select)) {
+		if (key !== "pageInfo" && key !== options.fieldName) {
+			throw new TypeError(
+				`Invalid page selection key "${key}". Allowed keys: pageInfo, ${options.fieldName}.`,
+			);
+		}
+	}
+
 	const sections: string[] = [];
 	const pageInfo = options.select.pageInfo;
 	const field = options.select[options.fieldName];
 
-	if (pageInfo !== undefined) {
+	if (pageInfo !== undefined && pageInfo !== null) {
 		const inner = requireNonEmpty(
 			buildSelectionSet(pageInfo as Record<string, unknown>, "      "),
 			"pageInfo selection",
@@ -129,7 +135,7 @@ export function buildPageDocument(options: PageDocumentOptions): string {
 		sections.push(`    pageInfo {\n${inner}\n    }`);
 	}
 
-	if (field !== undefined) {
+	if (field !== undefined && field !== null) {
 		const inner = requireNonEmpty(
 			buildSelectionSet(field as Record<string, unknown>, "      "),
 			`${options.fieldName} selection`,

@@ -20,7 +20,11 @@ import type {
 	RootSelectionOption,
 	SelectionOption,
 } from "../selections/options";
-import { getSelection, hasSelection } from "../selections/options";
+import {
+	hasSelection,
+	resolvePageSelection,
+	resolveSelection,
+} from "../selections/options";
 import type {
 	FavouritesSelect,
 	MediaPageSelect,
@@ -95,10 +99,9 @@ export class AnimeService {
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
-			const wrapped =
-				(options.select as Record<string, unknown>).media !== undefined;
-			return this.selectedMedia(getSelection(options, "media"), { id }).then(
-				(raw) => (wrapped ? { media: raw.Media } : raw),
+			const { select, wrapped } = resolveSelection(options, "media");
+			return this.selectedMedia(select, { id }).then((raw) =>
+				wrapped ? { media: raw.Media } : raw,
 			);
 		}
 		return this.client.GetAnimeById({ id });
@@ -134,7 +137,9 @@ export class AnimeService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const document = buildAnimeSearchDocument(options.select.page);
+			const document = buildAnimeSearchDocument(
+				resolvePageSelection<TSelect>(options.select, "media"),
+			);
 			const p: Promise<{ page: SelectedMediaPage<TSelect> | null }> =
 				this.graphQLClient
 					.request<
@@ -174,7 +179,7 @@ export class AnimeService {
 				"SelectedAnimeTrending",
 				"($page: Int, $perPage: Int)",
 				["type: ANIME", "sort: TRENDING_DESC"],
-				options.select.page,
+				resolvePageSelection<TSelect>(options.select, "media"),
 			);
 			return this.selectedMediaPage<TSelect>(document, { page, perPage });
 		}
@@ -208,7 +213,7 @@ export class AnimeService {
 				"SelectedAnimePopular",
 				"($page: Int, $perPage: Int)",
 				["type: ANIME", "sort: POPULARITY_DESC"],
-				options.select.page,
+				resolvePageSelection<TSelect>(options.select, "media"),
 			);
 			return this.selectedMediaPage<TSelect>(document, { page, perPage });
 		}
@@ -236,9 +241,8 @@ export class AnimeService {
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
-			const wrapped =
-				(options.select as Record<string, unknown>).media !== undefined;
-			return this.selectedMedia(getSelection(options, "media"), {
+			const { select, wrapped } = resolveSelection(options, "media");
+			return this.selectedMedia(select, {
 				id: mediaId,
 			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
 		}
@@ -264,9 +268,8 @@ export class AnimeService {
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
-			const wrapped =
-				(options.select as Record<string, unknown>).media !== undefined;
-			return this.selectedMedia(getSelection(options, "media"), {
+			const { select, wrapped } = resolveSelection(options, "media");
+			return this.selectedMedia(select, {
 				id: mediaId,
 			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
 		}
@@ -292,9 +295,8 @@ export class AnimeService {
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
-			const wrapped =
-				(options.select as Record<string, unknown>).media !== undefined;
-			return this.selectedMedia(getSelection(options, "media"), {
+			const { select, wrapped } = resolveSelection(options, "media");
+			return this.selectedMedia(select, {
 				id: mediaId,
 			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
 		}
@@ -320,9 +322,8 @@ export class AnimeService {
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
-			const wrapped =
-				(options.select as Record<string, unknown>).media !== undefined;
-			return this.selectedMedia(getSelection(options, "media"), {
+			const { select, wrapped } = resolveSelection(options, "media");
+			return this.selectedMedia(select, {
 				id: mediaId,
 			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
 		}
@@ -350,12 +351,12 @@ export class AnimeService {
 				"SelectedAnimeByTitle",
 				"($title: String, $page: Int, $perPage: Int)",
 				["search: $title", "type: ANIME"],
-				options.select.page,
+				resolvePageSelection<TSelect>(options.select, "media"),
 			);
 			return this.selectedMediaPage<TSelect>(document, {
 				title,
 				page: 1,
-				perPage: 10,
+				perPage: 1,
 			});
 		}
 		return this.client.GetAnimeByTitle({ title });
@@ -392,7 +393,7 @@ export class AnimeService {
 				"SelectedAnimeListByGenre",
 				"($genre: String, $page: Int, $perPage: Int)",
 				["genre: $genre", "type: ANIME"],
-				options.select.page,
+				resolvePageSelection<TSelect>(options.select, "media"),
 			);
 			return this.selectedMediaPage<TSelect>(document, {
 				genre,
@@ -455,8 +456,10 @@ export class AnimeService {
 					"status: $status",
 					"seasonYear: $seasonYear",
 					"type: ANIME",
+					"sort: POPULARITY_DESC",
+					"isAdult: false",
 				],
-				options.select.page,
+				resolvePageSelection<TSelect>(options.select, "media"),
 			);
 			return this.selectedMediaPage<TSelect>(document, {
 				genre,
@@ -511,8 +514,14 @@ export class AnimeService {
 			const document = buildMediaPageDocument(
 				"SelectedSeasonalAnime",
 				"($season: MediaSeason, $seasonYear: Int, $page: Int, $perPage: Int)",
-				["season: $season", "seasonYear: $seasonYear", "type: ANIME"],
-				options.select.page,
+				[
+					"season: $season",
+					"seasonYear: $seasonYear",
+					"type: ANIME",
+					"sort: POPULARITY_DESC",
+					"isAdult: false",
+				],
+				resolvePageSelection<TSelect>(options.select, "media"),
 			);
 			return this.selectedMediaPage<TSelect>(document, {
 				season,
@@ -547,22 +556,8 @@ export class AnimeService {
 		animeId: number,
 		options?: SelectionOption<"favorites", TSelect>,
 	): unknown {
-		if (hasSelection(options)) {
-			if (!this.graphQLClient) {
-				throw new Error("graphQLClient is required for selected queries.");
-			}
-			const select = getSelection(options, "favorites");
-			const wrapped =
-				(options.select as Record<string, unknown>).favorites !== undefined;
-			const document = buildToggleFavouriteDocument(select, "animeId");
-			return this.graphQLClient
-				.request<
-					{ ToggleFavourite: SelectedFavourites<TSelect> | null },
-					{ id: number }
-				>({ document, variables: { id: animeId } })
-				.then((raw) => (wrapped ? { favorites: raw.ToggleFavourite } : raw));
-		}
-		return this.toggleFavorite(animeId);
+		if (options === undefined) return this.toggleFavorite(animeId);
+		return this.toggleFavorite(animeId, options as { select: TSelect });
 	}
 
 	/**
@@ -588,9 +583,7 @@ export class AnimeService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const select = getSelection(options, "favorites");
-			const wrapped =
-				(options.select as Record<string, unknown>).favorites !== undefined;
+			const { select, wrapped } = resolveSelection(options, "favorites");
 			const document = buildToggleFavouriteDocument(select, "animeId");
 			return this.graphQLClient
 				.request<
