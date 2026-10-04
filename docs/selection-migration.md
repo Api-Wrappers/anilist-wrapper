@@ -114,6 +114,14 @@ console.log(legacy.Media?.id);
 Prefer the new root-object shape for new code because selected calls then return
 the same lowercase root names across endpoint families.
 
+## Selection Depth Limits
+
+The selection types recurse into object fields up to a depth of five levels,
+which breaks circular AniList types (`Media` → `MediaConnection` →
+`MediaEdge` → `Media`). At the limit, only scalar fields of the deepest object
+remain selectable. Deeper projections should use `anilist.graphql.request`
+with a hand-written document.
+
 ## Common Migrations
 
 | Before | After |

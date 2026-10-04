@@ -1491,3 +1491,82 @@ describe("service boundary validation", () => {
 		expect(mediaList.gql.requests).toHaveLength(0);
 	});
 });
+
+// ── Remaining selected endpoints ──────────────────────────────────────────────
+
+describe("remaining selected endpoints", () => {
+	it("anime sub-resource endpoints build the expected documents", async () => {
+		const { gql, service } = makeAnimeService();
+
+		gql.setResponse({ Media: { recommendations: { edges: [] } } });
+		await service.getRecommendations(16498, {
+			select: { media: { recommendations: { edges: { node: { id: true } } } } },
+		});
+		expect(gql.lastRequest().document).toContain("recommendations");
+
+		gql.setResponse({ Media: { relations: { edges: [] } } });
+		await service.getRelations(16498, {
+			select: { media: { relations: { edges: { relationType: true } } } },
+		});
+		expect(gql.lastRequest().document).toContain("relations");
+
+		gql.setResponse({ Media: { staff: { edges: [] } } });
+		await service.getStaff(16498, {
+			select: { media: { staff: { edges: { role: true } } } },
+		});
+		expect(gql.lastRequest().document).toContain("staff");
+	});
+
+	it("manga sub-resource endpoints build the expected documents", async () => {
+		const { gql, service } = makeMangaService();
+
+		gql.setResponse({ Media: { characters: { edges: [] } } });
+		await service.getMangaCharacters(30013, {
+			select: { media: { characters: { edges: { role: true } } } },
+		});
+		expect(gql.lastRequest().document).toContain("characters");
+
+		gql.setResponse({ Media: { staff: { edges: [] } } });
+		await service.getMangaStaff(30013, {
+			select: { media: { staff: { edges: { role: true } } } },
+		});
+		expect(gql.lastRequest().document).toContain("staff");
+
+		gql.setResponse({ Media: { relations: { edges: [] } } });
+		await service.getMangaRelations(30013, {
+			select: { media: { relations: { edges: { relationType: true } } } },
+		});
+		expect(gql.lastRequest().document).toContain("relations");
+	});
+
+	it("user and list collection endpoints build the expected documents", async () => {
+		const user = makeUserService();
+
+		user.gql.setResponse({ User: { id: 1 } });
+		await user.service.getUserInfoByUsername("example", {
+			select: { user: { id: true } },
+		});
+		expect(user.gql.lastRequest().document).toContain("User(name: $userName)");
+
+		user.gql.setResponse({ MediaListCollection: { lists: [] } });
+		await user.service.getUserMangaList(1, MediaListStatus.Current, {
+			select: { mediaListCollection: { lists: { entries: { id: true } } } },
+		});
+		expect(user.gql.lastRequest().document).toContain("MediaListCollection");
+
+		user.gql.setResponse({ User: { statistics: { anime: { count: 1 } } } });
+		await user.service.getUserStatistics(1, {
+			select: { user: { statistics: { anime: { count: true } } } },
+		});
+		expect(user.gql.lastRequest().document).toContain("statistics");
+
+		const mediaList = makeMediaListService();
+		mediaList.gql.setResponse({ MediaListCollection: { lists: [] } });
+		await mediaList.service.getMediaListByUser(1, "ANIME", undefined, {
+			select: { mediaListCollection: { lists: { entries: { id: true } } } },
+		});
+		expect(mediaList.gql.lastRequest().document).toContain(
+			"MediaListCollection(userId: $userId",
+		);
+	});
+});
