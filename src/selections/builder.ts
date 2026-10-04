@@ -1,4 +1,6 @@
 import type {
+	AiringSchedulePageSelect,
+	AiringScheduleSelect,
 	CharacterPageSelect,
 	CharacterSelect,
 	DeletedSelect,
@@ -7,12 +9,14 @@ import type {
 	MediaListSelect,
 	MediaPageSelect,
 	MediaSelect,
+	MediaTagSelect,
 	StaffPageSelect,
 	StaffSelect,
 	StudioPageSelect,
 	StudioSelect,
 	UserPageSelect,
 	UserSelect,
+	UserStatisticTypesSelect,
 } from "./types";
 
 // ── Core recursive builder ────────────────────────────────────────────────────
@@ -445,5 +449,69 @@ export function buildUserPageDocument(
 		fieldArgs,
 		select: select as Record<string, unknown>,
 		context: "page select",
+	});
+}
+
+export function buildMediaTagCollectionDocument(
+	select: MediaTagSelect,
+): string {
+	return buildRootDocument({
+		operationName: "SelectedMediaTagCollection",
+		variableDefinitions: "($status: Int)",
+		rootField: "MediaTagCollection",
+		rootArgs: ["status: $status"],
+		select: select as Record<string, unknown>,
+		context: "MediaTagSelect",
+	});
+}
+
+export function buildAiringScheduleByIdDocument(
+	select: AiringScheduleSelect,
+): string {
+	return buildRootDocument({
+		operationName: "SelectedAiringScheduleById",
+		variableDefinitions: "($id: Int)",
+		rootField: "AiringSchedule",
+		rootArgs: ["id: $id"],
+		select: select as Record<string, unknown>,
+		context: "AiringScheduleSelect",
+	});
+}
+
+export function buildAiringSchedulePageDocument(
+	operationName: string,
+	variableDefinitions: string,
+	fieldArgs: string[],
+	select: AiringSchedulePageSelect,
+): string {
+	return buildPageDocument({
+		operationName,
+		variableDefinitions,
+		fieldName: "airingSchedules",
+		fieldArgs,
+		select: select as Record<string, unknown>,
+		context: "page select",
+	});
+}
+
+export function buildViewerDocument(select: UserSelect): string {
+	return buildRootDocument({
+		operationName: "SelectedViewer",
+		variableDefinitions: "",
+		rootField: "Viewer",
+		select: select as Record<string, unknown>,
+		context: "UserSelect",
+	});
+}
+
+export function buildViewerStatisticsDocument(
+	select: UserStatisticTypesSelect,
+): string {
+	return buildRootDocument({
+		operationName: "SelectedViewerStatistics",
+		variableDefinitions: "",
+		rootField: "Viewer",
+		select: { statistics: select },
+		context: "UserStatisticTypesSelect",
 	});
 }

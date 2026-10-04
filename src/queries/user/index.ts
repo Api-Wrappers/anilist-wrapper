@@ -7,3 +7,5 @@ export * from "./getUserMangaList";
 export * from "./getUserMangaListByUserName";
 export * from "./getUserStatistics";
 export * from "./getUserStatisticsByUserName";
+export * from "./getViewer";
+export * from "./getViewerStatistics";
