@@ -94,6 +94,14 @@ export {
 	createSdkClient,
 } from "./client";
 export type {
+	ExtractedPage,
+	PageExtractor,
+	PageFetcher,
+	PageInfoLike,
+	PaginateOptions,
+} from "./pagination";
+export { collectPages, paginate } from "./pagination";
+export type {
 	ActivityReplyPageSelect,
 	ActivityReplySelect,
 	AiringSchedulePageSelect,
@@ -176,4 +184,9 @@ export type {
 	SaveThreadInput,
 	ThreadSearchFilters,
 } from "./services/socialService";
+export {
+	ANILIST_MAX_PER_PAGE,
+	assertPositiveInt,
+	normalizePerPage,
+} from "./services/validation";
 export { Anilist, Anilist as AniList };

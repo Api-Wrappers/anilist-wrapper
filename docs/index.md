@@ -111,11 +111,46 @@ map, mutation shapes, and the legacy direct-select compatibility path.
 
 ### Pagination
 
-List methods accept `page` and `perPage` arguments. Defaults are documented per method.
+List methods accept `page` and `perPage` arguments. Defaults are documented per
+method, and AniList caps `perPage` at 50.
 
 ```typescript
 const pageTwo = await anilist.anime.getTrendingAnime(2, 20);
 ```
+
+Collect every page sequentially with `collectPages`, or stream items with
+`paginate`:
+
+```typescript
+import { collectPages } from "@api-wrappers/anilist-wrapper";
+
+const media = await collectPages(
+	(page) => anilist.anime.getAnimeBySearch("Frieren", page, 50),
+	(response) => ({
+		pageInfo: response.Page?.pageInfo,
+		items: response.Page?.media,
+	}),
+);
+```
+
+### Anime and manga naming
+
+The anime and manga services cover the same concepts with different prefixes.
+Manga sub-resource methods carry the `Manga` prefix; the anime equivalents do
+not.
+
+| Anime | Manga |
+| --- | --- |
+| `getAnimeById` | `getMangaById` |
+| `getAnimeByTitle` | `getMangaByTitle` |
+| `getAnimeBySearch` | `getMangaBySearch` |
+| `getTrendingAnime` | `getMangaTrending` |
+| `getPopularAnime` | `getMangaPopular` |
+| `getAnimeListByGenre` | `getMangaListByGenre` |
+| `getRecommendations` | `getMangaRecommendations` |
+| `getRelations` | `getMangaRelations` |
+| `getCharacters` | `getMangaCharacters` |
+| `getStaff` | `getMangaStaff` |
 
 ### Media list statuses
 

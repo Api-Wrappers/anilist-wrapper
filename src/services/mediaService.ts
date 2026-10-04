@@ -51,6 +51,7 @@ import type {
 	SelectedReview,
 } from "../selections/types";
 import { toMediaType } from "./mediaType";
+import { assertPositiveInt, normalizePerPage } from "./validation";
 
 /**
  * Fields accepted by {@link MediaService.saveReview}. Provide `id` to update
@@ -100,6 +101,7 @@ export class MediaService {
 		id: number,
 		options?: SelectionOption<"media", TSelect>,
 	): unknown {
+		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -150,6 +152,7 @@ export class MediaService {
 		status?: MediaListStatus,
 		options?: SelectionOption<"mediaListCollection", TSelect>,
 	): unknown {
+		assertPositiveInt(userId, "userId");
 		const normalizedType = toMediaType(mediaType);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
@@ -330,6 +333,7 @@ export class MediaService {
 		id: number,
 		options?: SelectionOption<"airingSchedule", TSelect>,
 	): unknown {
+		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -389,6 +393,8 @@ export class MediaService {
 	):
 		| ReturnType<ANILISTSDK["GetAiringSchedulesByMedia"]>
 		| Promise<{ page: SelectedAiringSchedulePage<TSelect> | null }> {
+		const limit = normalizePerPage(perPage, 25);
+		assertPositiveInt(mediaId, "mediaId");
 		if (options?.select !== undefined) {
 			const document = buildAiringSchedulePageDocument(
 				"SelectedAiringSchedulesByMedia",
@@ -399,13 +405,13 @@ export class MediaService {
 			return this.selectedPage<TSelect>(document, {
 				mediaId,
 				page,
-				perPage,
+				perPage: limit,
 			});
 		}
 		return this.client.GetAiringSchedulesByMedia({
 			mediaId,
 			page,
-			perPage,
+			perPage: limit,
 		});
 	}
 
@@ -435,6 +441,8 @@ export class MediaService {
 	):
 		| ReturnType<ANILISTSDK["GetMediaReviews"]>
 		| Promise<{ page: SelectedFields<Page, TSelect> | null }> {
+		const limit = normalizePerPage(perPage, 10);
+		assertPositiveInt(mediaId, "mediaId");
 		if (options?.select !== undefined) {
 			const document = buildReviewPageDocument(
 				"SelectedMediaReviews",
@@ -445,10 +453,10 @@ export class MediaService {
 			return this.selectedPage<TSelect>(document, {
 				mediaId,
 				page,
-				perPage,
+				perPage: limit,
 			});
 		}
-		return this.client.GetMediaReviews({ mediaId, page, perPage });
+		return this.client.GetMediaReviews({ mediaId, page, perPage: limit });
 	}
 
 	/**
@@ -477,6 +485,8 @@ export class MediaService {
 	):
 		| ReturnType<ANILISTSDK["GetRecommendationsPage"]>
 		| Promise<{ page: SelectedFields<Page, TSelect> | null }> {
+		const limit = normalizePerPage(perPage, 10);
+		assertPositiveInt(mediaId, "mediaId");
 		if (options?.select !== undefined) {
 			const document = buildRecommendationPageDocument(
 				"SelectedRecommendationsPage",
@@ -487,10 +497,14 @@ export class MediaService {
 			return this.selectedPage<TSelect>(document, {
 				mediaId,
 				page,
-				perPage,
+				perPage: limit,
 			});
 		}
-		return this.client.GetRecommendationsPage({ mediaId, page, perPage });
+		return this.client.GetRecommendationsPage({
+			mediaId,
+			page,
+			perPage: limit,
+		});
 	}
 
 	/**
@@ -522,6 +536,8 @@ export class MediaService {
 		rating?: RecommendationRating,
 		options?: SelectionOption<"recommendation", TSelect>,
 	): unknown {
+		assertPositiveInt(mediaId, "mediaId");
+		assertPositiveInt(mediaRecommendationId, "mediaRecommendationId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -575,6 +591,7 @@ export class MediaService {
 		rating?: ReviewRating,
 		options?: SelectionOption<"review", TSelect>,
 	): unknown {
+		assertPositiveInt(reviewId, "reviewId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -650,6 +667,7 @@ export class MediaService {
 		id: number,
 		options?: SelectionOption<"deleteReview", TSelect>,
 	): unknown {
+		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");

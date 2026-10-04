@@ -34,6 +34,7 @@ import type {
 	SelectedMedia,
 	SelectedMediaPage,
 } from "../selections/types";
+import { normalizePerPage } from "./validation";
 
 /**
  * Service class for interacting with AniList manga-related queries.
@@ -113,17 +114,26 @@ export class MangaService {
 	 * @param title - The title of the manga.
 	 * @returns A promise resolving to the matching manga entry.
 	 */
-	getMangaByTitle(title: string): Promise<GetMangaByTitleQuery>;
+	getMangaByTitle(
+		title: string,
+		page?: number,
+		perPage?: number,
+	): Promise<GetMangaByTitleQuery>;
 	getMangaByTitle<TSelect extends MediaPageSelect>(
 		title: string,
+		page: number,
+		perPage: number,
 		options: { select: { page: TSelect } },
 	): Promise<{ page: SelectedMediaPage<TSelect> | null }>;
 	getMangaByTitle<TSelect extends MediaPageSelect>(
 		title: string,
+		page = 1,
+		perPage = 1,
 		options?: { select: { page: TSelect } },
 	):
 		| Promise<GetMangaByTitleQuery>
 		| Promise<{ page: SelectedMediaPage<TSelect> | null }> {
+		const limit = normalizePerPage(perPage, 1);
 		if (options?.select !== undefined) {
 			const document = buildMediaPageDocument(
 				"SelectedMangaByTitle",
@@ -133,11 +143,11 @@ export class MangaService {
 			);
 			return this.selectedMediaPage<TSelect>(document, {
 				title,
-				page: 1,
-				perPage: 1,
+				page,
+				perPage: limit,
 			});
 		}
-		return this.client.GetMangaByTitle({ title });
+		return this.client.GetMangaByTitle({ title, page, perPage: limit });
 	}
 
 	/**

@@ -13,7 +13,7 @@ const anilist = new Anilist();
 | Method | Auth | Returns |
 | --- | --- | --- |
 | `getAnimeById(id)` | No | `Media` |
-| `getAnimeByTitle(title)` | No | `Page.media` |
+| `getAnimeByTitle(title, page?, perPage?)` | No | `Page.media` |
 | `getAnimeBySearch(search, page?, perPage?)` | No | `Page.media` |
 | `getTrendingAnime(page?, perPage?)` | No | `Page.media` |
 | `getPopularAnime(page?, perPage?)` | No | `Page.media` |
@@ -62,6 +62,7 @@ get the first page, with 10 results for every anime list method.
 | `getTrendingAnime` | `1` | `10` |
 | `getPopularAnime` | `1` | `10` |
 | `getAnimeListByGenre` | `1` | `10` |
+| `getAnimeByTitle` | `1` | `1` |
 
 Pass both values when you want a specific window of results:
 
@@ -74,9 +75,35 @@ for (const media of page2.Page?.media ?? []) {
 }
 ```
 
+AniList caps `perPage` at 50. Passing a larger value throws a `TypeError`
+naming the limit, so requests fail before they reach the API.
+
 AniList can return `null` at any level, including the `Page` itself and the
 entries inside `media`. Use optional chaining, and fall back to an empty array
 before you loop, the way the example does with `?? []`.
+
+### Collecting every page
+
+Use `collectPages` to gather all items sequentially. It stops when
+`pageInfo.hasNextPage` is not `true` and propagates errors (including
+`RateLimitError`) untouched.
+
+```typescript
+import { collectPages } from "@api-wrappers/anilist-wrapper";
+
+const media = await collectPages(
+	(page) => anilist.anime.getAnimeBySearch("Frieren", page, 50),
+	(response) => ({
+		pageInfo: response.Page?.pageInfo,
+		items: response.Page?.media,
+	}),
+);
+
+console.log(media.length);
+```
+
+`paginate` is the streaming variant if you would rather process items as they
+arrive.
 
 ## Related Data
 

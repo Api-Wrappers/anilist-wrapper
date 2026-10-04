@@ -35,6 +35,7 @@ import type {
 	UserSelect,
 	UserStatisticTypesSelect,
 } from "../selections/types";
+import { assertPositiveInt, normalizePerPage } from "./validation";
 
 /**
  * Service class for interacting with AniList user-related queries.
@@ -71,6 +72,7 @@ export class UserService {
 		userId: number,
 		options?: SelectionOption<"user", TSelect>,
 	): unknown {
+		assertPositiveInt(userId, "userId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -152,6 +154,7 @@ export class UserService {
 		status?: MediaListStatus,
 		options?: SelectionOption<"mediaListCollection", TSelect>,
 	): unknown {
+		assertPositiveInt(userId, "userId");
 		const normalizedStatus = status ?? MediaListStatus.Current;
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
@@ -285,6 +288,7 @@ export class UserService {
 		status?: MediaListStatus,
 		options?: SelectionOption<"mediaListCollection", TSelect>,
 	): unknown {
+		assertPositiveInt(userId, "userId");
 		const normalizedStatus = status ?? MediaListStatus.Current;
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
@@ -409,6 +413,7 @@ export class UserService {
 		perPage = 10,
 		options?: { select: { page: TSelect } },
 	): unknown {
+		const limit = normalizePerPage(perPage, 10);
 		if (options?.select !== undefined) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -423,12 +428,12 @@ export class UserService {
 				.request<
 					{ Page: SelectedUserPage<TSelect> | null },
 					{ page: number; perPage: number }
-				>({ document, variables: { page, perPage } })
+				>({ document, variables: { page, perPage: limit } })
 				.then((raw) => ({ page: raw.Page }));
 		}
 		return this.client.GetUserList({
 			page,
-			perPage,
+			perPage: limit,
 		});
 	}
 
@@ -452,6 +457,7 @@ export class UserService {
 		userId: number,
 		options?: SelectionOption<"user", TSelect>,
 	): unknown {
+		assertPositiveInt(userId, "userId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -592,6 +598,8 @@ export class UserService {
 	):
 		| ReturnType<ANILISTSDK["GetUserReviews"]>
 		| Promise<{ page: SelectedFields<Page, TSelect> | null }> {
+		const limit = normalizePerPage(perPage, 10);
+		assertPositiveInt(userId, "userId");
 		if (options?.select !== undefined) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -608,10 +616,10 @@ export class UserService {
 				.request<
 					{ Page: SelectedFields<Page, TSelect> | null },
 					{ userId: number; page: number; perPage: number }
-				>({ document, variables: { userId, page, perPage } })
+				>({ document, variables: { userId, page, perPage: limit } })
 				.then((raw) => ({ page: raw.Page }));
 			return selected;
 		}
-		return this.client.GetUserReviews({ userId, page, perPage });
+		return this.client.GetUserReviews({ userId, page, perPage: limit });
 	}
 }

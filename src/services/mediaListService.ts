@@ -30,6 +30,7 @@ import type {
 	SelectedMediaListCollection,
 } from "../selections/types";
 import { toMediaType } from "./mediaType";
+import { assertPositiveInt } from "./validation";
 
 type SaveMediaListEntryFields = {
 	status?: MediaListStatus | null;
@@ -96,6 +97,7 @@ export class MediaListService {
 		id: number,
 		options?: SelectionOption<"mediaList", TSelect>,
 	): unknown {
+		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -146,6 +148,7 @@ export class MediaListService {
 		status?: MediaListStatus,
 		options?: SelectionOption<"mediaListCollection", TSelect>,
 	): unknown {
+		assertPositiveInt(userId, "userId");
 		const normalizedType = toMediaType(mediaType);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
@@ -332,6 +335,7 @@ export class MediaListService {
 		id: number,
 		options?: SelectionOption<"deleteMediaListEntry", TSelect>,
 	): unknown {
+		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
@@ -377,6 +381,7 @@ export class MediaListService {
 		entries: UpdateMediaListEntriesInput,
 		options?: SelectionOption<"updateMediaListEntries", TSelect>,
 	): unknown {
+		for (const entryId of entries.ids) assertPositiveInt(entryId, "ids");
 		const { ids, ...fields } = entries;
 		const mutationVariables: UpdateMediaListEntriesMutationVariables = {
 			advancedScores: fields.advancedScores,
