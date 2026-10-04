@@ -253,9 +253,8 @@ console.log(data.GenreCollection);
 ## Runtime Support
 
 The package ships ESM, CommonJS, and TypeScript declaration output from
-`dist/`. It is developed and tested with Bun, and it can be used from modern
-Node.js runtimes that support the package `exports` field and `fetch`-compatible
-HTTP behavior through `@api-wrappers/api-core`.
+`dist/`. It requires Node.js 18 or newer (for the global `fetch`) and works with
+Bun. CI imports both the ESM and CommonJS builds on Node 18, 20, and 22.
 
 ## Generated GraphQL Types
 

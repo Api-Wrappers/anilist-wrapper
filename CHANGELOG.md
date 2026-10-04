@@ -26,16 +26,6 @@
 
 - 70e4533: Add schema-derived field selection across every wrapper query and mutation with normalized response roots, legacy selection compatibility, current AniList mutation inputs, safer runtime validation, and refreshed generated API types.
 
-## Unreleased
-
-### Minor Changes
-
-- Added normalized root-object selected query support across read endpoints and
-  mutations. Selected calls can now use roots like `media`, `page`, `user`,
-  `mediaListCollection`, `mediaList`, `favorites`, and
-  `deleteMediaListEntry`, while legacy direct selections remain supported for
-  compatibility.
-
 ## 2.7.0
 
 ### Minor Changes
