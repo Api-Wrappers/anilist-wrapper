@@ -57,7 +57,8 @@ jobs:
         run: bun pm pack --dry-run
 
       - name: Create release PR or publish
-        uses: changesets/action@v2
+        # v2 requires Changesets CLI v3; this repo uses CLI v2 (@changesets/cli ^2).
+        uses: changesets/action@v1
         with:
           version: bun run version-packages
           publish: bun run release
