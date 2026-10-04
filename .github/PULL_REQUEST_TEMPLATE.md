@@ -37,6 +37,13 @@ List the commands you ran:
 - [ ] This PR does not change GraphQL operations, fragments, or generated types.
 - [ ] This PR changes GraphQL output and includes the `bun run codegen` result.
 
+## Changesets
+
+- [ ] A changeset is included for user-facing changes (minor for features and
+      fixes, major for breaking changes).
+- [ ] This change is internal-only (CI, docs, tests, or maintenance) and does
+      not need a changeset.
+
 ## Notes For Reviewers
 
 Add risks, follow-up work, or context that would help review.
