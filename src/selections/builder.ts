@@ -10,6 +10,10 @@ import type {
 	MediaPageSelect,
 	MediaSelect,
 	MediaTagSelect,
+	RecommendationPageSelect,
+	RecommendationSelect,
+	ReviewPageSelect,
+	ReviewSelect,
 	StaffPageSelect,
 	StaffSelect,
 	StudioPageSelect,
@@ -554,5 +558,96 @@ export function buildViewerStatisticsDocument(
 		rootField: "Viewer",
 		select: { statistics: select },
 		context: "UserStatisticTypesSelect",
+	});
+}
+
+export function buildReviewPageDocument(
+	operationName: string,
+	variableDefinitions: string,
+	fieldArgs: string[],
+	select: ReviewPageSelect,
+): string {
+	return buildPageDocument({
+		operationName,
+		variableDefinitions,
+		fieldName: "reviews",
+		fieldArgs,
+		select: select as Record<string, unknown>,
+		context: "page select",
+	});
+}
+
+export function buildRecommendationPageDocument(
+	operationName: string,
+	variableDefinitions: string,
+	fieldArgs: string[],
+	select: RecommendationPageSelect,
+): string {
+	return buildPageDocument({
+		operationName,
+		variableDefinitions,
+		fieldName: "recommendations",
+		fieldArgs,
+		select: select as Record<string, unknown>,
+		context: "page select",
+	});
+}
+
+export function buildSaveRecommendationDocument(
+	select: RecommendationSelect,
+): string {
+	return buildMutationDocument({
+		operationName: "SelectedSaveRecommendation",
+		variableDefinitions:
+			"($mediaId: Int, $mediaRecommendationId: Int, $rating: RecommendationRating)",
+		rootField: "SaveRecommendation",
+		rootArgs: [
+			"mediaId: $mediaId",
+			"mediaRecommendationId: $mediaRecommendationId",
+			"rating: $rating",
+		],
+		select: select as Record<string, unknown>,
+		context: "RecommendationSelect",
+	});
+}
+
+export function buildRateReviewDocument(select: ReviewSelect): string {
+	return buildMutationDocument({
+		operationName: "SelectedRateReview",
+		variableDefinitions: "($reviewId: Int, $rating: ReviewRating)",
+		rootField: "RateReview",
+		rootArgs: ["reviewId: $reviewId", "rating: $rating"],
+		select: select as Record<string, unknown>,
+		context: "ReviewSelect",
+	});
+}
+
+export function buildSaveReviewDocument(select: ReviewSelect): string {
+	return buildMutationDocument({
+		operationName: "SelectedSaveReview",
+		variableDefinitions:
+			"($id: Int, $mediaId: Int, $body: String, $summary: String, $score: Int, $private: Boolean)",
+		rootField: "SaveReview",
+		rootArgs: [
+			"id: $id",
+			"mediaId: $mediaId",
+			"body: $body",
+			"summary: $summary",
+			"score: $score",
+			"private: $private",
+		],
+		select: select as Record<string, unknown>,
+		context: "ReviewSelect",
+	});
+}
+
+export function buildDeleteReviewDocument(select: DeletedSelect): string {
+	return buildMutationDocument({
+		operationName: "SelectedDeleteReview",
+		variableDefinitions: "($id: Int)",
+		rootField: "DeleteReview",
+		rootArgs: ["id: $id"],
+		select: select as Record<string, unknown>,
+		context: "DeletedSelect",
 	});
 }

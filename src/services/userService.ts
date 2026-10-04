@@ -1,4 +1,5 @@
 import type { ANILISTSDK } from "../@types";
+import type { Page } from "../__generated__/anilist-schema";
 import {
 	type GraphQLClient,
 	MediaListStatus,
@@ -6,6 +7,7 @@ import {
 } from "../__generated__/anilist-sdk";
 import {
 	buildMediaListCollectionByUserDocument,
+	buildReviewPageDocument,
 	buildUserByIdDocument,
 	buildUserByUsernameDocument,
 	buildUserPageDocument,
@@ -23,6 +25,8 @@ import {
 } from "../selections/options";
 import type {
 	MediaListCollectionSelect,
+	ReviewPageSelect,
+	SelectedFields,
 	SelectedMediaListCollection,
 	SelectedUser,
 	SelectedUserPage,
@@ -560,5 +564,54 @@ export class UserService {
 				);
 		}
 		return this.client.GetViewerStatistics();
+	}
+
+	/**
+	 * Retrieves reviews written by a user.
+	 * When `options.select` is provided, only the selected fields are returned.
+	 * @param userId - The ID of the user whose reviews should be fetched.
+	 * @param page - Optional page number. Defaults to 1.
+	 * @param perPage - Optional number of reviews per page. Defaults to 10.
+	 */
+	getReviews(
+		userId: number,
+		page?: number,
+		perPage?: number,
+	): ReturnType<ANILISTSDK["GetUserReviews"]>;
+	getReviews<TSelect extends ReviewPageSelect>(
+		userId: number,
+		page: number,
+		perPage: number,
+		options: { select: { page: TSelect } },
+	): Promise<{ page: SelectedFields<Page, TSelect> | null }>;
+	getReviews<TSelect extends ReviewPageSelect>(
+		userId: number,
+		page = 1,
+		perPage = 10,
+		options?: { select: { page: TSelect } },
+	):
+		| ReturnType<ANILISTSDK["GetUserReviews"]>
+		| Promise<{ page: SelectedFields<Page, TSelect> | null }> {
+		if (options?.select !== undefined) {
+			if (!this.graphQLClient) {
+				throw new Error("graphQLClient is required for selected queries.");
+			}
+			const document = buildReviewPageDocument(
+				"SelectedUserReviews",
+				"($userId: Int, $page: Int, $perPage: Int)",
+				["userId: $userId"],
+				resolvePageSelection<TSelect>(options.select, "reviews"),
+			);
+			const selected: Promise<{
+				page: SelectedFields<Page, TSelect> | null;
+			}> = this.graphQLClient
+				.request<
+					{ Page: SelectedFields<Page, TSelect> | null },
+					{ userId: number; page: number; perPage: number }
+				>({ document, variables: { userId, page, perPage } })
+				.then((raw) => ({ page: raw.Page }));
+			return selected;
+		}
+		return this.client.GetUserReviews({ userId, page, perPage });
 	}
 }

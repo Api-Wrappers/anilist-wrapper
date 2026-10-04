@@ -9,6 +9,8 @@ import type {
 	MediaTag,
 	Page,
 	PageInfo,
+	Recommendation,
+	Review,
 	Staff,
 	Studio,
 	User,
@@ -92,6 +94,8 @@ export type StaffSelect = ToSelect<Staff>;
 export type StudioSelect = ToSelect<Studio>;
 export type MediaTagSelect = ToSelect<MediaTag>;
 export type AiringScheduleSelect = ToSelect<AiringSchedule>;
+export type ReviewSelect = ToSelect<Review>;
+export type RecommendationSelect = ToSelect<Recommendation>;
 export type UserStatisticTypesSelect = ToSelect<UserStatisticTypes>;
 export type UserSelect = ToSelect<User>;
 export type MediaListSelect = ToSelect<MediaList>;
@@ -128,6 +132,16 @@ export type UserPageSelect = {
 export type AiringSchedulePageSelect = {
 	pageInfo?: PageInfoSelect;
 	airingSchedules?: AiringScheduleSelect;
+};
+
+export type ReviewPageSelect = {
+	pageInfo?: PageInfoSelect;
+	reviews?: ReviewSelect;
+};
+
+export type RecommendationPageSelect = {
+	pageInfo?: PageInfoSelect;
+	recommendations?: RecommendationSelect;
 };
 
 // ── Public result mapped types ────────────────────────────────────────────────
@@ -210,3 +224,18 @@ export type SelectedAiringSchedulePage<
 export type SelectedUserStatisticTypes<
 	TSelect extends UserStatisticTypesSelect,
 > = SelectedFields<UserStatisticTypes, TSelect>;
+
+export type SelectedReview<TSelect extends ReviewSelect> = SelectedFields<
+	Review,
+	TSelect
+>;
+
+export type SelectedReviewPage<TSelect extends ReviewPageSelect> =
+	SelectedFields<Page, TSelect>;
+
+export type SelectedRecommendation<TSelect extends RecommendationSelect> =
+	SelectedFields<Recommendation, TSelect>;
+
+export type SelectedRecommendationPage<
+	TSelect extends RecommendationPageSelect,
+> = SelectedFields<Page, TSelect>;

@@ -103,6 +103,10 @@ export type {
 	MediaSelect,
 	MediaTagSelect,
 	PageInfoSelect,
+	RecommendationPageSelect,
+	RecommendationSelect,
+	ReviewPageSelect,
+	ReviewSelect,
 	SelectedAiringSchedule,
 	SelectedAiringSchedulePage,
 	SelectedCharacter,
@@ -115,6 +119,10 @@ export type {
 	SelectedMediaListCollection,
 	SelectedMediaPage,
 	SelectedMediaTag,
+	SelectedRecommendation,
+	SelectedRecommendationPage,
+	SelectedReview,
+	SelectedReviewPage,
 	SelectedStaff,
 	SelectedStaffPage,
 	SelectedStudio,
@@ -136,4 +144,5 @@ export type {
 	SaveMediaListEntryInput,
 	UpdateMediaListEntriesInput,
 } from "./services/mediaListService";
+export type { SaveReviewInput } from "./services/mediaService";
 export { Anilist, Anilist as AniList };

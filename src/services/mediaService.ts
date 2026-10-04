@@ -1,14 +1,24 @@
 import type { ANILISTSDK, MediaTypeNonEnum } from "../@types";
+import type { Page } from "../__generated__/anilist-schema";
 import type {
 	GraphQLClient,
 	MediaListStatus,
+	RecommendationRating,
+	ReviewRating,
+	SaveReviewMutationVariables,
 } from "../__generated__/anilist-sdk";
 import {
 	buildAiringScheduleByIdDocument,
 	buildAiringSchedulePageDocument,
+	buildDeleteReviewDocument,
 	buildMediaByIdDocument,
 	buildMediaListCollectionByUserDocument,
 	buildMediaTagCollectionDocument,
+	buildRateReviewDocument,
+	buildRecommendationPageDocument,
+	buildReviewPageDocument,
+	buildSaveRecommendationDocument,
+	buildSaveReviewDocument,
 } from "../selections/builder";
 import type {
 	RootSelectionOption,
@@ -22,16 +32,38 @@ import {
 import type {
 	AiringSchedulePageSelect,
 	AiringScheduleSelect,
+	DeletedSelect,
 	MediaListCollectionSelect,
 	MediaSelect,
 	MediaTagSelect,
+	RecommendationPageSelect,
+	RecommendationSelect,
+	ReviewPageSelect,
+	ReviewSelect,
 	SelectedAiringSchedule,
 	SelectedAiringSchedulePage,
+	SelectedDeleted,
+	SelectedFields,
 	SelectedMedia,
 	SelectedMediaListCollection,
 	SelectedMediaTag,
+	SelectedRecommendation,
+	SelectedReview,
 } from "../selections/types";
 import { toMediaType } from "./mediaType";
+
+/**
+ * Fields accepted by {@link MediaService.saveReview}. Provide `id` to update
+ * an existing review or `mediaId` to create one.
+ */
+export type SaveReviewInput = {
+	id?: number | null;
+	mediaId?: number | null;
+	body?: string | null;
+	summary?: string | null;
+	score?: number | null;
+	private?: boolean | null;
+};
 
 /**
  * Service class responsible for interacting with the AniList API to retrieve media details.
@@ -316,16 +348,16 @@ export class MediaService {
 		return this.client.GetAiringSchedule({ id });
 	}
 
-	private selectedAiringSchedulePage<TSelect extends AiringSchedulePageSelect>(
+	private selectedPage<TSelect>(
 		document: string,
 		variables: Record<string, unknown>,
-	): Promise<{ page: SelectedAiringSchedulePage<TSelect> | null }> {
+	): Promise<{ page: SelectedFields<Page, TSelect> | null }> {
 		if (!this.graphQLClient) {
 			throw new Error("graphQLClient is required for selected queries.");
 		}
 		return this.graphQLClient
 			.request<
-				{ Page: SelectedAiringSchedulePage<TSelect> | null },
+				{ Page: SelectedFields<Page, TSelect> | null },
 				Record<string, unknown>
 			>({ document, variables })
 			.then((raw) => ({ page: raw.Page }));
@@ -364,7 +396,7 @@ export class MediaService {
 				["mediaId: $mediaId"],
 				resolvePageSelection<TSelect>(options.select, "airingSchedules"),
 			);
-			return this.selectedAiringSchedulePage<TSelect>(document, {
+			return this.selectedPage<TSelect>(document, {
 				mediaId,
 				page,
 				perPage,
@@ -375,5 +407,262 @@ export class MediaService {
 			page,
 			perPage,
 		});
+	}
+
+	/**
+	 * Retrieves reviews for a media entry.
+	 * When `options.select` is provided, only the selected fields are returned.
+	 * @param mediaId - The ID of the media whose reviews should be fetched.
+	 * @param page - Optional page number. Defaults to 1.
+	 * @param perPage - Optional number of reviews per page. Defaults to 10.
+	 */
+	getReviews(
+		mediaId: number,
+		page?: number,
+		perPage?: number,
+	): ReturnType<ANILISTSDK["GetMediaReviews"]>;
+	getReviews<TSelect extends ReviewPageSelect>(
+		mediaId: number,
+		page: number,
+		perPage: number,
+		options: { select: { page: TSelect } },
+	): Promise<{ page: SelectedFields<Page, TSelect> | null }>;
+	getReviews<TSelect extends ReviewPageSelect>(
+		mediaId: number,
+		page = 1,
+		perPage = 10,
+		options?: { select: { page: TSelect } },
+	):
+		| ReturnType<ANILISTSDK["GetMediaReviews"]>
+		| Promise<{ page: SelectedFields<Page, TSelect> | null }> {
+		if (options?.select !== undefined) {
+			const document = buildReviewPageDocument(
+				"SelectedMediaReviews",
+				"($mediaId: Int, $page: Int, $perPage: Int)",
+				["mediaId: $mediaId"],
+				resolvePageSelection<TSelect>(options.select, "reviews"),
+			);
+			return this.selectedPage<TSelect>(document, {
+				mediaId,
+				page,
+				perPage,
+			});
+		}
+		return this.client.GetMediaReviews({ mediaId, page, perPage });
+	}
+
+	/**
+	 * Retrieves recommendations for a media entry.
+	 * When `options.select` is provided, only the selected fields are returned.
+	 * @param mediaId - The ID of the media whose recommendations should be fetched.
+	 * @param page - Optional page number. Defaults to 1.
+	 * @param perPage - Optional number of recommendations per page. Defaults to 10.
+	 */
+	getRecommendationsPage(
+		mediaId: number,
+		page?: number,
+		perPage?: number,
+	): ReturnType<ANILISTSDK["GetRecommendationsPage"]>;
+	getRecommendationsPage<TSelect extends RecommendationPageSelect>(
+		mediaId: number,
+		page: number,
+		perPage: number,
+		options: { select: { page: TSelect } },
+	): Promise<{ page: SelectedFields<Page, TSelect> | null }>;
+	getRecommendationsPage<TSelect extends RecommendationPageSelect>(
+		mediaId: number,
+		page = 1,
+		perPage = 10,
+		options?: { select: { page: TSelect } },
+	):
+		| ReturnType<ANILISTSDK["GetRecommendationsPage"]>
+		| Promise<{ page: SelectedFields<Page, TSelect> | null }> {
+		if (options?.select !== undefined) {
+			const document = buildRecommendationPageDocument(
+				"SelectedRecommendationsPage",
+				"($mediaId: Int, $page: Int, $perPage: Int)",
+				["mediaId: $mediaId"],
+				resolvePageSelection<TSelect>(options.select, "recommendations"),
+			);
+			return this.selectedPage<TSelect>(document, {
+				mediaId,
+				page,
+				perPage,
+			});
+		}
+		return this.client.GetRecommendationsPage({ mediaId, page, perPage });
+	}
+
+	/**
+	 * Saves a recommendation rating. Requires authentication.
+	 * @param mediaId - The media the recommendation belongs to.
+	 * @param mediaRecommendationId - The recommended media.
+	 * @param rating - Optional rating (`RecommendationRating`).
+	 */
+	saveRecommendation(
+		mediaId: number,
+		mediaRecommendationId: number,
+		rating?: RecommendationRating,
+	): ReturnType<ANILISTSDK["SaveRecommendation"]>;
+	saveRecommendation<TSelect extends RecommendationSelect>(
+		mediaId: number,
+		mediaRecommendationId: number,
+		rating: RecommendationRating | undefined,
+		options: { select: TSelect },
+	): Promise<{ SaveRecommendation: SelectedRecommendation<TSelect> | null }>;
+	saveRecommendation<TSelect extends RecommendationSelect>(
+		mediaId: number,
+		mediaRecommendationId: number,
+		rating: RecommendationRating | undefined,
+		options: RootSelectionOption<"recommendation", TSelect>,
+	): Promise<{ recommendation: SelectedRecommendation<TSelect> | null }>;
+	saveRecommendation<TSelect extends RecommendationSelect>(
+		mediaId: number,
+		mediaRecommendationId: number,
+		rating?: RecommendationRating,
+		options?: SelectionOption<"recommendation", TSelect>,
+	): unknown {
+		if (hasSelection(options)) {
+			if (!this.graphQLClient) {
+				throw new Error("graphQLClient is required for selected queries.");
+			}
+			const { select, wrapped } = resolveSelection(options, "recommendation");
+			const document = buildSaveRecommendationDocument(select);
+			return this.graphQLClient
+				.request<
+					{ SaveRecommendation: SelectedRecommendation<TSelect> | null },
+					{
+						mediaId: number;
+						mediaRecommendationId: number;
+						rating?: RecommendationRating;
+					}
+				>({
+					document,
+					variables: { mediaId, mediaRecommendationId, rating },
+				})
+				.then((raw) =>
+					wrapped ? { recommendation: raw.SaveRecommendation } : raw,
+				);
+		}
+		return this.client.SaveRecommendation({
+			mediaId,
+			mediaRecommendationId,
+			rating,
+		});
+	}
+
+	/**
+	 * Rates a review. Requires authentication.
+	 * @param reviewId - The ID of the review to rate.
+	 * @param rating - Optional rating (`ReviewRating`).
+	 */
+	rateReview(
+		reviewId: number,
+		rating?: ReviewRating,
+	): ReturnType<ANILISTSDK["RateReview"]>;
+	rateReview<TSelect extends ReviewSelect>(
+		reviewId: number,
+		rating: ReviewRating | undefined,
+		options: { select: TSelect },
+	): Promise<{ RateReview: SelectedReview<TSelect> | null }>;
+	rateReview<TSelect extends ReviewSelect>(
+		reviewId: number,
+		rating: ReviewRating | undefined,
+		options: RootSelectionOption<"review", TSelect>,
+	): Promise<{ review: SelectedReview<TSelect> | null }>;
+	rateReview<TSelect extends ReviewSelect>(
+		reviewId: number,
+		rating?: ReviewRating,
+		options?: SelectionOption<"review", TSelect>,
+	): unknown {
+		if (hasSelection(options)) {
+			if (!this.graphQLClient) {
+				throw new Error("graphQLClient is required for selected queries.");
+			}
+			const { select, wrapped } = resolveSelection(options, "review");
+			const document = buildRateReviewDocument(select);
+			return this.graphQLClient
+				.request<
+					{ RateReview: SelectedReview<TSelect> | null },
+					{ reviewId: number; rating?: ReviewRating }
+				>({ document, variables: { reviewId, rating } })
+				.then((raw) => (wrapped ? { review: raw.RateReview } : raw));
+		}
+		return this.client.RateReview({ reviewId, rating });
+	}
+
+	/**
+	 * Saves (creates or updates) a review. Requires authentication.
+	 * @param input - The review fields to save.
+	 */
+	saveReview(input: SaveReviewInput): ReturnType<ANILISTSDK["SaveReview"]>;
+	saveReview<TSelect extends ReviewSelect>(
+		input: SaveReviewInput,
+		options: { select: TSelect },
+	): Promise<{ SaveReview: SelectedReview<TSelect> | null }>;
+	saveReview<TSelect extends ReviewSelect>(
+		input: SaveReviewInput,
+		options: RootSelectionOption<"review", TSelect>,
+	): Promise<{ review: SelectedReview<TSelect> | null }>;
+	saveReview<TSelect extends ReviewSelect>(
+		input: SaveReviewInput,
+		options?: SelectionOption<"review", TSelect>,
+	): unknown {
+		const mutationVariables: SaveReviewMutationVariables = {
+			body: input.body,
+			id: input.id,
+			mediaId: input.mediaId,
+			private: input.private,
+			score: input.score,
+			summary: input.summary,
+		};
+
+		if (hasSelection(options)) {
+			if (!this.graphQLClient) {
+				throw new Error("graphQLClient is required for selected queries.");
+			}
+			const { select, wrapped } = resolveSelection(options, "review");
+			const document = buildSaveReviewDocument(select);
+			return this.graphQLClient
+				.request<
+					{ SaveReview: SelectedReview<TSelect> | null },
+					SaveReviewMutationVariables
+				>({ document, variables: mutationVariables })
+				.then((raw) => (wrapped ? { review: raw.SaveReview } : raw));
+		}
+		return this.client.SaveReview(mutationVariables);
+	}
+
+	/**
+	 * Deletes a review. Requires authentication.
+	 * @param id - The ID of the review to delete.
+	 */
+	deleteReview(id: number): ReturnType<ANILISTSDK["DeleteReview"]>;
+	deleteReview<TSelect extends DeletedSelect>(
+		id: number,
+		options: { select: TSelect },
+	): Promise<{ DeleteReview: SelectedDeleted<TSelect> | null }>;
+	deleteReview<TSelect extends DeletedSelect>(
+		id: number,
+		options: RootSelectionOption<"deleteReview", TSelect>,
+	): Promise<{ deleteReview: SelectedDeleted<TSelect> | null }>;
+	deleteReview<TSelect extends DeletedSelect>(
+		id: number,
+		options?: SelectionOption<"deleteReview", TSelect>,
+	): unknown {
+		if (hasSelection(options)) {
+			if (!this.graphQLClient) {
+				throw new Error("graphQLClient is required for selected queries.");
+			}
+			const { select, wrapped } = resolveSelection(options, "deleteReview");
+			const document = buildDeleteReviewDocument(select);
+			return this.graphQLClient
+				.request<
+					{ DeleteReview: SelectedDeleted<TSelect> | null },
+					{ id: number }
+				>({ document, variables: { id } })
+				.then((raw) => (wrapped ? { deleteReview: raw.DeleteReview } : raw));
+		}
+		return this.client.DeleteReview({ id });
 	}
 }
