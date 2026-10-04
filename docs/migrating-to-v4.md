@@ -33,7 +33,9 @@ accepts only the root shape, so the result key is always the lowercase root.
 const { Media } = await anilist.anime.getAnimeById(16498, {
 	select: { id: true, title: { userPreferred: true } },
 });
+```
 
+```typescript
 // v4
 const { media } = await anilist.anime.getAnimeById(16498, {
 	select: { media: { id: true, title: { userPreferred: true } } },
@@ -81,6 +83,12 @@ New optional arguments were added before `options` on these methods. Pass
 await anilist.media.getMediaList(userId, "ANIME", {
 	select: { mediaListCollection: { lists: { name: true } } },
 });
+```
+
+```typescript
+import { MediaListStatus } from "@api-wrappers/anilist-wrapper";
+
+const userId = 1;
 
 // v4: no status filter
 await anilist.media.getMediaList(userId, "ANIME", undefined, {
@@ -151,6 +159,9 @@ instead of throwing, which makes conditional selections easier to build.
 
 These are additive, so no migration is needed. See the
 [changelog](../CHANGELOG.md) for details.
+
+- Every default page query returns `pageInfo { hasNextPage currentPage }`, so
+  `paginate()` and `collectPages()` work on unselected calls.
 
 - `social` service for follows, notifications, activities, threads, comments,
   likes, site statistics, and markdown, including writes.

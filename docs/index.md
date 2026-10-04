@@ -39,6 +39,8 @@ const anilist = new Anilist();
 Authenticated reads and mutations use the same client with an access token:
 
 ```typescript
+import { Anilist } from "@api-wrappers/anilist-wrapper";
+
 const anilist = new Anilist(process.env.ANILIST_TOKEN);
 ```
 
@@ -100,13 +102,15 @@ removed in v4.
 
 | Service | Property | Best for |
 | --- | --- | --- |
-| Anime | `anilist.anime` | Anime details, search, trending, popular, genre filtering, relations, characters, staff, recommendations |
-| Manga | `anilist.manga` | Manga details, search, trending, popular, genre filtering, relations, characters, staff, recommendations |
+| Anime | `anilist.anime` | Anime details, search, trending, popular, browse and seasonal filters, genre filtering, relations, characters, staff, recommendations |
+| Manga | `anilist.manga` | Manga details, search, trending, popular, browse filters, genre filtering, relations, characters, staff, recommendations |
 | Character | `anilist.character` | Character details, birthday lists, favorite mutations |
 | Staff | `anilist.staff` | Staff details, birthday lists, favorite mutations |
-| User | `anilist.user` | User profiles, statistics, anime lists, manga lists |
-| Media | `anilist.media` | Generic anime or manga records by ID and list access by media type |
-| Media List | `anilist.mediaList` | Media list entries, saving progress, deleting entries |
+| Studio | `anilist.studio` | Studio details, search, favorite mutations |
+| User | `anilist.user` | User profiles, the authenticated viewer, statistics, reviews, anime lists, manga lists |
+| Media | `anilist.media` | Generic media records, list access by media type, genres, tags, airing schedules, reviews, recommendations |
+| Media List | `anilist.mediaList` | Media list entries, saving progress, bulk updates, deleting entries and custom lists |
+| Social | `anilist.social` | Follows, notifications, activities, forum threads and comments, likes, site statistics |
 | GraphQL | `anilist.graphql` | Any AniList query or mutation |
 
 ## Common Patterns
@@ -200,6 +204,7 @@ const data = await anilist.graphql.request<{
 - [Users](./api/user.md)
 - [Media](./api/media.md)
 - [Media Lists](./api/media-list.md)
+- [Social](./api/social.md)
 - [Raw GraphQL](./api/graphql.md)
 - [Client Options](./client-options.md)
 - [Error Handling](./errors.md)

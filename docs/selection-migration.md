@@ -44,6 +44,8 @@ console.log(page?.pageInfo?.hasNextPage);
 Mutations use the mutated resource root:
 
 ```typescript
+import { MediaListStatus } from "@api-wrappers/anilist-wrapper";
+
 const { mediaList } = await anilist.mediaList.saveEntry(
 	{ mediaId: 16498, status: MediaListStatus.Current },
 	{

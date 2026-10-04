@@ -19,7 +19,8 @@ const titleOf = (
 		  }
 		| null
 		| undefined,
-) => media?.title?.userPreferred ?? media?.title?.english ?? media?.title?.romaji;
+) =>
+	media?.title?.userPreferred ?? media?.title?.english ?? media?.title?.romaji;
 
 const manga = await anilist.manga.getMangaById(30013);
 console.log("Lookup by ID");

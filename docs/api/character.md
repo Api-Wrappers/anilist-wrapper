@@ -47,6 +47,8 @@ console.log(names);
 ## Favorites
 
 ```typescript
+import { Anilist } from "@api-wrappers/anilist-wrapper";
+
 const anilist = new Anilist(process.env.ANILIST_TOKEN);
 
 await anilist.character.toggleFavoriteCharacter(1);

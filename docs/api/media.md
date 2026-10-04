@@ -11,6 +11,16 @@ Use this service when code should work with either media type. Use `anilist.anim
 | `getMediaById(id)` | No | `Media` |
 | `getMediaList(userId, mediaType, status?)` | Depends on list privacy | `MediaListCollection` |
 | `getMediaListByUsername(userName, mediaType, status?)` | Depends on list privacy | `MediaListCollection` |
+| `getGenres()` | No | `GenreCollection` |
+| `getMediaTags(status?)` | No | `MediaTagCollection` |
+| `getAiringSchedule(id)` | No | `AiringSchedule` |
+| `getAiringSchedulesByMedia(mediaId, page?, perPage?)` | No | `Page.airingSchedules` |
+| `getReviews(mediaId, page?, perPage?)` | No | `Page.reviews` |
+| `getRecommendationsPage(mediaId, page?, perPage?)` | No | `Page.recommendations` |
+| `saveReview(input)` | Yes | `SaveReview` |
+| `rateReview(reviewId, rating?)` | Yes | `RateReview` |
+| `deleteReview(id)` | Yes | `DeleteReview` |
+| `saveRecommendation(mediaId, mediaRecommendationId, rating?)` | Yes | `SaveRecommendation` |
 
 `mediaType` is `"ANIME"` or `"MANGA"`. `status` is an optional
 `MediaListStatus` filter.

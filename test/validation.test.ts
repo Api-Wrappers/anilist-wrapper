@@ -1,5 +1,9 @@
 import { describe, expect, it } from "bun:test";
-import { ANILIST_MAX_PER_PAGE, assertPositiveInt, normalizePerPage } from "../src";
+import {
+	ANILIST_MAX_PER_PAGE,
+	assertPositiveInt,
+	normalizePerPage,
+} from "../src";
 
 describe("assertPositiveInt", () => {
 	it("returns valid positive integers unchanged", () => {

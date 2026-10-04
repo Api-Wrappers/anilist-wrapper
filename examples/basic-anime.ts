@@ -19,7 +19,8 @@ const titleOf = (
 		  }
 		| null
 		| undefined,
-) => media?.title?.userPreferred ?? media?.title?.english ?? media?.title?.romaji;
+) =>
+	media?.title?.userPreferred ?? media?.title?.english ?? media?.title?.romaji;
 
 const printTitles = (
 	label: string,
@@ -39,7 +40,11 @@ console.log(`- Title: ${titleOf(anime.Media)}`);
 console.log(`- Episodes: ${anime.Media?.episodes ?? "unknown"}`);
 console.log(`- URL: ${anime.Media?.siteUrl ?? "unknown"}`);
 
-const search = await anilist.anime.getAnimeBySearch("Fullmetal Alchemist", 1, 5);
+const search = await anilist.anime.getAnimeBySearch(
+	"Fullmetal Alchemist",
+	1,
+	5,
+);
 printTitles("Search results", search.Page?.media);
 
 const trending = await anilist.anime.getTrendingAnime(1, 5);

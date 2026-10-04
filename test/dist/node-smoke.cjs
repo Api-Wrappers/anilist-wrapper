@@ -1,5 +1,10 @@
 const assert = require("node:assert/strict");
-const { Anilist, AniList, paginate, collectPages } = require("../../dist/index.cjs");
+const {
+	Anilist,
+	AniList,
+	paginate,
+	collectPages,
+} = require("../../dist/index.cjs");
 
 assert.equal(typeof Anilist, "function", "Anilist must be a constructor");
 assert.equal(AniList, Anilist, "AniList must alias Anilist");

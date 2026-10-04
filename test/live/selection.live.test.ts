@@ -24,14 +24,19 @@ describe("AniList selected-field API", () => {
 				title: { romaji: expect.any(String) },
 			});
 
-			const search = await anilist.anime.getAnimeBySearch("Cowboy Bebop", 1, 2, {
-				select: {
-					page: {
-						pageInfo: { currentPage: true, hasNextPage: true },
-						media: { id: true, title: { userPreferred: true } },
+			const search = await anilist.anime.getAnimeBySearch(
+				"Cowboy Bebop",
+				1,
+				2,
+				{
+					select: {
+						page: {
+							pageInfo: { currentPage: true, hasNextPage: true },
+							media: { id: true, title: { userPreferred: true } },
+						},
 					},
 				},
-			});
+			);
 
 			expect(search.page).toMatchObject({
 				pageInfo: { currentPage: 1 },

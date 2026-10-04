@@ -47,7 +47,11 @@ const logPath = join(logDir, "documents.jsonl");
 try {
 	const tests = Bun.spawnSync(
 		["bun", "test", "--timeout", "10000", "test/selection.test.ts"],
-		{ env: { ...process.env, ANILIST_DOCUMENT_LOG: logPath }, stdout: "inherit", stderr: "inherit" },
+		{
+			env: { ...process.env, ANILIST_DOCUMENT_LOG: logPath },
+			stdout: "inherit",
+			stderr: "inherit",
+		},
 	);
 	if (tests.exitCode !== 0) process.exit(tests.exitCode ?? 1);
 

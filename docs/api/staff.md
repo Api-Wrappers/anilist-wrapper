@@ -7,7 +7,7 @@ Access staff workflows through `anilist.staff`.
 | Method | Auth | Returns |
 | --- | --- | --- |
 | `getStaffById(id)` | No | `Staff` |
-| `getStaffBirthdayToday(page?)` | No | `Page.staff` |
+| `getStaffBirthdayToday(page?, perPage?)` | No | `Page.staff` |
 | `toggleFavoriteStaff(staffId)` | Yes | `ToggleFavourite` |
 
 Selected calls use normalized roots: `staff` for lookups, `page` for birthday
@@ -46,6 +46,8 @@ console.log(names);
 ## Favorites
 
 ```typescript
+import { Anilist } from "@api-wrappers/anilist-wrapper";
+
 const anilist = new Anilist(process.env.ANILIST_TOKEN);
 
 await anilist.staff.toggleFavoriteStaff(95269);

@@ -243,9 +243,11 @@ console.log(data.GenreCollection);
 | `anilist.manga` | Manga lookup, search, trending, popular, genre, relations, characters, staff, recommendations, favorites |
 | `anilist.character` | Character lookup, birthdays, favorites |
 | `anilist.staff` | Staff lookup, birthdays, favorites |
+| `anilist.studio` | Studio lookup, search, favorites |
 | `anilist.user` | User profiles, public lists by username, authenticated list/stat queries by user ID |
-| `anilist.media` | Generic anime/manga media lookup and list access |
-| `anilist.mediaList` | Media list entry lookup, save, and delete |
+| `anilist.media` | Generic media lookup, list access, genres, tags, airing schedules, reviews, recommendations |
+| `anilist.mediaList` | Media list entry lookup, save, bulk update, and delete |
+| `anilist.social` | Follows, notifications, activities, forum threads, likes, site statistics |
 | `anilist.graphql` | Any AniList GraphQL query or mutation |
 
 ## Runtime Support
