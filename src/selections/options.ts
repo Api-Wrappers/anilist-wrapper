@@ -2,31 +2,18 @@ export type RootSelectionOption<TKey extends string, TSelect> = {
 	select: { [K in TKey]: TSelect };
 };
 
-/**
- * @deprecated Legacy direct selections are supported for backwards
- * compatibility and will be removed in the next major release. Prefer the
- * normalized root-object form, for example `{ select: { media: { id: true } } }`.
- */
-export type LegacySelectionOption<TSelect> = {
-	select: TSelect;
-};
-
-export type SelectionOption<TKey extends string, TSelect> =
-	| RootSelectionOption<TKey, TSelect>
-	| LegacySelectionOption<TSelect>;
-
-export type ResolvedSelection<TSelect> = {
-	select: TSelect;
-	wrapped: boolean;
-};
-
 const isSelectionObject = (value: unknown): value is Record<string, unknown> =>
 	value !== null && typeof value === "object" && !Array.isArray(value);
 
+/**
+ * Returns the selection nested under the root key, for example the
+ * `{ id: true }` in `{ select: { media: { id: true } } }`.
+ * @throws TypeError when `select` is not exactly `{ [key]: { ... } }`.
+ */
 export function resolveSelection<TKey extends string, TSelect>(
-	options: SelectionOption<TKey, TSelect>,
+	options: RootSelectionOption<TKey, TSelect>,
 	key: TKey,
-): ResolvedSelection<TSelect> {
+): TSelect {
 	const select: unknown = options.select;
 
 	if (!isSelectionObject(select)) {
@@ -35,47 +22,39 @@ export function resolveSelection<TKey extends string, TSelect>(
 
 	const keys = Object.keys(select);
 
-	if (keys.length > 0 && keys.every((entry) => entry === key)) {
-		return { select: select[key] as TSelect, wrapped: true };
+	if (keys.length === 1 && keys[0] === key && isSelectionObject(select[key])) {
+		return select[key] as TSelect;
 	}
 
-	return { select: options.select as TSelect, wrapped: false };
+	throw new TypeError(
+		`select must be { ${key}: { ... } }. Direct selections were removed in v4; wrap the fields in the "${key}" root.`,
+	);
 }
 
+/**
+ * Returns the page selection nested under `page`, for example the
+ * `{ pageInfo: { ... }, media: { ... } }` in `{ select: { page: { ... } } }`.
+ * @throws TypeError when `select` is not exactly `{ page: { ... } }`.
+ */
 export function resolvePageSelection<TSelect>(
 	select: unknown,
 	fieldName: string,
 ): TSelect {
-	if (!isSelectionObject(select)) {
-		throw new TypeError(pageSelectionError(fieldName));
-	}
-
-	const keys = Object.keys(select);
-
 	if (
-		keys.length === 1 &&
-		keys[0] === "page" &&
+		isSelectionObject(select) &&
+		Object.keys(select).length === 1 &&
 		isSelectionObject(select.page)
 	) {
 		return select.page as TSelect;
 	}
 
-	if (
-		keys.length > 0 &&
-		keys.every((key) => key === "pageInfo" || key === fieldName)
-	) {
-		return select as TSelect;
-	}
-
-	throw new TypeError(pageSelectionError(fieldName));
-}
-
-function pageSelectionError(fieldName: string): string {
-	return `Page select must be either { page: { ... } } or a legacy page body containing only "pageInfo" and "${fieldName}".`;
+	throw new TypeError(
+		`Page select must be { page: { pageInfo?: { ... }, ${fieldName}?: { ... } } }. Legacy page bodies were removed in v4; wrap them in "page".`,
+	);
 }
 
 export function hasSelection<TKey extends string, TSelect>(
-	options: SelectionOption<TKey, TSelect> | undefined,
-): options is SelectionOption<TKey, TSelect> {
+	options: RootSelectionOption<TKey, TSelect> | undefined,
+): options is RootSelectionOption<TKey, TSelect> {
 	return options?.select !== undefined;
 }

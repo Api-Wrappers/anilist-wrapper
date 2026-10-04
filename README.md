@@ -139,8 +139,9 @@ console.log(media?.title?.userPreferred);
 console.log(page?.pageInfo?.hasNextPage);
 ```
 
-See the [selection migration guide](./docs/selection-migration.md) for all
-endpoint roots, mutation examples, and legacy direct-select compatibility.
+See the [selection guide](./docs/selection-migration.md) for all endpoint
+roots and mutation examples. Upgrading from v3? Read
+[Migrating to v4](./docs/migrating-to-v4.md).
 
 ### Get manga
 

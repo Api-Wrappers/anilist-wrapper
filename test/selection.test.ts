@@ -208,7 +208,7 @@ describe("selected detail calls use the low-level GraphQL client", () => {
 		});
 
 		const result = await service.getAnimeById(16498, {
-			select: { id: true, title: { userPreferred: true } },
+			select: { media: { id: true, title: { userPreferred: true } } },
 		});
 
 		const req = gql.lastRequest();
@@ -218,7 +218,7 @@ describe("selected detail calls use the low-level GraphQL client", () => {
 		expect(req.document).toContain("title");
 		expect(req.document).toContain("userPreferred");
 		expect(result).toEqual({
-			Media: { id: 16498, title: { userPreferred: "Frieren" } },
+			media: { id: 16498, title: { userPreferred: "Frieren" } },
 		});
 	});
 
@@ -226,7 +226,7 @@ describe("selected detail calls use the low-level GraphQL client", () => {
 		const { gql, service } = makeMangaService();
 		gql.setResponse({ Media: { id: 30013, genres: ["Action"] } });
 
-		await service.getMangaById(30013, { select: { id: true, genres: true } });
+		await service.getMangaById(30013, { select: { media: { id: true, genres: true } } });
 
 		const req = gql.lastRequest();
 		expect(req.document).toContain("Media(id: $id, type: MANGA)");
@@ -236,7 +236,7 @@ describe("selected detail calls use the low-level GraphQL client", () => {
 		const { gql, service } = makeMediaService();
 		gql.setResponse({ Media: { id: 16498 } });
 
-		await service.getMediaById(16498, { select: { id: true } });
+		await service.getMediaById(16498, { select: { media: { id: true } } });
 
 		const req = gql.lastRequest();
 		expect(req.document).toContain("Media(id: $id)");
@@ -248,7 +248,7 @@ describe("selected detail calls use the low-level GraphQL client", () => {
 		gql.setResponse({ Media: { coverImage: { large: "url" } } });
 
 		await service.getAnimeById(1, {
-			select: { coverImage: { large: true } },
+			select: { media: { coverImage: { large: true } } },
 		});
 
 		const req = gql.lastRequest();
@@ -262,7 +262,7 @@ describe("selected detail calls use the low-level GraphQL client", () => {
 		gql.setResponse({ Media: {} });
 
 		await service.getAnimeById(1, {
-			select: {
+			select: { media: {
 				startDate: { year: true, month: true, day: true },
 				endDate: { year: true },
 				trailer: { id: true, site: true, thumbnail: true },
@@ -272,7 +272,7 @@ describe("selected detail calls use the low-level GraphQL client", () => {
 				isReviewBlocked: true,
 				modNotes: true,
 				seasonInt: true,
-			},
+			} },
 		});
 
 		const req = gql.lastRequest();
@@ -295,7 +295,7 @@ describe("selected detail calls use the low-level GraphQL client", () => {
 		gql.setResponse({ Media: {} });
 
 		await service.getAnimeById(1, {
-			select: {
+			select: { media: {
 				characters: {
 					edges: {
 						role: true,
@@ -310,7 +310,7 @@ describe("selected detail calls use the low-level GraphQL client", () => {
 				},
 				tags: { name: true, rank: true },
 				externalLinks: { url: true, site: true },
-			},
+			} },
 		});
 
 		const req = gql.lastRequest();
@@ -425,7 +425,7 @@ describe("selected read endpoints across services", () => {
 
 		gql.setResponse({ Media: { characters: { edges: [] } } });
 		await service.getCharacters(16498, {
-			select: { characters: { edges: { role: true, node: { id: true } } } },
+			select: { media: { characters: { edges: { role: true, node: { id: true } } } } },
 		});
 		expect(gql.lastRequest().document).toContain("characters");
 	});
@@ -450,7 +450,7 @@ describe("selected read endpoints across services", () => {
 
 		gql.setResponse({ Media: { recommendations: { edges: [] } } });
 		await service.getMangaRecommendations(30013, {
-			select: { recommendations: { edges: { node: { id: true } } } },
+			select: { media: { recommendations: { edges: { node: { id: true } } } } },
 		});
 		expect(gql.lastRequest().document).toContain("recommendations");
 	});
@@ -459,7 +459,7 @@ describe("selected read endpoints across services", () => {
 		const character = makeCharacterService();
 		character.gql.setResponse({ Character: { id: 1, name: { full: "Spike" } } });
 		await character.service.getCharacterById(1, {
-			select: { id: true, name: { full: true } },
+			select: { character: { id: true, name: { full: true } } },
 		});
 		expect(character.gql.lastRequest().document).toContain("Character(id: $id)");
 
@@ -473,7 +473,7 @@ describe("selected read endpoints across services", () => {
 		const staff = makeStaffService();
 		staff.gql.setResponse({ Staff: { id: 1, name: { full: "Aoi" } } });
 		await staff.service.getStaffById(1, {
-			select: { id: true, name: { full: true } },
+			select: { staff: { id: true, name: { full: true } } },
 		});
 		expect(staff.gql.lastRequest().document).toContain("Staff(id: $id)");
 
@@ -486,7 +486,7 @@ describe("selected read endpoints across services", () => {
 	it("User, MediaService, and MediaListService endpoints accept derived selects", async () => {
 		const user = makeUserService();
 		user.gql.setResponse({ User: { id: 1, name: "example" } });
-		await user.service.getUserInfo(1, { select: { id: true, name: true } });
+		await user.service.getUserInfo(1, { select: { user: { id: true, name: true } } });
 		expect(user.gql.lastRequest().document).toContain("User(id: $id)");
 
 		await user.service.getUserList(1, 10, {
@@ -495,24 +495,24 @@ describe("selected read endpoints across services", () => {
 		expect(user.gql.lastRequest().document).toContain("users");
 
 		await user.service.getUserAnimeList(1, MediaListStatus.Current, {
-			select: { lists: { entries: { media: { id: true } } } },
+			select: { mediaListCollection: { lists: { entries: { media: { id: true } } } } },
 		});
 		expect(user.gql.lastRequest().document).toContain("MediaListCollection");
 
 		const media = makeMediaService();
 		media.gql.setResponse({ MediaListCollection: { lists: [] } });
 		await media.service.getMediaList(1, "ANIME", undefined, {
-			select: { lists: { entries: { id: true } } },
+			select: { mediaListCollection: { lists: { entries: { id: true } } } },
 		});
 		expect(media.gql.lastRequest().variables).toMatchObject({ userId: 1 });
 
 		const mediaList = makeMediaListService();
 		mediaList.gql.setResponse({ MediaList: { id: 10 } });
-		await mediaList.service.getMediaList(10, { select: { id: true } });
+		await mediaList.service.getMediaList(10, { select: { mediaList: { id: true } } });
 		expect(mediaList.gql.lastRequest().document).toContain("MediaList(id: $id)");
 
 		await mediaList.service.getMediaListByUsername("example", "MANGA", undefined, {
-			select: { lists: { entries: { progress: true } } },
+			select: { mediaListCollection: { lists: { entries: { progress: true } } } },
 		});
 		expect(mediaList.gql.lastRequest().variables).toMatchObject({
 			userName: "example",
@@ -527,7 +527,7 @@ describe("selected mutation endpoints across services", () => {
 		const anime = makeAnimeService();
 		anime.gql.setResponse({ ToggleFavourite: { anime: { nodes: [{ id: 1 }] } } });
 		await anime.service.toggleFavorite(1, {
-			select: { anime: { nodes: { id: true } } },
+			select: { favorites: { anime: { nodes: { id: true } } } },
 		});
 		expect(anime.gql.lastRequest().variables).toEqual({ id: 1 });
 		expect(anime.gql.lastRequest().document).toContain(
@@ -538,7 +538,7 @@ describe("selected mutation endpoints across services", () => {
 		const manga = makeMangaService();
 		manga.gql.setResponse({ ToggleFavourite: { manga: { nodes: [{ id: 2 }] } } });
 		await manga.service.toggleFavourite(2, {
-			select: { manga: { nodes: { id: true } } },
+			select: { favorites: { manga: { nodes: { id: true } } } },
 		});
 		expect(manga.gql.lastRequest().document).toContain(
 			"ToggleFavourite(mangaId: $id)",
@@ -549,7 +549,7 @@ describe("selected mutation endpoints across services", () => {
 			ToggleFavourite: { characters: { nodes: [{ id: 3 }] } },
 		});
 		await character.service.toggleFavoriteCharacter(3, {
-			select: { characters: { nodes: { id: true } } },
+			select: { favorites: { characters: { nodes: { id: true } } } },
 		});
 		expect(character.gql.lastRequest().document).toContain(
 			"ToggleFavourite(characterId: $id)",
@@ -558,7 +558,7 @@ describe("selected mutation endpoints across services", () => {
 		const staff = makeStaffService();
 		staff.gql.setResponse({ ToggleFavourite: { staff: { nodes: [{ id: 4 }] } } });
 		await staff.service.toggleFavoriteStaff(4, {
-			select: { staff: { nodes: { id: true } } },
+			select: { favorites: { staff: { nodes: { id: true } } } },
 		});
 		expect(staff.gql.lastRequest().document).toContain(
 			"ToggleFavourite(staffId: $id)",
@@ -578,7 +578,7 @@ describe("selected mutation endpoints across services", () => {
 				progress: 3,
 			},
 			{
-				select: { id: true, progress: true, media: { id: true } },
+				select: { mediaList: { id: true, progress: true, media: { id: true } } },
 			},
 		);
 
@@ -734,7 +734,7 @@ describe("empty selections throw TypeError before any request", () => {
 	it("empty MediaSelect throws TypeError", () => {
 		const { gql, service } = makeAnimeService();
 
-		expect(() => service.getAnimeById(1, { select: {} })).toThrow(TypeError);
+		expect(() => service.getAnimeById(1, { select: { media: {} } })).toThrow(TypeError);
 		expect(gql.requests).toHaveLength(0);
 	});
 
@@ -742,7 +742,7 @@ describe("empty selections throw TypeError before any request", () => {
 		const { gql, service } = makeAnimeService();
 
 		expect(() =>
-			service.getAnimeById(1, { select: { title: {} } }),
+			service.getAnimeById(1, { select: { media: { title: {} } } }),
 		).toThrow(TypeError);
 		expect(gql.requests).toHaveLength(0);
 	});
@@ -770,14 +770,14 @@ describe("empty selections throw TypeError before any request", () => {
 	it("empty mutation selection throws TypeError", () => {
 		const { gql, service } = makeAnimeService();
 
-		expect(() => service.toggleFavorite(1, { select: {} })).toThrow(TypeError);
+		expect(() => service.toggleFavorite(1, { select: { favorites: {} } })).toThrow(TypeError);
 		expect(gql.requests).toHaveLength(0);
 	});
 
 	it("empty delete mutation selection throws TypeError", () => {
 		const { gql, service } = makeMediaListService();
 
-		expect(() => service.deleteEntry(1, { select: {} })).toThrow(TypeError);
+		expect(() => service.deleteEntry(1, { select: { deleteMediaListEntry: {} } })).toThrow(TypeError);
 		expect(gql.requests).toHaveLength(0);
 	});
 
@@ -788,13 +788,15 @@ describe("empty selections throw TypeError before any request", () => {
 		};
 
 		expect(() =>
-			unsafeService.getAnimeById(1, { select: { id: false } }),
+			unsafeService.getAnimeById(1, { select: { media: { id: false } } }),
 		).toThrow(TypeError);
 		expect(() =>
-			unsafeService.getAnimeById(1, { select: { title: ["romaji"] } }),
+			unsafeService.getAnimeById(1, { select: { media: { title: ["romaji"] } } }),
 		).toThrow(TypeError);
 		expect(() =>
-			unsafeService.getAnimeById(1, { select: { "id } mutation Bad": true } }),
+			unsafeService.getAnimeById(1, {
+					select: { media: { "id } mutation Bad": true } },
+				}),
 		).toThrow(TypeError);
 		expect(gql.requests).toHaveLength(0);
 	});
@@ -823,17 +825,17 @@ describe("selected return type narrowing", () => {
 		gql.setResponse({ Media: { id: 16498, averageScore: 90 } });
 
 		const result = await service.getAnimeById(16498, {
-			select: { id: true, averageScore: true },
+			select: { media: { id: true, averageScore: true } },
 		});
 
-		const media = result.Media;
+		const media = result.media;
 		if (media) {
 			const _id: number = media.id;
 			const _score: number | null = media.averageScore;
 			// @ts-expect-error — episodes was not selected
 			const _episodes = media.episodes;
 		}
-		expect(result.Media).toEqual({ id: 16498, averageScore: 90 });
+		expect(result.media).toEqual({ id: 16498, averageScore: 90 });
 	});
 
 	it("getAnimeBySearch result uses lowercase page key, not Page", async () => {
@@ -854,17 +856,35 @@ describe("selected return type narrowing", () => {
 // ── Selection root routing ────────────────────────────────────────────────────
 
 describe("selection root routing", () => {
-	it("treats a mixed legacy staff selection as a direct Staff selection", async () => {
+	it("selects a nested staff field inside the staff root", async () => {
 		const staff = makeStaffService();
 		staff.gql.setResponse({ Staff: { id: 1, staff: { id: 2 } } });
 
 		const result = await staff.service.getStaffById(1, {
-			select: { id: true, staff: { id: true } },
+			select: { staff: { id: true, staff: { id: true } } },
 		});
 
 		const document = staff.gql.lastRequest().document.replace(/\s+/g, " ");
 		expect(document).toContain("id staff { id }");
-		expect(result).toEqual({ Staff: { id: 1, staff: { id: 2 } } });
+		expect(result).toEqual({ staff: { id: 1, staff: { id: 2 } } });
+	});
+
+	it("rejects direct (unwrapped) selections removed in v4", () => {
+		const { gql, service } = makeAnimeService();
+		const unsafeService = service as unknown as {
+			getAnimeById(id: number, options: unknown): unknown;
+		};
+
+		expect(() =>
+			unsafeService.getAnimeById(1, { select: { id: true } }),
+		).toThrow('select must be { media: { ... } }.');
+		expect(() =>
+			unsafeService.getAnimeById(1, { select: { media: { id: true }, id: true } }),
+		).toThrow(TypeError);
+		expect(() =>
+			unsafeService.getAnimeById(1, { select: { media: true } }),
+		).toThrow(TypeError);
+		expect(gql.requests).toHaveLength(0);
 	});
 
 	it("still returns the normalized staff root for wrapped selections", async () => {
@@ -989,7 +1009,9 @@ describe("staff birthday pagination", () => {
 
 describe("media list collection status forwarding", () => {
 	it("forwards status in selected calls and omits it when absent", async () => {
-		const select = { lists: { entries: { id: true } } } as const;
+		const select = {
+			mediaListCollection: { lists: { entries: { id: true } } },
+		} as const;
 		const media = makeMediaService();
 
 		media.gql.setResponse({ MediaListCollection: { lists: [] } });
@@ -1054,26 +1076,23 @@ describe("media list collection status forwarding", () => {
 // ── Page selection shapes ─────────────────────────────────────────────────────
 
 describe("page selection shapes", () => {
-	it("builds documents from a legacy page body", async () => {
+	it("rejects legacy page bodies removed in v4", () => {
 		const { gql, service } = makeAnimeService();
-		gql.setResponse({ Page: { media: [{ id: 1 }], pageInfo: { total: 1 } } });
 		const legacy = service as unknown as {
 			getAnimeBySearch(
 				search: string,
 				page: number,
 				perPage: number,
 				options: unknown,
-			): Promise<unknown>;
+			): unknown;
 		};
 
-		await legacy.getAnimeBySearch("test", 1, 10, {
-			select: { pageInfo: { total: true }, media: { id: true } },
-		});
-
-		const document = gql.lastRequest().document;
-		expect(document).toContain("pageInfo");
-		expect(document).toContain("total");
-		expect(document).toContain("media(search: $query, type: ANIME)");
+		expect(() =>
+			legacy.getAnimeBySearch("test", 1, 10, {
+				select: { pageInfo: { total: true }, media: { id: true } },
+			}),
+		).toThrow("Page select must be { page: { pageInfo?: { ... }, media?: { ... } } }.");
+		expect(gql.requests).toHaveLength(0);
 	});
 
 	it("throws descriptive TypeErrors for empty and undefined page selections", () => {
@@ -1092,7 +1111,7 @@ describe("page selection shapes", () => {
 		).toThrow(TypeError);
 		expect(() =>
 			unsafe.getAnimeBySearch("test", 1, 10, { select: {} }),
-		).toThrow(/"pageInfo" and "media"/);
+		).toThrow(/\{ page: \{ pageInfo\?: \{ \.\.\. \}, media\?/);
 		expect(() =>
 			unsafe.getAnimeBySearch("test", 1, 10, {
 				select: { page: undefined },
@@ -1102,7 +1121,7 @@ describe("page selection shapes", () => {
 			unsafe.getAnimeBySearch("test", 1, 10, {
 				select: { page: undefined },
 			}),
-		).toThrow(/"pageInfo" and "media"/);
+		).toThrow(/\{ page: \{ pageInfo\?: \{ \.\.\. \}, media\?/);
 		expect(gql.requests).toHaveLength(0);
 	});
 });
@@ -1553,7 +1572,7 @@ describe("service boundary validation", () => {
 
 		expect(() =>
 			service.getStudioBySearch("MAPPA", 1, 10, { select: {} } as never),
-		).toThrow(/"pageInfo" and "studios"/);
+		).toThrow(/studios\?: \{ \.\.\. \}/);
 		expect(gql.requests).toHaveLength(0);
 	});
 });
@@ -1634,5 +1653,72 @@ describe("remaining selected endpoints", () => {
 		expect(mediaList.gql.lastRequest().document).toContain(
 			"MediaListCollection(userId: $userId",
 		);
+	});
+});
+
+// ── v3 argument order guards ──────────────────────────────────────────────────
+
+describe("v3 argument order guards", () => {
+	type UnsafeListMethod = (
+		owner: number | string,
+		mediaType: string,
+		status: unknown,
+		options?: unknown,
+	) => unknown;
+	const v3Options = { select: { mediaListCollection: { lists: { name: true } } } };
+
+	it("rejects selection options passed in the status position", () => {
+		const media = makeMediaService();
+		const mediaList = makeMediaListService();
+		const calls: [UnsafeListMethod, number | string][] = [
+			[media.service.getMediaList.bind(media.service) as UnsafeListMethod, 1],
+			[
+				media.service.getMediaListByUsername.bind(
+					media.service,
+				) as UnsafeListMethod,
+				"example",
+			],
+			[
+				mediaList.service.getMediaListByUser.bind(
+					mediaList.service,
+				) as UnsafeListMethod,
+				1,
+			],
+			[
+				mediaList.service.getMediaListByUsername.bind(
+					mediaList.service,
+				) as UnsafeListMethod,
+				"example",
+			],
+		];
+
+		for (const [call, owner] of calls) {
+			expect(() => call(owner, "ANIME", v3Options)).toThrow(
+				/selection options are the argument after status/,
+			);
+		}
+		expect(media.gql.requests).toHaveLength(0);
+		expect(mediaList.gql.requests).toHaveLength(0);
+	});
+
+	it("rejects selection options passed in the title lookup page position", () => {
+		const anime = makeAnimeService();
+		const manga = makeMangaService();
+		const options = { select: { page: { media: { id: true } } } };
+
+		expect(() =>
+			(anime.service.getAnimeByTitle as (...args: unknown[]) => unknown)(
+				"Frieren",
+				options,
+			),
+		).toThrow("page must be a positive integer.");
+		expect(() =>
+			(manga.service.getMangaByTitle as (...args: unknown[]) => unknown)(
+				"Berserk",
+				options,
+			),
+		).toThrow("page must be a positive integer.");
+		expect(anime.gql.requests).toHaveLength(0);
+		expect(manga.gql.requests).toHaveLength(0);
 	});
 });

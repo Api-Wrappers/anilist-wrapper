@@ -11,7 +11,8 @@ This documentation is written for building with the wrapper quickly, then reachi
 5. [Configure the client](./client-options.md)
 6. [Handle errors](./errors.md)
 7. [Migrate selected queries](./selection-migration.md)
-8. [Find contribution ideas](./contributing-ideas.md)
+8. [Migrate from v3 to v4](./migrating-to-v4.md)
+9. [Find contribution ideas](./contributing-ideas.md)
 
 ## Install
 
@@ -91,8 +92,9 @@ const { page } = await anilist.anime.getAnimeBySearch("Cowboy Bebop", 1, 10, {
 });
 ```
 
-Read the [selection migration guide](./selection-migration.md) for the full root
-map, mutation shapes, and the legacy direct-select compatibility path.
+Read the [selection guide](./selection-migration.md) for the full root map and
+mutation shapes. Selections must use the root shape; v3 direct selections were
+removed in v4.
 
 ## Choose A Service
 
@@ -202,6 +204,7 @@ const data = await anilist.graphql.request<{
 - [Client Options](./client-options.md)
 - [Error Handling](./errors.md)
 - [Selection Migration](./selection-migration.md)
+- [Migrating to v4](./migrating-to-v4.md)
 
 ## Examples
 

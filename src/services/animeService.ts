@@ -16,10 +16,7 @@ import {
 	buildMediaPageDocument,
 	buildToggleFavouriteDocument,
 } from "../selections/builder";
-import type {
-	RootSelectionOption,
-	SelectionOption,
-} from "../selections/options";
+import type { RootSelectionOption } from "../selections/options";
 import {
 	hasSelection,
 	resolvePageSelection,
@@ -89,22 +86,18 @@ export class AnimeService {
 	getAnimeById(id: number): ReturnType<ANILISTSDK["GetAnimeById"]>;
 	getAnimeById<TSelect extends MediaSelect>(
 		id: number,
-		options: { select: TSelect },
-	): Promise<{ Media: SelectedMedia<TSelect> | null }>;
-	getAnimeById<TSelect extends MediaSelect>(
-		id: number,
 		options: RootSelectionOption<"media", TSelect>,
 	): Promise<{ media: SelectedMedia<TSelect> | null }>;
 	getAnimeById<TSelect extends MediaSelect>(
 		id: number,
-		options?: SelectionOption<"media", TSelect>,
+		options?: RootSelectionOption<"media", TSelect>,
 	): unknown {
 		assertPositiveInt(id);
 		if (hasSelection(options)) {
-			const { select, wrapped } = resolveSelection(options, "media");
-			return this.selectedMedia(select, { id }).then((raw) =>
-				wrapped ? { media: raw.Media } : raw,
-			);
+			const select = resolveSelection(options, "media");
+			return this.selectedMedia(select, { id }).then((raw) => ({
+				media: raw.Media,
+			}));
 		}
 		return this.client.GetAnimeById({ id });
 	}
@@ -235,22 +228,18 @@ export class AnimeService {
 	): ReturnType<ANILISTSDK["GetAnimeRecommendations"]>;
 	getRecommendations<TSelect extends MediaSelect>(
 		mediaId: number,
-		options: { select: TSelect },
-	): Promise<{ Media: SelectedMedia<TSelect> | null }>;
-	getRecommendations<TSelect extends MediaSelect>(
-		mediaId: number,
 		options: RootSelectionOption<"media", TSelect>,
 	): Promise<{ media: SelectedMedia<TSelect> | null }>;
 	getRecommendations<TSelect extends MediaSelect>(
 		mediaId: number,
-		options?: SelectionOption<"media", TSelect>,
+		options?: RootSelectionOption<"media", TSelect>,
 	): unknown {
 		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
-			const { select, wrapped } = resolveSelection(options, "media");
+			const select = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
 				id: mediaId,
-			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
+			}).then((raw) => ({ media: raw.Media }));
 		}
 		return this.client.GetAnimeRecommendations({ id: mediaId });
 	}
@@ -263,22 +252,18 @@ export class AnimeService {
 	getCharacters(mediaId: number): ReturnType<ANILISTSDK["GetAnimeCharacters"]>;
 	getCharacters<TSelect extends MediaSelect>(
 		mediaId: number,
-		options: { select: TSelect },
-	): Promise<{ Media: SelectedMedia<TSelect> | null }>;
-	getCharacters<TSelect extends MediaSelect>(
-		mediaId: number,
 		options: RootSelectionOption<"media", TSelect>,
 	): Promise<{ media: SelectedMedia<TSelect> | null }>;
 	getCharacters<TSelect extends MediaSelect>(
 		mediaId: number,
-		options?: SelectionOption<"media", TSelect>,
+		options?: RootSelectionOption<"media", TSelect>,
 	): unknown {
 		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
-			const { select, wrapped } = resolveSelection(options, "media");
+			const select = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
 				id: mediaId,
-			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
+			}).then((raw) => ({ media: raw.Media }));
 		}
 		return this.client.GetAnimeCharacters({ id: mediaId });
 	}
@@ -291,22 +276,18 @@ export class AnimeService {
 	getStaff(mediaId: number): ReturnType<ANILISTSDK["GetAnimeStaff"]>;
 	getStaff<TSelect extends MediaSelect>(
 		mediaId: number,
-		options: { select: TSelect },
-	): Promise<{ Media: SelectedMedia<TSelect> | null }>;
-	getStaff<TSelect extends MediaSelect>(
-		mediaId: number,
 		options: RootSelectionOption<"media", TSelect>,
 	): Promise<{ media: SelectedMedia<TSelect> | null }>;
 	getStaff<TSelect extends MediaSelect>(
 		mediaId: number,
-		options?: SelectionOption<"media", TSelect>,
+		options?: RootSelectionOption<"media", TSelect>,
 	): unknown {
 		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
-			const { select, wrapped } = resolveSelection(options, "media");
+			const select = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
 				id: mediaId,
-			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
+			}).then((raw) => ({ media: raw.Media }));
 		}
 		return this.client.GetAnimeStaff({ id: mediaId });
 	}
@@ -319,22 +300,18 @@ export class AnimeService {
 	getRelations(mediaId: number): ReturnType<ANILISTSDK["GetAnimeRelations"]>;
 	getRelations<TSelect extends MediaSelect>(
 		mediaId: number,
-		options: { select: TSelect },
-	): Promise<{ Media: SelectedMedia<TSelect> | null }>;
-	getRelations<TSelect extends MediaSelect>(
-		mediaId: number,
 		options: RootSelectionOption<"media", TSelect>,
 	): Promise<{ media: SelectedMedia<TSelect> | null }>;
 	getRelations<TSelect extends MediaSelect>(
 		mediaId: number,
-		options?: SelectionOption<"media", TSelect>,
+		options?: RootSelectionOption<"media", TSelect>,
 	): unknown {
 		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
-			const { select, wrapped } = resolveSelection(options, "media");
+			const select = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
 				id: mediaId,
-			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
+			}).then((raw) => ({ media: raw.Media }));
 		}
 		return this.client.GetAnimeRelations({ id: mediaId });
 	}
@@ -363,6 +340,7 @@ export class AnimeService {
 	):
 		| ReturnType<ANILISTSDK["GetAnimeByTitle"]>
 		| Promise<{ page: SelectedMediaPage<TSelect> | null }> {
+		assertPositiveInt(page, "page");
 		const limit = normalizePerPage(perPage, 1);
 		if (options?.select !== undefined) {
 			const document = buildMediaPageDocument(
@@ -567,18 +545,14 @@ export class AnimeService {
 	toggleFavourite(animeId: number): Promise<ToggleFavoriteAnimeMutation>;
 	toggleFavourite<TSelect extends FavouritesSelect>(
 		animeId: number,
-		options: { select: TSelect },
-	): Promise<{ ToggleFavourite: SelectedFavourites<TSelect> | null }>;
-	toggleFavourite<TSelect extends FavouritesSelect>(
-		animeId: number,
 		options: RootSelectionOption<"favorites", TSelect>,
 	): Promise<{ favorites: SelectedFavourites<TSelect> | null }>;
 	toggleFavourite<TSelect extends FavouritesSelect>(
 		animeId: number,
-		options?: SelectionOption<"favorites", TSelect>,
+		options?: RootSelectionOption<"favorites", TSelect>,
 	): unknown {
 		if (options === undefined) return this.toggleFavorite(animeId);
-		return this.toggleFavorite(animeId, options as { select: TSelect });
+		return this.toggleFavorite(animeId, options);
 	}
 
 	/**
@@ -590,29 +564,25 @@ export class AnimeService {
 	toggleFavorite(animeId: number): Promise<ToggleFavoriteAnimeMutation>;
 	toggleFavorite<TSelect extends FavouritesSelect>(
 		animeId: number,
-		options: { select: TSelect },
-	): Promise<{ ToggleFavourite: SelectedFavourites<TSelect> | null }>;
-	toggleFavorite<TSelect extends FavouritesSelect>(
-		animeId: number,
 		options: RootSelectionOption<"favorites", TSelect>,
 	): Promise<{ favorites: SelectedFavourites<TSelect> | null }>;
 	toggleFavorite<TSelect extends FavouritesSelect>(
 		animeId: number,
-		options?: SelectionOption<"favorites", TSelect>,
+		options?: RootSelectionOption<"favorites", TSelect>,
 	): unknown {
 		assertPositiveInt(animeId, "animeId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "favorites");
+			const select = resolveSelection(options, "favorites");
 			const document = buildToggleFavouriteDocument(select, "animeId");
 			return this.graphQLClient
 				.request<
 					{ ToggleFavourite: SelectedFavourites<TSelect> | null },
 					{ id: number }
 				>({ document, variables: { id: animeId } })
-				.then((raw) => (wrapped ? { favorites: raw.ToggleFavourite } : raw));
+				.then((raw) => ({ favorites: raw.ToggleFavourite }));
 		}
 		return this.client.ToggleFavoriteAnime({ animeId });
 	}

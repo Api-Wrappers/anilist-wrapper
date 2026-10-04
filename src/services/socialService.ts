@@ -22,10 +22,7 @@ import {
 	buildThreadPageDocument,
 	buildToggleFollowDocument,
 } from "../selections/builder";
-import type {
-	RootSelectionOption,
-	SelectionOption,
-} from "../selections/options";
+import type { RootSelectionOption } from "../selections/options";
 import {
 	hasSelection,
 	resolvePageSelection,
@@ -329,29 +326,25 @@ export class SocialService {
 	getActivityReply(id: number): ReturnType<ANILISTSDK["GetActivityReply"]>;
 	getActivityReply<TSelect extends ActivityReplySelect>(
 		id: number,
-		options: { select: TSelect },
-	): Promise<{ ActivityReply: SelectedActivityReply<TSelect> | null }>;
-	getActivityReply<TSelect extends ActivityReplySelect>(
-		id: number,
 		options: RootSelectionOption<"activityReply", TSelect>,
 	): Promise<{ activityReply: SelectedActivityReply<TSelect> | null }>;
 	getActivityReply<TSelect extends ActivityReplySelect>(
 		id: number,
-		options?: SelectionOption<"activityReply", TSelect>,
+		options?: RootSelectionOption<"activityReply", TSelect>,
 	): unknown {
 		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "activityReply");
+			const select = resolveSelection(options, "activityReply");
 			const document = buildActivityReplyByIdDocument(select);
 			return this.graphQLClient
 				.request<
 					{ ActivityReply: SelectedActivityReply<TSelect> | null },
 					{ id: number }
 				>({ document, variables: { id } })
-				.then((raw) => (wrapped ? { activityReply: raw.ActivityReply } : raw));
+				.then((raw) => ({ activityReply: raw.ActivityReply }));
 		}
 		return this.client.GetActivityReply({ id });
 	}
@@ -406,29 +399,25 @@ export class SocialService {
 	getThread(id: number): ReturnType<ANILISTSDK["GetThread"]>;
 	getThread<TSelect extends ThreadSelect>(
 		id: number,
-		options: { select: TSelect },
-	): Promise<{ Thread: SelectedThread<TSelect> | null }>;
-	getThread<TSelect extends ThreadSelect>(
-		id: number,
 		options: RootSelectionOption<"thread", TSelect>,
 	): Promise<{ thread: SelectedThread<TSelect> | null }>;
 	getThread<TSelect extends ThreadSelect>(
 		id: number,
-		options?: SelectionOption<"thread", TSelect>,
+		options?: RootSelectionOption<"thread", TSelect>,
 	): unknown {
 		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "thread");
+			const select = resolveSelection(options, "thread");
 			const document = buildThreadByIdDocument(select);
 			return this.graphQLClient
 				.request<{ Thread: SelectedThread<TSelect> | null }, { id: number }>({
 					document,
 					variables: { id },
 				})
-				.then((raw) => (wrapped ? { thread: raw.Thread } : raw));
+				.then((raw) => ({ thread: raw.Thread }));
 		}
 		return this.client.GetThread({ id });
 	}
@@ -481,26 +470,20 @@ export class SocialService {
 	getThreadComment(id: number): ReturnType<ANILISTSDK["GetThreadComment"]>;
 	getThreadComment<TSelect extends ThreadCommentSelect>(
 		id: number,
-		options: { select: TSelect },
-	): Promise<{
-		ThreadComment: Array<SelectedThreadComment<TSelect> | null> | null;
-	}>;
-	getThreadComment<TSelect extends ThreadCommentSelect>(
-		id: number,
 		options: RootSelectionOption<"threadComments", TSelect>,
 	): Promise<{
 		threadComments: Array<SelectedThreadComment<TSelect> | null> | null;
 	}>;
 	getThreadComment<TSelect extends ThreadCommentSelect>(
 		id: number,
-		options?: SelectionOption<"threadComments", TSelect>,
+		options?: RootSelectionOption<"threadComments", TSelect>,
 	): unknown {
 		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "threadComments");
+			const select = resolveSelection(options, "threadComments");
 			const document = buildThreadCommentByIdDocument(select);
 			return this.graphQLClient
 				.request<
@@ -509,7 +492,7 @@ export class SocialService {
 					},
 					{ id: number }
 				>({ document, variables: { id } })
-				.then((raw) => (wrapped ? { threadComments: raw.ThreadComment } : raw));
+				.then((raw) => ({ threadComments: raw.ThreadComment }));
 		}
 		return this.client.GetThreadComment({ id });
 	}
@@ -526,21 +509,19 @@ export class SocialService {
 		options: RootSelectionOption<"siteStatistics", TSelect>,
 	): Promise<{ siteStatistics: SelectedSiteStatistics<TSelect> | null }>;
 	getSiteStatistics<TSelect extends SiteStatisticsSelect>(
-		options?: SelectionOption<"siteStatistics", TSelect>,
+		options?: RootSelectionOption<"siteStatistics", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "siteStatistics");
+			const select = resolveSelection(options, "siteStatistics");
 			const document = buildSiteStatisticsDocument(select);
 			return this.graphQLClient
 				.request<{ SiteStatistics: SelectedSiteStatistics<TSelect> | null }>({
 					document,
 				})
-				.then((raw) =>
-					wrapped ? { siteStatistics: raw.SiteStatistics } : raw,
-				);
+				.then((raw) => ({ siteStatistics: raw.SiteStatistics }));
 		}
 		return this.client.GetSiteStatistics();
 	}
@@ -553,28 +534,24 @@ export class SocialService {
 	getMarkdown(markdown: string): ReturnType<ANILISTSDK["GetMarkdown"]>;
 	getMarkdown<TSelect extends ParsedMarkdownSelect>(
 		markdown: string,
-		options: { select: TSelect },
-	): Promise<{ Markdown: SelectedParsedMarkdown<TSelect> | null }>;
-	getMarkdown<TSelect extends ParsedMarkdownSelect>(
-		markdown: string,
 		options: RootSelectionOption<"markdown", TSelect>,
 	): Promise<{ markdown: SelectedParsedMarkdown<TSelect> | null }>;
 	getMarkdown<TSelect extends ParsedMarkdownSelect>(
 		markdown: string,
-		options?: SelectionOption<"markdown", TSelect>,
+		options?: RootSelectionOption<"markdown", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "markdown");
+			const select = resolveSelection(options, "markdown");
 			const document = buildParsedMarkdownDocument(select);
 			return this.graphQLClient
 				.request<
 					{ Markdown: SelectedParsedMarkdown<TSelect> | null },
 					{ markdown: string }
 				>({ document, variables: { markdown } })
-				.then((raw) => (wrapped ? { markdown: raw.Markdown } : raw));
+				.then((raw) => ({ markdown: raw.Markdown }));
 		}
 		return this.client.GetMarkdown({ markdown });
 	}
@@ -587,29 +564,25 @@ export class SocialService {
 	toggleFollow(userId: number): ReturnType<ANILISTSDK["ToggleFollow"]>;
 	toggleFollow<TSelect extends UserSelect>(
 		userId: number,
-		options: { select: TSelect },
-	): Promise<{ ToggleFollow: SelectedUser<TSelect> | null }>;
-	toggleFollow<TSelect extends UserSelect>(
-		userId: number,
 		options: RootSelectionOption<"user", TSelect>,
 	): Promise<{ user: SelectedUser<TSelect> | null }>;
 	toggleFollow<TSelect extends UserSelect>(
 		userId: number,
-		options?: SelectionOption<"user", TSelect>,
+		options?: RootSelectionOption<"user", TSelect>,
 	): unknown {
 		assertPositiveInt(userId, "userId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "user");
+			const select = resolveSelection(options, "user");
 			const document = buildToggleFollowDocument(select);
 			return this.graphQLClient
 				.request<
 					{ ToggleFollow: SelectedUser<TSelect> | null },
 					{ userId: number }
 				>({ document, variables: { userId } })
-				.then((raw) => (wrapped ? { user: raw.ToggleFollow } : raw));
+				.then((raw) => ({ user: raw.ToggleFollow }));
 		}
 		return this.client.ToggleFollow({ userId });
 	}
