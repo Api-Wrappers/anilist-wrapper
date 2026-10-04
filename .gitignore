@@ -6,6 +6,9 @@ out
 dist
 *.tgz
 
+# documentation snippet typecheck scratch dir
+.doc-snippets
+
 # code coverage
 coverage
 *.lcov

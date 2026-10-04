@@ -56,7 +56,7 @@ describe("critical selected documents", () => {
 				),
 			),
 		).toBe(
-			'query SelectedMangaBrowse($genre: String, $format: MediaFormat, $status: MediaStatus, $startDate: FuzzyDateInt, $page: Int, $perPage: Int) { Page(page: $page, perPage: $perPage) { media(genre: $genre, format: $format, status: $status, startDate: $startDate, type: MANGA, sort: POPULARITY_DESC, isAdult: false) { id } } }',
+			"query SelectedMangaBrowse($genre: String, $format: MediaFormat, $status: MediaStatus, $startDate: FuzzyDateInt, $page: Int, $perPage: Int) { Page(page: $page, perPage: $perPage) { media(genre: $genre, format: $format, status: $status, startDate: $startDate, type: MANGA, sort: POPULARITY_DESC, isAdult: false) { id } } }",
 		);
 	});
 
@@ -76,7 +76,10 @@ describe("critical selected documents", () => {
 	it("mutation documents keep the mutation root args", () => {
 		expect(
 			compact(
-				buildToggleFavouriteDocument({ anime: { nodes: { id: true } } }, "animeId"),
+				buildToggleFavouriteDocument(
+					{ anime: { nodes: { id: true } } },
+					"animeId",
+				),
 			),
 		).toBe(
 			"mutation SelectedToggleFavoriteAnime($id: Int) { ToggleFavourite(animeId: $id) { anime { nodes { id } } } }",
@@ -88,12 +91,16 @@ describe("critical selected documents", () => {
 	});
 
 	it("utility documents keep fixed nested roots", () => {
-		expect(compact(buildViewerStatisticsDocument({ anime: { count: true } }))).toBe(
+		expect(
+			compact(buildViewerStatisticsDocument({ anime: { count: true } })),
+		).toBe(
 			"query SelectedViewerStatistics { Viewer { statistics { anime { count } } } }",
 		);
 
 		expect(
-			compact(buildSiteStatisticsDocument({ users: { nodes: { count: true } } })),
+			compact(
+				buildSiteStatisticsDocument({ users: { nodes: { count: true } } }),
+			),
 		).toBe(
 			"query SelectedSiteStatistics { SiteStatistics { users { nodes { count } } } }",
 		);

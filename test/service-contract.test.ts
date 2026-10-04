@@ -8,6 +8,7 @@ import {
 	RecommendationRating,
 	ReviewRating,
 } from "../src";
+import type { GraphQLClientRequestOptions } from "../src/__generated__/anilist-sdk";
 import { AnimeService } from "../src/services/animeService";
 import { GraphQLService } from "../src/services/graphqlService";
 import { MangaService } from "../src/services/mangaService";
@@ -16,7 +17,6 @@ import { MediaService } from "../src/services/mediaService";
 import { SocialService } from "../src/services/socialService";
 import { StudioService } from "../src/services/studioService";
 import { UserService } from "../src/services/userService";
-import type { GraphQLClientRequestOptions } from "../src/__generated__/anilist-sdk";
 import { FakeSdk, sdkResult } from "./fakeSdk";
 
 describe("service contracts", () => {
@@ -99,7 +99,11 @@ describe("service contracts", () => {
 		const service = new MangaService(fake.client());
 
 		await service.browseManga(
-			{ genre: "Action", format: MediaFormat.Manga, status: MediaStatus.Releasing },
+			{
+				genre: "Action",
+				format: MediaFormat.Manga,
+				status: MediaStatus.Releasing,
+			},
 			2,
 			15,
 		);
@@ -191,7 +195,10 @@ describe("service contracts", () => {
 		await service.getUserInfo(1);
 		await service.getUserInfoByUsername("example");
 		await service.getUserAnimeList(1);
-		await service.getUserMangaListByUsername("example", MediaListStatus.Completed);
+		await service.getUserMangaListByUsername(
+			"example",
+			MediaListStatus.Completed,
+		);
 		await service.getUserList();
 
 		expect(fake.lastCall("GetUserInfo").variables).toEqual({ id: 1 });
@@ -404,10 +411,7 @@ describe("service contracts", () => {
 
 	it("maps review and recommendation endpoints to generated SDK operations", async () => {
 		const fake = new FakeSdk()
-			.respond(
-				"GetMediaReviews",
-				sdkResult("GetMediaReviews", { Page: null }),
-			)
+			.respond("GetMediaReviews", sdkResult("GetMediaReviews", { Page: null }))
 			.respond("GetUserReviews", sdkResult("GetUserReviews", { Page: null }))
 			.respond(
 				"GetRecommendationsPage",

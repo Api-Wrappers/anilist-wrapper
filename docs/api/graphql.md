@@ -34,6 +34,8 @@ console.log(data.GenreCollection);
 ## Variables
 
 ```typescript
+import { gql } from "@api-wrappers/anilist-wrapper";
+
 const data = await anilist.graphql.request<
 	{
 		Media: {
@@ -62,6 +64,8 @@ const data = await anilist.graphql.request<
 Authenticated raw GraphQL uses the same token-based constructor as the convenience services.
 
 ```typescript
+import { Anilist, gql } from "@api-wrappers/anilist-wrapper";
+
 const anilist = new Anilist(process.env.ANILIST_TOKEN);
 
 await anilist.graphql.request<unknown, { userId: number }>(
@@ -80,6 +84,8 @@ await anilist.graphql.request<unknown, { userId: number }>(
 ## Request Cancellation
 
 ```typescript
+import { gql } from "@api-wrappers/anilist-wrapper";
+
 const controller = new AbortController();
 
 const promise = anilist.graphql.request(

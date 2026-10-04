@@ -37,3 +37,16 @@ export const normalizePerPage = (
 	}
 	return perPage;
 };
+
+/**
+ * Throws unless `status` is `undefined` or a status string. Catches callers
+ * still passing selection options in the v3 position, which is now `status`.
+ * @param status - The caller-provided list status.
+ */
+export const assertOptionalStatus = (status: unknown): void => {
+	if (status !== undefined && typeof status !== "string") {
+		throw new TypeError(
+			"status must be a MediaListStatus or undefined. Since v4, selection options are the argument after status: pass undefined for status to select without filtering.",
+		);
+	}
+};

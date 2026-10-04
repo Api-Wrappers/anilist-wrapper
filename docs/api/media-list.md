@@ -54,6 +54,8 @@ console.log(saved.SaveMediaListEntry?.id);
 ```
 
 ```typescript
+import { MediaListStatus } from "@api-wrappers/anilist-wrapper";
+
 const { mediaList } = await anilist.mediaList.saveEntry(
 	{ mediaId: 16498, status: MediaListStatus.Current, progress: 5 },
 	{ select: { mediaList: { id: true, status: true, progress: true } } },

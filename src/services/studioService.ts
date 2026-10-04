@@ -5,10 +5,7 @@ import {
 	buildStudioPageDocument,
 	buildToggleFavouriteDocument,
 } from "../selections/builder";
-import type {
-	RootSelectionOption,
-	SelectionOption,
-} from "../selections/options";
+import type { RootSelectionOption } from "../selections/options";
 import {
 	hasSelection,
 	resolvePageSelection,
@@ -53,25 +50,21 @@ export class StudioService {
 	): Promise<{ studio: SelectedStudio<TSelect> | null }>;
 	getStudioById<TSelect extends StudioSelect>(
 		id: number,
-		options: { select: TSelect },
-	): Promise<{ Studio: SelectedStudio<TSelect> | null }>;
-	getStudioById<TSelect extends StudioSelect>(
-		id: number,
-		options?: SelectionOption<"studio", TSelect>,
+		options?: RootSelectionOption<"studio", TSelect>,
 	): unknown {
 		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "studio");
+			const select = resolveSelection(options, "studio");
 			const document = buildStudioByIdDocument(select);
 			return this.graphQLClient
 				.request<{ Studio: SelectedStudio<TSelect> | null }, { id: number }>({
 					document,
 					variables: { id },
 				})
-				.then((raw) => (wrapped ? { studio: raw.Studio } : raw));
+				.then((raw) => ({ studio: raw.Studio }));
 		}
 		return this.client.GetStudioById({ id });
 	}
@@ -137,29 +130,25 @@ export class StudioService {
 	): ReturnType<ANILISTSDK["ToggleFavoriteStudio"]>;
 	toggleFavorite<TSelect extends FavouritesSelect>(
 		studioId: number,
-		options: { select: TSelect },
-	): Promise<{ ToggleFavourite: SelectedFavourites<TSelect> | null }>;
-	toggleFavorite<TSelect extends FavouritesSelect>(
-		studioId: number,
 		options: RootSelectionOption<"favorites", TSelect>,
 	): Promise<{ favorites: SelectedFavourites<TSelect> | null }>;
 	toggleFavorite<TSelect extends FavouritesSelect>(
 		studioId: number,
-		options?: SelectionOption<"favorites", TSelect>,
+		options?: RootSelectionOption<"favorites", TSelect>,
 	): unknown {
 		assertPositiveInt(studioId, "studioId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "favorites");
+			const select = resolveSelection(options, "favorites");
 			const document = buildToggleFavouriteDocument(select, "studioId");
 			return this.graphQLClient
 				.request<
 					{ ToggleFavourite: SelectedFavourites<TSelect> | null },
 					{ id: number }
 				>({ document, variables: { id: studioId } })
-				.then((raw) => (wrapped ? { favorites: raw.ToggleFavourite } : raw));
+				.then((raw) => ({ favorites: raw.ToggleFavourite }));
 		}
 		return this.client.ToggleFavoriteStudio({ studioId });
 	}

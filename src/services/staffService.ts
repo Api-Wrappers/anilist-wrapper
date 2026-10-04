@@ -5,10 +5,7 @@ import {
 	buildStaffPageDocument,
 	buildToggleFavouriteDocument,
 } from "../selections/builder";
-import type {
-	RootSelectionOption,
-	SelectionOption,
-} from "../selections/options";
+import type { RootSelectionOption } from "../selections/options";
 import {
 	hasSelection,
 	resolvePageSelection,
@@ -53,25 +50,21 @@ export class StaffService {
 	): Promise<{ staff: SelectedStaff<TSelect> | null }>;
 	getStaffById<TSelect extends StaffSelect>(
 		id: number,
-		options: { select: TSelect },
-	): Promise<{ Staff: SelectedStaff<TSelect> | null }>;
-	getStaffById<TSelect extends StaffSelect>(
-		id: number,
-		options?: SelectionOption<"staff", TSelect>,
+		options?: RootSelectionOption<"staff", TSelect>,
 	): unknown {
 		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "staff");
+			const select = resolveSelection(options, "staff");
 			const document = buildStaffByIdDocument(select);
 			return this.graphQLClient
 				.request<{ Staff: SelectedStaff<TSelect> | null }, { id: number }>({
 					document,
 					variables: { id },
 				})
-				.then((raw) => (wrapped ? { staff: raw.Staff } : raw));
+				.then((raw) => ({ staff: raw.Staff }));
 		}
 		return this.client.GetStaffById({ id });
 	}
@@ -135,25 +128,21 @@ export class StaffService {
 	): Promise<{ favorites: SelectedFavourites<TSelect> | null }>;
 	toggleFavoriteStaff<TSelect extends FavouritesSelect>(
 		staffId: number,
-		options: { select: TSelect },
-	): Promise<{ ToggleFavourite: SelectedFavourites<TSelect> | null }>;
-	toggleFavoriteStaff<TSelect extends FavouritesSelect>(
-		staffId: number,
-		options?: SelectionOption<"favorites", TSelect>,
+		options?: RootSelectionOption<"favorites", TSelect>,
 	): unknown {
 		assertPositiveInt(staffId, "staffId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "favorites");
+			const select = resolveSelection(options, "favorites");
 			const document = buildToggleFavouriteDocument(select, "staffId");
 			return this.graphQLClient
 				.request<
 					{ ToggleFavourite: SelectedFavourites<TSelect> | null },
 					{ id: number }
 				>({ document, variables: { id: staffId } })
-				.then((raw) => (wrapped ? { favorites: raw.ToggleFavourite } : raw));
+				.then((raw) => ({ favorites: raw.ToggleFavourite }));
 		}
 		return this.client.ToggleFavoriteStaff({ staffID: staffId });
 	}

@@ -19,10 +19,7 @@ import {
 	buildMediaPageDocument,
 	buildToggleFavouriteDocument,
 } from "../selections/builder";
-import type {
-	RootSelectionOption,
-	SelectionOption,
-} from "../selections/options";
+import type { RootSelectionOption } from "../selections/options";
 import {
 	hasSelection,
 	resolvePageSelection,
@@ -92,22 +89,18 @@ export class MangaService {
 	getMangaById(id: number): ReturnType<ANILISTSDK["GetMangaById"]>;
 	getMangaById<TSelect extends MediaSelect>(
 		id: number,
-		options: { select: TSelect },
-	): Promise<{ Media: SelectedMedia<TSelect> | null }>;
-	getMangaById<TSelect extends MediaSelect>(
-		id: number,
 		options: RootSelectionOption<"media", TSelect>,
 	): Promise<{ media: SelectedMedia<TSelect> | null }>;
 	getMangaById<TSelect extends MediaSelect>(
 		id: number,
-		options?: SelectionOption<"media", TSelect>,
+		options?: RootSelectionOption<"media", TSelect>,
 	): unknown {
 		assertPositiveInt(id);
 		if (hasSelection(options)) {
-			const { select, wrapped } = resolveSelection(options, "media");
-			return this.selectedMedia(select, { id }).then((raw) =>
-				wrapped ? { media: raw.Media } : raw,
-			);
+			const select = resolveSelection(options, "media");
+			return this.selectedMedia(select, { id }).then((raw) => ({
+				media: raw.Media,
+			}));
 		}
 		return this.client.GetMangaById({ id });
 	}
@@ -136,6 +129,7 @@ export class MangaService {
 	):
 		| Promise<GetMangaByTitleQuery>
 		| Promise<{ page: SelectedMediaPage<TSelect> | null }> {
+		assertPositiveInt(page, "page");
 		const limit = normalizePerPage(perPage, 1);
 		if (options?.select !== undefined) {
 			const document = buildMediaPageDocument(
@@ -207,22 +201,18 @@ export class MangaService {
 	getMangaCharacters(mediaId: number): Promise<GetMangaCharactersQuery>;
 	getMangaCharacters<TSelect extends MediaSelect>(
 		mediaId: number,
-		options: { select: TSelect },
-	): Promise<{ Media: SelectedMedia<TSelect> | null }>;
-	getMangaCharacters<TSelect extends MediaSelect>(
-		mediaId: number,
 		options: RootSelectionOption<"media", TSelect>,
 	): Promise<{ media: SelectedMedia<TSelect> | null }>;
 	getMangaCharacters<TSelect extends MediaSelect>(
 		mediaId: number,
-		options?: SelectionOption<"media", TSelect>,
+		options?: RootSelectionOption<"media", TSelect>,
 	): unknown {
 		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
-			const { select, wrapped } = resolveSelection(options, "media");
+			const select = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
 				id: mediaId,
-			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
+			}).then((raw) => ({ media: raw.Media }));
 		}
 		return this.client.GetMangaCharacters({ id: mediaId });
 	}
@@ -280,22 +270,18 @@ export class MangaService {
 	): Promise<GetMangaRecommendationsQuery>;
 	getMangaRecommendations<TSelect extends MediaSelect>(
 		mediaId: number,
-		options: { select: TSelect },
-	): Promise<{ Media: SelectedMedia<TSelect> | null }>;
-	getMangaRecommendations<TSelect extends MediaSelect>(
-		mediaId: number,
 		options: RootSelectionOption<"media", TSelect>,
 	): Promise<{ media: SelectedMedia<TSelect> | null }>;
 	getMangaRecommendations<TSelect extends MediaSelect>(
 		mediaId: number,
-		options?: SelectionOption<"media", TSelect>,
+		options?: RootSelectionOption<"media", TSelect>,
 	): unknown {
 		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
-			const { select, wrapped } = resolveSelection(options, "media");
+			const select = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
 				id: mediaId,
-			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
+			}).then((raw) => ({ media: raw.Media }));
 		}
 		return this.client.GetMangaRecommendations({ id: mediaId });
 	}
@@ -308,22 +294,18 @@ export class MangaService {
 	getMangaRelations(mediaId: number): Promise<GetMangaRelationsQuery>;
 	getMangaRelations<TSelect extends MediaSelect>(
 		mediaId: number,
-		options: { select: TSelect },
-	): Promise<{ Media: SelectedMedia<TSelect> | null }>;
-	getMangaRelations<TSelect extends MediaSelect>(
-		mediaId: number,
 		options: RootSelectionOption<"media", TSelect>,
 	): Promise<{ media: SelectedMedia<TSelect> | null }>;
 	getMangaRelations<TSelect extends MediaSelect>(
 		mediaId: number,
-		options?: SelectionOption<"media", TSelect>,
+		options?: RootSelectionOption<"media", TSelect>,
 	): unknown {
 		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
-			const { select, wrapped } = resolveSelection(options, "media");
+			const select = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
 				id: mediaId,
-			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
+			}).then((raw) => ({ media: raw.Media }));
 		}
 		return this.client.GetMangaRelations({ id: mediaId });
 	}
@@ -336,22 +318,18 @@ export class MangaService {
 	getMangaStaff(mediaId: number): Promise<GetMangaStaffQuery>;
 	getMangaStaff<TSelect extends MediaSelect>(
 		mediaId: number,
-		options: { select: TSelect },
-	): Promise<{ Media: SelectedMedia<TSelect> | null }>;
-	getMangaStaff<TSelect extends MediaSelect>(
-		mediaId: number,
 		options: RootSelectionOption<"media", TSelect>,
 	): Promise<{ media: SelectedMedia<TSelect> | null }>;
 	getMangaStaff<TSelect extends MediaSelect>(
 		mediaId: number,
-		options?: SelectionOption<"media", TSelect>,
+		options?: RootSelectionOption<"media", TSelect>,
 	): unknown {
 		assertPositiveInt(mediaId, "mediaId");
 		if (hasSelection(options)) {
-			const { select, wrapped } = resolveSelection(options, "media");
+			const select = resolveSelection(options, "media");
 			return this.selectedMedia(select, {
 				id: mediaId,
-			}).then((raw) => (wrapped ? { media: raw.Media } : raw));
+			}).then((raw) => ({ media: raw.Media }));
 		}
 		return this.client.GetMangaStaff({ id: mediaId });
 	}
@@ -514,18 +492,14 @@ export class MangaService {
 	toggleFavourite(mangaId: number): Promise<ToggleFavoriteMangaMutation>;
 	toggleFavourite<TSelect extends FavouritesSelect>(
 		mangaId: number,
-		options: { select: TSelect },
-	): Promise<{ ToggleFavourite: SelectedFavourites<TSelect> | null }>;
-	toggleFavourite<TSelect extends FavouritesSelect>(
-		mangaId: number,
 		options: RootSelectionOption<"favorites", TSelect>,
 	): Promise<{ favorites: SelectedFavourites<TSelect> | null }>;
 	toggleFavourite<TSelect extends FavouritesSelect>(
 		mangaId: number,
-		options?: SelectionOption<"favorites", TSelect>,
+		options?: RootSelectionOption<"favorites", TSelect>,
 	): unknown {
 		if (options === undefined) return this.toggleFavorite(mangaId);
-		return this.toggleFavorite(mangaId, options as { select: TSelect });
+		return this.toggleFavorite(mangaId, options);
 	}
 
 	/**
@@ -537,29 +511,25 @@ export class MangaService {
 	toggleFavorite(mangaId: number): Promise<ToggleFavoriteMangaMutation>;
 	toggleFavorite<TSelect extends FavouritesSelect>(
 		mangaId: number,
-		options: { select: TSelect },
-	): Promise<{ ToggleFavourite: SelectedFavourites<TSelect> | null }>;
-	toggleFavorite<TSelect extends FavouritesSelect>(
-		mangaId: number,
 		options: RootSelectionOption<"favorites", TSelect>,
 	): Promise<{ favorites: SelectedFavourites<TSelect> | null }>;
 	toggleFavorite<TSelect extends FavouritesSelect>(
 		mangaId: number,
-		options?: SelectionOption<"favorites", TSelect>,
+		options?: RootSelectionOption<"favorites", TSelect>,
 	): unknown {
 		assertPositiveInt(mangaId, "mangaId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "favorites");
+			const select = resolveSelection(options, "favorites");
 			const document = buildToggleFavouriteDocument(select, "mangaId");
 			return this.graphQLClient
 				.request<
 					{ ToggleFavourite: SelectedFavourites<TSelect> | null },
 					{ id: number }
 				>({ document, variables: { id: mangaId } })
-				.then((raw) => (wrapped ? { favorites: raw.ToggleFavourite } : raw));
+				.then((raw) => ({ favorites: raw.ToggleFavourite }));
 		}
 		return this.client.ToggleFavoriteManga({ mangaId });
 	}

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "bun:test";
 import type { RequestContext } from "@api-wrappers/api-core";
 import type { GraphQLClientRequestOptions } from "../src/__generated__/anilist-sdk";
-import { createGraphQLClient, type AnilistRequestOptions } from "../src/client";
+import { type AnilistRequestOptions, createGraphQLClient } from "../src/client";
 
 const requests: RequestContext[] = [];
 

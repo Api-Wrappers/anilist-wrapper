@@ -6,6 +6,10 @@ export const GET_MANGA_TRENDING = gql`
 
   query GetMangaTrending($page: Int = 1, $perPage: Int = 20) {
     Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        hasNextPage
+        currentPage
+      }
       media(sort: TRENDING_DESC, type: MANGA) {
         ...MediaFragment
       }

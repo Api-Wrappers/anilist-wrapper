@@ -6,6 +6,10 @@ export const GET_MANGA_POPULAR = gql`
 
   query GetMangaPopular($page: Int = 1, $perPage: Int = 20) {
     Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        hasNextPage
+        currentPage
+      }
       media(sort: POPULARITY_DESC, type: MANGA) {
         ...MediaFragment
       }

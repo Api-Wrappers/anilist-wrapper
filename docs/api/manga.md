@@ -54,6 +54,8 @@ for (const media of search.Page?.media ?? []) {
 date filters, sorted by popularity and excluding adult entries.
 
 ```typescript
+import { MediaFormat, MediaStatus } from "@api-wrappers/anilist-wrapper";
+
 const ongoing = await anilist.manga.browseManga(
 	{ status: MediaStatus.Releasing, format: MediaFormat.Manga },
 	1,
@@ -143,6 +145,8 @@ console.log(staff.Media?.staff?.edges?.[0]?.node?.name?.full);
 `toggleFavourite` remains available as a backwards-compatible alias.
 
 ```typescript
+import { Anilist } from "@api-wrappers/anilist-wrapper";
+
 const anilist = new Anilist(process.env.ANILIST_TOKEN);
 
 await anilist.manga.toggleFavorite(30013);

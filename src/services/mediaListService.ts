@@ -16,10 +16,7 @@ import {
 	buildSaveMediaListEntryDocument,
 	buildUpdateMediaListEntriesDocument,
 } from "../selections/builder";
-import type {
-	RootSelectionOption,
-	SelectionOption,
-} from "../selections/options";
+import type { RootSelectionOption } from "../selections/options";
 import { hasSelection, resolveSelection } from "../selections/options";
 import type {
 	DeletedSelect,
@@ -30,7 +27,7 @@ import type {
 	SelectedMediaListCollection,
 } from "../selections/types";
 import { toMediaType } from "./mediaType";
-import { assertPositiveInt } from "./validation";
+import { assertOptionalStatus, assertPositiveInt } from "./validation";
 
 type SaveMediaListEntryFields = {
 	status?: MediaListStatus | null;
@@ -87,29 +84,25 @@ export class MediaListService {
 	getMediaList(id: number): ReturnType<ANILISTSDK["GetMediaList"]>;
 	getMediaList<TSelect extends MediaListSelect>(
 		id: number,
-		options: { select: TSelect },
-	): Promise<{ MediaList: SelectedMediaList<TSelect> | null }>;
-	getMediaList<TSelect extends MediaListSelect>(
-		id: number,
 		options: RootSelectionOption<"mediaList", TSelect>,
 	): Promise<{ mediaList: SelectedMediaList<TSelect> | null }>;
 	getMediaList<TSelect extends MediaListSelect>(
 		id: number,
-		options?: SelectionOption<"mediaList", TSelect>,
+		options?: RootSelectionOption<"mediaList", TSelect>,
 	): unknown {
 		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "mediaList");
+			const select = resolveSelection(options, "mediaList");
 			const document = buildMediaListByIdDocument(select);
 			return this.graphQLClient
 				.request<
 					{ MediaList: SelectedMediaList<TSelect> | null },
 					{ id: number }
 				>({ document, variables: { id } })
-				.then((raw) => (wrapped ? { mediaList: raw.MediaList } : raw));
+				.then((raw) => ({ mediaList: raw.MediaList }));
 		}
 		return this.client.GetMediaList({ id });
 	}
@@ -130,14 +123,6 @@ export class MediaListService {
 		userId: number,
 		mediaType: MediaTypeNonEnum,
 		status: MediaListStatus | undefined,
-		options: { select: TSelect },
-	): Promise<{
-		MediaListCollection: SelectedMediaListCollection<TSelect> | null;
-	}>;
-	getMediaListByUser<TSelect extends MediaListCollectionSelect>(
-		userId: number,
-		mediaType: MediaTypeNonEnum,
-		status: MediaListStatus | undefined,
 		options: RootSelectionOption<"mediaListCollection", TSelect>,
 	): Promise<{
 		mediaListCollection: SelectedMediaListCollection<TSelect> | null;
@@ -146,18 +131,16 @@ export class MediaListService {
 		userId: number,
 		mediaType: MediaTypeNonEnum,
 		status?: MediaListStatus,
-		options?: SelectionOption<"mediaListCollection", TSelect>,
+		options?: RootSelectionOption<"mediaListCollection", TSelect>,
 	): unknown {
+		assertOptionalStatus(status);
 		assertPositiveInt(userId, "userId");
 		const normalizedType = toMediaType(mediaType);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(
-				options,
-				"mediaListCollection",
-			);
+			const select = resolveSelection(options, "mediaListCollection");
 			const document = buildMediaListCollectionByUserDocument(select, "id");
 			return this.graphQLClient
 				.request<
@@ -175,9 +158,7 @@ export class MediaListService {
 						...(status !== undefined ? { status } : {}),
 					},
 				})
-				.then((raw) =>
-					wrapped ? { mediaListCollection: raw.MediaListCollection } : raw,
-				);
+				.then((raw) => ({ mediaListCollection: raw.MediaListCollection }));
 		}
 		return this.client.GetMediaListByUser({
 			userId,
@@ -202,14 +183,6 @@ export class MediaListService {
 		userName: string,
 		mediaType: MediaTypeNonEnum,
 		status: MediaListStatus | undefined,
-		options: { select: TSelect },
-	): Promise<{
-		MediaListCollection: SelectedMediaListCollection<TSelect> | null;
-	}>;
-	getMediaListByUsername<TSelect extends MediaListCollectionSelect>(
-		userName: string,
-		mediaType: MediaTypeNonEnum,
-		status: MediaListStatus | undefined,
 		options: RootSelectionOption<"mediaListCollection", TSelect>,
 	): Promise<{
 		mediaListCollection: SelectedMediaListCollection<TSelect> | null;
@@ -218,17 +191,15 @@ export class MediaListService {
 		userName: string,
 		mediaType: MediaTypeNonEnum,
 		status?: MediaListStatus,
-		options?: SelectionOption<"mediaListCollection", TSelect>,
+		options?: RootSelectionOption<"mediaListCollection", TSelect>,
 	): unknown {
+		assertOptionalStatus(status);
 		const normalizedType = toMediaType(mediaType);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(
-				options,
-				"mediaListCollection",
-			);
+			const select = resolveSelection(options, "mediaListCollection");
 			const document = buildMediaListCollectionByUserDocument(
 				select,
 				"username",
@@ -249,9 +220,7 @@ export class MediaListService {
 						...(status !== undefined ? { status } : {}),
 					},
 				})
-				.then((raw) =>
-					wrapped ? { mediaListCollection: raw.MediaListCollection } : raw,
-				);
+				.then((raw) => ({ mediaListCollection: raw.MediaListCollection }));
 		}
 		return this.client.GetMediaListByUserByUsername({
 			userName,
@@ -270,15 +239,11 @@ export class MediaListService {
 	): Promise<SaveMediaListEntryMutation>;
 	saveEntry<TSelect extends MediaListSelect>(
 		variables: SaveMediaListEntryInput,
-		options: { select: TSelect },
-	): Promise<{ SaveMediaListEntry: SelectedMediaList<TSelect> | null }>;
-	saveEntry<TSelect extends MediaListSelect>(
-		variables: SaveMediaListEntryInput,
 		options: RootSelectionOption<"mediaList", TSelect>,
 	): Promise<{ mediaList: SelectedMediaList<TSelect> | null }>;
 	saveEntry<TSelect extends MediaListSelect>(
 		variables: SaveMediaListEntryInput,
-		options?: SelectionOption<"mediaList", TSelect>,
+		options?: RootSelectionOption<"mediaList", TSelect>,
 	): unknown {
 		if (variables.mediaId == null && variables.id == null) {
 			throw new TypeError("saveEntry requires either mediaId or id.");
@@ -310,14 +275,14 @@ export class MediaListService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "mediaList");
+			const select = resolveSelection(options, "mediaList");
 			const document = buildSaveMediaListEntryDocument(select);
 			return this.graphQLClient
 				.request<
 					{ SaveMediaListEntry: SelectedMediaList<TSelect> | null },
 					SaveMediaListEntryMutationVariables
 				>({ document, variables: mutationVariables })
-				.then((raw) => (wrapped ? { mediaList: raw.SaveMediaListEntry } : raw));
+				.then((raw) => ({ mediaList: raw.SaveMediaListEntry }));
 		}
 
 		return this.client.SaveMediaListEntry(mutationVariables);
@@ -331,34 +296,25 @@ export class MediaListService {
 	deleteEntry(id: number): Promise<DeleteMediaListEntryMutation>;
 	deleteEntry<TSelect extends DeletedSelect>(
 		id: number,
-		options: { select: TSelect },
-	): Promise<{ DeleteMediaListEntry: SelectedDeleted<TSelect> | null }>;
-	deleteEntry<TSelect extends DeletedSelect>(
-		id: number,
 		options: RootSelectionOption<"deleteMediaListEntry", TSelect>,
 	): Promise<{ deleteMediaListEntry: SelectedDeleted<TSelect> | null }>;
 	deleteEntry<TSelect extends DeletedSelect>(
 		id: number,
-		options?: SelectionOption<"deleteMediaListEntry", TSelect>,
+		options?: RootSelectionOption<"deleteMediaListEntry", TSelect>,
 	): unknown {
 		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(
-				options,
-				"deleteMediaListEntry",
-			);
+			const select = resolveSelection(options, "deleteMediaListEntry");
 			const document = buildDeleteMediaListEntryDocument(select);
 			return this.graphQLClient
 				.request<
 					{ DeleteMediaListEntry: SelectedDeleted<TSelect> | null },
 					{ id: number }
 				>({ document, variables: { id } })
-				.then((raw) =>
-					wrapped ? { deleteMediaListEntry: raw.DeleteMediaListEntry } : raw,
-				);
+				.then((raw) => ({ deleteMediaListEntry: raw.DeleteMediaListEntry }));
 		}
 		return this.client.DeleteMediaListEntry({ id });
 	}
@@ -373,19 +329,13 @@ export class MediaListService {
 	): ReturnType<ANILISTSDK["UpdateMediaListEntries"]>;
 	updateEntries<TSelect extends MediaListSelect>(
 		entries: UpdateMediaListEntriesInput,
-		options: { select: TSelect },
-	): Promise<{
-		UpdateMediaListEntries: Array<SelectedMediaList<TSelect> | null> | null;
-	}>;
-	updateEntries<TSelect extends MediaListSelect>(
-		entries: UpdateMediaListEntriesInput,
 		options: RootSelectionOption<"updateMediaListEntries", TSelect>,
 	): Promise<{
 		updateMediaListEntries: Array<SelectedMediaList<TSelect> | null> | null;
 	}>;
 	updateEntries<TSelect extends MediaListSelect>(
 		entries: UpdateMediaListEntriesInput,
-		options?: SelectionOption<"updateMediaListEntries", TSelect>,
+		options?: RootSelectionOption<"updateMediaListEntries", TSelect>,
 	): unknown {
 		if (entries.ids.length === 0) {
 			throw new TypeError("updateEntries requires at least one id.");
@@ -413,10 +363,7 @@ export class MediaListService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(
-				options,
-				"updateMediaListEntries",
-			);
+			const select = resolveSelection(options, "updateMediaListEntries");
 			const document = buildUpdateMediaListEntriesDocument(select);
 			return this.graphQLClient
 				.request<
@@ -425,11 +372,9 @@ export class MediaListService {
 					},
 					UpdateMediaListEntriesMutationVariables
 				>({ document, variables: mutationVariables })
-				.then((raw) =>
-					wrapped
-						? { updateMediaListEntries: raw.UpdateMediaListEntries }
-						: raw,
-				);
+				.then((raw) => ({
+					updateMediaListEntries: raw.UpdateMediaListEntries,
+				}));
 		}
 
 		return this.client.UpdateMediaListEntries(mutationVariables);
@@ -448,33 +393,26 @@ export class MediaListService {
 	deleteCustomList<TSelect extends DeletedSelect>(
 		customList: string,
 		type: MediaTypeNonEnum,
-		options: { select: TSelect },
-	): Promise<{ DeleteCustomList: SelectedDeleted<TSelect> | null }>;
-	deleteCustomList<TSelect extends DeletedSelect>(
-		customList: string,
-		type: MediaTypeNonEnum,
 		options: RootSelectionOption<"deleteCustomList", TSelect>,
 	): Promise<{ deleteCustomList: SelectedDeleted<TSelect> | null }>;
 	deleteCustomList<TSelect extends DeletedSelect>(
 		customList: string,
 		type: MediaTypeNonEnum,
-		options?: SelectionOption<"deleteCustomList", TSelect>,
+		options?: RootSelectionOption<"deleteCustomList", TSelect>,
 	): unknown {
 		const normalizedType = toMediaType(type);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "deleteCustomList");
+			const select = resolveSelection(options, "deleteCustomList");
 			const document = buildDeleteCustomListDocument(select);
 			return this.graphQLClient
 				.request<
 					{ DeleteCustomList: SelectedDeleted<TSelect> | null },
 					{ customList: string; type: ReturnType<typeof toMediaType> }
 				>({ document, variables: { customList, type: normalizedType } })
-				.then((raw) =>
-					wrapped ? { deleteCustomList: raw.DeleteCustomList } : raw,
-				);
+				.then((raw) => ({ deleteCustomList: raw.DeleteCustomList }));
 		}
 		return this.client.DeleteCustomList({
 			customList,

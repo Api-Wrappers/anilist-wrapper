@@ -66,6 +66,8 @@ console.log(saved.SaveMediaListEntry?.id);
 Selected mutations can return only the fields you need:
 
 ```typescript
+import { MediaListStatus } from "@api-wrappers/anilist-wrapper";
+
 const { mediaList } = await anilist.mediaList.saveEntry(
 	{ mediaId: 16498, status: MediaListStatus.Current, progress: 3 },
 	{ select: { mediaList: { id: true, status: true, progress: true } } },

@@ -6,6 +6,10 @@ export const SEARCH_MANGA = gql`
 
   query SearchManga($query: String, $page: Int, $perPage: Int) {
     Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        hasNextPage
+        currentPage
+      }
       media(search: $query, type: MANGA) {
         ...MediaFragment
       }

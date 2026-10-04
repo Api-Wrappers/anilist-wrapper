@@ -14,10 +14,7 @@ import {
 	buildViewerDocument,
 	buildViewerStatisticsDocument,
 } from "../selections/builder";
-import type {
-	RootSelectionOption,
-	SelectionOption,
-} from "../selections/options";
+import type { RootSelectionOption } from "../selections/options";
 import {
 	hasSelection,
 	resolvePageSelection,
@@ -63,29 +60,25 @@ export class UserService {
 	getUserInfo(userId: number): ReturnType<ANILISTSDK["GetUserInfo"]>;
 	getUserInfo<TSelect extends UserSelect>(
 		userId: number,
-		options: { select: TSelect },
-	): Promise<{ User: SelectedUser<TSelect> | null }>;
-	getUserInfo<TSelect extends UserSelect>(
-		userId: number,
 		options: RootSelectionOption<"user", TSelect>,
 	): Promise<{ user: SelectedUser<TSelect> | null }>;
 	getUserInfo<TSelect extends UserSelect>(
 		userId: number,
-		options?: SelectionOption<"user", TSelect>,
+		options?: RootSelectionOption<"user", TSelect>,
 	): unknown {
 		assertPositiveInt(userId, "userId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "user");
+			const select = resolveSelection(options, "user");
 			const document = buildUserByIdDocument(select);
 			return this.graphQLClient
 				.request<{ User: SelectedUser<TSelect> | null }, { id: number }>({
 					document,
 					variables: { id: userId },
 				})
-				.then((raw) => (wrapped ? { user: raw.User } : raw));
+				.then((raw) => ({ user: raw.User }));
 		}
 		return this.client.GetUserInfo({ id: userId });
 	}
@@ -100,28 +93,24 @@ export class UserService {
 	): ReturnType<ANILISTSDK["GetUserInfoByUsername"]>;
 	getUserInfoByUsername<TSelect extends UserSelect>(
 		userName: string,
-		options: { select: TSelect },
-	): Promise<{ User: SelectedUser<TSelect> | null }>;
-	getUserInfoByUsername<TSelect extends UserSelect>(
-		userName: string,
 		options: RootSelectionOption<"user", TSelect>,
 	): Promise<{ user: SelectedUser<TSelect> | null }>;
 	getUserInfoByUsername<TSelect extends UserSelect>(
 		userName: string,
-		options?: SelectionOption<"user", TSelect>,
+		options?: RootSelectionOption<"user", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "user");
+			const select = resolveSelection(options, "user");
 			const document = buildUserByUsernameDocument(select);
 			return this.graphQLClient
 				.request<{ User: SelectedUser<TSelect> | null }, { userName: string }>({
 					document,
 					variables: { userName },
 				})
-				.then((raw) => (wrapped ? { user: raw.User } : raw));
+				.then((raw) => ({ user: raw.User }));
 		}
 		return this.client.GetUserInfoByUsername({ userName });
 	}
@@ -139,13 +128,6 @@ export class UserService {
 	getUserAnimeList<TSelect extends MediaListCollectionSelect>(
 		userId: number,
 		status: MediaListStatus | undefined,
-		options: { select: TSelect },
-	): Promise<{
-		MediaListCollection: SelectedMediaListCollection<TSelect> | null;
-	}>;
-	getUserAnimeList<TSelect extends MediaListCollectionSelect>(
-		userId: number,
-		status: MediaListStatus | undefined,
 		options: RootSelectionOption<"mediaListCollection", TSelect>,
 	): Promise<{
 		mediaListCollection: SelectedMediaListCollection<TSelect> | null;
@@ -153,7 +135,7 @@ export class UserService {
 	getUserAnimeList<TSelect extends MediaListCollectionSelect>(
 		userId: number,
 		status?: MediaListStatus,
-		options?: SelectionOption<"mediaListCollection", TSelect>,
+		options?: RootSelectionOption<"mediaListCollection", TSelect>,
 	): unknown {
 		assertPositiveInt(userId, "userId");
 		const normalizedStatus = status ?? MediaListStatus.Current;
@@ -161,10 +143,7 @@ export class UserService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(
-				options,
-				"mediaListCollection",
-			);
+			const select = resolveSelection(options, "mediaListCollection");
 			const document = buildMediaListCollectionByUserDocument(select, "id");
 			return this.graphQLClient
 				.request<
@@ -182,9 +161,7 @@ export class UserService {
 						status: normalizedStatus,
 					},
 				})
-				.then((raw) =>
-					wrapped ? { mediaListCollection: raw.MediaListCollection } : raw,
-				);
+				.then((raw) => ({ mediaListCollection: raw.MediaListCollection }));
 		}
 		return this.client.GetUserAnimeList({
 			status: normalizedStatus,
@@ -205,13 +182,6 @@ export class UserService {
 	getUserAnimeListByUsername<TSelect extends MediaListCollectionSelect>(
 		userName: string,
 		status: MediaListStatus | undefined,
-		options: { select: TSelect },
-	): Promise<{
-		MediaListCollection: SelectedMediaListCollection<TSelect> | null;
-	}>;
-	getUserAnimeListByUsername<TSelect extends MediaListCollectionSelect>(
-		userName: string,
-		status: MediaListStatus | undefined,
 		options: RootSelectionOption<"mediaListCollection", TSelect>,
 	): Promise<{
 		mediaListCollection: SelectedMediaListCollection<TSelect> | null;
@@ -219,17 +189,14 @@ export class UserService {
 	getUserAnimeListByUsername<TSelect extends MediaListCollectionSelect>(
 		userName: string,
 		status?: MediaListStatus,
-		options?: SelectionOption<"mediaListCollection", TSelect>,
+		options?: RootSelectionOption<"mediaListCollection", TSelect>,
 	): unknown {
 		const normalizedStatus = status ?? MediaListStatus.Current;
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(
-				options,
-				"mediaListCollection",
-			);
+			const select = resolveSelection(options, "mediaListCollection");
 			const document = buildMediaListCollectionByUserDocument(
 				select,
 				"username",
@@ -250,9 +217,7 @@ export class UserService {
 						status: normalizedStatus,
 					},
 				})
-				.then((raw) =>
-					wrapped ? { mediaListCollection: raw.MediaListCollection } : raw,
-				);
+				.then((raw) => ({ mediaListCollection: raw.MediaListCollection }));
 		}
 		return this.client.GetUserAnimeListByUsername({
 			status: normalizedStatus,
@@ -273,13 +238,6 @@ export class UserService {
 	getUserMangaList<TSelect extends MediaListCollectionSelect>(
 		userId: number,
 		status: MediaListStatus | undefined,
-		options: { select: TSelect },
-	): Promise<{
-		MediaListCollection: SelectedMediaListCollection<TSelect> | null;
-	}>;
-	getUserMangaList<TSelect extends MediaListCollectionSelect>(
-		userId: number,
-		status: MediaListStatus | undefined,
 		options: RootSelectionOption<"mediaListCollection", TSelect>,
 	): Promise<{
 		mediaListCollection: SelectedMediaListCollection<TSelect> | null;
@@ -287,7 +245,7 @@ export class UserService {
 	getUserMangaList<TSelect extends MediaListCollectionSelect>(
 		userId: number,
 		status?: MediaListStatus,
-		options?: SelectionOption<"mediaListCollection", TSelect>,
+		options?: RootSelectionOption<"mediaListCollection", TSelect>,
 	): unknown {
 		assertPositiveInt(userId, "userId");
 		const normalizedStatus = status ?? MediaListStatus.Current;
@@ -295,10 +253,7 @@ export class UserService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(
-				options,
-				"mediaListCollection",
-			);
+			const select = resolveSelection(options, "mediaListCollection");
 			const document = buildMediaListCollectionByUserDocument(select, "id");
 			return this.graphQLClient
 				.request<
@@ -316,9 +271,7 @@ export class UserService {
 						status: normalizedStatus,
 					},
 				})
-				.then((raw) =>
-					wrapped ? { mediaListCollection: raw.MediaListCollection } : raw,
-				);
+				.then((raw) => ({ mediaListCollection: raw.MediaListCollection }));
 		}
 		return this.client.GetUserMangaList({
 			status: normalizedStatus,
@@ -339,13 +292,6 @@ export class UserService {
 	getUserMangaListByUsername<TSelect extends MediaListCollectionSelect>(
 		userName: string,
 		status: MediaListStatus | undefined,
-		options: { select: TSelect },
-	): Promise<{
-		MediaListCollection: SelectedMediaListCollection<TSelect> | null;
-	}>;
-	getUserMangaListByUsername<TSelect extends MediaListCollectionSelect>(
-		userName: string,
-		status: MediaListStatus | undefined,
 		options: RootSelectionOption<"mediaListCollection", TSelect>,
 	): Promise<{
 		mediaListCollection: SelectedMediaListCollection<TSelect> | null;
@@ -353,17 +299,14 @@ export class UserService {
 	getUserMangaListByUsername<TSelect extends MediaListCollectionSelect>(
 		userName: string,
 		status?: MediaListStatus,
-		options?: SelectionOption<"mediaListCollection", TSelect>,
+		options?: RootSelectionOption<"mediaListCollection", TSelect>,
 	): unknown {
 		const normalizedStatus = status ?? MediaListStatus.Current;
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(
-				options,
-				"mediaListCollection",
-			);
+			const select = resolveSelection(options, "mediaListCollection");
 			const document = buildMediaListCollectionByUserDocument(
 				select,
 				"username",
@@ -384,9 +327,7 @@ export class UserService {
 						status: normalizedStatus,
 					},
 				})
-				.then((raw) =>
-					wrapped ? { mediaListCollection: raw.MediaListCollection } : raw,
-				);
+				.then((raw) => ({ mediaListCollection: raw.MediaListCollection }));
 		}
 		return this.client.GetUserMangaListByUsername({
 			status: normalizedStatus,
@@ -448,29 +389,25 @@ export class UserService {
 	): ReturnType<ANILISTSDK["GetUserStatistics"]>;
 	getUserStatistics<TSelect extends UserSelect>(
 		userId: number,
-		options: { select: TSelect },
-	): Promise<{ User: SelectedUser<TSelect> | null }>;
-	getUserStatistics<TSelect extends UserSelect>(
-		userId: number,
 		options: RootSelectionOption<"user", TSelect>,
 	): Promise<{ user: SelectedUser<TSelect> | null }>;
 	getUserStatistics<TSelect extends UserSelect>(
 		userId: number,
-		options?: SelectionOption<"user", TSelect>,
+		options?: RootSelectionOption<"user", TSelect>,
 	): unknown {
 		assertPositiveInt(userId, "userId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "user");
+			const select = resolveSelection(options, "user");
 			const document = buildUserByIdDocument(select);
 			return this.graphQLClient
 				.request<{ User: SelectedUser<TSelect> | null }, { id: number }>({
 					document,
 					variables: { id: userId },
 				})
-				.then((raw) => (wrapped ? { user: raw.User } : raw));
+				.then((raw) => ({ user: raw.User }));
 		}
 		return this.client.GetUserStatistics({ id: userId });
 	}
@@ -485,28 +422,24 @@ export class UserService {
 	): ReturnType<ANILISTSDK["GetUserStatisticsByUsername"]>;
 	getUserStatisticsByUsername<TSelect extends UserSelect>(
 		userName: string,
-		options: { select: TSelect },
-	): Promise<{ User: SelectedUser<TSelect> | null }>;
-	getUserStatisticsByUsername<TSelect extends UserSelect>(
-		userName: string,
 		options: RootSelectionOption<"user", TSelect>,
 	): Promise<{ user: SelectedUser<TSelect> | null }>;
 	getUserStatisticsByUsername<TSelect extends UserSelect>(
 		userName: string,
-		options?: SelectionOption<"user", TSelect>,
+		options?: RootSelectionOption<"user", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "user");
+			const select = resolveSelection(options, "user");
 			const document = buildUserByUsernameDocument(select);
 			return this.graphQLClient
 				.request<{ User: SelectedUser<TSelect> | null }, { userName: string }>({
 					document,
 					variables: { userName },
 				})
-				.then((raw) => (wrapped ? { user: raw.User } : raw));
+				.then((raw) => ({ user: raw.User }));
 		}
 		return this.client.GetUserStatisticsByUsername({ userName });
 	}
@@ -523,17 +456,17 @@ export class UserService {
 		options: RootSelectionOption<"viewer", TSelect>,
 	): Promise<{ viewer: SelectedUser<TSelect> | null }>;
 	getViewer<TSelect extends UserSelect>(
-		options?: SelectionOption<"viewer", TSelect>,
+		options?: RootSelectionOption<"viewer", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "viewer");
+			const select = resolveSelection(options, "viewer");
 			const document = buildViewerDocument(select);
 			return this.graphQLClient
 				.request<{ Viewer: SelectedUser<TSelect> | null }>({ document })
-				.then((raw) => (wrapped ? { viewer: raw.Viewer } : raw));
+				.then((raw) => ({ viewer: raw.Viewer }));
 		}
 		return this.client.GetViewer();
 	}
@@ -552,13 +485,13 @@ export class UserService {
 		options: RootSelectionOption<"viewerStatistics", TSelect>,
 	): Promise<{ viewerStatistics: SelectedUserStatisticTypes<TSelect> | null }>;
 	getViewerStatistics<TSelect extends UserStatisticTypesSelect>(
-		options?: SelectionOption<"viewerStatistics", TSelect>,
+		options?: RootSelectionOption<"viewerStatistics", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "viewerStatistics");
+			const select = resolveSelection(options, "viewerStatistics");
 			const document = buildViewerStatisticsDocument(select);
 			return this.graphQLClient
 				.request<{
@@ -566,9 +499,7 @@ export class UserService {
 						statistics: SelectedUserStatisticTypes<TSelect> | null;
 					} | null;
 				}>({ document })
-				.then((raw) =>
-					wrapped ? { viewerStatistics: raw.Viewer?.statistics ?? null } : raw,
-				);
+				.then((raw) => ({ viewerStatistics: raw.Viewer?.statistics ?? null }));
 		}
 		return this.client.GetViewerStatistics();
 	}

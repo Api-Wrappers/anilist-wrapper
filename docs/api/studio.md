@@ -14,6 +14,7 @@ const anilist = new Anilist();
 | --- | --- | --- |
 | `getStudioById(id)` | No | `Studio` |
 | `getStudioBySearch(search, page?, perPage?)` | No | `Page.studios` |
+| `toggleFavorite(studioId)` | Yes | `ToggleFavourite` |
 
 Selected calls use normalized roots: `studio` for the lookup and `page` for
 search pagination. See the [selection migration guide](../selection-migration.md).

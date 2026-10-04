@@ -5,10 +5,7 @@ import {
 	buildCharacterPageDocument,
 	buildToggleFavouriteDocument,
 } from "../selections/builder";
-import type {
-	RootSelectionOption,
-	SelectionOption,
-} from "../selections/options";
+import type { RootSelectionOption } from "../selections/options";
 import {
 	hasSelection,
 	resolvePageSelection,
@@ -49,29 +46,25 @@ export class CharacterService {
 	getCharacterById(id: number): ReturnType<ANILISTSDK["GetCharacterById"]>;
 	getCharacterById<TSelect extends CharacterSelect>(
 		id: number,
-		options: { select: TSelect },
-	): Promise<{ Character: SelectedCharacter<TSelect> | null }>;
-	getCharacterById<TSelect extends CharacterSelect>(
-		id: number,
 		options: RootSelectionOption<"character", TSelect>,
 	): Promise<{ character: SelectedCharacter<TSelect> | null }>;
 	getCharacterById<TSelect extends CharacterSelect>(
 		id: number,
-		options?: SelectionOption<"character", TSelect>,
+		options?: RootSelectionOption<"character", TSelect>,
 	): unknown {
 		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "character");
+			const select = resolveSelection(options, "character");
 			const document = buildCharacterByIdDocument(select);
 			return this.graphQLClient
 				.request<
 					{ Character: SelectedCharacter<TSelect> | null },
 					{ id: number }
 				>({ document, variables: { id } })
-				.then((raw) => (wrapped ? { character: raw.Character } : raw));
+				.then((raw) => ({ character: raw.Character }));
 		}
 		return this.client.GetCharacterById({ id });
 	}
@@ -131,29 +124,25 @@ export class CharacterService {
 	): ReturnType<ANILISTSDK["ToggleFavoriteCharacter"]>;
 	toggleFavoriteCharacter<TSelect extends FavouritesSelect>(
 		characterId: number,
-		options: { select: TSelect },
-	): Promise<{ ToggleFavourite: SelectedFavourites<TSelect> | null }>;
-	toggleFavoriteCharacter<TSelect extends FavouritesSelect>(
-		characterId: number,
 		options: RootSelectionOption<"favorites", TSelect>,
 	): Promise<{ favorites: SelectedFavourites<TSelect> | null }>;
 	toggleFavoriteCharacter<TSelect extends FavouritesSelect>(
 		characterId: number,
-		options?: SelectionOption<"favorites", TSelect>,
+		options?: RootSelectionOption<"favorites", TSelect>,
 	): unknown {
 		assertPositiveInt(characterId, "characterId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "favorites");
+			const select = resolveSelection(options, "favorites");
 			const document = buildToggleFavouriteDocument(select, "characterId");
 			return this.graphQLClient
 				.request<
 					{ ToggleFavourite: SelectedFavourites<TSelect> | null },
 					{ id: number }
 				>({ document, variables: { id: characterId } })
-				.then((raw) => (wrapped ? { favorites: raw.ToggleFavourite } : raw));
+				.then((raw) => ({ favorites: raw.ToggleFavourite }));
 		}
 		return this.client.ToggleFavoriteCharacter({ charID: characterId });
 	}

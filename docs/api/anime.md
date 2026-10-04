@@ -18,6 +18,8 @@ const anilist = new Anilist();
 | `getTrendingAnime(page?, perPage?)` | No | `Page.media` |
 | `getPopularAnime(page?, perPage?)` | No | `Page.media` |
 | `getAnimeListByGenre(genre, page?, perPage?)` | No | `Page.media` |
+| `browseAnime(filters?, page?, perPage?)` | No | `Page.media` |
+| `getSeasonalAnime(season, seasonYear, page?, perPage?)` | No | `Page.media` |
 | `getRecommendations(mediaId)` | No | `Media.recommendations` |
 | `getRelations(mediaId)` | No | `Media.relations` |
 | `getCharacters(mediaId)` | No | `Media.characters` |
@@ -116,7 +118,9 @@ const recommendations = await anilist.anime.getRecommendations(16498);
 console.log(characters.Media?.characters?.edges?.[0]?.node?.name?.full);
 console.log(staff.Media?.staff?.edges?.[0]?.node?.name?.full);
 console.log(relations.Media?.relations?.edges?.[0]?.relationType);
-console.log(recommendations.Media?.recommendations?.edges?.[0]?.node?.rating);
+console.log(
+	recommendations.Media?.recommendations?.edges?.[0]?.node?.media?.title?.userPreferred,
+);
 ```
 
 ## Favorites
@@ -125,6 +129,8 @@ console.log(recommendations.Media?.recommendations?.edges?.[0]?.node?.rating);
 `toggleFavourite` remains available as a backwards-compatible alias.
 
 ```typescript
+import { Anilist } from "@api-wrappers/anilist-wrapper";
+
 const anilist = new Anilist(process.env.ANILIST_TOKEN);
 
 await anilist.anime.toggleFavorite(16498);

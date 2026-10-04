@@ -6,7 +6,7 @@ options object. Both forms produce the same transport.
 ## Constructor forms
 
 ```typescript
-import { Anilist } from "@api-wrappers/anilist-wrapper";
+import { Anilist, createRateLimitPlugin } from "@api-wrappers/anilist-wrapper";
 
 // Public client, package defaults.
 const publicClient = new Anilist();
@@ -14,9 +14,9 @@ const publicClient = new Anilist();
 // Token shorthand.
 const authenticated = new Anilist(process.env.ANILIST_TOKEN);
 
-// Token provider (evaluated before every request).
+// Token provider (evaluated before every request), for tokens that change.
 const refreshing = new Anilist({
-	token: async () => refreshAccessToken(),
+	token: async () => process.env.ANILIST_TOKEN,
 });
 
 // api-core overrides.
@@ -72,6 +72,8 @@ Retries use exponential backoff, and HTTP 429 responses respect AniList's
 `Retry-After` header. Override it through `core.retry`:
 
 ```typescript
+import { Anilist } from "@api-wrappers/anilist-wrapper";
+
 const anilist = new Anilist({
 	core: {
 		retry: { maxAttempts: 6, delayMs: 2000, retriableStatusCodes: [429, 500] },
@@ -115,7 +117,9 @@ const transport: Transport = {
 		return fetch(ctx.url, {
 			method: ctx.method,
 			headers: ctx.headers,
-			body: ctx.body,
+			// GraphQL requests pass the body as an object; serialize it as JSON.
+			body: ctx.body === undefined ? undefined : JSON.stringify(ctx.body),
+			signal: ctx.signal,
 		});
 	},
 };

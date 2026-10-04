@@ -139,8 +139,9 @@ console.log(media?.title?.userPreferred);
 console.log(page?.pageInfo?.hasNextPage);
 ```
 
-See the [selection migration guide](./docs/selection-migration.md) for all
-endpoint roots, mutation examples, and legacy direct-select compatibility.
+See the [selection guide](./docs/selection-migration.md) for all endpoint
+roots and mutation examples. Upgrading from v3? Read
+[Migrating to v4](./docs/migrating-to-v4.md).
 
 ### Get manga
 
@@ -242,17 +243,18 @@ console.log(data.GenreCollection);
 | `anilist.manga` | Manga lookup, search, trending, popular, genre, relations, characters, staff, recommendations, favorites |
 | `anilist.character` | Character lookup, birthdays, favorites |
 | `anilist.staff` | Staff lookup, birthdays, favorites |
+| `anilist.studio` | Studio lookup, search, favorites |
 | `anilist.user` | User profiles, public lists by username, authenticated list/stat queries by user ID |
-| `anilist.media` | Generic anime/manga media lookup and list access |
-| `anilist.mediaList` | Media list entry lookup, save, and delete |
+| `anilist.media` | Generic media lookup, list access, genres, tags, airing schedules, reviews, recommendations |
+| `anilist.mediaList` | Media list entry lookup, save, bulk update, and delete |
+| `anilist.social` | Follows, notifications, activities, forum threads, likes, site statistics |
 | `anilist.graphql` | Any AniList GraphQL query or mutation |
 
 ## Runtime Support
 
 The package ships ESM, CommonJS, and TypeScript declaration output from
-`dist/`. It is developed and tested with Bun, and it can be used from modern
-Node.js runtimes that support the package `exports` field and `fetch`-compatible
-HTTP behavior through `@api-wrappers/api-core`.
+`dist/`. It requires Node.js 18 or newer (for the global `fetch`) and works with
+Bun. CI imports both the ESM and CommonJS builds on Node 18, 20, and 22.
 
 ## Generated GraphQL Types
 
@@ -305,7 +307,9 @@ the local checks, typecheck, build, and Bun pack dry-run.
 `bun run test:dist` builds the package and imports both the ESM and CJS bundles
 in Node to smoke-test the public surface. `bun run test:coverage` runs the
 deterministic suite with an lcov report and fails below the 80% line-coverage
-floor.
+floor. `bun run test:documents` validates every document the selected-query
+tests build against AniList's live schema; run it after changing a selection
+builder.
 
 Use `bun run codegen` only when GraphQL operations, fragments, or generated
 types need to be refreshed. Codegen requires network access to fetch AniList's

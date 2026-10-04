@@ -9,6 +9,10 @@ export const GET_MANGA_BY_TITLE = gql`
     $perPage: Int = 1
   ) {
     Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        hasNextPage
+        currentPage
+      }
       media(search: $title, type: MANGA) {
         ...MediaFragment
       }

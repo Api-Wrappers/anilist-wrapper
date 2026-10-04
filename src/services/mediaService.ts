@@ -20,10 +20,7 @@ import {
 	buildSaveRecommendationDocument,
 	buildSaveReviewDocument,
 } from "../selections/builder";
-import type {
-	RootSelectionOption,
-	SelectionOption,
-} from "../selections/options";
+import type { RootSelectionOption } from "../selections/options";
 import {
 	hasSelection,
 	resolvePageSelection,
@@ -53,7 +50,11 @@ import type {
 	SelectedReviewPage,
 } from "../selections/types";
 import { toMediaType } from "./mediaType";
-import { assertPositiveInt, normalizePerPage } from "./validation";
+import {
+	assertOptionalStatus,
+	assertPositiveInt,
+	normalizePerPage,
+} from "./validation";
 
 /**
  * Fields accepted by {@link MediaService.saveReview}. Provide `id` to update
@@ -93,29 +94,25 @@ export class MediaService {
 	getMediaById(id: number): ReturnType<ANILISTSDK["GetMediaById"]>;
 	getMediaById<TSelect extends MediaSelect>(
 		id: number,
-		options: { select: TSelect },
-	): Promise<{ Media: SelectedMedia<TSelect> | null }>;
-	getMediaById<TSelect extends MediaSelect>(
-		id: number,
 		options: RootSelectionOption<"media", TSelect>,
 	): Promise<{ media: SelectedMedia<TSelect> | null }>;
 	getMediaById<TSelect extends MediaSelect>(
 		id: number,
-		options?: SelectionOption<"media", TSelect>,
+		options?: RootSelectionOption<"media", TSelect>,
 	): unknown {
 		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "media");
+			const select = resolveSelection(options, "media");
 			const document = buildMediaByIdDocument(select);
 			return this.graphQLClient
 				.request<{ Media: SelectedMedia<TSelect> | null }, { id: number }>({
 					document,
 					variables: { id },
 				})
-				.then((raw) => (wrapped ? { media: raw.Media } : raw));
+				.then((raw) => ({ media: raw.Media }));
 		}
 		return this.client.GetMediaById({ id });
 	}
@@ -136,14 +133,6 @@ export class MediaService {
 		userId: number,
 		mediaType: MediaTypeNonEnum,
 		status: MediaListStatus | undefined,
-		options: { select: TSelect },
-	): Promise<{
-		MediaListCollection: SelectedMediaListCollection<TSelect> | null;
-	}>;
-	getMediaList<TSelect extends MediaListCollectionSelect>(
-		userId: number,
-		mediaType: MediaTypeNonEnum,
-		status: MediaListStatus | undefined,
 		options: RootSelectionOption<"mediaListCollection", TSelect>,
 	): Promise<{
 		mediaListCollection: SelectedMediaListCollection<TSelect> | null;
@@ -152,18 +141,16 @@ export class MediaService {
 		userId: number,
 		mediaType: MediaTypeNonEnum,
 		status?: MediaListStatus,
-		options?: SelectionOption<"mediaListCollection", TSelect>,
+		options?: RootSelectionOption<"mediaListCollection", TSelect>,
 	): unknown {
+		assertOptionalStatus(status);
 		assertPositiveInt(userId, "userId");
 		const normalizedType = toMediaType(mediaType);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(
-				options,
-				"mediaListCollection",
-			);
+			const select = resolveSelection(options, "mediaListCollection");
 			const document = buildMediaListCollectionByUserDocument(select, "id");
 			return this.graphQLClient
 				.request<
@@ -181,9 +168,7 @@ export class MediaService {
 						...(status !== undefined ? { status } : {}),
 					},
 				})
-				.then((raw) =>
-					wrapped ? { mediaListCollection: raw.MediaListCollection } : raw,
-				);
+				.then((raw) => ({ mediaListCollection: raw.MediaListCollection }));
 		}
 		return this.client.GetMediaListByUser({
 			mediaType: normalizedType,
@@ -208,14 +193,6 @@ export class MediaService {
 		userName: string,
 		mediaType: MediaTypeNonEnum,
 		status: MediaListStatus | undefined,
-		options: { select: TSelect },
-	): Promise<{
-		MediaListCollection: SelectedMediaListCollection<TSelect> | null;
-	}>;
-	getMediaListByUsername<TSelect extends MediaListCollectionSelect>(
-		userName: string,
-		mediaType: MediaTypeNonEnum,
-		status: MediaListStatus | undefined,
 		options: RootSelectionOption<"mediaListCollection", TSelect>,
 	): Promise<{
 		mediaListCollection: SelectedMediaListCollection<TSelect> | null;
@@ -224,17 +201,15 @@ export class MediaService {
 		userName: string,
 		mediaType: MediaTypeNonEnum,
 		status?: MediaListStatus,
-		options?: SelectionOption<"mediaListCollection", TSelect>,
+		options?: RootSelectionOption<"mediaListCollection", TSelect>,
 	): unknown {
+		assertOptionalStatus(status);
 		const normalizedType = toMediaType(mediaType);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(
-				options,
-				"mediaListCollection",
-			);
+			const select = resolveSelection(options, "mediaListCollection");
 			const document = buildMediaListCollectionByUserDocument(
 				select,
 				"username",
@@ -255,9 +230,7 @@ export class MediaService {
 						...(status !== undefined ? { status } : {}),
 					},
 				})
-				.then((raw) =>
-					wrapped ? { mediaListCollection: raw.MediaListCollection } : raw,
-				);
+				.then((raw) => ({ mediaListCollection: raw.MediaListCollection }));
 		}
 		return this.client.GetMediaListByUserByUsername({
 			mediaType: normalizedType,
@@ -282,28 +255,19 @@ export class MediaService {
 	getMediaTags(status?: number): ReturnType<ANILISTSDK["GetMediaTags"]>;
 	getMediaTags<TSelect extends MediaTagSelect>(
 		status: number | undefined,
-		options: { select: TSelect },
-	): Promise<{
-		MediaTagCollection: Array<SelectedMediaTag<TSelect> | null> | null;
-	}>;
-	getMediaTags<TSelect extends MediaTagSelect>(
-		status: number | undefined,
 		options: RootSelectionOption<"mediaTagCollection", TSelect>,
 	): Promise<{
 		mediaTagCollection: Array<SelectedMediaTag<TSelect> | null> | null;
 	}>;
 	getMediaTags<TSelect extends MediaTagSelect>(
 		status?: number,
-		options?: SelectionOption<"mediaTagCollection", TSelect>,
+		options?: RootSelectionOption<"mediaTagCollection", TSelect>,
 	): unknown {
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(
-				options,
-				"mediaTagCollection",
-			);
+			const select = resolveSelection(options, "mediaTagCollection");
 			const document = buildMediaTagCollectionDocument(select);
 			return this.graphQLClient
 				.request<
@@ -312,9 +276,7 @@ export class MediaService {
 					},
 					{ status?: number }
 				>({ document, variables: { status } })
-				.then((raw) =>
-					wrapped ? { mediaTagCollection: raw.MediaTagCollection } : raw,
-				);
+				.then((raw) => ({ mediaTagCollection: raw.MediaTagCollection }));
 		}
 		return this.client.GetMediaTags({ status });
 	}
@@ -327,31 +289,25 @@ export class MediaService {
 	getAiringSchedule(id: number): ReturnType<ANILISTSDK["GetAiringSchedule"]>;
 	getAiringSchedule<TSelect extends AiringScheduleSelect>(
 		id: number,
-		options: { select: TSelect },
-	): Promise<{ AiringSchedule: SelectedAiringSchedule<TSelect> | null }>;
-	getAiringSchedule<TSelect extends AiringScheduleSelect>(
-		id: number,
 		options: RootSelectionOption<"airingSchedule", TSelect>,
 	): Promise<{ airingSchedule: SelectedAiringSchedule<TSelect> | null }>;
 	getAiringSchedule<TSelect extends AiringScheduleSelect>(
 		id: number,
-		options?: SelectionOption<"airingSchedule", TSelect>,
+		options?: RootSelectionOption<"airingSchedule", TSelect>,
 	): unknown {
 		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "airingSchedule");
+			const select = resolveSelection(options, "airingSchedule");
 			const document = buildAiringScheduleByIdDocument(select);
 			return this.graphQLClient
 				.request<
 					{ AiringSchedule: SelectedAiringSchedule<TSelect> | null },
 					{ id: number }
 				>({ document, variables: { id } })
-				.then((raw) =>
-					wrapped ? { airingSchedule: raw.AiringSchedule } : raw,
-				);
+				.then((raw) => ({ airingSchedule: raw.AiringSchedule }));
 		}
 		return this.client.GetAiringSchedule({ id });
 	}
@@ -526,19 +482,13 @@ export class MediaService {
 		mediaId: number,
 		mediaRecommendationId: number,
 		rating: RecommendationRating | undefined,
-		options: { select: TSelect },
-	): Promise<{ SaveRecommendation: SelectedRecommendation<TSelect> | null }>;
-	saveRecommendation<TSelect extends RecommendationSelect>(
-		mediaId: number,
-		mediaRecommendationId: number,
-		rating: RecommendationRating | undefined,
 		options: RootSelectionOption<"recommendation", TSelect>,
 	): Promise<{ recommendation: SelectedRecommendation<TSelect> | null }>;
 	saveRecommendation<TSelect extends RecommendationSelect>(
 		mediaId: number,
 		mediaRecommendationId: number,
 		rating?: RecommendationRating,
-		options?: SelectionOption<"recommendation", TSelect>,
+		options?: RootSelectionOption<"recommendation", TSelect>,
 	): unknown {
 		assertPositiveInt(mediaId, "mediaId");
 		assertPositiveInt(mediaRecommendationId, "mediaRecommendationId");
@@ -546,7 +496,7 @@ export class MediaService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "recommendation");
+			const select = resolveSelection(options, "recommendation");
 			const document = buildSaveRecommendationDocument(select);
 			return this.graphQLClient
 				.request<
@@ -560,9 +510,7 @@ export class MediaService {
 					document,
 					variables: { mediaId, mediaRecommendationId, rating },
 				})
-				.then((raw) =>
-					wrapped ? { recommendation: raw.SaveRecommendation } : raw,
-				);
+				.then((raw) => ({ recommendation: raw.SaveRecommendation }));
 		}
 		return this.client.SaveRecommendation({
 			mediaId,
@@ -583,31 +531,26 @@ export class MediaService {
 	rateReview<TSelect extends ReviewSelect>(
 		reviewId: number,
 		rating: ReviewRating | undefined,
-		options: { select: TSelect },
-	): Promise<{ RateReview: SelectedReview<TSelect> | null }>;
-	rateReview<TSelect extends ReviewSelect>(
-		reviewId: number,
-		rating: ReviewRating | undefined,
 		options: RootSelectionOption<"review", TSelect>,
 	): Promise<{ review: SelectedReview<TSelect> | null }>;
 	rateReview<TSelect extends ReviewSelect>(
 		reviewId: number,
 		rating?: ReviewRating,
-		options?: SelectionOption<"review", TSelect>,
+		options?: RootSelectionOption<"review", TSelect>,
 	): unknown {
 		assertPositiveInt(reviewId, "reviewId");
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "review");
+			const select = resolveSelection(options, "review");
 			const document = buildRateReviewDocument(select);
 			return this.graphQLClient
 				.request<
 					{ RateReview: SelectedReview<TSelect> | null },
 					{ reviewId: number; rating?: ReviewRating }
 				>({ document, variables: { reviewId, rating } })
-				.then((raw) => (wrapped ? { review: raw.RateReview } : raw));
+				.then((raw) => ({ review: raw.RateReview }));
 		}
 		return this.client.RateReview({ reviewId, rating });
 	}
@@ -619,15 +562,11 @@ export class MediaService {
 	saveReview(input: SaveReviewInput): ReturnType<ANILISTSDK["SaveReview"]>;
 	saveReview<TSelect extends ReviewSelect>(
 		input: SaveReviewInput,
-		options: { select: TSelect },
-	): Promise<{ SaveReview: SelectedReview<TSelect> | null }>;
-	saveReview<TSelect extends ReviewSelect>(
-		input: SaveReviewInput,
 		options: RootSelectionOption<"review", TSelect>,
 	): Promise<{ review: SelectedReview<TSelect> | null }>;
 	saveReview<TSelect extends ReviewSelect>(
 		input: SaveReviewInput,
-		options?: SelectionOption<"review", TSelect>,
+		options?: RootSelectionOption<"review", TSelect>,
 	): unknown {
 		const mutationVariables: SaveReviewMutationVariables = {
 			body: input.body,
@@ -642,14 +581,14 @@ export class MediaService {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "review");
+			const select = resolveSelection(options, "review");
 			const document = buildSaveReviewDocument(select);
 			return this.graphQLClient
 				.request<
 					{ SaveReview: SelectedReview<TSelect> | null },
 					SaveReviewMutationVariables
 				>({ document, variables: mutationVariables })
-				.then((raw) => (wrapped ? { review: raw.SaveReview } : raw));
+				.then((raw) => ({ review: raw.SaveReview }));
 		}
 		return this.client.SaveReview(mutationVariables);
 	}
@@ -661,29 +600,25 @@ export class MediaService {
 	deleteReview(id: number): ReturnType<ANILISTSDK["DeleteReview"]>;
 	deleteReview<TSelect extends DeletedSelect>(
 		id: number,
-		options: { select: TSelect },
-	): Promise<{ DeleteReview: SelectedDeleted<TSelect> | null }>;
-	deleteReview<TSelect extends DeletedSelect>(
-		id: number,
 		options: RootSelectionOption<"deleteReview", TSelect>,
 	): Promise<{ deleteReview: SelectedDeleted<TSelect> | null }>;
 	deleteReview<TSelect extends DeletedSelect>(
 		id: number,
-		options?: SelectionOption<"deleteReview", TSelect>,
+		options?: RootSelectionOption<"deleteReview", TSelect>,
 	): unknown {
 		assertPositiveInt(id);
 		if (hasSelection(options)) {
 			if (!this.graphQLClient) {
 				throw new Error("graphQLClient is required for selected queries.");
 			}
-			const { select, wrapped } = resolveSelection(options, "deleteReview");
+			const select = resolveSelection(options, "deleteReview");
 			const document = buildDeleteReviewDocument(select);
 			return this.graphQLClient
 				.request<
 					{ DeleteReview: SelectedDeleted<TSelect> | null },
 					{ id: number }
 				>({ document, variables: { id } })
-				.then((raw) => (wrapped ? { deleteReview: raw.DeleteReview } : raw));
+				.then((raw) => ({ deleteReview: raw.DeleteReview }));
 		}
 		return this.client.DeleteReview({ id });
 	}

@@ -10,6 +10,10 @@ export const GET_ANIME_BY_TITLE = gql`
     $perPage: Int = 1
   ) {
     Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        hasNextPage
+        currentPage
+      }
       media(search: $title, type: ANIME) {
         ...MediaFragment
       }

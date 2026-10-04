@@ -17,6 +17,9 @@ Username methods read public profile data and usually work without a token. Nume
 | `getUserList(page?, perPage?)` | No | `Page.users` |
 | `getUserStatistics(userId)` | Yes | `User.statistics` |
 | `getUserStatisticsByUsername(userName)` | No | `User.statistics` |
+| `getViewer()` | Yes | `Viewer` |
+| `getViewerStatistics()` | Yes | `Viewer.statistics` |
+| `getReviews(userId, page?, perPage?)` | No | `Page.reviews` |
 
 Selected calls use normalized roots: `user` for profile/statistics methods,
 `mediaListCollection` for anime and manga list methods, and `page` for
@@ -51,6 +54,8 @@ for (const group of completedAnime.MediaListCollection?.lists ?? []) {
 Manga lists support the same status filters:
 
 ```typescript
+import { MediaListStatus } from "@api-wrappers/anilist-wrapper";
+
 const currentManga = await anilist.user.getUserMangaListByUsername(
 	"example_user",
 	MediaListStatus.Current,

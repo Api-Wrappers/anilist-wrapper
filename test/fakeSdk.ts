@@ -26,7 +26,8 @@ export class FakeSdk {
 		return new Proxy({} as ANILISTSDK, {
 			get: (_target, property) => {
 				if (typeof property !== "string") return undefined;
-				return (variables: unknown) => this.record(property as SdkOperation, variables);
+				return (variables: unknown) =>
+					this.record(property as SdkOperation, variables);
 			},
 		});
 	}

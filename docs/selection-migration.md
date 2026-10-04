@@ -1,6 +1,6 @@
 # Selection Migration Guide
 
-Selected queries now use the same root-object shape across read endpoints and
+Selected queries use the same root-object shape across read endpoints and
 mutations. The field selection still follows AniList's real GraphQL shape, but
 the wrapper-level root is normalized to the service result you are asking for.
 
@@ -44,6 +44,8 @@ console.log(page?.pageInfo?.hasNextPage);
 Mutations use the mutated resource root:
 
 ```typescript
+import { MediaListStatus } from "@api-wrappers/anilist-wrapper";
+
 const { mediaList } = await anilist.mediaList.saveEntry(
 	{ mediaId: 16498, status: MediaListStatus.Current },
 	{
@@ -88,31 +90,19 @@ const { deleteMediaListEntry } = await anilist.mediaList.deleteEntry(123456, {
 
 ## Resolution Rules
 
-A selection is treated as the normalized root-object shape only when every
-top-level key equals the root key (for example `{ media: { id: true } }`).
-Any other shape is treated as a legacy direct selection of the root object.
-Paginated methods accept `{ page: { ... } }` or the legacy page body where
-every key is `pageInfo` or the result field (for example
-`{ pageInfo: { ... }, media: { ... } }`).
+Since v4, `select` must contain exactly one key: the root listed above for the
+method (for example `{ media: { ... } }`). Paginated methods take exactly
+`{ page: { ... } }`, where the page body may select `pageInfo` and the result
+field (for example `{ page: { pageInfo: { ... }, media: { ... } } }`).
 
-## Old Shape Compatibility
+Any other shape throws a `TypeError` before a request is sent. The v3 direct
+selections (`{ select: { id: true } }`) and bare page bodies
+(`{ select: { pageInfo: { ... }, media: { ... } } }`) were removed. See
+[Migrating to v4](./migrating-to-v4.md).
 
-> **Deprecated:** legacy direct selections are supported for backwards
-> compatibility and will be removed in the next major release. New code should
-> use the normalized root-object shape shown above.
-
-The previous direct selection shape is still accepted for compatibility:
-
-```typescript
-const legacy = await anilist.anime.getAnimeById(16498, {
-	select: { id: true, title: { userPreferred: true } },
-});
-
-console.log(legacy.Media?.id);
-```
-
-Prefer the new root-object shape for new code because selected calls then return
-the same lowercase root names across endpoint families.
+Because the root is always explicit, a field with the same name as the root is
+unambiguous: `{ staff: { id: true, staff: { id: true } } }` selects the nested
+`Staff.staff` field.
 
 ## Selection Depth Limits
 
@@ -122,9 +112,12 @@ which breaks circular AniList types (`Media` → `MediaConnection` →
 remain selectable. Deeper projections should use `anilist.graphql.request`
 with a hand-written document.
 
-## Common Migrations
+## Migrating v3 Direct Selections
 
-| Before | After |
+Wrap the fields in the method's root. The result then uses the lowercase root
+key instead of the GraphQL root field name.
+
+| v3 | v4 |
 | --- | --- |
 | `{ select: { id: true } }` returns `{ Media }` | `{ select: { media: { id: true } } }` returns `{ media }` |
 | `{ select: { lists: { entries: { id: true } } } }` returns `{ MediaListCollection }` | `{ select: { mediaListCollection: { lists: { entries: { id: true } } } } }` returns `{ mediaListCollection }` |
