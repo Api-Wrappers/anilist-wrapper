@@ -105,8 +105,10 @@ with a `TypeError` instead of an AniList error response.
   values and AniList silently capped them.
 - `mediaType` must be `"ANIME"` or `"MANGA"`. v3 treated any other value,
   including `"anime"`, as `"MANGA"`.
-- Page selections can only contain `pageInfo` and the method's result field.
-  Unknown keys inside `page` throw instead of being sent to AniList.
+- Page selections can only contain `pageInfo` and the method's result field,
+  and must select the result field. Unknown keys inside `page` throw instead of
+  being sent to AniList. A `pageInfo`-only selection also throws: AniList
+  rejected those documents, and computes `pageInfo` from the result field.
 
 The exported `assertPositiveInt`, `normalizePerPage`, and
 `ANILIST_MAX_PER_PAGE` apply the same rules if you want to validate input

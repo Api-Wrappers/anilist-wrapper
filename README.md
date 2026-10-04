@@ -306,7 +306,9 @@ the local checks, typecheck, build, and Bun pack dry-run.
 `bun run test:dist` builds the package and imports both the ESM and CJS bundles
 in Node to smoke-test the public surface. `bun run test:coverage` runs the
 deterministic suite with an lcov report and fails below the 80% line-coverage
-floor.
+floor. `bun run test:documents` validates every document the selected-query
+tests build against AniList's live schema; run it after changing a selection
+builder.
 
 Use `bun run codegen` only when GraphQL operations, fragments, or generated
 types need to be refreshed. Codegen requires network access to fetch AniList's

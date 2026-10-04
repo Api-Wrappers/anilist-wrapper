@@ -1,4 +1,5 @@
 import { describe, expect, it } from "bun:test";
+import { appendFileSync } from "node:fs";
 import {
 	LikeableType,
 	MediaListStatus,
@@ -28,6 +29,9 @@ type RecordedRequest = {
 	variables: Record<string, unknown>;
 };
 
+// Set by scripts/validate-selected-documents.ts to collect every built document.
+const documentLogPath = process.env.ANILIST_DOCUMENT_LOG;
+
 class FakeGraphQLClient {
 	readonly requests: RecordedRequest[] = [];
 	private response: unknown = undefined;
@@ -49,6 +53,12 @@ class FakeGraphQLClient {
 					document: options.document.toString(),
 					variables: (options.variables ?? {}) as Record<string, unknown>,
 				});
+				if (documentLogPath) {
+					appendFileSync(
+						documentLogPath,
+						`${JSON.stringify(options.document.toString())}\n`,
+					);
+				}
 				return this.response as TData;
 			},
 		};
@@ -370,17 +380,15 @@ describe("selected search calls use the low-level client with correct page mappi
 		expect(gql.lastRequest().document).not.toContain("pageInfo");
 	});
 
-	it("media is omitted from document when only pageInfo is selected", async () => {
+	it("rejects pageInfo-only page selections, which AniList cannot paginate", () => {
 		const { gql, service } = makeAnimeService();
-		gql.setResponse({ Page: { pageInfo: { total: 100 } } });
 
-		await service.getAnimeBySearch("test", 1, 10, {
-			select: { page: { pageInfo: { total: true } } },
-		});
-
-		const doc = gql.lastRequest().document;
-		expect(doc).toContain("pageInfo");
-		expect(doc).not.toContain("media(");
+		expect(() =>
+			service.getAnimeBySearch("test", 1, 10, {
+				select: { page: { pageInfo: { total: true } } },
+			}),
+		).toThrow('page select must select "media".');
+		expect(gql.requests).toHaveLength(0);
 	});
 
 	it("MangaService.getMangaBySearch uses MANGA type in document", async () => {
@@ -840,10 +848,10 @@ describe("selected return type narrowing", () => {
 
 	it("getAnimeBySearch result uses lowercase page key, not Page", async () => {
 		const { gql, service } = makeAnimeService();
-		gql.setResponse({ Page: { pageInfo: { total: 5 } } });
+		gql.setResponse({ Page: { pageInfo: { total: 5 }, media: [] } });
 
 		const result = await service.getAnimeBySearch("test", 1, 10, {
-			select: { page: { pageInfo: { total: true } } },
+			select: { page: { pageInfo: { total: true }, media: { id: true } } },
 		});
 
 		const _page = result.page;
@@ -1720,5 +1728,86 @@ describe("v3 argument order guards", () => {
 		).toThrow("page must be a positive integer.");
 		expect(anime.gql.requests).toHaveLength(0);
 		expect(manga.gql.requests).toHaveLength(0);
+	});
+});
+
+// ── Previously unexercised selected endpoints ─────────────────────────────────
+
+describe("previously unexercised selected endpoints", () => {
+	it("anime and manga popular/genre pages build MEDIA page documents", async () => {
+		const anime = makeAnimeService();
+		anime.gql.setResponse({ Page: { media: [] } });
+		await anime.service.getPopularAnime(2, 5, {
+			select: { page: { media: { id: true } } },
+		});
+		expect(anime.gql.lastRequest().document).toContain(
+			"media(type: ANIME, sort: POPULARITY_DESC)",
+		);
+		expect(anime.gql.lastRequest().variables).toEqual({ page: 2, perPage: 5 });
+
+		const manga = makeMangaService();
+		manga.gql.setResponse({ Page: { media: [] } });
+		await manga.service.getMangaPopular(1, 5, {
+			select: { page: { media: { id: true } } },
+		});
+		expect(manga.gql.lastRequest().document).toContain(
+			"media(type: MANGA, sort: POPULARITY_DESC)",
+		);
+
+		await manga.service.getMangaListByGenre("Drama", 1, 5, {
+			select: { page: { media: { id: true } } },
+		});
+		expect(manga.gql.lastRequest().document).toContain(
+			"media(genre: $genre, type: MANGA)",
+		);
+		expect(manga.gql.lastRequest().variables).toEqual({
+			genre: "Drama",
+			page: 1,
+			perPage: 5,
+		});
+	});
+
+	it("social follower, reply, thread, and comment endpoints build documents", async () => {
+		const { gql, service } = makeSocialService();
+		gql.setResponse({ Page: {} });
+
+		await service.getFollowers(7, 1, 5, {
+			select: { page: { followers: { id: true } } },
+		});
+		expect(gql.lastRequest().document).toContain("followers(userId: $userId)");
+		expect(gql.lastRequest().variables).toEqual({
+			userId: 7,
+			page: 1,
+			perPage: 5,
+		});
+
+		await service.getActivityReplies(9, 1, 5, {
+			select: { page: { activityReplies: { id: true, text: true } } },
+		});
+		expect(gql.lastRequest().document).toContain(
+			"activityReplies(activityId: $activityId)",
+		);
+
+		await service.getThreads({ search: "Frieren" }, 1, 5, {
+			select: { page: { threads: { id: true, title: true } } },
+		});
+		expect(gql.lastRequest().document).toContain("threads(");
+
+		await service.getThreadComments(11, 1, 5, {
+			select: { page: { threadComments: { id: true } } },
+		});
+		expect(gql.lastRequest().document).toContain(
+			"threadComments(threadId: $threadId)",
+		);
+
+		gql.setResponse({ ActivityReply: { id: 3 } });
+		await expect(
+			service.getActivityReply(3, { select: { activityReply: { id: true } } }),
+		).resolves.toEqual({ activityReply: { id: 3 } });
+
+		gql.setResponse({ ThreadComment: [{ id: 4 }] });
+		await expect(
+			service.getThreadComment(4, { select: { threadComments: { id: true } } }),
+		).resolves.toEqual({ threadComments: [{ id: 4 }] });
 	});
 });

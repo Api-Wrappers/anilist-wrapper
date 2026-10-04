@@ -42,3 +42,6 @@ jobs:
             Review the generated diff, then run `bun run verify` before merging.
           branch: chore/schema-drift
           delete-branch: true
+
+      - name: Validate selected documents against the live schema
+        run: bun run test:documents

@@ -169,6 +169,12 @@ export function buildPageDocument(options: PageDocumentOptions): string {
 		);
 	}
 
+	if (field === undefined || field === null) {
+		throw new TypeError(
+			`${options.context} must select "${options.fieldName}". AniList computes pageInfo from that field, so pageInfo cannot be selected on its own.`,
+		);
+	}
+
 	const pageBody = sections.join("\n");
 	return `query ${options.operationName}${options.variableDefinitions} {\n  Page(page: $page, perPage: $perPage) {\n${pageBody}\n  }\n}`;
 }
@@ -667,7 +673,7 @@ export function buildFollowingPageDocument(
 ): string {
 	return buildPageDocument({
 		operationName: "SelectedFollowing",
-		variableDefinitions: "($userId: Int, $page: Int, $perPage: Int)",
+		variableDefinitions: "($userId: Int!, $page: Int, $perPage: Int)",
 		fieldName: "following",
 		fieldArgs: ["userId: $userId"],
 		select: select as Record<string, unknown>,
@@ -680,7 +686,7 @@ export function buildFollowersPageDocument(
 ): string {
 	return buildPageDocument({
 		operationName: "SelectedFollowers",
-		variableDefinitions: "($userId: Int, $page: Int, $perPage: Int)",
+		variableDefinitions: "($userId: Int!, $page: Int, $perPage: Int)",
 		fieldName: "followers",
 		fieldArgs: ["userId: $userId"],
 		select: select as Record<string, unknown>,
