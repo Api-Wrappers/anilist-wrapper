@@ -168,5 +168,12 @@ export type {
 	UpdateMediaListEntriesInput,
 } from "./services/mediaListService";
 export type { SaveReviewInput } from "./services/mediaService";
-export type { ThreadSearchFilters } from "./services/socialService";
+export type {
+	SaveActivityReplyInput,
+	SaveMessageActivityInput,
+	SaveTextActivityInput,
+	SaveThreadCommentInput,
+	SaveThreadInput,
+	ThreadSearchFilters,
+} from "./services/socialService";
 export { Anilist, Anilist as AniList };
