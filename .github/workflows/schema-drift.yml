@@ -18,6 +18,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          # The PR action manages its own authentication for git operations.
+          persist-credentials: false
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
