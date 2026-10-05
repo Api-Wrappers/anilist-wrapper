@@ -115,7 +115,7 @@
 		"graphql": "^16.14.2",
 		"graphql-tag": "^2.12.6",
 		"tsdown": "^0.23.0",
-		"typescript": "^6.0.3"
+		"typescript": "^7.0.2"
 	},
 	"dependencies": {
 		"@api-wrappers/api-core": "^1.1.1"
