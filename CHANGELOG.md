@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.1
+
+### Patch Changes
+
+- 4d79c3a: Update development and CI dependencies, fix schema-drift workflow authentication, and keep release automation compatible with Changesets CLI v3.
+
 ## 4.0.0
 
 ### Major Changes
