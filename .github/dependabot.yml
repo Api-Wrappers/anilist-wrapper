@@ -12,9 +12,3 @@ updates:
     schedule:
       interval: weekly
       day: monday
-    ignore:
-      # changesets/action v2 only supports Changesets CLI v3. Upgrade the
-      # action together with @changesets/cli, not on its own.
-      - dependency-name: changesets/action
-        update-types:
-          - version-update:semver-major

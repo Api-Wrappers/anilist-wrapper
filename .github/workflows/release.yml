@@ -57,13 +57,12 @@ jobs:
         run: bun pm pack --dry-run
 
       - name: Create release PR or publish
-        # v2 requires Changesets CLI v3; this repo uses CLI v2 (@changesets/cli ^2).
-        uses: changesets/action@v1
+        uses: changesets/action@v2.1.2
         with:
-          version: bun run version-packages
-          publish: bun run release
-          title: "chore: version packages"
-          commit: "chore: version packages"
+          version-script: bun run version-packages
+          publish-script: bun run release
+          pr-title: "chore: version packages"
+          commit-message: "chore: version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
