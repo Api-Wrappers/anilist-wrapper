@@ -434,6 +434,12 @@ export const ThreadSort = {
   ViewCountDesc: "VIEW_COUNT_DESC",
 } as const;
 
+export const UserPrivacy = {
+  Private: "PRIVATE",
+  Public: "PUBLIC",
+  SemiPublic: "SEMI_PUBLIC",
+} as const;
+
 export const UserSort = {
   ChaptersRead: "CHAPTERS_READ",
   ChaptersReadDesc: "CHAPTERS_READ_DESC",
