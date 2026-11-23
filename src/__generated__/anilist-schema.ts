@@ -98,6 +98,7 @@ export type ActivityReply = {
 /** Replay to an activity item */
 export type ActivityReplyTextArgs = {
   asHtml: InputMaybe<Scalars['Boolean']['input']>;
+  htmlVersion: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** Notification for when a activity reply is liked */
@@ -206,7 +207,7 @@ export type AiringNotification = {
 export type AiringProgression = {
   /** The episode the stats were recorded at. .5 is the mid point between 2 episodes airing dates. */
   episode: Maybe<Scalars['Float']['output']>;
-  /** The average score for the media */
+  /** The weighted average score for the media */
   score: Maybe<Scalars['Float']['output']>;
   /** The amount of users watching the anime */
   watching: Maybe<Scalars['Int']['output']>;
@@ -285,6 +286,8 @@ export type Character = {
   favourites: Maybe<Scalars['Int']['output']>;
   /** The character's gender. Usually Male, Female, or Non-binary but can be any string. */
   gender: Maybe<Scalars['String']['output']>;
+  /** The characters height */
+  height: Maybe<Height>;
   /** The id of the character */
   id: Scalars['Int']['output'];
   /** Character images */
@@ -309,6 +312,7 @@ export type Character = {
 /** A character that features in an anime or manga */
 export type CharacterDescriptionArgs = {
   asHtml: InputMaybe<Scalars['Boolean']['input']>;
+  htmlVersion: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -427,10 +431,24 @@ export enum CharacterSort {
   SearchMatch = 'SEARCH_MATCH'
 }
 
+/** Character and staff submission categories, also used to filter by */
+export enum CharacterStaffSubmissionCategory {
+  /** Submissions that only change the image */
+  ImagesOnly = 'IMAGES_ONLY',
+  /** Submissions with a note but no changes */
+  NoteOnly = 'NOTE_ONLY',
+  /** Submissions with exactly one change */
+  SingleChange = 'SINGLE_CHANGE',
+  /** Submissions by users with 50+ accepted and a 90%+ acceptance rate */
+  TrustedSubmitter = 'TRUSTED_SUBMITTER'
+}
+
 /** A submission for a character that features in an anime or manga */
 export type CharacterSubmission = {
   /** Data Mod assigned to handle the submission */
   assignee: Maybe<User>;
+  /** Filter categories the submission falls into */
+  categories: Maybe<Array<Maybe<CharacterStaffSubmissionCategory>>>;
   /** Character that the submission is referencing */
   character: Maybe<Character>;
   createdAt: Maybe<Scalars['Int']['output']>;
@@ -603,6 +621,40 @@ export type GenreStats = {
   timeWatched: Maybe<Scalars['Int']['output']>;
 };
 
+/** A height, height range, or initial height. A single height has equal min and max. */
+export type Height = {
+  /** The height when first introduced, if it changes later. Min and max are null when this is set. */
+  initial: Maybe<HeightValue>;
+  /** The highest height in the range */
+  max: Maybe<HeightValue>;
+  /** The lowest height in the range */
+  min: Maybe<HeightValue>;
+};
+
+/** A height (equal min and max), height range, or initial height */
+export type HeightInput = {
+  /** The height when first introduced, if it changes later. Cannot be combined with min and max. */
+  initial: InputMaybe<HeightValueInput>;
+  /** The highest height in the range, required with min */
+  max: InputMaybe<HeightValueInput>;
+  /** The lowest height in the range, required with max */
+  min: InputMaybe<HeightValueInput>;
+};
+
+/** A height in metric and imperial units */
+export type HeightValue = {
+  /** Height in feet and inches, rounded to the nearest inch (5'7") */
+  imperial: Maybe<Scalars['String']['output']>;
+  /** Height in centimetres (169.5) */
+  metric: Maybe<Scalars['Float']['output']>;
+};
+
+/** A height in centimetres */
+export type HeightValueInput = {
+  /** Height in centimetres (169.5) */
+  metric: Scalars['Float']['input'];
+};
+
 /** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPage = {
   activities: Maybe<Array<Maybe<ActivityUnion>>>;
@@ -618,9 +670,11 @@ export type InternalPage = {
   mediaSubmissions: Maybe<Array<Maybe<MediaSubmission>>>;
   mediaTrends: Maybe<Array<Maybe<MediaTrend>>>;
   modActions: Maybe<Array<Maybe<ModAction>>>;
+  mutualFollowers: Maybe<Array<Maybe<User>>>;
   notifications: Maybe<Array<Maybe<NotificationUnion>>>;
   /** The pagination information */
   pageInfo: Maybe<PageInfo>;
+  recentlyRepliedActivities: Maybe<Array<Maybe<ActivityUnion>>>;
   recommendations: Maybe<Array<Maybe<Recommendation>>>;
   reports: Maybe<Array<Maybe<Report>>>;
   reviews: Maybe<Array<Maybe<Review>>>;
@@ -702,6 +756,7 @@ export type InternalPageAiringSchedulesArgs = {
 export type InternalPageCharacterSubmissionsArgs = {
   assigneeId: InputMaybe<Scalars['Int']['input']>;
   characterId: InputMaybe<Scalars['Int']['input']>;
+  filter: InputMaybe<CharacterStaffSubmissionCategory>;
   sort: InputMaybe<Array<InputMaybe<SubmissionSort>>>;
   status: InputMaybe<SubmissionStatus>;
   userId: InputMaybe<Scalars['Int']['input']>;
@@ -814,6 +869,10 @@ export type InternalPageMediaArgs = {
   volumes: InputMaybe<Scalars['Int']['input']>;
   volumes_greater: InputMaybe<Scalars['Int']['input']>;
   volumes_lesser: InputMaybe<Scalars['Int']['input']>;
+  weightedScore: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_greater: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_lesser: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_not: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -850,6 +909,7 @@ export type InternalPageMediaListArgs = {
 /** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageMediaSubmissionsArgs = {
   assigneeId: InputMaybe<Scalars['Int']['input']>;
+  filter: InputMaybe<MediaSubmissionCategory>;
   mediaId: InputMaybe<Scalars['Int']['input']>;
   sort: InputMaybe<Array<InputMaybe<SubmissionSort>>>;
   status: InputMaybe<SubmissionStatus>;
@@ -886,6 +946,10 @@ export type InternalPageMediaTrendsArgs = {
   trending_greater: InputMaybe<Scalars['Int']['input']>;
   trending_lesser: InputMaybe<Scalars['Int']['input']>;
   trending_not: InputMaybe<Scalars['Int']['input']>;
+  weightedScore: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_greater: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_lesser: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_not: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -900,10 +964,23 @@ export type InternalPageModActionsArgs = {
 
 
 /** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
+export type InternalPageMutualFollowersArgs = {
+  sort: InputMaybe<Array<InputMaybe<UserSort>>>;
+  userId: Scalars['Int']['input'];
+};
+
+
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageNotificationsArgs = {
   resetNotificationCount: InputMaybe<Scalars['Boolean']['input']>;
   type: InputMaybe<NotificationType>;
   type_in: InputMaybe<Array<InputMaybe<NotificationType>>>;
+};
+
+
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
+export type InternalPageRecentlyRepliedActivitiesArgs = {
+  userId: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -963,6 +1040,7 @@ export type InternalPageStaffArgs = {
 /** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageStaffSubmissionsArgs = {
   assigneeId: InputMaybe<Scalars['Int']['input']>;
+  filter: InputMaybe<CharacterStaffSubmissionCategory>;
   sort: InputMaybe<Array<InputMaybe<SubmissionSort>>>;
   staffId: InputMaybe<Scalars['Int']['input']>;
   status: InputMaybe<SubmissionStatus>;
@@ -1090,7 +1168,10 @@ export type Media = {
   airingSchedule: Maybe<AiringScheduleConnection>;
   /** If the media should have forum thread automatically created for it on airing episode release */
   autoCreateForumThread: Maybe<Scalars['Boolean']['output']>;
-  /** A weighted average score of all the user's scores of the media */
+  /**
+   * A weighted average score of all the users' scores of the media
+   * @deprecated Use weightedScore
+   */
   averageScore: Maybe<Scalars['Int']['output']>;
   /** The banner image of the media */
   bannerImage: Maybe<Scalars['String']['output']>;
@@ -1198,6 +1279,8 @@ export type Media = {
   updatedAt: Maybe<Scalars['Int']['output']>;
   /** The amount of volumes the manga has when complete */
   volumes: Maybe<Scalars['Int']['output']>;
+  /** A weighted average score of all the users' scores of the media */
+  weightedScore: Maybe<Scalars['Int']['output']>;
 };
 
 
@@ -1647,7 +1730,7 @@ export type MediaListTypeOptions = {
   splitCompletedSectionByFormat: Maybe<Scalars['Boolean']['output']>;
   /**
    * The list theme options
-   * @deprecated This field has not yet been fully implemented and may change without warning
+   * @deprecated No longer used
    */
   theme: Maybe<Scalars['Json']['output']>;
 };
@@ -1856,6 +1939,8 @@ export type MediaStreamingEpisode = {
 export type MediaSubmission = {
   /** Data Mod assigned to handle the submission */
   assignee: Maybe<User>;
+  /** Filter categories the submission falls into */
+  categories: Maybe<Array<Maybe<MediaSubmissionCategory>>>;
   changes: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   characters: Maybe<Array<Maybe<MediaSubmissionComparison>>>;
   createdAt: Maybe<Scalars['Int']['output']>;
@@ -1877,6 +1962,30 @@ export type MediaSubmission = {
   submitter: Maybe<User>;
   submitterStats: Maybe<Scalars['Json']['output']>;
 };
+
+/** Media submission categories, also used to filter by */
+export enum MediaSubmissionCategory {
+  /** Submissions that only change characters */
+  CharactersOnly = 'CHARACTERS_ONLY',
+  /** Submissions adding ADR staff or voice actors not in the anime's original language */
+  Dub = 'DUB',
+  /** Submissions that only change the cover or banner image */
+  ImagesOnly = 'IMAGES_ONLY',
+  /** Submissions for media that doesn't exist yet */
+  New = 'NEW',
+  /** Submissions for entries releasing next season */
+  NextSeason = 'NEXT_SEASON',
+  /** Submissions with a note but no changes */
+  NoteOnly = 'NOTE_ONLY',
+  /** Submissions for currently releasing media, or current-season media that hasn't started airing */
+  Releasing = 'RELEASING',
+  /** Submissions with exactly one change */
+  SingleChange = 'SINGLE_CHANGE',
+  /** Submissions that only change staff */
+  StaffOnly = 'STAFF_ONLY',
+  /** Submissions by users with 50+ accepted and a 90%+ acceptance rate */
+  TrustedSubmitter = 'TRUSTED_SUBMITTER'
+}
 
 /** Media submission with comparison to current data */
 export type MediaSubmissionComparison = {
@@ -2001,7 +2110,10 @@ export type MediaTrailer = {
 
 /** Daily media statistics */
 export type MediaTrend = {
-  /** A weighted average score of all the user's scores of the media */
+  /**
+   * A weighted average score of all the user's scores of the media
+   * @deprecated Use weightedScore
+   */
   averageScore: Maybe<Scalars['Int']['output']>;
   /** The day the data was recorded (timestamp) */
   date: Scalars['Int']['output'];
@@ -2019,6 +2131,8 @@ export type MediaTrend = {
   releasing: Scalars['Boolean']['output'];
   /** The amount of media activity on the day */
   trending: Scalars['Int']['output'];
+  /** A weighted average score of all the user's scores of the media */
+  weightedScore: Maybe<Scalars['Int']['output']>;
 };
 
 export type MediaTrendConnection = {
@@ -2103,6 +2217,7 @@ export type MessageActivity = {
 /** User message activity */
 export type MessageActivityMessageArgs = {
   asHtml: InputMaybe<Scalars['Boolean']['input']>;
+  htmlVersion: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type ModAction = {
@@ -2124,6 +2239,7 @@ export enum ModActionType {
   Edit = 'EDIT',
   Expire = 'EXPIRE',
   Note = 'NOTE',
+  Pin = 'PIN',
   Report = 'REPORT',
   Reset = 'RESET'
 }
@@ -2169,6 +2285,8 @@ export type Mutation = {
   DeleteActivityReply: Maybe<Deleted>;
   /** Delete a custom list and remove the list entries from it */
   DeleteCustomList: Maybe<Deleted>;
+  /** Removes a follower */
+  DeleteFollower: Maybe<User>;
   /** Delete a media list entry */
   DeleteMediaListEntry: Maybe<Deleted>;
   /** Delete a review */
@@ -2237,6 +2355,11 @@ export type MutationDeleteActivityReplyArgs = {
 export type MutationDeleteCustomListArgs = {
   customList: InputMaybe<Scalars['String']['input']>;
   type: InputMaybe<MediaType>;
+};
+
+
+export type MutationDeleteFollowerArgs = {
+  userId: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -2449,8 +2572,11 @@ export type MutationUpdateUserArgs = {
   airingNotifications: InputMaybe<Scalars['Boolean']['input']>;
   animeListOptions: InputMaybe<MediaListOptionsInput>;
   disabledListActivity: InputMaybe<Array<InputMaybe<ListActivityOptionInput>>>;
+  displayAdultActivities: InputMaybe<Scalars['Boolean']['input']>;
   displayAdultContent: InputMaybe<Scalars['Boolean']['input']>;
   donatorBadge: InputMaybe<Scalars['String']['input']>;
+  includeAdultContentInQuickSearch: InputMaybe<Scalars['Boolean']['input']>;
+  includeAdultContentInSearch: InputMaybe<Scalars['Boolean']['input']>;
   mangaListOptions: InputMaybe<MediaListOptionsInput>;
   notificationOptions: InputMaybe<Array<InputMaybe<NotificationOptionInput>>>;
   profileColor: InputMaybe<Scalars['String']['input']>;
@@ -2537,6 +2663,7 @@ export type Page = {
   media: Maybe<Array<Maybe<Media>>>;
   mediaList: Maybe<Array<Maybe<MediaList>>>;
   mediaTrends: Maybe<Array<Maybe<MediaTrend>>>;
+  mutualFollowers: Maybe<Array<Maybe<User>>>;
   notifications: Maybe<Array<Maybe<NotificationUnion>>>;
   /** The pagination information */
   pageInfo: Maybe<PageInfo>;
@@ -2719,6 +2846,10 @@ export type PageMediaArgs = {
   volumes: InputMaybe<Scalars['Int']['input']>;
   volumes_greater: InputMaybe<Scalars['Int']['input']>;
   volumes_lesser: InputMaybe<Scalars['Int']['input']>;
+  weightedScore: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_greater: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_lesser: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_not: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -2779,6 +2910,17 @@ export type PageMediaTrendsArgs = {
   trending_greater: InputMaybe<Scalars['Int']['input']>;
   trending_lesser: InputMaybe<Scalars['Int']['input']>;
   trending_not: InputMaybe<Scalars['Int']['input']>;
+  weightedScore: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_greater: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_lesser: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_not: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
+export type PageMutualFollowersArgs = {
+  sort: InputMaybe<Array<InputMaybe<UserSort>>>;
+  userId: Scalars['Int']['input'];
 };
 
 
@@ -2920,6 +3062,8 @@ export type Query = {
   MediaTagCollection: Maybe<Array<Maybe<MediaTag>>>;
   /** Media Trend query */
   MediaTrend: Maybe<MediaTrend>;
+  /** Mutual follower query */
+  MutualFollower: Maybe<User>;
   /** Notification query */
   Notification: Maybe<NotificationUnion>;
   Page: Maybe<Page>;
@@ -3041,6 +3185,7 @@ export type QueryLikeArgs = {
 
 
 export type QueryMarkdownArgs = {
+  htmlVersion: InputMaybe<Scalars['Int']['input']>;
   markdown: Scalars['String']['input'];
 };
 
@@ -3117,6 +3262,10 @@ export type QueryMediaArgs = {
   volumes: InputMaybe<Scalars['Int']['input']>;
   volumes_greater: InputMaybe<Scalars['Int']['input']>;
   volumes_lesser: InputMaybe<Scalars['Int']['input']>;
+  weightedScore: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_greater: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_lesser: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_not: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -3205,6 +3354,16 @@ export type QueryMediaTrendArgs = {
   trending_greater: InputMaybe<Scalars['Int']['input']>;
   trending_lesser: InputMaybe<Scalars['Int']['input']>;
   trending_not: InputMaybe<Scalars['Int']['input']>;
+  weightedScore: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_greater: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_lesser: InputMaybe<Scalars['Int']['input']>;
+  weightedScore_not: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryMutualFollowerArgs = {
+  sort: InputMaybe<Array<InputMaybe<UserSort>>>;
+  userId: Scalars['Int']['input'];
 };
 
 
@@ -3353,6 +3512,7 @@ export type RelatedMediaAdditionNotification = {
 };
 
 export type Report = {
+  assignee: Maybe<User>;
   cleared: Maybe<Scalars['Boolean']['output']>;
   /** When the entry data was created */
   createdAt: Maybe<Scalars['Int']['output']>;
@@ -3402,6 +3562,7 @@ export type Review = {
 /** A Review that features in an anime or manga */
 export type ReviewBodyArgs = {
   asHtml: InputMaybe<Scalars['Boolean']['input']>;
+  htmlVersion: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type ReviewConnection = {
@@ -3598,6 +3759,8 @@ export type Staff = {
   favourites: Maybe<Scalars['Int']['output']>;
   /** The staff's gender. Usually Male, Female, or Non-binary but can be any string. */
   gender: Maybe<Scalars['String']['output']>;
+  /** The persons height */
+  height: Maybe<Height>;
   /** The persons birthplace or hometown */
   homeTown: Maybe<Scalars['String']['output']>;
   /** The id of the staff member */
@@ -3660,6 +3823,7 @@ export type StaffCharactersArgs = {
 /** Voice actors or production staff */
 export type StaffDescriptionArgs = {
   asHtml: InputMaybe<Scalars['Boolean']['input']>;
+  htmlVersion: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -3755,6 +3919,8 @@ export type StaffNameInput = {
 
 /** Voice actor role for a character */
 export type StaffRoleType = {
+  /** Media specific character name for this voice actor role */
+  characterName: Maybe<Scalars['String']['output']>;
   /** Used for grouping roles where multiple dubs exist for the same language. Either dubbing company name or language variant. */
   dubGroup: Maybe<Scalars['String']['output']>;
   /** Notes regarding the VA's role for the character */
@@ -3791,6 +3957,8 @@ export type StaffStats = {
 export type StaffSubmission = {
   /** Data Mod assigned to handle the submission */
   assignee: Maybe<User>;
+  /** Filter categories the submission falls into */
+  categories: Maybe<Array<Maybe<CharacterStaffSubmissionCategory>>>;
   createdAt: Maybe<Scalars['Int']['output']>;
   /** The id of the submission */
   id: Scalars['Int']['output'];
@@ -3962,6 +4130,7 @@ export type TextActivity = {
 /** User text activity */
 export type TextActivityTextArgs = {
   asHtml: InputMaybe<Scalars['Boolean']['input']>;
+  htmlVersion: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** Forum Thread */
@@ -4016,6 +4185,7 @@ export type Thread = {
 /** Forum Thread */
 export type ThreadBodyArgs = {
   asHtml: InputMaybe<Scalars['Boolean']['input']>;
+  htmlVersion: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A forum thread category */
@@ -4062,6 +4232,7 @@ export type ThreadComment = {
 /** Forum Thread Comment */
 export type ThreadCommentCommentArgs = {
   asHtml: InputMaybe<Scalars['Boolean']['input']>;
+  htmlVersion: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** Notification for when a thread comment is liked */
@@ -4243,6 +4414,8 @@ export type User = {
   options: Maybe<UserOptions>;
   /** The user's previously used names. */
   previousNames: Maybe<Array<Maybe<UserPreviousName>>>;
+  /** The user's account privacy setting */
+  privacy: Maybe<UserPrivacy>;
   /** The url for the user page on the AniList website */
   siteUrl: Maybe<Scalars['String']['output']>;
   /** The users anime & manga list statistics */
@@ -4262,6 +4435,7 @@ export type User = {
 /** A user */
 export type UserAboutArgs = {
   asHtml: InputMaybe<Scalars['Boolean']['input']>;
+  htmlVersion: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -4326,12 +4500,12 @@ export type UserLengthStatistic = {
 
 /** User data for moderators */
 export type UserModData = {
-  alts: Maybe<Array<Maybe<User>>>;
   bans: Maybe<Scalars['Json']['output']>;
+  browserAlts: Maybe<Array<Maybe<User>>>;
   counts: Maybe<Scalars['Json']['output']>;
   email: Maybe<Scalars['String']['output']>;
   ip: Maybe<Scalars['Json']['output']>;
-  privacy: Maybe<Scalars['Int']['output']>;
+  ipAlts: Maybe<Array<Maybe<User>>>;
 };
 
 /** A user's general options */
@@ -4342,8 +4516,14 @@ export type UserOptions = {
   airingNotifications: Maybe<Scalars['Boolean']['output']>;
   /** The list activity types the user has disabled from being created from list updates */
   disabledListActivity: Maybe<Array<Maybe<ListActivityOption>>>;
+  /** Whether the user wants to see others' activities for adult media. Sub-option of displayAdultContent */
+  displayAdultActivities: Maybe<Scalars['Boolean']['output']>;
   /** Whether the user has enabled viewing of 18+ content */
   displayAdultContent: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the user wants to see adult media in quick search results by default. Sub-option of displayAdultContent */
+  includeAdultContentInQuickSearch: Maybe<Scalars['Boolean']['output']>;
+  /** Whether the user wants to see adult media in search results by default. Sub-option of displayAdultContent */
+  includeAdultContentInSearch: Maybe<Scalars['Boolean']['output']>;
   /** Notification options */
   notificationOptions: Maybe<Array<Maybe<NotificationOption>>>;
   /** Profile highlight color (blue, purple, pink, orange, red, green, gray) */
@@ -4367,6 +4547,16 @@ export type UserPreviousName = {
   /** When the user most recently changed from this name. */
   updatedAt: Maybe<Scalars['Int']['output']>;
 };
+
+/** User's account privacy setting */
+export enum UserPrivacy {
+  /** Private user */
+  Private = 'PRIVATE',
+  /** Public user */
+  Public = 'PUBLIC',
+  /** Semi-Public user */
+  SemiPublic = 'SEMI_PUBLIC'
+}
 
 export type UserReleaseYearStatistic = {
   chaptersRead: Scalars['Int']['output'];

@@ -65,6 +65,13 @@ export const CharacterSort = {
   SearchMatch: "SEARCH_MATCH",
 } as const;
 
+export const CharacterStaffSubmissionCategory = {
+  ImagesOnly: "IMAGES_ONLY",
+  NoteOnly: "NOTE_ONLY",
+  SingleChange: "SINGLE_CHANGE",
+  TrustedSubmitter: "TRUSTED_SUBMITTER",
+} as const;
+
 export const ExternalLinkMediaType = {
   Anime: "ANIME",
   Manga: "MANGA",
@@ -234,6 +241,19 @@ export const MediaStatus = {
   Releasing: "RELEASING",
 } as const;
 
+export const MediaSubmissionCategory = {
+  CharactersOnly: "CHARACTERS_ONLY",
+  Dub: "DUB",
+  ImagesOnly: "IMAGES_ONLY",
+  New: "NEW",
+  NextSeason: "NEXT_SEASON",
+  NoteOnly: "NOTE_ONLY",
+  Releasing: "RELEASING",
+  SingleChange: "SINGLE_CHANGE",
+  StaffOnly: "STAFF_ONLY",
+  TrustedSubmitter: "TRUSTED_SUBMITTER",
+} as const;
+
 export const MediaTrendSort = {
   Date: "DATE",
   DateDesc: "DATE_DESC",
@@ -263,6 +283,7 @@ export const ModActionType = {
   Edit: "EDIT",
   Expire: "EXPIRE",
   Note: "NOTE",
+  Pin: "PIN",
   Report: "REPORT",
   Reset: "RESET",
 } as const;
@@ -432,6 +453,12 @@ export const ThreadSort = {
   UpdatedAtDesc: "UPDATED_AT_DESC",
   ViewCount: "VIEW_COUNT",
   ViewCountDesc: "VIEW_COUNT_DESC",
+} as const;
+
+export const UserPrivacy = {
+  Private: "PRIVATE",
+  Public: "PUBLIC",
+  SemiPublic: "SEMI_PUBLIC",
 } as const;
 
 export const UserSort = {
